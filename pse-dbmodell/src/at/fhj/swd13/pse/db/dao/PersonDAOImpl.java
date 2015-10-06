@@ -2,22 +2,19 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 
-public class PersonDAOImpl implements PersonDAO {
-
-	private final DbContext dbContext;
+public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 	public PersonDAOImpl(DbContext dbContext) {
 
-		this.dbContext = dbContext;
+		super(dbContext);
 	}
 
 	/*
@@ -74,7 +71,7 @@ public class PersonDAOImpl implements PersonDAO {
 		final Query q = dbContext.createNamedQuery("Person.findById");
 		q.setParameter("id", personId);
 
-		return doFetchSingle(q);
+		return fetchSingle(q);
 	}
 
 	/*
@@ -88,7 +85,7 @@ public class PersonDAOImpl implements PersonDAO {
 		final Query q = dbContext.createNamedQuery("Person.findByUserName");
 		q.setParameter("uname", username);
 
-		return doFetchSingle(q);
+		return fetchSingle(q);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -155,18 +152,5 @@ public class PersonDAOImpl implements PersonDAO {
 		person.getPersonTargetRelations().clear();
 
 		return removedRelationCount;
-	}
-
-	private Person doFetchSingle(final Query q) {
-		try {
-
-			Person person = (Person) q.getSingleResult();
-
-			return person;
-
-		} catch (NoResultException | NonUniqueResultException x) {
-
-			return null;
-		}
 	}
 }
