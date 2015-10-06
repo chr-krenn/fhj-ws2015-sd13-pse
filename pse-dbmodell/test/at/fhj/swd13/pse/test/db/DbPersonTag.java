@@ -1,0 +1,188 @@
+package at.fhj.swd13.pse.test.db;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.DbContextProvider;
+import at.fhj.swd13.pse.db.DbContextProviderImpl;
+import at.fhj.swd13.pse.db.dao.PersonDAO;
+import at.fhj.swd13.pse.db.dao.TagDAO;
+import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.Tag;
+
+public class DbPersonTag {
+
+	private Person p1 = new Person("etester", "Tester", "Ehrenfried");
+	private Person p2 = new Person("xtester", "Tester", "Xaver");
+
+	private Tag t = new Tag("ballroom", "Gesellschftstanz in allen Varianten");
+
+	private static DbContextProvider contextProvider;
+
+	@BeforeClass
+	public static void construct() {
+		contextProvider = new DbContextProviderImpl();
+	}
+
+	@Before
+	public void setup() throws Exception {
+
+		p1.setPassword("1234567");
+		p2.setPassword("1234567");
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			personDAO.insert(p1);
+			personDAO.insert(p2);
+
+			dbContext.persist(t);
+
+			dbContext.commit();
+		}
+	}
+
+	@After
+	public void cleanup() throws Exception {
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person a = personDAO.getById(p1.getPersonId());
+			Person b = personDAO.getById(p2.getPersonId());
+
+			personDAO.remove(a);
+			personDAO.remove(b);
+
+			tagDAO.remove(t.getTagId());
+
+			dbContext.commit();
+		}
+	}
+
+	@Test
+	public void setTag() throws Exception {
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			x.addTag(l);
+
+			dbContext.commit();
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			assertTrue(x.hasTag(l));
+		}
+	}
+
+	@Test
+	public void setRemoveCycleTag() throws Exception {
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			x.addTag(l);
+
+			dbContext.commit();
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			assertTrue(x.hasTag(l));
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			x.removeTag(l);
+
+			assertFalse(x.hasTag(l));
+			assertEquals(0, l.getPersonTags().size());
+
+			dbContext.commit();
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			dbContext.clearCache();
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			assertFalse(x.hasTag(l));
+			assertEquals(0, l.getPersonTags().size());
+		}
+	}
+
+	@Test
+	public void getPersonsByTag1() throws Exception {
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Person x = personDAO.getById(p1.getPersonId());
+			Tag l = tagDAO.getById(t.getTagId());
+
+			x.addTag(l);
+
+			dbContext.commit();
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			TagDAO tagDAO = dbContext.getTagDAO();
+
+			Tag l = tagDAO.getById(t.getTagId());
+
+			assertNotNull(l);
+			assertEquals(1, l.getPersonTags().size());
+		}
+	}
+}
