@@ -1,60 +1,74 @@
 package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the community database table.
  * 
  */
 @Entity
-@Table(name="community")
-@NamedQuery(name="Community.findAll", query="SELECT c FROM Community c")
+@Table(name = "community")
+@NamedQueries({ @NamedQuery(name = "Community.findAll", query = "SELECT c FROM Community c"),
+		@NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
+		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"), })
 public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="community_id", unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "community_id", unique = true, nullable = false)
 	private int communityId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_at", nullable=false)
+	@Column(name = "created_at", nullable = false, insertable = false)
 	private Date createdAt;
 
-	@Column(name="invitation_only", nullable=false)
+	@Column(name = "invitation_only", nullable = false)
 	private boolean invitationOnly;
 
-	@Column(nullable=false, length=64)
+	@Column(nullable = false, length = 64)
 	private String name;
 
-	@Column(name="system_internal", nullable=false)
+	@Column(name = "system_internal", nullable = false)
 	private boolean systemInternal;
 
-	//bi-directional many-to-one association to Person
+	// bi-directional many-to-one association to Person
 	@ManyToOne
-	@JoinColumn(name="private_user")
-	private Person person1;
+	@JoinColumn(name = "private_user")
+	private Person privateUser;
 
-	//bi-directional many-to-one association to Person
+	// bi-directional many-to-one association to Person
 	@ManyToOne
-	@JoinColumn(name="confirmed_by")
-	private Person person2;
+	@JoinColumn(name = "confirmed_by")
+	private Person confirmedBy;
 
-	//bi-directional many-to-one association to Person
+	// bi-directional many-to-one association to Person
 	@ManyToOne
-	@JoinColumn(name="created_by")
-	private Person person3;
+	@JoinColumn(name = "created_by", nullable = false)
+	private Person createdBy;
 
-	//bi-directional many-to-one association to CommunityMember
-	@OneToMany(mappedBy="community")
+	// bi-directional many-to-one association to CommunityMember
+	@OneToMany(mappedBy = "community")
 	private List<CommunityMember> communityMembers;
 
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="community")
+	// bi-directional many-to-one association to Message
+	@OneToMany(mappedBy = "community")
 	private List<Message> messages;
 
 	public Community() {
@@ -100,28 +114,33 @@ public class Community implements Serializable {
 		this.systemInternal = systemInternal;
 	}
 
-	public Person getPerson1() {
-		return this.person1;
+	public Person getPrivateUser() {
+		return this.privateUser;
 	}
 
-	public void setPerson1(Person person1) {
-		this.person1 = person1;
+	public void setPrivateUser(Person person1) {
+		this.privateUser = person1;
 	}
 
-	public Person getPerson2() {
-		return this.person2;
+	public boolean isConfirmed() {
+
+		return confirmedBy != null;
 	}
 
-	public void setPerson2(Person person2) {
-		this.person2 = person2;
+	public Person getConfirmedBy() {
+		return this.confirmedBy;
 	}
 
-	public Person getPerson3() {
-		return this.person3;
+	public void setConfirmedBy(Person person2) {
+		this.confirmedBy = person2;
 	}
 
-	public void setPerson3(Person person3) {
-		this.person3 = person3;
+	public Person getCreatedBy() {
+		return this.createdBy;
+	}
+
+	public void setCreatedBy(Person person3) {
+		this.createdBy = person3;
 	}
 
 	public List<CommunityMember> getCommunityMembers() {

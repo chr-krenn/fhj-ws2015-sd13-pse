@@ -94,16 +94,16 @@ public class Person implements Serializable {
 	private String userName;
 
 	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "person1")
-	private List<Community> communities1;
+	@OneToMany(mappedBy = "privateUser")
+	private List<Community> privateCommunities;
 
 	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "person2")
-	private List<Community> communities2;
+	@OneToMany(mappedBy = "confirmedBy")
+	private List<Community> confirmedCommunities;
 
 	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "person3")
-	private List<Community> communities3;
+	@OneToMany(mappedBy = "createdBy")
+	private List<Community> createdCommunities;
 
 	// bi-directional many-to-one association to CommunityMember
 	@OneToMany(mappedBy = "person1")
@@ -324,68 +324,56 @@ public class Person implements Serializable {
 		this.userName = userName;
 	}
 
-	public List<Community> getCommunities1() {
-		return this.communities1;
+	public List<Community> getPrivateCommunities() {
+		return this.privateCommunities;
 	}
 
-	public void setCommunities1(List<Community> communities1) {
-		this.communities1 = communities1;
-	}
-
-	public Community addCommunities1(Community communities1) {
-		getCommunities1().add(communities1);
-		communities1.setPerson1(this);
+	public Community addPrivateCommunites(Community communities1) {
+		getPrivateCommunities().add(communities1);
+		communities1.setPrivateUser(this);
 
 		return communities1;
 	}
 
-	public Community removeCommunities1(Community communities1) {
-		getCommunities1().remove(communities1);
-		communities1.setPerson1(null);
+	public Community removePrivateCommunities(Community communities1) {
+		getPrivateCommunities().remove(communities1);
+		communities1.setPrivateUser(null);
 
 		return communities1;
 	}
 
-	public List<Community> getCommunities2() {
-		return this.communities2;
+	public List<Community> getConfirmedCommunities() {
+		return this.confirmedCommunities;
 	}
 
-	public void setCommunities2(List<Community> communities2) {
-		this.communities2 = communities2;
-	}
-
-	public Community addCommunities2(Community communities2) {
-		getCommunities2().add(communities2);
-		communities2.setPerson2(this);
+	public Community addConfirmedCommunities(Community communities2) {
+		getConfirmedCommunities().add(communities2);
+		communities2.setConfirmedBy(this);
 
 		return communities2;
 	}
 
-	public Community removeCommunities2(Community communities2) {
-		getCommunities2().remove(communities2);
-		communities2.setPerson2(null);
+	public Community removeConfirmedCommunities(Community communities2) {
+		getConfirmedCommunities().remove(communities2);
+		communities2.setConfirmedBy(null);
 
 		return communities2;
 	}
 
-	public List<Community> getCommunities3() {
-		return this.communities3;
+	public List<Community> getCreatedCommunities() {
+		return this.createdCommunities;
 	}
 
-	public void setCommunities3(List<Community> communities3) {
-		this.communities3 = communities3;
-	}
-
-	public Community addCommunities3(Community communities3) {
-		getCommunities3().add(communities3);
-		communities3.setPerson3(this);
+	public Community addCreatedCommunities(Community communities3) {
+		getCreatedCommunities().add(communities3);
+		communities3.setCreatedBy(this);
 
 		return communities3;
 	}
 
-	public Community removeCommunities3(Community communities3) {
-		getCommunities3().remove(communities3);
-		communities3.setPerson3(null);
+	public Community removeCreatedCommunities(Community communities3) {
+		getCreatedCommunities().remove(communities3);
+		communities3.setCreatedBy(null);
 
 		return communities3;
 	}

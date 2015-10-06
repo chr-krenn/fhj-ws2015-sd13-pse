@@ -9,6 +9,8 @@ import javax.persistence.RollbackException;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 
+import at.fhj.swd13.pse.db.dao.CommunityDAO;
+import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -188,6 +190,15 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 		return new TagDAOImpl(this);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.DbContext#getCommunityDAO()
+	 */
+	public CommunityDAO getCommunityDAO() {
+		
+		return new CommunityDAOImpl( this );
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -28,7 +28,7 @@ CREATE TABLE `community` (
   `invitation_only` bit(1) NOT NULL DEFAULT b'1',
   `name` varchar(64) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_by` int(11) DEFAULT NULL,
+  `created_by` int(11) NOT NULL,
   `private_user` int(11) DEFAULT NULL,
   `confirmed_by` int(11) DEFAULT NULL COMMENT 'wenn null wurde community noch nicht freigegeben, ist also im status beantragt',
   PRIMARY KEY (`community_id`),
