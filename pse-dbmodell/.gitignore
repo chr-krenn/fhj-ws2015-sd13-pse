@@ -2,3 +2,6 @@
 /reports/
 /target/
 /bin/
+.settings/
+.classpath
+.project
