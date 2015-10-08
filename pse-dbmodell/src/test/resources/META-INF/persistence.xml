@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.1"
-	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	
-	<persistence-unit name="pseDbModell" transaction-type="JTA">
-
-		<jta-data-source>java:jboss/datasources/pseDS</jta-data-source>
-		
+	<persistence-unit name="pseDbModell" transaction-type="RESOURCE_LOCAL">
+	
 		<class>at.fhj.swd13.pse.db.entity.Community</class>
 		<class>at.fhj.swd13.pse.db.entity.CommunityMember</class>
 		<class>at.fhj.swd13.pse.db.entity.DeliverySystem</class>
@@ -21,10 +17,11 @@
 		<class>at.fhj.swd13.pse.db.entity.Tag</class>
 		
 		<properties>
-			<property name="format_sql" value="false" />
-			<property name="use_sql_comments" value="false" />
-		
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/pse"/>
+			<property name="javax.persistence.jdbc.user" value="root"/>
+			<property name="javax.persistence.jdbc.password" value="root"/>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+			<property name="eclipselink.logging.level" value="FINE"/>			
 		</properties>
 		
 	</persistence-unit>

@@ -5,10 +5,12 @@
 	<groupId>at.fhj.swd13</groupId>
 	<artifactId>pse</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
 
 	<name>TODO</name>
 
 	<description>TODO</description>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
