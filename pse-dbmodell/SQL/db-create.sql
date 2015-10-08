@@ -48,7 +48,7 @@ CREATE TABLE `community` (
 
 LOCK TABLES `community` WRITE;
 /*!40000 ALTER TABLE `community` DISABLE KEYS */;
-INSERT INTO `community` VALUES (1,'','\0','Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,'','\0','Document Library','2015-10-04 19:35:38',1,NULL,1);
+INSERT INTO `community` VALUES (1,0,0,'Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,0,0,'Document Library','2015-10-04 19:35:38',1,NULL,1);
 /*!40000 ALTER TABLE `community` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,7 +289,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,'','\0','\0',NULL);
+INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,1,NULL);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
