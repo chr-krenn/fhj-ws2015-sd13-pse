@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
@@ -86,6 +87,28 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 		q.setParameter("uname", username);
 
 		return fetchSingle(q);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.db.PersonDAO#getByUsername(java.lang.String)
+	 */
+	@Override
+	public Person getByUsername(String username, boolean assertRequired ) {
+
+		final Query q = dbContext.createNamedQuery("Person.findByUserName");
+		q.setParameter("uname", username);
+
+		Person p = fetchSingle(q);
+		
+		if ( p == null ) {
+			
+			
+			throw new EntityNotFoundException( "Unknown user with username " + username );
+		}
+		
+		return p;
 	}
 
 	@SuppressWarnings("unchecked")

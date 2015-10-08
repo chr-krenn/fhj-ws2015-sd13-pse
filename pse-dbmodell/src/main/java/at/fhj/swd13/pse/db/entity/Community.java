@@ -72,6 +72,13 @@ public class Community implements Serializable {
 	private List<Message> messages;
 
 	public Community() {
+		invitationOnly = false;
+		systemInternal = false;		
+	}
+
+	public Community( final String communityName ) {
+		this();
+		this.name = communityName;
 	}
 
 	public int getCommunityId() {

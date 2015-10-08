@@ -45,9 +45,21 @@ public interface PersonDAO {
 	 * Load a person with the given username, the search is case sensitive
 	 * 
 	 * @param username the username of the person to retrieve
+	 * 
 	 * @return the person with the given username, null if none was found
 	 */
 	Person getByUsername( String username );
+
+	/**
+	 * Load a person with the given username, the search is case sensitive
+	 * 
+	 * @param username the username of the person to retrieve
+	 * @param assertFound when true, 
+	 * 
+	 * @return the person with the given username, null if none was found
+	 */
+	Person getByUsername( String username, boolean assertFound );
+	
 	
 	/**
 	 * Load all persons sorted by last_name, first_name
