@@ -146,10 +146,17 @@ public class Person implements Serializable {
 	private List<PersonTag> personTags;
 
 	public Person() {
+		
+		isActive = true;
+		isAdmin = false;
+		isLoginAllowed = true;
+		isOnline = false;		
 	}
 
 	public Person( final String userName, final String lastName, final String firstName, final String plainPassword ) {
 
+		this();
+		
 		this.userName = userName;
 		this.lastName = lastName;
 		this.firstName = firstName;
