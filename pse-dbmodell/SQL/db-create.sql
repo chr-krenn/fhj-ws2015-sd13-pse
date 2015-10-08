@@ -129,7 +129,7 @@ CREATE TABLE `document` (
   PRIMARY KEY (`document_id`),
   UNIQUE KEY `document_name_UNIQUE` (`name`),
   FULLTEXT KEY `document_description` (`description`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Für alles was vom Benutzer hochgeladen wird (pdf,jpg, png)\nFilter was erlaubt ist (Größe, Type) durch Applikation)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Fï¿½r alles was vom Benutzer hochgeladen wird (pdf,jpg, png)\nFilter was erlaubt ist (Grï¿½ï¿½e, Type) durch Applikation)';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +182,7 @@ CREATE TABLE `message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `created_by` int(11) NOT NULL,
   `posted_in` int(11) DEFAULT NULL,
-  `headline` varchar(45) DEFAULT NULL,
+  `headline` varchar(128) DEFAULT NULL,
   `message` varchar(2048) NOT NULL,
   `document_icon_id` int(11) DEFAULT NULL,
   `document_attachment_id` int(11) DEFAULT NULL,
