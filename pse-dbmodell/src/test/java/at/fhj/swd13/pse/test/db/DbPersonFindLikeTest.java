@@ -19,20 +19,15 @@ public class DbPersonFindLikeTest {
 
 	private static DbContextProvider contextProvider;
 
-	private static Person p1 = new Person("etester", "Ausprobierer", "Ehrenfried");
-	private static Person p2 = new Person("xtester", "Probierer", "Xaver");
-	private static Person p3 = new Person("xtesla", "Tesla", "Xaver");
-	private static Person p4 = new Person("maha", "Maier", "Hans");
+	private static Person p1 = new Person("etester", "Ausprobierer", "Ehrenfried", "12345678");
+	private static Person p2 = new Person("xtester", "Probierer", "Xaver", "12345678");
+	private static Person p3 = new Person("xtesla", "Tesla", "Xaver", "12345678");
+	private static Person p4 = new Person("maha", "Maier", "Hans", "12345678");
 
 	@BeforeClass
 	public static void setup() throws Exception {
 		contextProvider = new DbContextProviderImpl();
 
-		p1.setPassword("12345678");
-		p2.setPassword("12345678");
-		p3.setPassword("12345678");
-		p4.setPassword("12345678");
-		
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();

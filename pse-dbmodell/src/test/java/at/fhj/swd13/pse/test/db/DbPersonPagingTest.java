@@ -34,8 +34,7 @@ public class DbPersonPagingTest {
 
 				String username = USER_NAME_PREFIX + String.format("%04d", i);
 
-				Person p = new Person(username, username, "Gustav");
-				p.setPassword("1234567");
+				Person p = new Person(username, username, "Gustav", "12345678");
 
 				personDao.insert(p);
 			}

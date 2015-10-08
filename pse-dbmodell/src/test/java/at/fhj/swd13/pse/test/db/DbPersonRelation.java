@@ -19,9 +19,9 @@ import at.fhj.swd13.pse.db.entity.PersonRelation;
 
 public class DbPersonRelation {
 
-	private Person p1 = new Person("etester", "Tester", "Ehrenfried");
-	private Person p2 = new Person("xtester", "Tester", "Xaver");
-	private Person p3 = new Person("mtester", "Tester", "Mario");
+	private Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
+	private Person p2 = new Person("xtester", "Tester", "Xaver", "1234567");
+	private Person p3 = new Person("mtester", "Tester", "Mario", "1234567");
 
 	private static DbContextProvider contextProvider;
 
@@ -32,10 +32,6 @@ public class DbPersonRelation {
 
 	@Before
 	public void setup() throws Exception {
-
-		p1.setPassword("1234567");
-		p2.setPassword("1234567");
-		p3.setPassword("1234567");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 

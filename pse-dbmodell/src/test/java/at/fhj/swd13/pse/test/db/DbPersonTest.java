@@ -31,7 +31,7 @@ public class DbPersonTest {
 	@Test
 	public void getById() {
 
-		try (DbContext dbContext = contextProvider.getDbContext() ) {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
@@ -105,7 +105,7 @@ public class DbPersonTest {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			Person p = personDAO.getByUsername("gnurmifgjpösh l hlfdyghlfd glkdfghv y");
+			Person p = personDAO.getByUsername("gnurmifgjpï¿½sh l hlfdyghlfd glkdfghv y");
 
 			assertEquals(p, null);
 
@@ -118,8 +118,7 @@ public class DbPersonTest {
 	@Test
 	public void insert() throws Exception, ConstraintViolationException {
 
-		Person p = new Person("etester", "Tester", "Ehrenfried");
-		p.setHashedPassword("gustl");
+		Person p = new Person("etester", "Tester", "Ehrenfried", "1234567");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -153,8 +152,7 @@ public class DbPersonTest {
 	@Test
 	public void insertRemovCycle() throws Exception {
 
-		Person p = new Person("etester", "Tester", "Ehrenfried");
-		p.setHashedPassword("gustl");
+		Person p = new Person("etester", "Tester", "Ehrenfried", "12345678");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -194,11 +192,9 @@ public class DbPersonTest {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			Person p1 = new Person("etester", "Tester", "Ehrenfried");
-			p1.setHashedPassword("gustl");
+			Person p1 = new Person("etester", "Tester", "Ehrenfried", "12345678");
 
-			Person p2 = new Person("etester", "Tester", "Ehrenfried");
-			p2.setHashedPassword("gustl");
+			Person p2 = new Person("etester", "Tester", "Ehrenfried", "12345678");
 
 			personDAO.insert(p1);
 			personDAO.insert(p2);
@@ -213,48 +209,29 @@ public class DbPersonTest {
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakNull() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried");
-		p1.setPassword(null);
+		Person p1 = new Person("etester", "Tester", "Ehrenfried", null);
 	}
 
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakEmpty() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried");
-		p1.setPassword("");
+		Person p1 = new Person("etester", "Tester", "Ehrenfried", "");
 	}
 
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakShort() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried");
-		p1.setPassword("123456");
+		Person p1 = new Person("etester", "Tester", "Ehrenfried", "123456");
 	}
 
 	@Test
 	public void passwordOk() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried");
-		p1.setPassword("1234567");
+		Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
 
 		assertNotEquals("1234567", p1.getHashedPassword());
 		assertTrue(p1.isMatchingPassword("1234567"));
 		assertFalse(p1.isMatchingPassword("123456788"));
-	}
-
-	@Test(expected = ConstraintViolationException.class)
-	public void passwordEmpty() throws Exception {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			Person p1 = new Person("etester", "Tester", "Ehrenfried");
-
-			personDAO.insert(p1);
-
-			dbContext.commit();
-		}
 	}
 
 	@Test(expected = ParameterException.class)

@@ -20,8 +20,8 @@ import at.fhj.swd13.pse.db.entity.Tag;
 
 public class DbPersonTag {
 
-	private Person p1 = new Person("etester", "Tester", "Ehrenfried");
-	private Person p2 = new Person("xtester", "Tester", "Xaver");
+	private Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
+	private Person p2 = new Person("xtester", "Tester", "Xaver", "1234567");
 
 	private Tag t = new Tag("ballroom", "Gesellschftstanz in allen Varianten");
 
@@ -34,9 +34,6 @@ public class DbPersonTag {
 
 	@Before
 	public void setup() throws Exception {
-
-		p1.setPassword("1234567");
-		p2.setPassword("1234567");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
