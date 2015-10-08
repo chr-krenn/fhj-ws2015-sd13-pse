@@ -1,3 +1,4 @@
+SET FOREIGN_KEY_CHECKS = 0;
 DROP DATABASE IF EXISTS `pse` ;
 CREATE DATABASE `pse` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
@@ -295,6 +296,12 @@ CREATE TABLE `person` (
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
 INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,1,NULL);
+INSERT INTO `person` VALUES (2,'padmin','Portal','Admin','pse@edu.fh-joanneum.at','+436644711815','--','Portal-Admin',NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1,NULL);
+
+INSERT INTO `person` VALUES (90, 'krenn','Krenn','Christian','christian.krenn@imaginary.com','+436644711815','--','Vortragender',NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,0,NULL);
+INSERT INTO `person` VALUES (91, 'teiniker','Teiniker','Egon','egon.teiniker@imaginary.com','+436644711815','--','Vortragender',NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,0,NULL);
+
+INSERT INTO `person` VALUES (100, 'loeflerm13','Löfler','Mario','mario.loefler@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 1','A','-2','666',NULL,NULL,1,1,0,0,NULL);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,3 +429,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2015-10-04 19:46:40
+SET FOREIGN_KEY_CHECKS = 1;
