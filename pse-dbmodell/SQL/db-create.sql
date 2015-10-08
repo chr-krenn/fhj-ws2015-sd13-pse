@@ -274,6 +274,7 @@ CREATE TABLE `person` (
   `is_active` bit(1) NOT NULL DEFAULT b'1',
   `is_login_allowed` bit(1) NOT NULL DEFAULT b'1',
   `is_online` bit(1) NOT NULL DEFAULT b'0',
+  `is_admin`  bit(1) NOT NULL DEFAULT b'0',
   `document_image_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`person_id`),
   UNIQUE KEY `user_name_UNIQUE` (`user_name`),

@@ -72,6 +72,9 @@ public class Person implements Serializable {
 	@Column(name = "is_online", nullable = false)
 	private boolean isOnline;
 
+	@Column(name = "is_admin", nullable = false)
+	private boolean isAdmin;
+
 	@Column(name = "job_position", length = 64)
 	private String jobPosition;
 
@@ -266,6 +269,14 @@ public class Person implements Serializable {
 
 	public void setIsOnline(boolean isOnline) {
 		this.isOnline = isOnline;
+	}
+
+	public boolean isAdmin() {
+		return this.isAdmin;
+	}
+
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 	public String getJobPosition() {
