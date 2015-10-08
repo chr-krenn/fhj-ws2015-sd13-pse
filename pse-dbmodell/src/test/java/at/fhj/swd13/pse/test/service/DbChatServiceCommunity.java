@@ -80,11 +80,20 @@ public class DbChatServiceCommunity {
 
 		toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
 
+		/* one would expect this to work, albeit it does not... curse jpa, curse curse curse
+		 * I guess it is ok, since the entities are detached anyway...
+		 *  
+		 * assertEquals(1, plainPerson.getMemberships().size() ); 
+		 */
 		try (DbContext context = contextProvider.getDbContext()) {
 			context.clearCache();
 
 			Community c = context.getCommunityDAO().getByName("unconfirmed");
 			assertFalse(c.isConfirmed());
+			
+			Person p = context.getPersonDAO().getById( plainPerson.getPersonId() );
+			assertEquals(1, p.getMemberships().size() );
+			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName() );
 		}
 	}
 

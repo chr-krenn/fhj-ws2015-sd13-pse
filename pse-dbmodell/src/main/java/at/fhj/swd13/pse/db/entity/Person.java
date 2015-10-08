@@ -29,8 +29,7 @@ import at.fhj.swd13.pse.db.WeakPasswordException;
  */
 @Entity
 @Table(name = "person")
-@NamedQueries({
-		@NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p ORDER BY p.lastName, p.firstName"),
+@NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.personId = :id"),
 		@NamedQuery(name = "Person.findByUserName", query = "SELECT p FROM Person p WHERE p.userName = :uname"),
 		@NamedQuery(name = "Person.findNameLike", query = "SELECT p FROM Person p WHERE p.userName LIKE :name OR p.lastName LIKE :name ORDER BY p.lastName, p.firstName"),
@@ -109,12 +108,12 @@ public class Person implements Serializable {
 	private List<Community> createdCommunities;
 
 	// bi-directional many-to-one association to CommunityMember
-	@OneToMany(mappedBy = "person1")
-	private List<CommunityMember> communityMembers1;
+	@OneToMany(mappedBy = "confirmer")
+	private List<CommunityMember> confirmedMemberships;
 
 	// bi-directional many-to-one association to CommunityMember
-	@OneToMany(mappedBy = "person2")
-	private List<CommunityMember> communityMembers2;
+	@OneToMany(mappedBy = "member")
+	private List<CommunityMember> memberships;
 
 	// bi-directional many-to-one association to MesasgeRating
 	@OneToMany(mappedBy = "person")
@@ -146,17 +145,17 @@ public class Person implements Serializable {
 	private List<PersonTag> personTags;
 
 	public Person() {
-		
+
 		isActive = true;
 		isAdmin = false;
 		isLoginAllowed = true;
-		isOnline = false;		
+		isOnline = false;
 	}
 
-	public Person( final String userName, final String lastName, final String firstName, final String plainPassword ) {
+	public Person(final String userName, final String lastName, final String firstName, final String plainPassword) {
 
 		this();
-		
+
 		this.userName = userName;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -397,48 +396,36 @@ public class Person implements Serializable {
 		return communities3;
 	}
 
-	public List<CommunityMember> getCommunityMembers1() {
-		return this.communityMembers1;
+	public List<CommunityMember> getConfirmedMemberships() {
+		return this.confirmedMemberships;
 	}
 
-	public void setCommunityMembers1(List<CommunityMember> communityMembers1) {
-		this.communityMembers1 = communityMembers1;
+	public CommunityMember addConfirmedMemberships(CommunityMember confirmedMembership) {
+		getConfirmedMemberships().add(confirmedMembership);
+
+		return confirmedMembership;
 	}
 
-	public CommunityMember addCommunityMembers1(CommunityMember communityMembers1) {
-		getCommunityMembers1().add(communityMembers1);
-		communityMembers1.setPerson1(this);
+	public CommunityMember removeConfirmedMemberships(CommunityMember confirmedMembership) {
+		getConfirmedMemberships().remove(confirmedMembership);
 
-		return communityMembers1;
+		return confirmedMembership;
 	}
 
-	public CommunityMember removeCommunityMembers1(CommunityMember communityMembers1) {
-		getCommunityMembers1().remove(communityMembers1);
-		communityMembers1.setPerson1(null);
-
-		return communityMembers1;
+	public List<CommunityMember> getMemberships() {
+		return this.memberships;
 	}
 
-	public List<CommunityMember> getCommunityMembers2() {
-		return this.communityMembers2;
+	public CommunityMember addMembership(CommunityMember membership) {
+		getMemberships().add(membership);
+
+		return membership;
 	}
 
-	public void setCommunityMembers2(List<CommunityMember> communityMembers2) {
-		this.communityMembers2 = communityMembers2;
-	}
+	public CommunityMember removeMembership(CommunityMember membership) {
+		getMemberships().remove(membership);
 
-	public CommunityMember addCommunityMembers2(CommunityMember communityMembers2) {
-		getCommunityMembers2().add(communityMembers2);
-		communityMembers2.setPerson2(this);
-
-		return communityMembers2;
-	}
-
-	public CommunityMember removeCommunityMembers2(CommunityMember communityMembers2) {
-		getCommunityMembers2().remove(communityMembers2);
-		communityMembers2.setPerson2(null);
-
-		return communityMembers2;
+		return membership;
 	}
 
 	public List<MesasgeRating> getMesasgeRatings() {
@@ -554,6 +541,7 @@ public class Person implements Serializable {
 	public List<PersonRelation> getPersonTargetRelations() {
 		return this.personTargetRelations;
 	}
+
 	public PersonRelation addPersonTargetRelation(PersonRelation personRelations) {
 		getPersonTargetRelations().add(personRelations);
 		personRelations.setTargetPerson(this);
@@ -655,7 +643,7 @@ public class Person implements Serializable {
 
 	/**
 	 * Remove a tag from this person does nothing if the tag is not set
-
+	 * 
 	 * @param t
 	 *            the tag to remove
 	 */

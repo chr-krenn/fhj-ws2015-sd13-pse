@@ -1,8 +1,10 @@
 package at.fhj.swd13.pse.service;
 
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
 
 /**
@@ -24,11 +26,13 @@ public class ChatService extends ServiceBase {
 	 * community is confirmed. Method creates a db-context and calls
 	 * createChatCommunity
 	 * 
-	 * @param creator
-	 * @param communityName
-	 * @param dbContext
+	 * also creates an admin membership for the creator
 	 * 
-	 * @return
+	 * @param creator username of the creator of the chat
+	 * @param communityName name of the community to create
+	 * @param invitationOnly when true the members can only join the community when community admin confirms request
+	 * 
+	 * @return instance of the created community
 	 * 
 	 * @throws DuplicateEntityException
 	 *             if the community already exists
@@ -48,14 +52,17 @@ public class ChatService extends ServiceBase {
 	}
 
 	/**
+	 * Create a public chat community. If the creator is an administrator, the
+	 * community is confirmed.
+     *
+	 * also creates an admin membership for the creator
 	 * 
+	 * @param creator username of the creator of the chat
+	 * @param communityName name of the community to create
+	 * @param invitationOnly when true the members can only join the community when community admin confirms request
+	 * @param dbContext session to the persistent storage 
 	 * 
-	 * @param creator
-	 * @param communityName
-	 * @param dbContext
-	 * 
-	 * @return
-	 * 
+	 * @return instance of the created community	 * 
 	 * @throws DuplicateEntityException
 	 *             if the community already exists
 	 * @throws EntityNotFoundException
@@ -84,6 +91,8 @@ public class ChatService extends ServiceBase {
 	 * Internal Helper to create a community and when the creator is admin set
 	 * it to confirmed
 	 * 
+	 * also creates an admin membership for the creator
+	 * 
 	 * @param creator
 	 * @param community
 	 * @param dbContext
@@ -104,7 +113,12 @@ public class ChatService extends ServiceBase {
 			}
 
 			communityDao.insert(community);
-
+			CommunityMember memberShip = community.addMember( creator, true );
+			
+			if ( memberShip != null ) {
+				dbContext.persist( memberShip );
+			}
+			
 			return community;
 		} else {
 			throw new DuplicateEntityException("Community already exists: " + community.getName());

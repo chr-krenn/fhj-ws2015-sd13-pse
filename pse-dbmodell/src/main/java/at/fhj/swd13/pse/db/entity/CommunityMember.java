@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+
 /**
  * The persistent class for the community_member database table.
  * 
@@ -52,9 +54,29 @@ public class CommunityMember implements Serializable {
 	@JoinColumn(name = "person_id", nullable = false)
 	private Person member;
 
-	public CommunityMember() {
+	/**
+	 * protected ctor needed by jpa
+	 */
+	protected CommunityMember() {		
 	}
+	
+	/**
+	 * Create a non-admin membership object
+	 * 
+	 * @param community 
+	 * @param member
+	 * 
+	 */
+	public CommunityMember( final Community community, final Person member ) {
 
+		createdAt = new Date();
+		
+		isAdministrator = false;
+		
+		setCommunity(community);
+		setMember( member );
+	}
+	
 	public int getCommunityMemberId() {
 		return this.communityMemberId;
 	}
@@ -91,16 +113,16 @@ public class CommunityMember implements Serializable {
 		return this.confirmer;
 	}
 
-	public void setConfirmer(Person person1) {
-		this.confirmer = person1;
+	public void setConfirmer(Person confirmer) {
+		this.confirmer = confirmer;
 	}
 
 	public Person getMember() {
 		return this.member;
 	}
 
-	public void setMember(Person person2) {
-		this.member = person2;
+	public void setMember(Person member) {
+		this.member = member;
 	}
 
 }
