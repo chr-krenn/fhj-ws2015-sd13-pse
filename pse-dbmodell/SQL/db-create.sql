@@ -296,7 +296,7 @@ CREATE TABLE `person` (
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
 INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,1,NULL);
-INSERT INTO `person` VALUES (2,'padmin','Portal','Admin','pse@edu.fh-joanneum.at','+436644711815','--','Portal-Admin',NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1,NULL);
+
 UNLOCK TABLES;
 
 --
