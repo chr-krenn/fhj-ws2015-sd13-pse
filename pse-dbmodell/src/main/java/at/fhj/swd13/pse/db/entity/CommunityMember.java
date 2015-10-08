@@ -15,8 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-
 /**
  * The persistent class for the community_member database table.
  * 
@@ -57,26 +55,26 @@ public class CommunityMember implements Serializable {
 	/**
 	 * protected ctor needed by jpa
 	 */
-	protected CommunityMember() {		
+	protected CommunityMember() {
 	}
-	
+
 	/**
 	 * Create a non-admin membership object
 	 * 
-	 * @param community 
+	 * @param community
 	 * @param member
 	 * 
 	 */
-	public CommunityMember( final Community community, final Person member ) {
+	public CommunityMember(final Community community, final Person member) {
 
 		createdAt = new Date();
-		
+
 		isAdministrator = false;
-		
+
 		setCommunity(community);
-		setMember( member );
+		setMember(member);
 	}
-	
+
 	public int getCommunityMemberId() {
 		return this.communityMemberId;
 	}

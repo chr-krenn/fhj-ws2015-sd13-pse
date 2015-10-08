@@ -209,19 +209,19 @@ public class DbPersonTest {
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakNull() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried", null);
+		new Person("etester", "Tester", "Ehrenfried", null);
 	}
 
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakEmpty() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried", "");
+		new Person("etester", "Tester", "Ehrenfried", "");
 	}
 
 	@Test(expected = WeakPasswordException.class)
 	public void passwordWeakShort() {
 
-		Person p1 = new Person("etester", "Tester", "Ehrenfried", "123456");
+		new Person("etester", "Tester", "Ehrenfried", "123456");
 	}
 
 	@Test

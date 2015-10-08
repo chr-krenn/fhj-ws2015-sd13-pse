@@ -11,6 +11,7 @@ import at.fhj.swd13.pse.db.DbContextProvider;
 import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.ParameterException;
 
 public class DbCommunityTest {
 
@@ -79,5 +80,23 @@ public class DbCommunityTest {
 
 			assertNull(c);
 		}
+	}
+	
+	@Test(expected=ParameterException.class)
+	public void removeIdUnpersisted() throws Exception {
+		
+		try ( DbContext context = contextProvider.getDbContext() ) {
+		
+			context.getCommunityDAO().remove( 0 );			
+		}		
+	}
+
+	@Test(expected=ParameterException.class)
+	public void removeObjectUnpersisted() throws Exception {
+		
+		try ( DbContext context = contextProvider.getDbContext() ) {
+		
+			context.getCommunityDAO().remove( null );			
+		}		
 	}
 }
