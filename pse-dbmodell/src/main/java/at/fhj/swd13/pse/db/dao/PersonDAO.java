@@ -74,6 +74,13 @@ public interface PersonDAO {
 	List<Person> getAllPersons( int startRow, int maxRows );
 	
 	/**
+	 * Load all persons that have no hashedPassword (IS NULL)
+	 * 
+	 * @return List of persons with no password, empty if none found
+	 */
+	List<Person> getAllWithNullPasswords();
+	
+	/**
 	 * Get all persons matching the given name
 	 * Either as part of their last_name or user_name
 	 * the serach is not case-insensitive

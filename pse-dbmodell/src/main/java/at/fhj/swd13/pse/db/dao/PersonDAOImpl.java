@@ -111,6 +111,9 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 		return p;
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons(int, int)
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Person> getAllPersons(int startRow, int maxRows) {
 
@@ -121,6 +124,14 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 		return (List<Person>) q.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Person> getAllWithNullPasswords() {
+
+		Query q = dbContext.createNamedQuery("Person.findAllNullPasswords");
+
+		return (List<Person>) q.getResultList();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
