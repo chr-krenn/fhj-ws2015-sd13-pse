@@ -1,6 +1,6 @@
 package at.fhj.swd13.pse.db;
 
-public class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends Exception {
 
 	/**
 	 * 
