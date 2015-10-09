@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.db;
 
+import javax.enterprise.inject.Produces;
+
 public class DbContextProviderImpl implements DbContextProvider {
 
 	/**
@@ -16,4 +18,9 @@ public class DbContextProviderImpl implements DbContextProvider {
 		
 		return new DbContextImpl();		
 	}	
+	
+	@Produces
+	public DbContext getDbContextJta() {
+		return new DbContextJtaImpl();
+	}
 }
