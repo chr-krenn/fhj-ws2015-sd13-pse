@@ -17,12 +17,12 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.service.ChatService;
+import at.fhj.swd13.pse.service.ChatServiceImpl;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
 
 public class DbChatServiceCommunity {
 
-	private ChatService chatService;
+	private ChatServiceImpl chatService;
 
 	private DbContextProvider contextProvider;
 
@@ -37,7 +37,7 @@ public class DbChatServiceCommunity {
 
 		contextProvider = new DbContextProviderImpl();
 
-		chatService = new ChatService();
+		chatService = new ChatServiceImpl();
 		chatService.setDbContext(contextProvider);
 
 		try (DbContext context = contextProvider.getDbContext()) {
