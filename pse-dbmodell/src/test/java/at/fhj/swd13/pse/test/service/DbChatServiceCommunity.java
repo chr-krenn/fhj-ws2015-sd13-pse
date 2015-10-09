@@ -127,7 +127,7 @@ public class DbChatServiceCommunity {
 		toDelete.add(chatService.createChatCommunity(inActivePerson.getUserName(), "confirmed", false));
 	}
 
-	@Test(expected = EntityNotFoundException.class)
+	@Test(expected = IllegalStateException.class)
 	public void unknownPerson() throws Exception {
 
 		toDelete.add(chatService.createChatCommunity("gustl", "confirmed", false));

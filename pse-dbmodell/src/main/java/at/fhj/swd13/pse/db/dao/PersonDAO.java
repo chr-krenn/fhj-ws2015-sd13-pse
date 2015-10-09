@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 
@@ -38,7 +39,7 @@ public interface PersonDAO {
 	 * @param personId the id of the person to retrieve
 	 * @return the person with the given id, null if none was found
 	 */
-	Person getById(int personId);
+	Person getById(int personId) throws EntityNotFoundException;
 
 	
 	/**
@@ -48,7 +49,7 @@ public interface PersonDAO {
 	 * 
 	 * @return the person with the given username, null if none was found
 	 */
-	Person getByUsername( String username );
+	Person getByUsername( String username ) ;
 
 	/**
 	 * Load a person with the given username, the search is case sensitive
@@ -58,7 +59,7 @@ public interface PersonDAO {
 	 * 
 	 * @return the person with the given username, null if none was found
 	 */
-	Person getByUsername( String username, boolean assertFound );
+	Person getByUsername( String username, boolean assertFound ) throws EntityNotFoundException;
 	
 	
 	/**

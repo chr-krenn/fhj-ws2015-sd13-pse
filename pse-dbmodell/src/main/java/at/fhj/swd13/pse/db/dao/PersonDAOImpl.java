@@ -67,12 +67,17 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhjoanneum.swd13.pse.db.PersonDAO#getById(int)
 	 */
 	@Override
-	public Person getById(int personId) {
+	public Person getById(int personId) throws EntityNotFoundException {
 
 		final Query q = dbContext.createNamedQuery("Person.findById");
 		q.setParameter("id", personId);
 
-		return fetchSingle(q);
+		Person result =  fetchSingle(q);
+		
+		if(result == null)
+			throw new EntityNotFoundException("Person not found");
+		
+		return result; 
 	}
 
 	/*
@@ -95,7 +100,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhj.swd13.pse.db.PersonDAO#getByUsername(java.lang.String)
 	 */
 	@Override
-	public Person getByUsername(String username, boolean assertRequired ) {
+	public Person getByUsername(String username, boolean assertRequired ) throws EntityNotFoundException {
 
 		final Query q = dbContext.createNamedQuery("Person.findByUserName");
 		q.setParameter("uname", username);

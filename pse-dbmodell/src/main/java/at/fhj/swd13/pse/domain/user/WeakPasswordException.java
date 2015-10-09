@@ -1,4 +1,4 @@
-package at.fhj.swd13.pse.db;
+package at.fhj.swd13.pse.domain.user;
 /**
  * The password given did not meet the set criteria 
  * and is not accepted by the system
@@ -19,4 +19,10 @@ public class WeakPasswordException extends Exception {
 		
 		super( message );
 	}	
+	
+	
+	public WeakPasswordException()
+	{
+		
+	}
 }

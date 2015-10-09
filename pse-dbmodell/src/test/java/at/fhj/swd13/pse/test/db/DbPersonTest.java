@@ -14,10 +14,11 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.DbContextProvider;
 import at.fhj.swd13.pse.db.DbContextProviderImpl;
-import at.fhj.swd13.pse.db.WeakPasswordException;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 
 public class DbPersonTest {
 
@@ -149,7 +150,7 @@ public class DbPersonTest {
 		}
 	}
 
-	@Test
+	@Test(expected = EntityNotFoundException.class)
 	public void insertRemovCycle() throws Exception {
 
 		Person p = new Person("etester", "Tester", "Ehrenfried", "12345678");
@@ -180,8 +181,6 @@ public class DbPersonTest {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			Person x = personDAO.getById(p.getPersonId());
-
-			assertNull(x);
 		}
 	}
 

@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.db;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -36,7 +37,7 @@ public interface DbContext extends AutoCloseable {
 	 * @throws IllegalStateException when commit is called 
 	 * 			on an already closed DbContext
 	 */
-	void commit();
+	void commit() throws ConstraintViolationException;
 
 	/**
 	 * Undo all pending changes since instantiation to the storage

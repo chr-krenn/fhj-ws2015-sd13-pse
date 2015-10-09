@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import at.fhj.swd13.pse.db.WeakPasswordException;
+import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 
 /**
  * The persistent class for the person database table.
@@ -270,17 +270,9 @@ public class Person implements Serializable {
 	 */
 	public void setPassword(String plainPassword) {
 
-		if (isWeakPassword(plainPassword)) {
-			throw new WeakPasswordException("Password strength is not sufficient");
-		}
-
 		hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
 	}
 
-	private boolean isWeakPassword(String plainPassword) {
-
-		return plainPassword == null || plainPassword.length() <= 6;
-	}
 
 	/**
 	 * Check whether the given plaintext password matches the user's password

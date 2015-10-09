@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.service;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
@@ -44,20 +45,28 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 */
 	@Override
 	public Community createChatCommunity(final String creatorUsername, final String communityName,
-			final boolean invitationOnly, final DbContext dbContext) {
+			final boolean invitationOnly, final DbContext dbContext)  {
 
-		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
+		try
+		{
+			Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
-		if (creator.isActive()) {
+			if (creator.isActive()) {
 
-			Community community = new Community(communityName);
+				Community community = new Community(communityName);
 
-			community.setCreatedBy(creator);
-			community.setInvitationOnly(invitationOnly);
+				community.setCreatedBy(creator);
+				community.setInvitationOnly(invitationOnly);
 
-			return createCommunity(creator, community, dbContext);
-			
-		} else throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername );
+				return createCommunity(creator, community, dbContext);
+				
+			} else throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername );	
+		}
+		catch(EntityNotFoundException ex)
+		{
+			//TODO Clarify which exception should be thrown
+			throw new IllegalStateException("Unkown person provided");
+		}
 	}
 
 	/* (non-Javadoc)

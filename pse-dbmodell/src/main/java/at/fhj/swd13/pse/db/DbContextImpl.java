@@ -80,7 +80,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	 * @see at.fhjoanneum.swd13.pse.db.DbContext#commit()
 	 */
 	@Override
-	public void commit() {
+	public void commit() throws ConstraintViolationException {
 
 		if (transaction == null || !transaction.isActive()) {
 
