@@ -60,4 +60,15 @@ public interface ChatService {
 	 */
 	List<Community> getUnconfirmedCommunities( DbContext dbContext);
 
+	/**
+	 * Confirm an unconfirmed community
+	 *  	
+	 * @param adminPerson administrator that confirms the community
+	 * 
+	 * @param unconfirmed the unconfirmed community
+	 * 
+	 * @throws IllegalStateException when the adminPerson is not active or not an admin
+	 */
+	void confirmCommunity( final Person adminPerson, Community unconfirmed);
+
 }

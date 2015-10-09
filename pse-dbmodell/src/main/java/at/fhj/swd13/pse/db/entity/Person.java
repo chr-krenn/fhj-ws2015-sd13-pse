@@ -36,6 +36,46 @@ import at.fhj.swd13.pse.db.WeakPasswordException;
 		@NamedQuery(name = "Person.findNameLike", query = "SELECT p FROM Person p WHERE p.userName LIKE :name OR p.lastName LIKE :name ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.deleteById", query = "DELETE FROM Person p WHERE p.personId = :id") })
 public class Person implements Serializable {
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + personId;
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Person)) {
+			return false;
+		}
+		Person other = (Person) obj;
+		if (personId != other.personId) {
+			return false;
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return false;
+			}
+		} else if (!userName.equals(other.userName)) {
+			return false;
+		}
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Id

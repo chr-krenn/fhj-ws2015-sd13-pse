@@ -80,7 +80,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * @param community
 	 * @param dbContext
 	 * 
-	 * @return the created, persisted but not commited community
+	 * @return the created, persisted but not committed community
 	 *
 	 * @throws DuplicateEntityException
 	 *             if the community already exists
@@ -107,5 +107,19 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new DuplicateEntityException("Community already exists: " + community.getName());
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.service.ChatService#confirmCommunity(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.entity.Community)
+	 */
+	public void confirmCommunity( final Person adminPerson, Community unconfirmed) {
+		
+		if ( adminPerson.isActive() && adminPerson.isAdmin() ) {
+		
+			adminPerson.addConfirmedCommunities( unconfirmed );
+			
+		} else {
+			throw new IllegalStateException( "Person confirming the community is either not active or not an admin: " + adminPerson.getUserName() );
+		}		
 	}
 }

@@ -172,6 +172,85 @@ public class DbChatServiceCommunity {
 
 			assertEquals(1, chatService.getUnconfirmedCommunities(context).size());
 		}
+	}
 
+	@Test
+	public void confirmGetUnconfirmed() throws Exception {
+
+		toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+
+		/*
+		 * one would expect this to work, albeit it does not... curse jpa, curse
+		 * curse curse I guess it is ok, since the entities are detached
+		 * anyway...
+		 * 
+		 * assertEquals(1, plainPerson.getMemberships().size() );
+		 */
+		try (DbContext context = contextProvider.getDbContext()) {
+			context.clearCache();
+
+			Community c = context.getCommunityDAO().getByName("unconfirmed");
+			assertFalse(c.isConfirmed());
+
+			Person p = context.getPersonDAO().getById(plainPerson.getPersonId());
+			assertEquals(1, p.getMemberships().size());
+			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName());
+
+			assertEquals(1, chatService.getUnconfirmedCommunities(context).size());
+
+			Community unconfirmed = chatService.getUnconfirmedCommunities(context).get(0);
+			chatService.confirmCommunity(adminPerson, unconfirmed);
+			
+			context.commit();
+		}
+
+		try (DbContext context = contextProvider.getDbContext()) {
+
+			Community c = context.getCommunityDAO().getByName("unconfirmed");
+			assertTrue(c.isConfirmed());
+			assertEquals(adminPerson, c.getConfirmedBy() );
+			
+			assertEquals(0, chatService.getUnconfirmedCommunities(context).size() );			
+		}
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void confirmGetUnconfirmedIllegal() throws Exception {
+
+		toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+
+		/*
+		 * one would expect this to work, albeit it does not... curse jpa, curse
+		 * curse curse I guess it is ok, since the entities are detached
+		 * anyway...
+		 * 
+		 * assertEquals(1, plainPerson.getMemberships().size() );
+		 */
+		try (DbContext context = contextProvider.getDbContext()) {
+			context.clearCache();
+
+			Community c = context.getCommunityDAO().getByName("unconfirmed");
+			assertFalse(c.isConfirmed());
+
+			Person p = context.getPersonDAO().getById(plainPerson.getPersonId());
+			assertEquals(1, p.getMemberships().size());
+			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName());
+
+			assertEquals(1, chatService.getUnconfirmedCommunities(context).size());
+
+			Community unconfirmed = chatService.getUnconfirmedCommunities(context).get(0);
+			chatService.confirmCommunity(p, unconfirmed);
+			
+			context.commit();
+		}
+
+		try (DbContext context = contextProvider.getDbContext()) {
+
+			Community c = context.getCommunityDAO().getByName("unconfirmed");
+			assertTrue(c.isConfirmed());
+			assertEquals(adminPerson, c.getConfirmedBy() );
+			
+			assertEquals(0, chatService.getUnconfirmedCommunities(context).size() );			
+		}
 	}
 }
