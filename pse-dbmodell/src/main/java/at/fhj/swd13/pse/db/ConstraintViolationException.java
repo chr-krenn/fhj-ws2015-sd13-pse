@@ -5,7 +5,7 @@ package at.fhj.swd13.pse.db;
  * This could either be a non-existing foreign key
  * , a duplicate value in a unique column ... 
  */
-public class ConstraintViolationException extends RuntimeException {
+public class ConstraintViolationException extends Exception {
 
 	/**
 	 * 
