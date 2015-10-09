@@ -85,7 +85,7 @@ public class Person implements Serializable {
 	private String locationBuilding;
 
 	@Column(name = "location_floor")
-	private int locationFloor;
+	private Integer locationFloor;
 
 	@Column(name = "location_room_number", length = 16)
 	private String locationRoomNumber;
