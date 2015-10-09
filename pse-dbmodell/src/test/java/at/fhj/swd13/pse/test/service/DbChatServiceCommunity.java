@@ -243,14 +243,5 @@ public class DbChatServiceCommunity {
 			
 			context.commit();
 		}
-
-		try (DbContext context = contextProvider.getDbContext()) {
-
-			Community c = context.getCommunityDAO().getByName("unconfirmed");
-			assertTrue(c.isConfirmed());
-			assertEquals(adminPerson, c.getConfirmedBy() );
-			
-			assertEquals(0, chatService.getUnconfirmedCommunities(context).size() );			
-		}
 	}
 }
