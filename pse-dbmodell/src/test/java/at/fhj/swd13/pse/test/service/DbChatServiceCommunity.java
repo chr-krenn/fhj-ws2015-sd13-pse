@@ -14,6 +14,7 @@ import org.junit.Test;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.DbContextProvider;
 import at.fhj.swd13.pse.db.DbContextProviderImpl;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Community;
@@ -79,6 +80,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+			
+			dbContext.commit();
 		}
 
 		/*
@@ -107,6 +110,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));
+			
+			dbContext.commit();
 		}
 
 		try (DbContext context = contextProvider.getDbContext()) {
@@ -139,7 +144,7 @@ public class DbChatServiceCommunity {
 		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = EntityNotFoundException.class)
 	public void unknownPerson() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -156,6 +161,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "sanityR", false));
+			
+			dbContext.commit();
 		}
 
 		try (DbContext context = contextProvider.getDbContext()) {
@@ -175,6 +182,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+			
+			dbContext.commit();
 		}
 		/*
 		 * one would expect this to work, albeit it does not... curse jpa, curse
@@ -205,6 +214,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+			
+			dbContext.commit();
 		}
 
 		/*
@@ -252,6 +263,8 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+			
+			dbContext.commit();
 		}
 		/*
 		 * one would expect this to work, albeit it does not... curse jpa, curse
