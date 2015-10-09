@@ -17,6 +17,28 @@ public class UserService extends ServiceBase {
 	}
 	
 	
+	/**
+	 * Get a user and log the user in
+	 * 
+	 * @param username username of the user to log in (case sensitive)
+	 * @param plainPassword plaintext password (case sensitive)
+	 * 
+	 * @return instance of a person or null if it could not be found or logged in or may not log in 
+	 */
+	public Person loginUser( final String username, final String plainPassword, DbContext dbContext ) {
+		
+		Person p = dbContext.getPersonDAO().getByUsername(username);
+		
+		
+		if ( p != null 
+				&& p.isLoginAllowed()
+				&& p.isMatchingPassword(plainPassword)) {
+			return p;
+		}
+		
+		return null;
+	}
+	
 	public int updateNullPasswords( ) throws Exception {
 		try ( DbContext context = contextProvider.getDbContext() ) {
 			

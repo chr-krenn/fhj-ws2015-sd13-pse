@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.test.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class DbUserServiceTest {
 
 	private UserService userService;
 
-	
+	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");	
 	private List<Object> toDelete = new ArrayList<Object>();
 
 	@Before
@@ -37,6 +38,8 @@ public class DbUserServiceTest {
 
 			context.getPersonDAO().getById(1).setHashedPassword("--");
 			
+			context.getPersonDAO().insert(plainPerson);
+
 			context.commit();
 		}
 	}
@@ -50,6 +53,8 @@ public class DbUserServiceTest {
 				context.remove(o);
 			}
 
+			context.getPersonDAO().remove( plainPerson.getPersonId() );
+			
 			context.commit();
 		}
 	}
@@ -67,5 +72,41 @@ public class DbUserServiceTest {
 			assertNotNull(p);
 			assertNotNull(p.getHashedPassword());
 		}
+	}
+	
+	@Test
+	public void loginUser() throws Exception {
+		
+		userService = new UserService();
+		userService.setDbContext(contextProvider);
+		
+		try( DbContext dbContext = contextProvider.getDbContext()) {
+		
+			assertNotNull( userService.loginUser(plainPerson.getUserName(), "12345678", dbContext));			
+		}		
+	}
+	
+	@Test
+	public void loginUserUnknown() throws Exception {
+		
+		userService = new UserService();
+		userService.setDbContext(contextProvider);
+		
+		try( DbContext dbContext = contextProvider.getDbContext()) {
+		
+			assertNull( userService.loginUser("xxxPerson", "12345678", dbContext));			
+		}		
+	}
+
+	@Test
+	public void loginUserInvalidPassword() throws Exception {
+		
+		userService = new UserService();
+		userService.setDbContext(contextProvider);
+		
+		try( DbContext dbContext = contextProvider.getDbContext()) {
+		
+			assertNull( userService.loginUser(plainPerson.getUserName(), "gustl", dbContext));			
+		}		
 	}
 }
