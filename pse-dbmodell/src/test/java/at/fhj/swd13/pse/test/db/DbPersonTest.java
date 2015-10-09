@@ -47,21 +47,14 @@ public class DbPersonTest {
 		}
 	}
 
-	@Test
-	public void getByIdNoneFound() {
+	@Test(expected=EntityNotFoundException.class)
+	public void getByIdNoneFound() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			Person p = personDAO.getById(-1); // 1 is the system internal user
-												// that should always exist
-
-			assertEquals(p, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception " + e.getMessage());
+			personDAO.getById(-1); 
 		}
 	}
 
@@ -203,34 +196,6 @@ public class DbPersonTest {
 
 			throw e;
 		}
-	}
-
-	@Test(expected = WeakPasswordException.class)
-	public void passwordWeakNull() {
-
-		new Person("etester", "Tester", "Ehrenfried", null);
-	}
-
-	@Test(expected = WeakPasswordException.class)
-	public void passwordWeakEmpty() {
-
-		new Person("etester", "Tester", "Ehrenfried", "");
-	}
-
-	@Test(expected = WeakPasswordException.class)
-	public void passwordWeakShort() {
-
-		new Person("etester", "Tester", "Ehrenfried", "123456");
-	}
-
-	@Test
-	public void passwordOk() {
-
-		Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
-
-		assertNotEquals("1234567", p1.getHashedPassword());
-		assertTrue(p1.isMatchingPassword("1234567"));
-		assertFalse(p1.isMatchingPassword("123456788"));
 	}
 
 	@Test(expected = ParameterException.class)

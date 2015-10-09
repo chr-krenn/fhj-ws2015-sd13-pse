@@ -1,7 +1,12 @@
 package at.fhj.swd13.pse.service;
 
+import javax.inject.Inject;
+
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.user.PasswordStrengthValidator;
+import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 
 /**
  * User Service, object that provides all higher level logic for managing users
@@ -9,13 +14,15 @@ import at.fhj.swd13.pse.db.entity.Person;
  */
 public class UserService extends ServiceBase {
 
+	@Inject
+	private PasswordStrengthValidator passwordStrengthValidator;
+	
 	/**
 	 * Create an instance of the user service
 	 */
 	public UserService() {
 		super();
 	}
-	
 	
 	/**
 	 * Get a user and log the user in
@@ -62,4 +69,36 @@ public class UserService extends ServiceBase {
 		
 		return userCount;
 	}	
+	
+	/**
+	 * Set a new instance that checks the strength of the password
+	 * 
+	 * @param passwordStrengthValidator new instance of the passwordStrengthValidator
+	 * 
+	 * 
+	 */
+	public void setPasswordStrengthValidator( PasswordStrengthValidator passwordStrengthValidator ) {
+		
+		this.passwordStrengthValidator = passwordStrengthValidator;
+	}
+	
+	/**
+	 * 
+	 * Set a new password for the user
+	 * 
+	 * @param username username of for whom to change the password
+	 * @param newPlainPassword plaintext of the new password
+	 * @param dbContext connection to the persistent storage
+	 * 
+	 * @throws WeakPasswordException password does not meet strength criteria
+	 * @throws EntityNotFoundException when the username is not associated with any existing user
+	 */
+	public void setPassword( final String username, final String newPlainPassword, DbContext dbContext ) throws WeakPasswordException, EntityNotFoundException {
+	
+		Person p = dbContext.getPersonDAO().getByUsername(username, true);
+		
+		passwordStrengthValidator.validate( newPlainPassword );
+
+		p.setPassword(newPlainPassword);
+	}
 }

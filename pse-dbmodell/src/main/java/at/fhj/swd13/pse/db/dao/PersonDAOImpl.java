@@ -72,12 +72,12 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 		final Query q = dbContext.createNamedQuery("Person.findById");
 		q.setParameter("id", personId);
 
-		Person result =  fetchSingle(q);
-		
-		if(result == null)
+		Person result = fetchSingle(q);
+
+		if (result == null)
 			throw new EntityNotFoundException("Person not found");
-		
-		return result; 
+
+		return result;
 	}
 
 	/*
@@ -100,23 +100,24 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhj.swd13.pse.db.PersonDAO#getByUsername(java.lang.String)
 	 */
 	@Override
-	public Person getByUsername(String username, boolean assertRequired ) throws EntityNotFoundException {
+	public Person getByUsername(String username, boolean assertRequired) throws EntityNotFoundException {
 
 		final Query q = dbContext.createNamedQuery("Person.findByUserName");
 		q.setParameter("uname", username);
 
 		Person p = fetchSingle(q);
-		
-		if ( p == null ) {
-			
-			
-			throw new EntityNotFoundException( "Unknown user with username " + username );
+
+		if (p == null) {
+
+			throw new EntityNotFoundException("Unknown user with username " + username);
 		}
-		
+
 		return p;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons(int, int)
 	 */
 	@SuppressWarnings("unchecked")
@@ -136,7 +137,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 		return (List<Person>) q.getResultList();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
