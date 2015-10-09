@@ -6,7 +6,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
+
+import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.service.FeedService;
 
 /**
  * 
@@ -18,15 +22,14 @@ public class SimpleFeedController {
 
     @Produces
     @Named
-	private List<FeedContent> feedContents;
+	private List<Message> messages;
+    
+    @Inject
+    private FeedService feedService;
     
     @PostConstruct
     public void postConstruct() {
-    	feedContents = new ArrayList<>();
     	
-    	FeedContent content = new FeedContent("Hallo");
-    	feedContents.add(content);
-    	feedContents.add(new FeedContent("Toll"));
+    	messages = feedService.loadFeed();
     }
-    
 }
