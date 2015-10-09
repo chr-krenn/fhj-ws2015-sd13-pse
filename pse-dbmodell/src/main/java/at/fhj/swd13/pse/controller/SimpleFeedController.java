@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
