@@ -1,12 +1,14 @@
 package at.fhj.swd13.pse.service;
 
-import at.fhj.swd13.pse.db.DbContextProvider;
+import at.fhj.swd13.pse.db.DbContext;
 
 public abstract class ServiceBase {
 
-	protected DbContextProvider contextProvider;
+	protected final DbContext dbContext;
 
-	public void setDbContext(final DbContextProvider contextProvider) {
-		this.contextProvider = contextProvider;
-	}
+	protected ServiceBase ( DbContext dbContext ) {
+		
+		
+		this.dbContext = dbContext;
+	}	
 }

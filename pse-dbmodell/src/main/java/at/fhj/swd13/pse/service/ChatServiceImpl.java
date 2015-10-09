@@ -19,66 +19,50 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	/**
 	 * Create an instance of the chat service
 	 */
-	public ChatServiceImpl() {
-		super();
+	public ChatServiceImpl(DbContext dbContext) {
+		super(dbContext);
 	}
 
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.service.ChatService#createChatCommunity(java.lang.String, java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.service.ChatService#createChatCommunity(java.lang.
+	 * String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
 	public Community createChatCommunity(final String creatorUsername, final String communityName,
-			final boolean invitationOnly) throws Exception {
+			final boolean invitationOnly) throws EntityNotFoundException {
 
-		try (DbContext dbContext = contextProvider.getDbContext()) {
+		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
-			Community community = createChatCommunity(creatorUsername, communityName, invitationOnly, dbContext);
+		if (creator.isActive()) {
 
-			dbContext.commit();
+			Community community = new Community(communityName);
 
-			return community;
+			community.setCreatedBy(creator);
+			community.setInvitationOnly(invitationOnly);
+
+			return createCommunity(creator, community, dbContext);
+
+		} else {
+			throw new IllegalStateException(
+					"User is not active and can therefore not create communities: " + creatorUsername);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.service.ChatService#createChatCommunity(java.lang.String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhj.swd13.pse.service.ChatService#getUnconfirmedCommunities(at.fhj.
+	 * swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public Community createChatCommunity(final String creatorUsername, final String communityName,
-			final boolean invitationOnly, final DbContext dbContext)  {
+	public List<Community> getUnconfirmedCommunities() {
 
-		try
-		{
-			Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
-
-			if (creator.isActive()) {
-
-				Community community = new Community(communityName);
-
-				community.setCreatedBy(creator);
-				community.setInvitationOnly(invitationOnly);
-
-				return createCommunity(creator, community, dbContext);
-				
-			} else throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername );	
-		}
-		catch(EntityNotFoundException ex)
-		{
-			//TODO Clarify which exception should be thrown
-			throw new IllegalStateException("Unkown person provided");
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.service.ChatService#getUnconfirmedCommunities(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.DbContext)
-	 */
-	@Override
-	public List<Community> getUnconfirmedCommunities(  DbContext dbContext ) {
-		
-		
 		return dbContext.getCommunityDAO().getUnconfirmedCommunites();
 	}
-	
+
 	/**
 	 * Internal Helper to create a community and when the creator is admin set
 	 * it to confirmed
@@ -105,12 +89,12 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			}
 
 			communityDao.insert(community);
-			CommunityMember memberShip = community.addMember( creator, true );
-			
-			if ( memberShip != null ) {
-				dbContext.persist( memberShip );
+			CommunityMember memberShip = community.addMember(creator, true);
+
+			if (memberShip != null) {
+				dbContext.persist(memberShip);
 			}
-			
+
 			return community;
 		} else {
 			throw new DuplicateEntityException("Community already exists: " + community.getName());
@@ -118,17 +102,22 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.service.ChatService#confirmCommunity(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.entity.Community)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhj.swd13.pse.service.ChatService#confirmCommunity(at.fhj.swd13.pse.db
+	 * .entity.Person, at.fhj.swd13.pse.db.entity.Community)
 	 */
-	public void confirmCommunity( final Person adminPerson, Community unconfirmed) {
-		
-		if ( adminPerson.isActive() && adminPerson.isAdmin() ) {
-		
-			adminPerson.addConfirmedCommunities( unconfirmed );
-			
+	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+
+			adminPerson.addConfirmedCommunities(unconfirmed);
+
 		} else {
-			throw new IllegalStateException( "Person confirming the community is either not active or not an admin: " + adminPerson.getUserName() );
-		}		
+			throw new IllegalStateException("Person confirming the community is either not active or not an admin: "
+					+ adminPerson.getUserName());
+		}
 	}
 }

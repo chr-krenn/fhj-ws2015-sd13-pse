@@ -19,9 +19,10 @@ public class UserService extends ServiceBase {
 	
 	/**
 	 * Create an instance of the user service
+	 * @param dbContext the connection to the persistent storage with which to work
 	 */
-	public UserService() {
-		super();
+	public UserService( DbContext dbContext) {
+		super( dbContext);
 	}
 	
 	/**
@@ -32,7 +33,7 @@ public class UserService extends ServiceBase {
 	 * 
 	 * @return instance of a person or null if it could not be found or logged in or may not log in 
 	 */
-	public Person loginUser( final String username, final String plainPassword, DbContext dbContext ) {
+	public Person loginUser( final String username, final String plainPassword ) {
 		
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 		
@@ -46,18 +47,12 @@ public class UserService extends ServiceBase {
 		return null;
 	}
 	
-	public int updateNullPasswords( ) throws Exception {
-		try ( DbContext context = contextProvider.getDbContext() ) {
-			
-			int userCount = updateNullPasswords( context );
-			
-			context.commit();
-			
-			return userCount;
-		}
-	}
-	
-	public int updateNullPasswords( DbContext dbContext ) {
+	/**
+	 * Update all passwords that are null or '--' with 12345678
+	 *  
+	 * @return the number of passwords changed
+	 */
+	public int updateNullPasswords( ) {
 		
 		int userCount = 0;
 		
@@ -88,12 +83,11 @@ public class UserService extends ServiceBase {
 	 * 
 	 * @param username username of for whom to change the password
 	 * @param newPlainPassword plaintext of the new password
-	 * @param dbContext connection to the persistent storage
 	 * 
 	 * @throws WeakPasswordException password does not meet strength criteria
 	 * @throws EntityNotFoundException when the username is not associated with any existing user
 	 */
-	public void setPassword( final String username, final String newPlainPassword, DbContext dbContext ) throws WeakPasswordException, EntityNotFoundException {
+	public void setPassword( final String username, final String newPlainPassword ) throws WeakPasswordException, EntityNotFoundException {
 	
 		Person p = dbContext.getPersonDAO().getByUsername(username, true);
 		
