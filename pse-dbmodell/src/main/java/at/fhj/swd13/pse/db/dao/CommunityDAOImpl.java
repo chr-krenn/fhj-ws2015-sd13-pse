@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.db.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.DAOBase;
@@ -34,7 +36,16 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 		return fetchSingle(q);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getUnconfirmedCommunites()
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Community> getUnconfirmedCommunites() {
+		
+		return (List<Community>)dbContext.createNamedQuery("Community.findUnconfirmed").getResultList();		
+	}
 	/*
 	 * (non-Javadoc)
 	 * 

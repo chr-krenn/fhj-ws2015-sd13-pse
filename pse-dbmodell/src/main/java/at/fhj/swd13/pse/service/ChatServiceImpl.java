@@ -61,13 +61,13 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.service.ChatService#getMyUnconfirmedCommunites(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.DbContext)
+	 * @see at.fhj.swd13.pse.service.ChatService#getUnconfirmedCommunities(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public List<Community> getMyUnconfirmedCommunites( final Person communityAdmin, DbContext dbContext ) {
+	public List<Community> getUnconfirmedCommunities(  DbContext dbContext ) {
 		
 		
-		return null;
+		return dbContext.getCommunityDAO().getUnconfirmedCommunites();
 	}
 	
 	/**

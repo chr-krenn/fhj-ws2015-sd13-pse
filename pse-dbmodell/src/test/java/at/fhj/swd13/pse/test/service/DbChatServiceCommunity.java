@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.test.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +45,8 @@ public class DbChatServiceCommunity {
 		try (DbContext context = contextProvider.getDbContext()) {
 
 			context.persist(plainPerson);
-			
-			adminPerson.setIsAdmin( true );
+
+			adminPerson.setIsAdmin(true);
 			context.persist(adminPerson);
 
 			inActivePerson.setIsActive(false);
@@ -80,20 +82,22 @@ public class DbChatServiceCommunity {
 
 		toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
 
-		/* one would expect this to work, albeit it does not... curse jpa, curse curse curse
-		 * I guess it is ok, since the entities are detached anyway...
-		 *  
-		 * assertEquals(1, plainPerson.getMemberships().size() ); 
+		/*
+		 * one would expect this to work, albeit it does not... curse jpa, curse
+		 * curse curse I guess it is ok, since the entities are detached
+		 * anyway...
+		 * 
+		 * assertEquals(1, plainPerson.getMemberships().size() );
 		 */
 		try (DbContext context = contextProvider.getDbContext()) {
 			context.clearCache();
 
 			Community c = context.getCommunityDAO().getByName("unconfirmed");
 			assertFalse(c.isConfirmed());
-			
-			Person p = context.getPersonDAO().getById( plainPerson.getPersonId() );
-			assertEquals(1, p.getMemberships().size() );
-			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName() );
+
+			Person p = context.getPersonDAO().getById(plainPerson.getPersonId());
+			assertEquals(1, p.getMemberships().size());
+			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName());
 		}
 	}
 
@@ -109,26 +113,26 @@ public class DbChatServiceCommunity {
 			assertTrue(c.isConfirmed());
 		}
 	}
-	
-	@Test(expected=DuplicateEntityException.class)
+
+	@Test(expected = DuplicateEntityException.class)
 	public void duplicate() throws Exception {
 
-		toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));		
-		toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));		
+		toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));
+		toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));
 	}
 
-	@Test(expected=IllegalStateException.class)
+	@Test(expected = IllegalStateException.class)
 	public void inActivePerson() throws Exception {
 
-		toDelete.add(chatService.createChatCommunity( inActivePerson.getUserName(), "confirmed", false));		
+		toDelete.add(chatService.createChatCommunity(inActivePerson.getUserName(), "confirmed", false));
 	}
 
-	@Test(expected=EntityNotFoundException.class)
+	@Test(expected = EntityNotFoundException.class)
 	public void unknownPerson() throws Exception {
 
-		toDelete.add(chatService.createChatCommunity( "gustl", "confirmed", false));		
+		toDelete.add(chatService.createChatCommunity("gustl", "confirmed", false));
 	}
-	
+
 	@Test
 	public void sanityPersonCommunity() throws Exception {
 
@@ -136,11 +140,38 @@ public class DbChatServiceCommunity {
 
 		try (DbContext context = contextProvider.getDbContext()) {
 			context.clearCache();
-			
-			Person person = context.getPersonDAO().getById( plainPerson.getPersonId() );
-			
-			assertEquals( 1, person.getCreatedCommunities().size() );
-			assertEquals("sanityR", person.getCreatedCommunities().get(0).getName() );
+
+			Person person = context.getPersonDAO().getById(plainPerson.getPersonId());
+
+			assertEquals(1, person.getCreatedCommunities().size());
+			assertEquals("sanityR", person.getCreatedCommunities().get(0).getName());
 		}
-	}	
+	}
+
+	@Test
+	public void getUnconfirmed() throws Exception {
+
+		toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
+
+		/*
+		 * one would expect this to work, albeit it does not... curse jpa, curse
+		 * curse curse I guess it is ok, since the entities are detached
+		 * anyway...
+		 * 
+		 * assertEquals(1, plainPerson.getMemberships().size() );
+		 */
+		try (DbContext context = contextProvider.getDbContext()) {
+			context.clearCache();
+
+			Community c = context.getCommunityDAO().getByName("unconfirmed");
+			assertFalse(c.isConfirmed());
+
+			Person p = context.getPersonDAO().getById(plainPerson.getPersonId());
+			assertEquals(1, p.getMemberships().size());
+			assertEquals("unconfirmed", p.getMemberships().get(0).getCommunity().getName());
+
+			assertEquals(1, chatService.getUnconfirmedCommunities(context).size());
+		}
+
+	}
 }

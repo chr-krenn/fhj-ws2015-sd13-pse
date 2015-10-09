@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.db.dao;
 
+import java.util.List;
+
 import at.fhj.swd13.pse.db.entity.Community;
 
 public interface CommunityDAO {
@@ -36,4 +38,11 @@ public interface CommunityDAO {
 	 * @param community
 	 */
 	void remove(final Community community);
+
+	/**
+	 * Get a list of all unconfirmed communities
+	 * 
+	 * @return a list of all currently unconfirmed communities or an empty list
+	 */
+	List<Community> getUnconfirmedCommunites();
 }

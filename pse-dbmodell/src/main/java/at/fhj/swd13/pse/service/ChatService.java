@@ -51,6 +51,13 @@ public interface ChatService {
 	Community createChatCommunity(String creatorUsername, String communityName, boolean invitationOnly,
 			DbContext dbContext);
 
-	List<Community> getMyUnconfirmedCommunites(Person communityAdmin, DbContext dbContext);
+	/**
+	 * Get a list of all currently unconfirmed communities
+	 * 
+	 * @param dbContext session to the persistent store
+	 * 
+	 * @return List of unconfirmed communities or an empty list
+	 */
+	List<Community> getUnconfirmedCommunities( DbContext dbContext);
 
 }
