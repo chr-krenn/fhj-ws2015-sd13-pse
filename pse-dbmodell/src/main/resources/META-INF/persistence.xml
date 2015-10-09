@@ -7,19 +7,6 @@
 
 		<jta-data-source>java:jboss/datasources/pseDS</jta-data-source>
 		
-		<class>at.fhj.swd13.pse.db.entity.Community</class>
-		<class>at.fhj.swd13.pse.db.entity.CommunityMember</class>
-		<class>at.fhj.swd13.pse.db.entity.DeliverySystem</class>
-		<class>at.fhj.swd13.pse.db.entity.Document</class>
-		<class>at.fhj.swd13.pse.db.entity.MesasgeRating</class>
-		<class>at.fhj.swd13.pse.db.entity.Message</class>
-		<class>at.fhj.swd13.pse.db.entity.MessageTag</class>
-		<class>at.fhj.swd13.pse.db.entity.Person</class>
-		<class>at.fhj.swd13.pse.db.entity.PersonMessage</class>
-		<class>at.fhj.swd13.pse.db.entity.PersonRelation</class>
-		<class>at.fhj.swd13.pse.db.entity.PersonTag</class>
-		<class>at.fhj.swd13.pse.db.entity.Tag</class>
-		
 		<properties>
 			<property name="format_sql" value="false" />
 			<property name="use_sql_comments" value="false" />
