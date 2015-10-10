@@ -1,18 +1,17 @@
-package at.fhj.swd13.pse.service;
+package at.fhj.swd13.pse.domain.user;
 
 import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.domain.user.PasswordStrengthValidator;
-import at.fhj.swd13.pse.domain.user.WeakPasswordException;
+import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
  * User Service, object that provides all higher level logic for managing users
  * 
  */
-public class UserService extends ServiceBase {
+public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private PasswordStrengthValidator passwordStrengthValidator;
@@ -21,18 +20,14 @@ public class UserService extends ServiceBase {
 	 * Create an instance of the user service
 	 * @param dbContext the connection to the persistent storage with which to work
 	 */
-	public UserService( DbContext dbContext) {
+	public UserServiceImpl( DbContext dbContext) {
 		super( dbContext);
 	}
 	
-	/**
-	 * Get a user and log the user in
-	 * 
-	 * @param username username of the user to log in (case sensitive)
-	 * @param plainPassword plaintext password (case sensitive)
-	 * 
-	 * @return instance of a person or null if it could not be found or logged in or may not log in 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#loginUser(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public Person loginUser( final String username, final String plainPassword ) {
 		
 		Person p = dbContext.getPersonDAO().getByUsername(username);
@@ -47,11 +42,10 @@ public class UserService extends ServiceBase {
 		return null;
 	}
 	
-	/**
-	 * Update all passwords that are null or '--' with 12345678
-	 *  
-	 * @return the number of passwords changed
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#updateNullPasswords()
 	 */
+	@Override
 	public int updateNullPasswords( ) {
 		
 		int userCount = 0;
@@ -65,28 +59,19 @@ public class UserService extends ServiceBase {
 		return userCount;
 	}	
 	
-	/**
-	 * Set a new instance that checks the strength of the password
-	 * 
-	 * @param passwordStrengthValidator new instance of the passwordStrengthValidator
-	 * 
-	 * 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#setPasswordStrengthValidator(at.fhj.swd13.pse.domain.user.PasswordStrengthValidator)
 	 */
+	@Override
 	public void setPasswordStrengthValidator( PasswordStrengthValidator passwordStrengthValidator ) {
 		
 		this.passwordStrengthValidator = passwordStrengthValidator;
 	}
 	
-	/**
-	 * 
-	 * Set a new password for the user
-	 * 
-	 * @param username username of for whom to change the password
-	 * @param newPlainPassword plaintext of the new password
-	 * 
-	 * @throws WeakPasswordException password does not meet strength criteria
-	 * @throws EntityNotFoundException when the username is not associated with any existing user
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#setPassword(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setPassword( final String username, final String newPlainPassword ) throws WeakPasswordException, EntityNotFoundException {
 	
 		Person p = dbContext.getPersonDAO().getByUsername(username, true);

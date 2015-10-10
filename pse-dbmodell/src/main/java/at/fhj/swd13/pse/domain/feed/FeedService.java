@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhj.swd13.pse.service;
+package at.fhj.swd13.pse.domain.feed;
 
 import java.util.List;
 

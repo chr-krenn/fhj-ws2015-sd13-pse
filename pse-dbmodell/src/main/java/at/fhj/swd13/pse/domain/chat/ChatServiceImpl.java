@@ -1,4 +1,4 @@
-package at.fhj.swd13.pse.service;
+package at.fhj.swd13.pse.domain.chat;
 
 import java.util.List;
 
@@ -8,6 +8,8 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.service.DuplicateEntityException;
+import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
  * Chat service that provides all functionality for chatting and administration

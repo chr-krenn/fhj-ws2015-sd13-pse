@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import at.fhj.swd13.pse.db.entity.Message;
-import at.fhj.swd13.pse.service.FeedService;
+import at.fhj.swd13.pse.domain.feed.FeedService;
 
 /**
  * 

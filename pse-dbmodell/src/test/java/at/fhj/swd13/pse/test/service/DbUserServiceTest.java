@@ -16,8 +16,9 @@ import at.fhj.swd13.pse.db.DbContextProvider;
 import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.PasswortStrengthValidatorImpl;
+import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.domain.user.WeakPasswordException;
-import at.fhj.swd13.pse.service.UserService;
 
 public class DbUserServiceTest {
 
@@ -61,7 +62,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertEquals(1, userService.updateNullPasswords());
@@ -80,7 +81,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 			assertNotNull(userService.loginUser(plainPerson.getUserName(), "12345678"));
 		}
@@ -91,7 +92,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNull(userService.loginUser("xxxPerson", "12345678"));
@@ -102,7 +103,7 @@ public class DbUserServiceTest {
 	public void loginUserInvalidPassword() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			final UserService userService = new UserService(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNull(userService.loginUser(plainPerson.getUserName(), "gustl"));
@@ -117,7 +118,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService( dbContext );
+			final UserService userService = new UserServiceImpl( dbContext );
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), "gustavgusgustav" );
@@ -127,7 +128,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService( dbContext );
+			final UserService userService = new UserServiceImpl( dbContext );
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNotNull(userService.loginUser(plainPerson.getUserName(), "gustavgusgustav" ));
@@ -139,7 +140,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService( dbContext );
+			final UserService userService = new UserServiceImpl( dbContext );
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), null );
@@ -151,7 +152,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService( dbContext );
+			final UserService userService = new UserServiceImpl( dbContext );
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 			
 			
@@ -164,7 +165,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserService( dbContext );
+			final UserService userService = new UserServiceImpl( dbContext );
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), "3344" );
