@@ -1,7 +1,6 @@
 package at.fhj.swd13.pse.db;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
@@ -13,8 +12,14 @@ import at.fhj.swd13.pse.db.dao.TagDAOImpl;
 
 public class DbContextJtaImpl implements DbContext {
 
-	@PersistenceContext
+	// @PersistenceContext
 	private EntityManager entityManager;
+
+	public DbContextJtaImpl(EntityManager entityManager) {
+
+		this.entityManager = entityManager;
+
+	}
 
 	@Override
 	public void persist(Object target) {
@@ -79,7 +84,7 @@ public class DbContextJtaImpl implements DbContext {
 		return new CommunityDAOImpl(this);
 	}
 
+
 	@Override
-	public void close() throws Exception {
-	}
+	public void close() throws Exception {}
 }
