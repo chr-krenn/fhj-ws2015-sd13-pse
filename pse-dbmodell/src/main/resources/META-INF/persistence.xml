@@ -12,6 +12,7 @@
 			<property name="use_sql_comments" value="false" />
 		
 			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 		</properties>
 		
 	</persistence-unit>
