@@ -185,6 +185,9 @@ public class Person implements Serializable {
 	@OneToMany(mappedBy = "person", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
 	private List<PersonTag> personTags;
 
+	@Column(name = "current_session_id", nullable = true, length = 64)
+	private String currentSessionId;
+
 	public Person() {
 
 		isActive = true;
@@ -373,6 +376,21 @@ public class Person implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	/**
+	 * @return the currentSessionId
+	 */
+	public String getCurrentSessionId() {
+		return currentSessionId;
+	}
+
+	
+	/**
+	 * @param currentSessionId the currentSessionId to set
+	 */
+	public void setCurrentSessionId(String currentSessionId) {
+		this.currentSessionId = currentSessionId;
 	}
 
 	public List<Community> getPrivateCommunities() {
