@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.db;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
+import javax.inject.Named;
 
 public class DbContextProviderImpl implements DbContextProvider {
 
@@ -19,7 +21,7 @@ public class DbContextProviderImpl implements DbContextProvider {
 		return new DbContextImpl();		
 	}	
 	
-	@Produces
+	@Named @Produces @CurrentDbContext @RequestScoped
 	public DbContext getDbContextJta() {
 		return new DbContextJtaImpl();
 	}

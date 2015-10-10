@@ -5,7 +5,7 @@ import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
+import at.fhj.swd13.pse.db.CurrentDbContext;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.service.UserService;
 
@@ -13,7 +13,7 @@ import at.fhj.swd13.pse.service.UserService;
 @Singleton
 public class SetDefaultPasswords {
 
-	@Inject
+	@Inject @CurrentDbContext
 	private DbContext dbContext;
 	
 	@PostConstruct
