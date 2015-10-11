@@ -3,26 +3,68 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 		<h1>Welcome to PSE!</h1>
-		
+
 		<h:dataTable var="message" value="#{messages}"
-            rendered="#{not empty messages}"
-            styleClass="simpletablestyle">
-            <h:column>
-                <f:facet name="header">Headline</f:facet>
+			rendered="#{not empty messages}" styleClass="simpletablestyle">
+			<h:column>
+				<f:facet name="header">Headline</f:facet>
                 #{message.headline}
             </h:column>
-            <h:column>
-                <f:facet name="header">Message</f:facet>
-                #{message.message}
+			<h:column>
+				<f:facet name="header">Message</f:facet>
+                #{sesionService.username}
             </h:column>
-            <h:column>
-                <f:facet name="header">createdOn</f:facet>
-                #{message.createdOn}
-            </h:column>
-        </h:dataTable>
-		
+			<h:column>
+				<f:facet name="header">createdOn</f:facet>
+			</h:column>
+		</h:dataTable>
+		<h:form>
+			<div id="#loginLink">
+				Um mit der Arbeit zu beginnen, müssen sie sich <em><span
+					onclick="PF('dlg').show()">einloggen!</span></em>
+			</div>
+
+			<div>Weiter gehts <a href="TestLoggedIn.jsf">hier</a></div>
+
+			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+
+			<p:dialog header="Login" widgetVar="dlg" resizeable="false">
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel for="username" value="Username:" />
+					<p:inputText id="username" value="#{loginController.username}"
+						required="true" label="username" />
+
+					<h:outputLabel for="password" value="Passwort:" />
+					<p:password id="password" value="#{loginController.password}"
+						required="true" label="username" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Anmelden" update="growl"
+							actionListener="#{loginController.login}"
+							oncomplete="handleLoginResult(xhr,status,args)" />
+						<p:commandButton value="Abbrechen" update="growl"
+							onclick="PF('dlg').hide();" />
+					</f:facet>
+
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+		<script type="text/javascript">
+			function handleLoginResult(xhr, status, args) {
+				if (args.validationFailed || !args.loggedIn) {
+					PF('dlg').jq.effect("shake", {
+						times : 5
+					}, 100);
+				} else {
+					PF('dlg').hide();
+					$('#loginLink').fadeOut();
+				}
+			}
+		</script>
 	</ui:define>
 </ui:composition>
