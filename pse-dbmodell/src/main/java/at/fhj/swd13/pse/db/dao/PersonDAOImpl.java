@@ -102,12 +102,9 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	@Override
 	public Person getByUsername(String username, boolean assertRequired) throws EntityNotFoundException {
 
-		final Query q = dbContext.createNamedQuery("Person.findByUserName");
-		q.setParameter("uname", username);
+		Person p = getByUsername(username);
 
-		Person p = fetchSingle(q);
-
-		if (p == null) {
+		if (assertRequired && p == null) {
 
 			throw new EntityNotFoundException("Unknown user with username " + username);
 		}
