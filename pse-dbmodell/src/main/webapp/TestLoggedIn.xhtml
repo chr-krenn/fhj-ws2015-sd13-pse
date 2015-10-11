@@ -8,7 +8,52 @@
 	<ui:define name="content">
 	
 	<h:form>
-		<h:outputLabel value="Username: #{testLoggedInController.username}" />
+		<h:outputLabel for="username" value="Username: #{testLoggedInController.username}" />
+	
+	    <h:panelGrid columns="2" cellpadding="5">
+	        <p:outputLabel for="firstName" value="Vorname: " />
+	        <p:inputMask id="firstName" value="#{testLoggedInController.user.firstName}" disabled="True"/>
+	        
+	        <p:outputLabel for="lastName" value="Nachname: " />
+	        <p:inputMask id="lastName" value="#{testLoggedInController.user.lastName}" disabled="True"/>
+	        
+	        <p:outputLabel for="emailAddress" value="E-Mail: " />
+	        <p:inputMask id="emailAddress" value="#{testLoggedInController.user.emailAddress}" disabled="True"/>
+	        
+	        <p:outputLabel for="department" value="Abteilung: " />
+	        <p:inputMask id="department" value="#{testLoggedInController.user.department}" disabled="True"/>
+	 
+	        <p:outputLabel for="locationRoomNumber" value="Zimmer: " />
+	        <p:inputMask id="locationRoomNumber" value="#{testLoggedInController.user.locationRoomNumber}" disabled="True"/>
+	 
+	        <p:outputLabel for="phoneNumberMobile" value="Telefonnummer: " />
+	        <p:inputMask id="phoneNumberMobile" value="#{testLoggedInController.user.phoneNumberMobile}" disabled="True"/>
+
+	 
+	    </h:panelGrid>
+       	
+	    <p:dialog widgetVar="dlg" modal="true" resizable="false" header="Values" showEffect="fade"> 
+	        <p:panelGrid id="display" columns="2" columnClasses="label,value">
+	            <h:outputText value="Vorname: " />
+	            <h:outputText id="firstNameValue" value="#{testLoggedInController.user.firstName}" />
+	 
+	            <h:outputText value="Nachname: " />
+	            <h:outputText id="lastNameValue" value="#{testLoggedInController.user.lastName}" />
+	            
+	            <h:outputText value="E-Mail: " />
+	            <h:outputText id="emailAddressValue" value="#{testLoggedInController.user.emailAddress}" />
+	 
+	            <h:outputText value="Abteilung: " />
+	            <h:outputText id="departmentValue" value="#{testLoggedInController.user.department}" />
+	            
+	            <h:outputText value="Zimmer: " />
+	            <h:outputText id="locationRoomNumberValue" value="#{testLoggedInController.user.locationRoomNumber}" />
+	            
+	            <h:outputText value="Telefonnummer: " />
+	            <h:outputText id="phoneNumberMobileValue" value="#{testLoggedInController.user.phoneNumberMobile}"/>
+	        </p:panelGrid>
+		</p:dialog>
+
 	</h:form>
 	
 	

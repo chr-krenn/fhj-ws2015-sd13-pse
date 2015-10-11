@@ -88,4 +88,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 		p.setPassword(newPlainPassword);
 	}
+
+	@Override
+	public Person getUser(final String username) {
+		return dbContext.getPersonDAO().getByUsername(username);
+	}
 }
