@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 import java.io.Serializable;
+import java.util.UUID;
 
 @SessionScoped
 public class UserSession implements Serializable {
@@ -15,6 +16,8 @@ public class UserSession implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	private String sessionId = UUID.randomUUID().toString();
 
 	@Inject
 	private Logger logger;
@@ -28,8 +31,10 @@ public class UserSession implements Serializable {
 		logger.info("[USERSESSION] constructed");
 	}
 	
-	public void login( final String username ) {
+	public String login( final String username ) {
 		this.loggedInUser = username;
+		
+		return sessionId;
 	}
 	
 	public boolean isLoggedIn() {

@@ -1,14 +1,16 @@
 package at.fhj.swd13.pse.service;
 
+import javax.inject.Inject;
+
+import at.fhj.swd13.pse.db.CurrentDbContext;
 import at.fhj.swd13.pse.db.DbContext;
 
 public abstract class ServiceBase {
 
-	protected final DbContext dbContext;
+	@Inject
+	@CurrentDbContext
+	protected DbContext dbContext;
 
-	protected ServiceBase ( DbContext dbContext ) {
-		
-		
-		this.dbContext = dbContext;
+	protected ServiceBase () {
 	}	
 }

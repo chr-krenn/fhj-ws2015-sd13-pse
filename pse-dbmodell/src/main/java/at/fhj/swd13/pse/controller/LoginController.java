@@ -14,7 +14,6 @@ import at.fhj.swd13.pse.db.CurrentDbContext;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
@@ -22,60 +21,60 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 public class LoginController {
 
 	private String username;
-	
+
 	private String password;
 
 	@Inject
 	private Logger logger;
-	
-	@Inject @CurrentDbContext
+
+	@Inject
+	@CurrentDbContext
 	private DbContext dbContext;
-	
+
+	@Inject
 	private UserService userService;
-	
+
 	@Inject
 	private UserSession userSession;
-	
-	
-	public void login(ActionEvent event) {		
-		userService = new UserServiceImpl(dbContext);
-        RequestContext context = RequestContext.getCurrentInstance();
-        FacesMessage message = null;
-        boolean loggedIn = false;
-         
-        if(username != null && password != null) {
-        	
-        	Person user = userService.loginUser(username, password);
-        	
-        	if(user != null){
-        		loggedIn = true;
-                
-        		logger.info("[LOGIN] logged-in-user " + user);
-                userSession.login( username );
-                
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
-        	} else {
-        		loggedIn = false;
 
-                logger.info("[LOGIN] login failed for " + username + " from " + context.toString() );
-                
-                message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-        	}            
-        } else {
-            loggedIn = false;
+	public void login(ActionEvent event) {
 
-            logger.info("[LOGIN] login failed for " + username + " from " + context.toString() );
-            
-            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-        }
-         
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        context.addCallbackParam("loggedIn", loggedIn);
-    }   	
-	
-	
-	
-	
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message = null;
+		boolean loggedIn = false;
+
+		if (username != null && password != null) {
+
+			Person user = userService.loginUser(username, password);
+
+			if (user != null) {
+				loggedIn = true;
+
+				logger.info("[LOGIN] logged-in-user " + user);
+				
+				user.setCurrentSessionId( userSession.login(username) );
+				user.setIsOnline(true);
+
+				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
+			} else {
+				loggedIn = false;
+
+				logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
+
+				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+			}
+		} else {
+			loggedIn = false;
+
+			logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
+
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+		}
+
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		context.addCallbackParam("loggedIn", loggedIn);
+	}
+
 	/**
 	 * @return the username
 	 */
@@ -83,16 +82,15 @@ public class LoginController {
 		return username;
 	}
 
-	
 	/**
-	 * @param username the username to set
+	 * @param username
+	 *            the username to set
 	 */
 	public void setUsername(String username) {
-		
+
 		this.username = username;
 	}
 
-	
 	/**
 	 * @return the password
 	 */
@@ -100,12 +98,12 @@ public class LoginController {
 		return password;
 	}
 
-	
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public void setPassword(String password) {
-		
+
 		this.password = password;
-	}	
+	}
 }

@@ -21,9 +21,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	/**
 	 * Create an instance of the chat service
 	 */
-	public ChatServiceImpl(DbContext dbContext) {
-		super(dbContext);
-	}
+	public ChatServiceImpl() {}
 
 	/*
 	 * (non-Javadoc)
@@ -32,8 +30,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public Community createChatCommunity(final String creatorUsername, final String communityName,
-			final boolean invitationOnly) throws EntityNotFoundException {
+	public Community createChatCommunity(final String creatorUsername, final String communityName, final boolean invitationOnly)
+			throws EntityNotFoundException {
 
 		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
@@ -47,8 +45,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			return createCommunity(creator, community, dbContext);
 
 		} else {
-			throw new IllegalStateException(
-					"User is not active and can therefore not create communities: " + creatorUsername);
+			throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername);
 		}
 	}
 
@@ -118,8 +115,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			adminPerson.addConfirmedCommunities(unconfirmed);
 
 		} else {
-			throw new IllegalStateException("Person confirming the community is either not active or not an admin: "
-					+ adminPerson.getUserName());
+			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
 }

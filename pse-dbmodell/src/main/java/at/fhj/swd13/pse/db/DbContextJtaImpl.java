@@ -1,7 +1,14 @@
 package at.fhj.swd13.pse.db;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
@@ -10,16 +17,17 @@ import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.dao.TagDAOImpl;
 
+@RequestScoped
+@CurrentDbContext
 public class DbContextJtaImpl implements DbContext {
 
-	// @PersistenceContext
+	@PersistenceContext
 	private EntityManager entityManager;
 
-	public DbContextJtaImpl(EntityManager entityManager) {
-
-		this.entityManager = entityManager;
-
-	}
+	@Inject
+	private Logger logger;
+	
+	public DbContextJtaImpl() {}
 
 	@Override
 	public void persist(Object target) {
@@ -83,8 +91,17 @@ public class DbContextJtaImpl implements DbContext {
 
 		return new CommunityDAOImpl(this);
 	}
+	
+	@PostConstruct
+	protected void postConstruct() {
+		logger.info("[CONTEXT] ++ constructed");
+	}
 
-
+	@PreDestroy
+	protected void preDestroy() {
+		logger.info("[CONTEXT] -- destroy");		
+	}
+	
 	@Override
 	public void close() throws Exception {}
 }
