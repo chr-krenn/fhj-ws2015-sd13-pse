@@ -5,3 +5,4 @@ INSERT INTO `person` VALUES (91, 'teiniker','Teiniker','Egon','egon.teiniker@ima
 
 INSERT INTO `person` VALUES (100, 'loeflerm13','Löfler','Mario','mario.loefler@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 1','A','-2','666',NULL,NULL,1,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (101, 'eisendle','Eisendle','Roman','roman.eisendle@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 1','A','-2','666',NULL,NULL,1,1,0,0,NULL, NULL);
+INSERT INTO `person` VALUES (102, 'haringst13','Haring','Stefan','stefan.haring@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 2','A','-2','666',NULL,NULL,1,1,0,0,NULL, NULL);
