@@ -11,6 +11,9 @@ public abstract class ServiceBase {
 	@CurrentDbContext
 	protected DbContext dbContext;
 
-	protected ServiceBase () {
-	}	
+	protected ServiceBase() {}
+
+	protected ServiceBase(DbContext dbContext) {
+		this.dbContext = dbContext;
+	}
 }

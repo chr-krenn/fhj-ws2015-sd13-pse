@@ -23,6 +23,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 */
 	public ChatServiceImpl() {}
 
+	public ChatServiceImpl( DbContext dbContext ) {
+		super(dbContext);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.domain.user;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -25,6 +26,10 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	public UserServiceImpl() {
 		super();
+	}
+
+	public UserServiceImpl(DbContext dbContext) {
+		super(dbContext);
 	}
 
 	/*
