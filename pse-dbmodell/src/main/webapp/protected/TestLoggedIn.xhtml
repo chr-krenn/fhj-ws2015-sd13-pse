@@ -11,22 +11,22 @@
 		<h:outputLabel for="username" value="Username: #{testLoggedInController.username}" />
 	
 	    <h:panelGrid columns="2" cellpadding="5">
-	        <p:outputLabel for="firstName" value="Vorname: " />
+	        <p:outputLabel value="Vorname: " />
 	        <p:inputMask id="firstName" value="#{testLoggedInController.user.firstName}" disabled="True"/>
 	        
-	        <p:outputLabel for="lastName" value="Nachname: " />
+	        <p:outputLabel value="Nachname: " />
 	        <p:inputMask id="lastName" value="#{testLoggedInController.user.lastName}" disabled="True"/>
 	        
-	        <p:outputLabel for="emailAddress" value="E-Mail: " />
+	        <p:outputLabel value="E-Mail: " />
 	        <p:inputMask id="emailAddress" value="#{testLoggedInController.user.emailAddress}" disabled="True"/>
 	        
-	        <p:outputLabel for="department" value="Abteilung: " />
+	        <p:outputLabel value="Abteilung: " />
 	        <p:inputMask id="department" value="#{testLoggedInController.user.department}" disabled="True"/>
 	 
-	        <p:outputLabel for="locationRoomNumber" value="Zimmer: " />
-	        <p:inputMask id="locationRoomNumber" value="#{testLoggedInController.user.locationRoomNumber}" disabled="True"/>
+	        <p:outputLabel value="Zimmer: " />
+	        <p:inputMask value="#{testLoggedInController.user.locationRoomNumber}" disabled="True"/>
 	 
-	        <p:outputLabel for="phoneNumberMobile" value="Telefonnummer: " />
+	        <p:outputLabel value="Telefonnummer: " />
 	        <p:inputMask id="phoneNumberMobile" value="#{testLoggedInController.user.phoneNumberMobile}" disabled="True"/>
 
 	 
