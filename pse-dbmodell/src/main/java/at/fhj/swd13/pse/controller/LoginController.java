@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.controller;
 
+import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -9,9 +10,15 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
+import at.fhj.swd13.pse.db.CurrentDbContext;
+import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
+@Stateless
 public class LoginController {
 
 	private String username;
@@ -21,24 +28,39 @@ public class LoginController {
 	@Inject
 	private Logger logger;
 	
+	@Inject @CurrentDbContext
+	private DbContext dbContext;
+	
+	private UserService userService;
 	
 	@Inject
 	private UserSession userSession;
 	
-	public void login(ActionEvent event) {
-		
-		
+	
+	public void login(ActionEvent event) {		
+		userService = new UserServiceImpl(dbContext);
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage message = null;
         boolean loggedIn = false;
          
-        if(username != null && username.equals("admin") && password != null && password.equals("admin")) {
-            loggedIn = true;
-            
-    		logger.info("[LOGIN] logged-in-user " + username );
-            userSession.login( username );
-            
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", username);
+        if(username != null && password != null) {
+        	
+        	Person user = userService.loginUser(username, password);
+        	
+        	if(user != null){
+        		loggedIn = true;
+                
+        		logger.info("[LOGIN] logged-in-user " + user);
+                userSession.login( username );
+                
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
+        	} else {
+        		loggedIn = false;
+
+                logger.info("[LOGIN] login failed for " + username + " from " + context.toString() );
+                
+                message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+        	}            
         } else {
             loggedIn = false;
 
