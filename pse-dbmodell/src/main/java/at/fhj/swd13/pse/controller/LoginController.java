@@ -10,8 +10,6 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.CurrentDbContext;
-import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
@@ -26,10 +24,6 @@ public class LoginController {
 
 	@Inject
 	private Logger logger;
-
-	@Inject
-	@CurrentDbContext
-	private DbContext dbContext;
 
 	@Inject
 	private UserService userService;
@@ -51,8 +45,8 @@ public class LoginController {
 				loggedIn = true;
 
 				logger.info("[LOGIN] logged-in-user " + user);
-				
-				user.setCurrentSessionId( userSession.login(username) );
+
+				user.setCurrentSessionId(userSession.login(username));
 				user.setIsOnline(true);
 
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
