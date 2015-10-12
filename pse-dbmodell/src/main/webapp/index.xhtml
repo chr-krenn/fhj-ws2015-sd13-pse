@@ -30,7 +30,7 @@
 
 			<div>Weiter gehts <a href="protected/TestLoggedIn.jsf">hier</a></div>
 
-			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+			<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
 
 			<p:dialog header="Login" widgetVar="dlg" resizeable="false">
 				<h:panelGrid columns="2" cellpadding="5">
@@ -62,7 +62,7 @@
 					}, 100);
 				} else {
 					PF('dlg').hide();
-					$('#loginLink').fadeOut();
+					window.location.replace("/protected/TestLoggedIn.jsf");
 				}
 			}
 		</script>
