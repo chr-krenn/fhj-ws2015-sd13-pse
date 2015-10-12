@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.domain.user;
 
+import java.util.List;
+
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -21,15 +23,23 @@ public interface UserService {
 	 * logout the user in the current session
 	 */
 	void logoutCurrentUser();
-	
+
 	/**
 	 * Get the user with the given username
 	 * 
-	 * @param username of the person to retrieve
+	 * @param username
+	 *            of the person to retrieve
 	 * 
 	 * @return instance of the user with the given username
 	 */
 	Person getUser(final String username);
+
+	/**
+	 * get a list of all known usrs
+	 * 
+	 * @return a list of all currently known users
+	 */
+	List<Person> getUsers();
 
 	/**
 	 * Update all passwords that are null or '--' with 12345678

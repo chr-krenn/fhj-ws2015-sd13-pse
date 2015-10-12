@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.domain.user;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -117,5 +119,14 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	@Override
 	public Person getUser(final String username) {
 		return dbContext.getPersonDAO().getByUsername(username);
+	}
+	
+	
+	@Override
+	public 	List<Person> getUsers() {
+	
+		//TODO use better method
+		return dbContext.getPersonDAO().getAllPersons(0, 1000);
+		
 	}
 }
