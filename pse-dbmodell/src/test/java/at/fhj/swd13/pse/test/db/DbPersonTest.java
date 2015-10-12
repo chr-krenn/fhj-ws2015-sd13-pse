@@ -1,10 +1,8 @@
 package at.fhj.swd13.pse.test.db;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
@@ -18,7 +16,6 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 
 public class DbPersonTest {
 
@@ -174,6 +171,7 @@ public class DbPersonTest {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			Person x = personDAO.getById(p.getPersonId());
+			assertEquals(x, new Person());
 		}
 	}
 
