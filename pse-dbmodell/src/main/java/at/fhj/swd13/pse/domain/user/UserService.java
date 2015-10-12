@@ -17,6 +17,18 @@ public interface UserService {
 	 */
 	Person loginUser(String username, String plainPassword);
 
+	/**
+	 * logout the user in the current session
+	 */
+	void logoutCurrentUser();
+	
+	/**
+	 * Get the user with the given username
+	 * 
+	 * @param username of the person to retrieve
+	 * 
+	 * @return instance of the user with the given username
+	 */
 	Person getUser(final String username);
 
 	/**

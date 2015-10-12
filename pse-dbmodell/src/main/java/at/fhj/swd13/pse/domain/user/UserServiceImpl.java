@@ -1,7 +1,6 @@
 package at.fhj.swd13.pse.domain.user;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -57,6 +56,18 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return null;
 	}
 
+	@Override
+	public void logoutCurrentUser() {
+		
+		if ( userSession.isLoggedIn() ) {
+			Person p = dbContext.getPersonDAO().getByUsername( userSession.getUsername() );
+			p.setIsOnline( false );
+			p.setCurrentSessionId(null);
+			
+			userSession.logout();
+		}		
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

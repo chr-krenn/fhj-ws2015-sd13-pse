@@ -61,6 +61,10 @@ public class LoginController {
 		context.addCallbackParam("loggedIn", loggedIn);
 	}
 
+	public void logout() {
+		userService.logoutCurrentUser();
+	}
+	
 	/**
 	 * @return the username
 	 */
