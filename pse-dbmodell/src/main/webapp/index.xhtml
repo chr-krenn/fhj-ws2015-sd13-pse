@@ -23,13 +23,14 @@
 			</h:column>
 		</h:dataTable>
 		<h:form>
-			<div id="#loginLink">
+			<h:panelGroup rendered="#{!loginController.isLoggedIn}">
 				Um mit der Arbeit zu beginnen, müssen sie sich <em><a href="javascript:void(0)"
 					onclick="PF('dlg').show()">einloggen!</a></em>
-			</div>
-
-			<div>Weiter gehts <a href="/protected/TestLoggedIn.jsf">hier</a></div>
-
+			</h:panelGroup>
+			<h:panelGroup rendered="#{loginController.isLoggedIn}">
+				<div>Du bist bereits eingeloggt. Weiter gehts <a href="/protected/TestLoggedIn.jsf">hier</a></div>
+			</h:panelGroup>
+						
 			<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
 
 			<p:dialog header="Login" widgetVar="dlg" resizeable="false">

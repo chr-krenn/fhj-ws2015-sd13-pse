@@ -15,6 +15,7 @@ import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @Stateless
@@ -30,6 +31,9 @@ public class LoginController {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private UserSession userSession;
+	
 	public void login(ActionEvent event) {
 
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -105,5 +109,9 @@ public class LoginController {
 	public void setPassword(String password) {
 
 		this.password = password;
+	}
+	
+	public boolean getIsLoggedIn(){
+		return userSession.isLoggedIn();
 	}
 }
