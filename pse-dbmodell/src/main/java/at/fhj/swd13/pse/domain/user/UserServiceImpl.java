@@ -1,7 +1,6 @@
 package at.fhj.swd13.pse.domain.user;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -34,8 +33,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		super();
 	}
 
-	public UserServiceImpl(DbContext dbContext) {
+	public UserServiceImpl(DbContext dbContext, UserSession userSession) {
 		super(dbContext);
+		this.userSession = userSession;
 	}
 
 	/*
