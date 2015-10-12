@@ -1,22 +1,28 @@
 package at.fhj.swd13.pse.domain.user;
 
+import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
  * User Service, object that provides all higher level logic for managing users
  * 
  */
-@RequestScoped
+@Stateless
 public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private PasswordStrengthValidator passwordStrengthValidator;
+	
+	@Inject
+	private UserSession userSession;
+
 
 	/**
 	 * Create an instance of the user service
@@ -43,6 +49,8 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 
 		if (p != null && p.isLoginAllowed() && p.isMatchingPassword(plainPassword)) {
+			p.setIsOnline(true);
+			p.setCurrentSessionId(userSession.login(username));
 			return p;
 		}
 

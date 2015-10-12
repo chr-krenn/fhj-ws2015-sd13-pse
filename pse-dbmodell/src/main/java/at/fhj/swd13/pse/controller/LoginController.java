@@ -12,7 +12,6 @@ import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @Stateless
@@ -28,8 +27,6 @@ public class LoginController {
 	@Inject
 	private UserService userService;
 
-	@Inject
-	private UserSession userSession;
 
 	public void login(ActionEvent event) {
 
@@ -43,12 +40,7 @@ public class LoginController {
 
 			if (user != null) {
 				loggedIn = true;
-
 				logger.info("[LOGIN] logged-in-user " + user);
-
-				user.setCurrentSessionId(userSession.login(username));
-				user.setIsOnline(true);
-
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
 			} else {
 				loggedIn = false;
