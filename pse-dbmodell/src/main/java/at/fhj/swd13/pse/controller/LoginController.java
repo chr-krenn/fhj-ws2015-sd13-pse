@@ -1,8 +1,11 @@
 package at.fhj.swd13.pse.controller;
 
+import java.io.IOException;
+
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
@@ -26,7 +29,6 @@ public class LoginController {
 
 	@Inject
 	private UserService userService;
-
 
 	public void login(ActionEvent event) {
 
@@ -62,9 +64,17 @@ public class LoginController {
 	}
 
 	public void logout() {
+
 		userService.logoutCurrentUser();
+
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			context.redirect("/");
+		} catch (IOException e) {
+			logger.error("[LOGIN] error redirecting after logout: " + e.getMessage());
+		}
 	}
-	
+
 	/**
 	 * @return the username
 	 */
