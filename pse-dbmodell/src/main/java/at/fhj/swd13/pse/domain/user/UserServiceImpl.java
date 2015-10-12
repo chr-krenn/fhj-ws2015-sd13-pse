@@ -33,8 +33,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		super();
 	}
 
-	public UserServiceImpl(DbContext dbContext) {
+	public UserServiceImpl(DbContext dbContext, UserSession userSession) {
 		super(dbContext);
+		this.userSession = userSession;
 	}
 
 	/*

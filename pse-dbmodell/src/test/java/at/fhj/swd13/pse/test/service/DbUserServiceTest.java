@@ -19,10 +19,12 @@ import at.fhj.swd13.pse.domain.user.PasswortStrengthValidatorImpl;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.domain.user.WeakPasswordException;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 public class DbUserServiceTest {
 
 	private DbContextProvider contextProvider;
+	private UserSession userSession;
 
 	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");
 	private List<Object> toDelete = new ArrayList<Object>();
@@ -40,6 +42,8 @@ public class DbUserServiceTest {
 
 			context.commit();
 		}
+		
+		userSession = new UserSession();
 	}
 
 	@After
@@ -62,7 +66,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertEquals(1, userService.updateNullPasswords());
@@ -81,7 +85,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 			assertNotNull(userService.loginUser(plainPerson.getUserName(), "12345678"));
 		}
@@ -92,7 +96,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNull(userService.loginUser("xxxPerson", "12345678"));
@@ -103,7 +107,7 @@ public class DbUserServiceTest {
 	public void loginUserInvalidPassword() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			final UserService userService = new UserServiceImpl(dbContext);
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNull(userService.loginUser(plainPerson.getUserName(), "gustl"));
@@ -118,7 +122,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl( dbContext );
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), "gustavgusgustav" );
@@ -128,7 +132,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl( dbContext );
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			assertNotNull(userService.loginUser(plainPerson.getUserName(), "gustavgusgustav" ));
@@ -140,7 +144,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl( dbContext );
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), null );
@@ -152,7 +156,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl( dbContext );
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 			
 			
@@ -165,7 +169,7 @@ public class DbUserServiceTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl( dbContext );
+			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), "3344" );
