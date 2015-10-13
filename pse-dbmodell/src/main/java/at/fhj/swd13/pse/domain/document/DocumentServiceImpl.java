@@ -24,7 +24,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 	@Inject
 	private Logger logger;
-	
+
 	@Inject
 	private UserSession userSession;
 
@@ -54,7 +54,9 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		super(dbContext);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#store(java.lang.String, java.io.InputStream)
 	 */
 	@Override
@@ -71,12 +73,12 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			document.setSize((int) file.length());
 
 			document.setStorageLocation(storeFile(data));
-			
-			dbContext.getDocumentDAO().insert( document);
+
+			dbContext.getDocumentDAO().insert(document);
 
 			logger.info("[DOCS] stored file " + filename);
-			logger.info("[DOCS] storage location is " + document.getStorageLocation() );
-			
+			logger.info("[DOCS] storage location is " + document.getStorageLocation());
+
 			return document;
 		} catch (IOException x) {
 			logger.error("[DOCS] Error storing file " + filename + " : " + x.getMessage());
@@ -92,14 +94,34 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#get(int)
+	 */
+	public Document get(final int documentId) {
+		
+		return dbContext.getDocumentDAO().getById(documentId);
+	}
+
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#getServerPath(at.fhj.swd13.pse.db.entity.Document)
+	 */
+	public String getServerPath( final Document d ) {
+	
+		Path fullPath = Paths.get( imageFolder, d.getStorageLocation() );
+		
+		return fullPath.toString();
+	}
+	
 	/**
 	 * Store the file to the archive and also create its archive name
 	 * 
-	 * @param stream the file data from the uploaded file
+	 * @param stream
+	 *            the file data from the uploaded file
 	 * 
 	 * @return relative path of the filename created in the archive (beneath imageFileFolder)
 	 * 
-	 * @throws IOException when an I/O Exception occured during copying
+	 * @throws IOException
+	 *             when an I/O Exception occured during copying
 	 */
 	private static String storeFile(InputStream stream) throws IOException {
 
