@@ -69,12 +69,12 @@ public class Message implements Serializable {
 	//bi-directional many-to-one association to Document
 	@ManyToOne
 	@JoinColumn(name="document_attachment_id")
-	private Document document1;
+	private Document attachment;
 
 	//bi-directional many-to-one association to Document
 	@ManyToOne
 	@JoinColumn(name="document_icon_id")
-	private Document document2;
+	private Document icon;
 
 	//bi-directional many-to-one association to Person
 	@ManyToOne
@@ -221,20 +221,20 @@ public class Message implements Serializable {
 		this.deliverySystem = deliverySystem;
 	}
 
-	public Document getDocument1() {
-		return this.document1;
+	public Document getAttachment() {
+		return this.attachment;
 	}
 
-	public void setDocument1(Document document1) {
-		this.document1 = document1;
+	public void setAttachment(Document document) {
+		this.attachment = document;
 	}
 
-	public Document getDocument2() {
-		return this.document2;
+	public Document getIcon() {
+		return this.icon;
 	}
 
-	public void setDocument2(Document document2) {
-		this.document2 = document2;
+	public void setIcon(Document document) {
+		this.icon = document;
 	}
 
 	public Person getPerson() {
