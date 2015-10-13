@@ -9,14 +9,16 @@ import javax.persistence.RollbackException;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
+import at.fhj.swd13.pse.db.dao.DocumentDAO;
+import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.dao.TagDAOImpl;
-
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 /**
  * Implementaition fo a db session using jpa/ mysql
@@ -45,14 +47,16 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.DbContext#clearCache()
 	 */
 	public void clearCache() {
-		
+
 		entityManager.getEntityManagerFactory().getCache().evictAll();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,8 +101,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 
 				final DatabaseException dbx = (DatabaseException) e.getCause();
 
-				if (dbx.getInternalException() != null
-						&& dbx.getInternalException().getClass() == MySQLIntegrityConstraintViolationException.class) {
+				if (dbx.getInternalException() != null && dbx.getInternalException().getClass() == MySQLIntegrityConstraintViolationException.class) {
 
 					throw new ConstraintViolationException("Person already exists", e);
 				}
@@ -190,22 +193,32 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 		return new TagDAOImpl(this);
 	}
 
-	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.DbContext#getCommunityDAO()
 	 */
 	public CommunityDAO getCommunityDAO() {
-		
-		return new CommunityDAOImpl( this );
+
+		return new CommunityDAOImpl(this);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.DbContext#getDocumentDAO()
+	 */
+	@Override
+	public DocumentDAO getDocumentDAO() {
+
+		return new DocumentDAOImpl(this);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see at.fhjoanneum.swd13.pse.db.DbContext#close()
 	 */
 	@Override
-	public void close() throws Exception { 
+	public void close() throws Exception {
 
 		if (transaction != null) {
 
@@ -213,7 +226,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 				transaction.rollback();
 			}
 
-			transaction = null; 
+			transaction = null;
 		}
 
 		entityManager.close();

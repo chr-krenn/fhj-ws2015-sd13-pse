@@ -12,6 +12,8 @@ import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
+import at.fhj.swd13.pse.db.dao.DocumentDAO;
+import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -91,6 +93,16 @@ public class DbContextJtaImpl implements DbContext {
 
 		return new CommunityDAOImpl(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.DbContext#getDocumentDAO()
+	 */
+	@Override
+	public DocumentDAO getDocumentDAO() {
+
+		return new DocumentDAOImpl(this);
+	}
+	
 	
 	@PostConstruct
 	protected void postConstruct() {

@@ -3,8 +3,8 @@ package at.fhj.swd13.pse.db;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
+import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 
@@ -92,9 +92,17 @@ public interface DbContext extends AutoCloseable {
 	
 	/**
 	 * Get a dao for communities
-	 * @return
+	 * 
+	 * @return an instance of a DAO
 	 */
 	CommunityDAO getCommunityDAO();
+	
+	/**
+	 * Get a dao for documents
+	 * 
+	 * @return an instance of a DAO
+	 */
+	DocumentDAO getDocumentDAO();
 	
 	/**
 	 * Close DbContext 

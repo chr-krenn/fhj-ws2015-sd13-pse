@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+
+		<div>Upload a media file. Allowed are: jpg, png, docx, pdf, xslx. Size limit is 10M</div>
+
+		<h:form>
+
+			<p:fileUpload fileUploadListener="#{fileUploadView.handleFileUpload}"
+				mode="advanced" dragDropSupport="true" update="messages"
+				sizeLimit="10000000" allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" />
+
+			<p:growl id="messages" showDetail="true" />
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
