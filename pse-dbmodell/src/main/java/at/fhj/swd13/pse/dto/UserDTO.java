@@ -3,29 +3,28 @@ package at.fhj.swd13.pse.dto;
 import at.fhj.swd13.pse.db.entity.Person;
 
 public class UserDTO {
-	
+
 	private String userName;
-	
+
 	private String lastName;
-	
+
 	private String firstName;
-	
+
 	private String emailAddress;
-	
+
 	private String phoneNumberMobile;
-	
+
 	private String imageRef;
-	
+
 	private String department;
-	
+
 	private String locationRoomNumber;
-	
+
 	private String job;
 
-	
 	public UserDTO() {}
-	
-	public UserDTO( Person person ) {
+
+	public UserDTO(Person person) {
 		this.userName = person.getUserName();
 		this.lastName = person.getLastName();
 		this.firstName = person.getFirstName();
@@ -34,15 +33,22 @@ public class UserDTO {
 		this.department = person.getDepartment();
 		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.job = person.getJobPosition();
-		this.imageRef = "/protected/img/no_img.jpg";
+		
+		if (person.getDocument() != null) {
+			//TODO: hardcoded...
+			this.imageRef = "/store/media/" + person.getDocument().getDocumentId();
+		} else {
+			//TODO: hardcoded...
+			this.imageRef = "/protected/img/no_img.jpg";
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public String getFullname() {
-		return lastName +", " +  firstName;
+		return lastName + ", " + firstName;
 	}
 
 	/**
@@ -53,13 +59,13 @@ public class UserDTO {
 	}
 
 	/**
-	 * @param userName the userName to set
+	 * @param userName
+	 *            the userName to set
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
-	
 	/**
 	 * @return the lastName
 	 */
@@ -67,17 +73,14 @@ public class UserDTO {
 		return lastName;
 	}
 
-
-	
 	/**
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-
-	
 	/**
 	 * @return the firstName
 	 */
@@ -85,17 +88,14 @@ public class UserDTO {
 		return firstName;
 	}
 
-
-	
 	/**
-	 * @param firstName the firstName to set
+	 * @param firstName
+	 *            the firstName to set
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-
-	
 	/**
 	 * @return the imageRef
 	 */
@@ -103,10 +103,9 @@ public class UserDTO {
 		return imageRef;
 	}
 
-
-	
 	/**
-	 * @param imageRef the imageRef to set
+	 * @param imageRef
+	 *            the imageRef to set
 	 */
 	public void setImageRef(String imageRef) {
 		this.imageRef = imageRef;
@@ -120,12 +119,13 @@ public class UserDTO {
 	}
 
 	/**
-	 * @param emailAddress the emailAddress to set
+	 * @param emailAddress
+	 *            the emailAddress to set
 	 */
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
-	
+
 	/**
 	 * @return the department
 	 */
@@ -133,10 +133,9 @@ public class UserDTO {
 		return department;
 	}
 
-
-	
 	/**
-	 * @param department the department to set
+	 * @param department
+	 *            the department to set
 	 */
 	public void setDepartment(String department) {
 		this.department = department;
@@ -150,12 +149,13 @@ public class UserDTO {
 	}
 
 	/**
-	 * @param locationRoomNumber the locationRoomNumber to set
+	 * @param locationRoomNumber
+	 *            the locationRoomNumber to set
 	 */
 	public void setLocationRoomNumber(String locationRoomNumber) {
 		this.locationRoomNumber = locationRoomNumber;
 	}
-	
+
 	/**
 	 * @return the job
 	 */
@@ -163,10 +163,9 @@ public class UserDTO {
 		return job;
 	}
 
-
-	
 	/**
-	 * @param job the job to set
+	 * @param job
+	 *            the job to set
 	 */
 	public void setJob(String job) {
 		this.job = job;
@@ -180,9 +179,10 @@ public class UserDTO {
 	}
 
 	/**
-	 * @param phoneNumberMobile the phoneNumberMobile to set
+	 * @param phoneNumberMobile
+	 *            the phoneNumberMobile to set
 	 */
 	public void setPhoneNumberMobile(String phoneNumberMobile) {
 		this.phoneNumberMobile = phoneNumberMobile;
-	}	
+	}
 }
