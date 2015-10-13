@@ -23,7 +23,10 @@
 					<p:outputPanel>
 						<h:panelGrid columns="2" cellpadding="5">
 							<h:outputText value="Name:" />
-							<h:outputText value="#{user.fullname}" style="font-weight: bold" />
+							<h:outputLink  value="/protected/User.jsf">
+								<h:outputText value="#{user.fullname}"  style="font-weight: bold"/>
+								<f:param name="userName" value="#{user.userName}" />
+							</h:outputLink>
 
 							<h:outputText value="Abteilung:" />
 							<h:outputText value="#{user.department}" style="font-weight: bold" />
