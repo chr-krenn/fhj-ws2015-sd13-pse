@@ -4,14 +4,21 @@ import at.fhj.swd13.pse.db.entity.Person;
 
 public class UserDTO {
 	
+	private String userName;
 	
 	private String lastName;
 	
 	private String firstName;
 	
+	private String emailAddress;
+	
+	private String phoneNumberMobile;
+	
 	private String imageRef;
 	
 	private String department;
+	
+	private String locationRoomNumber;
 	
 	private String job;
 
@@ -19,9 +26,13 @@ public class UserDTO {
 	public UserDTO() {}
 	
 	public UserDTO( Person person ) {
+		this.userName = person.getUserName();
 		this.lastName = person.getLastName();
 		this.firstName = person.getFirstName();
+		this.emailAddress = person.getEmailAddress();
+		this.phoneNumberMobile = person.getPhoneNumberMobile();
 		this.department = person.getDepartment();
+		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.job = person.getJobPosition();
 		this.imageRef = "/protected/img/no_img.jpg";
 	}
@@ -34,6 +45,19 @@ public class UserDTO {
 		return lastName +", " +  firstName;
 	}
 
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return this.userName;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	
 	/**
@@ -88,7 +112,19 @@ public class UserDTO {
 		this.imageRef = imageRef;
 	}
 
+	/**
+	 * @return the emailAddress
+	 */
+	public String getEmailAddress() {
+		return this.emailAddress;
+	}
 
+	/**
+	 * @param emailAddress the emailAddress to set
+	 */
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
 	
 	/**
 	 * @return the department
@@ -106,7 +142,19 @@ public class UserDTO {
 		this.department = department;
 	}
 
+	/**
+	 * @return the locationRoomNumber
+	 */
+	public String getLocationRoomNumber() {
+		return this.locationRoomNumber;
+	}
 
+	/**
+	 * @param locationRoomNumber the locationRoomNumber to set
+	 */
+	public void setLocationRoomNumber(String locationRoomNumber) {
+		this.locationRoomNumber = locationRoomNumber;
+	}
 	
 	/**
 	 * @return the job
@@ -122,5 +170,19 @@ public class UserDTO {
 	 */
 	public void setJob(String job) {
 		this.job = job;
+	}
+
+	/**
+	 * @return the phoneNumberMobile
+	 */
+	public String getPhoneNumberMobile() {
+		return phoneNumberMobile;
+	}
+
+	/**
+	 * @param phoneNumberMobile the phoneNumberMobile to set
+	 */
+	public void setPhoneNumberMobile(String phoneNumberMobile) {
+		this.phoneNumberMobile = phoneNumberMobile;
 	}	
 }

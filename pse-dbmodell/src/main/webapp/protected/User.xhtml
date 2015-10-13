@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		<h:form>
+		    <h:panelGrid columns="2" cellpadding="5">
+		        <p:outputLabel value="Vorname: " />
+		        <p:inputMask id="firstName" value="#{userView.userDTO.firstName}" disabled="True"/>
+		        
+		        <p:outputLabel value="Nachname: " />
+		        <p:inputMask id="lastName" value="#{userView.userDTO.lastName}" disabled="True"/>
+		        
+		        <p:outputLabel value="E-Mail: " />
+		        <p:inputMask id="emailAddress" value="#{userView.userDTO.emailAddress}" disabled="True"/>
+		        
+		        <p:outputLabel value="Abteilung: " />
+		        <p:inputMask id="department" value="#{userView.userDTO.department}" disabled="True"/>
+		 
+		        <p:outputLabel value="Zimmer: " />
+		        <p:inputMask value="#{userView.userDTO.locationRoomNumber}" disabled="True"/>
+		 
+		        <p:outputLabel value="Telefonnummer: " />
+		        <p:inputMask id="phoneNumberMobile" value="#{userView.userDTO.phoneNumberMobile}" disabled="True"/>
+		    </h:panelGrid>
+	       	
+		    <p:dialog widgetVar="dlg" modal="true" resizable="false" header="Values" showEffect="fade"> 
+		        <p:panelGrid id="display" columns="2" columnClasses="label,value">
+		            <h:outputText value="Vorname: " />
+		            <h:outputText id="firstNameValue" value="#{userView.userDTO.firstName}" />
+		 
+		            <h:outputText value="Nachname: " />
+		            <h:outputText id="lastNameValue" value="#{userView.userDTO.lastName}" />
+		            
+		            <h:outputText value="E-Mail: " />
+		            <h:outputText id="emailAddressValue" value="#{userView.userDTO.emailAddress}" />
+		 
+		            <h:outputText value="Abteilung: " />
+		            <h:outputText id="departmentValue" value="#{userView.userDTO.department}" />
+		            
+		            <h:outputText value="Zimmer: " />
+		            <h:outputText id="locationRoomNumberValue" value="#{userView.userDTO.locationRoomNumber}" />
+		            
+		            <h:outputText value="Telefonnummer: " />
+		            <h:outputText id="phoneNumberMobileValue" value="#{userView.userDTO.phoneNumberMobile}"/>
+		        </p:panelGrid>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
