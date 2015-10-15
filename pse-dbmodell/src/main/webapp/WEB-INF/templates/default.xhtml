@@ -2,7 +2,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title>PSE</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,6 +11,9 @@
 </h:head>
 <h:body>
 	<div id="container">
+		<ui:insert name="header" >
+	  		<ui:include src="/protected/UserNameTag.xhtml" />
+		</ui:insert>
 		<div id="content">
 			<ui:insert name="content">
                     [Template content will be inserted here]

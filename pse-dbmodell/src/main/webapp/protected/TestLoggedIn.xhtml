@@ -11,7 +11,7 @@
 		<h:outputLabel value="Username: #{testLoggedInController.username}" />
 		<h:outputLink  value="/protected/User.jsf">
 			<h:outputText value="Benutzerprofil"/>
-			<f:param name="userName" value="#{testLoggedInController.username}" />
+			<f:param name="userName" value="#{loginController.loggedInUsername}" />
 		</h:outputLink>
 		<div>
 			<a href="/protected/UserList.jsf">Liste aller Benutzer</a>

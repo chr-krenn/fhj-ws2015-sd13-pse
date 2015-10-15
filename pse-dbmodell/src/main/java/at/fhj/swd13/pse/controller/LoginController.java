@@ -24,7 +24,7 @@ public class LoginController {
 	private String username;
 
 	private String password;
-
+	
 	@Inject
 	private Logger logger;
 
@@ -111,7 +111,18 @@ public class LoginController {
 		this.password = password;
 	}
 	
+	/**
+	 * @return the IsLoggedIn
+	 */     
 	public boolean getIsLoggedIn(){
 		return userSession.isLoggedIn();
 	}
+	
+	/**
+	 * @return the LoggedInUsername
+	 */     
+	public String getLoggedInUsername(){
+		return userSession.getUsername();
+	}
+
 }
