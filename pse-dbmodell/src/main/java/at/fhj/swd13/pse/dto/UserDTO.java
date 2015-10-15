@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.dto;
 
+import java.util.Date;
+
 import at.fhj.swd13.pse.db.entity.Person;
 
 public class UserDTO {
@@ -12,13 +14,23 @@ public class UserDTO {
 
 	private String emailAddress;
 
+	private Date dateOfBirth;
+	
+	private Date dateOfEntry;
+	
 	private String phoneNumberMobile;
 
 	private String imageRef;
 
+	private int imageId;
+
 	private String department;
 
+	private String locationBuilding;
+
 	private String locationRoomNumber;
+
+	private Integer locationFloor;
 
 	private String job;
 
@@ -29,16 +41,20 @@ public class UserDTO {
 		this.lastName = person.getLastName();
 		this.firstName = person.getFirstName();
 		this.emailAddress = person.getEmailAddress();
+		this.dateOfBirth = person.getDateOfBirth();
+		this.dateOfEntry = person.getDateOfEntry();
 		this.phoneNumberMobile = person.getPhoneNumberMobile();
 		this.department = person.getDepartment();
+		this.locationBuilding = person.getLocationBuilding();
 		this.locationRoomNumber = person.getLocationRoomNumber();
+		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
-		
+
 		if (person.getDocument() != null) {
-			//TODO: hardcoded...
+			// TODO: hardcoded...
 			this.imageRef = "/store/media/" + person.getDocument().getDocumentId();
 		} else {
-			//TODO: hardcoded...
+			// TODO: hardcoded...
 			this.imageRef = "/protected/img/no_img.jpg";
 		}
 	}
@@ -109,6 +125,23 @@ public class UserDTO {
 	 */
 	public void setImageRef(String imageRef) {
 		this.imageRef = imageRef;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getImageId() {
+		return imageId;
+	}
+
+	/**
+	 * 
+	 * @param imageId
+	 *            the imageId to set
+	 */
+	public void setImageId(int imageId) {
+		this.imageId = imageId;
 	}
 
 	/**
@@ -184,5 +217,67 @@ public class UserDTO {
 	 */
 	public void setPhoneNumberMobile(String phoneNumberMobile) {
 		this.phoneNumberMobile = phoneNumberMobile;
+	}
+
+	/**
+	 * @return the locationFloor
+	 */
+	public Integer getLocationFloor() {
+		return locationFloor;
+	}
+
+	/**
+	 * @param locationFloor
+	 *            the locationFloor to set
+	 */
+	public void setLocationFloor(Integer locationFloor) {
+		this.locationFloor = locationFloor;
+	}
+
+	/**
+	 * @return the locationBuilding
+	 */
+	public String getLocationBuilding() {
+		return locationBuilding;
+	}
+
+	/**
+	 * @param locationBuilding
+	 *            the locationBuilding to set
+	 */
+	public void setLocationBuilding(String locationBuilding) {
+		this.locationBuilding = locationBuilding;
+	}
+
+	
+	/**
+	 * @return the dateOfBirth
+	 */
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	
+	/**
+	 * @param dateOfBirth the dateOfBirth to set
+	 */
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	
+	/**
+	 * @return the dateOfEntry
+	 */
+	public Date getDateOfEntry() {
+		return dateOfEntry;
+	}
+
+	
+	/**
+	 * @param dateOfEntry the dateOfEntry to set
+	 */
+	public void setDateOfEntry(Date dateOfEntry) {
+		this.dateOfEntry = dateOfEntry;
 	}
 }
