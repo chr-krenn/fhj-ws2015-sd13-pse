@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+	    <h:body>
+		    <ui:composition>
+		        <h:form rendered="#{loginController.isLoggedIn}">
+			    <p:splitButton value="#{loginController.loggedInUsername}" icon="ui-icon-person">
+			    	<p:menuitem>
+			    		<h:link outcome="/protected/User.jsf" styleClass="ui-menuitem-link ui-corner-all">
+			    			<f:param name="userName" value="#{loginController.loggedInUsername}" />
+			    			<span class="ui-menuitem-icon ui-icon ui-icon-home"></span>
+			    			<h:outputText value="Startseite"/>			    			
+			    		</h:link>
+			    	</p:menuitem> 
+			        <p:menuitem value="Abmelden" actionListener="#{loginController.logout}" icon="ui-icon-arrowthickstop-1-e" />
+			    </p:splitButton> 
+		    </h:form>
+		    </ui:composition>
+	    </h:body>
+</html>
