@@ -346,11 +346,11 @@ public class Person implements Serializable {
 		this.locationBuilding = locationBuilding;
 	}
 
-	public int getLocationFloor() {
+	public Integer getLocationFloor() {
 		return this.locationFloor;
 	}
 
-	public void setLocationFloor(int locationFloor) {
+	public void setLocationFloor(Integer locationFloor) {
 		this.locationFloor = locationFloor;
 	}
 
