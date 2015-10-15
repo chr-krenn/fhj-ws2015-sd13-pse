@@ -25,7 +25,8 @@ import javax.persistence.TemporalType;
 @Table(name = "document")
 @NamedQueries( {
 	@NamedQuery(name = "Document.findAll", query = "SELECT d FROM Document d"),
-	@NamedQuery(name = "Document.findById", query = "SELECT d FROM Document d WHERE d.documentId = :id")
+	@NamedQuery(name = "Document.findById", query = "SELECT d FROM Document d WHERE d.documentId = :id"),
+	@NamedQuery(name = "Document.deleteById", query = "DELETE FROM Document d WHERE d.documentId = :id")
 })
 public class Document implements Serializable {
 
