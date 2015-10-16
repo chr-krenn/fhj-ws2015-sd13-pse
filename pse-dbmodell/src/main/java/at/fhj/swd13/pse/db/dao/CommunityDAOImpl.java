@@ -38,6 +38,18 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	}
 	
 	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getMatchingCommunities(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Community> getMatchingCommunities( final String needle )	{
+	
+		final Query q = dbContext.createNamedQuery("Community.findMatching" );
+		q.setParameter("needle", needle + "%");
+		
+		return q.getResultList();
+	}
+	
+	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getUnconfirmedCommunites()
 	 */
 	@Override
