@@ -7,7 +7,9 @@ import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -20,10 +22,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private PasswordStrengthValidator passwordStrengthValidator;
-	
+
 	@Inject
 	private UserSession userSession;
-
 
 	/**
 	 * Create an instance of the user service
@@ -61,16 +62,16 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Override
 	public void logoutCurrentUser() {
-		
-		if ( userSession.isLoggedIn() ) {
-			Person p = dbContext.getPersonDAO().getByUsername( userSession.getUsername() );
-			p.setIsOnline( false );
+
+		if (userSession.isLoggedIn()) {
+			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
+			p.setIsOnline(false);
 			p.setCurrentSessionId(null);
-			
+
 			userSession.logout();
-		}		
+		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -104,6 +105,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#isMatchingPassword(java.lang.String, java.lang.String)
+	 */
+	public boolean isMatchingPassword(final String username, final String plainPassword) {
+		Person p = dbContext.getPersonDAO().getByUsername(username);
+
+		return p != null && p.isMatchingPassword(plainPassword);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#setPassword(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -116,17 +128,66 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		p.setPassword(newPlainPassword);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#getUser(java.lang.String)
+	 */
 	@Override
 	public Person getUser(final String username) {
 		return dbContext.getPersonDAO().getByUsername(username);
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#getUsers()
+	 */
 	@Override
-	public 	List<Person> getUsers() {
-	
-		//TODO use better method
+	public List<Person> getUsers() {
+
+		// TODO use better method
 		return dbContext.getPersonDAO().getAllPersons(0, 1000);
-		
+
+	}
+
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#update(at.fhj.swd13.pse.dto.UserDTO)
+	 */
+	public void update(final UserDTO userDTO) throws EntityNotFoundException {
+
+		Person p = dbContext.getPersonDAO().getByUsername(userDTO.getUserName(), true);
+
+		p.setLastName(userDTO.getLastName());
+		p.setFirstName(userDTO.getFirstName());
+
+		p.setEmailAddress(userDTO.getEmailAddress());
+		p.setPhoneNumberMobile(userDTO.getPhoneNumberMobile());
+
+		p.setDateOfBirth(userDTO.getDateOfBirth());
+		p.setDateOfEntry(userDTO.getDateOfEntry());
+
+		p.setDepartment(userDTO.getDepartment());
+		p.setJobPosition(userDTO.getJob());
+		p.setLocationBuilding(userDTO.getLocationBuilding());
+		p.setLocationFloor(userDTO.getLocationFloor());
+		p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
+	}
+
+	public void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException {
+
+		Person p = dbContext.getPersonDAO().getByUsername(username, true);
+
+		if (documentId == 0) {
+			p.setDocument(null);
+		} else {
+			Document userImage = dbContext.getDocumentDAO().getById(documentId);
+
+			if (userImage != null) {
+				p.setDocument(userImage);
+			} else {
+				throw new EntityNotFoundException("Document not found : " + documentId);
+			}
+		}
 	}
 }
