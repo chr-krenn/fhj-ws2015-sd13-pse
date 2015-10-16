@@ -10,11 +10,12 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
-
 
 /*
  * Test data 
@@ -83,12 +84,59 @@ public class MessageEditorController {
 			CommunityDTO communityDTO = new CommunityDTO(Integer.toString(community.getCommunityId()),
 					community.getName());
 
-			result.add(communityDTO);
+			if (!isAlreadySelected(communityDTO.getToken())) {
+				result.add(communityDTO);
+			}
 		}
 
-		logger.info("[MSG+] matching communities found: " + result.size());
+		logger.info("[MSG+] matching and not already selected communities found: " + result.size());
 
 		return result;
+	}
+
+	/**
+	 * check if the community with the given token has already been selected
+	 * 
+	 * @param token
+	 *            token of the communityDTO to check
+	 * 
+	 * @return true if the communityDTO has already been selected, false
+	 *         otherwise
+	 */
+	private boolean isAlreadySelected(final String token) {
+
+		logger.info("[MSG+] checking already selected for " + token);
+		logger.info("[MSG+] selected count " + selectedCommunities.size());
+
+		for (CommunityDTO communityDTO : selectedCommunities) {
+			if (communityDTO.getToken().equals(token)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * called when a community is added to the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleSelect(SelectEvent event) {
+
+		logger.info("[MSG+] handleSelect");
+	}
+
+	/**
+	 * called when a community is removed from the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleUnselect(UnselectEvent event) {
+
+		logger.info("[MSG+] handleUnselect");
 	}
 
 	/**
@@ -109,8 +157,8 @@ public class MessageEditorController {
 	 */
 	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
 
-		logger.info("[MSG+] set selected with an itemcount of " + selectedCommunities.size() );
-		
+		logger.info("[MSG+] set selected with an itemcount of " + selectedCommunities.size());
+
 		this.selectedCommunities = selectedCommunities;
 	}
 
