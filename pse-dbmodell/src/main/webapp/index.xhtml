@@ -28,7 +28,7 @@
 					onclick="PF('dlg').show()">einloggen!</a></em>
 			</h:panelGroup>
 			<h:panelGroup rendered="#{loginController.isLoggedIn}">
-				<div>Du bist bereits eingeloggt. Weiter gehts <a href="/protected/TestLoggedIn.jsf">hier</a></div>
+				<div>Du bist bereits eingeloggt. Weiter gehts <a href="#{request.contextPath}/protected/TestLoggedIn.jsf">hier</a></div>
 			</h:panelGroup>
 			<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
 
@@ -45,8 +45,7 @@
 
 					<f:facet name="footer">
 						<p:commandButton value="Anmelden" update="growl"
-							actionListener="#{loginController.login}"
-							oncomplete="handleLoginResult(xhr,status,args)" />
+							action="#{loginController.login}"/>
 						<p:commandButton value="Abbrechen" update="growl"
 							onclick="PF('dlg').hide();" />
 					</f:facet>
@@ -54,17 +53,5 @@
 				</h:panelGrid>
 			</p:dialog>
 		</h:form>
-		<script type="text/javascript">
-			function handleLoginResult(xhr, status, args) {
-				if (args.validationFailed || !args.loggedIn) {
-					PF('dlg').jq.effect("shake", {
-						times : 5
-					}, 100);
-				} else {
-					PF('dlg').hide();
-					window.location.replace("/protected/TestLoggedIn.jsf");
-				}
-			}
-		</script>
 	</ui:define>
 </ui:composition>

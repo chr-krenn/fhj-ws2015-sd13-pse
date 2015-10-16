@@ -34,7 +34,7 @@ public class LoginController {
 	@Inject
 	private UserSession userSession;
 	
-	public void login(ActionEvent event) {
+	public String login() {
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage message = null;
@@ -50,30 +50,28 @@ public class LoginController {
 				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
 			} else {
 				loggedIn = false;
-
 				logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
-
 				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
 			}
 		} else {
 			loggedIn = false;
-
 			logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
-
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
 		}
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		context.addCallbackParam("loggedIn", loggedIn);
+		return loggedIn ? "/protected/TestLoggedIn.jsf" : "NotLoggedIn";
 	}
 
 	public void logout() {
 
 		userService.logoutCurrentUser();
 
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+		FacesContext context = FacesContext.getCurrentInstance();
 		try {
-			context.redirect("/");
+	        String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/index.xhmtl"));
+	        extContext.redirect(url);
 		} catch (IOException e) {
 			logger.error("[LOGIN] error redirecting after logout: " + e.getMessage());
 		}
