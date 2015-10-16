@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+			<p:dataScroller value="#{messageListView.messages}" var="message"
+				chunkSize="10" mode="inline" scrollHeight="500">
+				<f:facet name="header">
+        		    Liste aller Nachrichten
+		        </f:facet>
+
+				<h:panelGrid columns="2" style="width:100%"
+					columnClasses="logo,detail">
+					<p:graphicImage value="#{message.iconRef}" />
+
+					<p:outputPanel>
+						<h:panelGrid columns="1" cellpadding="5">
+							<h:outputText value="#{message.headLine}" style="font-weight: bold" />
+							<h:outputText value="#{message.body}" escape="false"/>
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+			</p:dataScroller>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
