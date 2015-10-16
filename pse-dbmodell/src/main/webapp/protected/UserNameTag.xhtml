@@ -11,13 +11,62 @@
 			    	<p:menuitem>
 			    		<h:link outcome="/protected/User.jsf" styleClass="ui-menuitem-link ui-corner-all">
 			    			<f:param name="userName" value="#{loginController.loggedInUsername}" />
+			    			<f:param name="mode" value="view" />
 			    			<span class="ui-menuitem-icon ui-icon ui-icon-home"></span>
 			    			<h:outputText value="Startseite"/>			    			
 			    		</h:link>
-			    	</p:menuitem> 
-			        <p:menuitem value="Abmelden" actionListener="#{loginController.logout}" icon="ui-icon-arrowthickstop-1-e" />
-			    </p:splitButton> 
+			    	</p:menuitem>
+			    	<p:menuitem>
+			    		<h:link outcome="/protected/User.jsf" styleClass="ui-menuitem-link ui-corner-all">
+			    			<f:param name="userName" value="#{loginController.loggedInUsername}" />
+			    			<f:param name="mode" value="edit" />
+			    			<span class="ui-menuitem-icon ui-icon ui-icon-pencil"></span>
+			    			<h:outputText value="Profil bearbeiten"/>			    			
+			    		</h:link>
+			    	</p:menuitem>  
+			    	<p:menuitem value="Passwort ändern" onclick="PF('dlgpwc').show()" icon="ui-icon-key" />
+			    	<p:menuitem value="Abmelden" actionListener="#{loginController.logout}" icon="ui-icon-arrowthickstop-1-e" />			        
+			    </p:splitButton>
+			    	    
+			    
+			<p:growl id="growlpwc" sticky="false" showDetail="true" life="5000" />
+			
+			<p:dialog header="Password ändern" widgetVar="dlgpwc" resizeable="false">
+				<h:panelGrid columns="2" cellpadding="5">
+				
+					<h:outputLabel for="oldPassword" value="Altes Passwort:" />
+					<p:password id="oldPassword" value="#{loginController.password}"
+						required="true" label="Altes Passwort" />
+
+					<h:outputLabel for="newPassword" value="Neues Passwort:" />
+					<p:password id="newPassword" value="#{loginController.passwordNew}"
+						required="true" label="Neues Passwort" />
+						
+					<h:outputLabel for="newPasswordConfirmation" value="Neues Passwort erneut eingeben:" />
+					<p:password id="newPasswordConfirmation" value="#{loginController.passwordNewConfirmation}"
+						required="true" label="Neues Passwort erneut eingeben" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Bestätigung" update="growlpwc"
+							actionListener="#{loginController.changePasswort}"
+							oncomplete="handlePasswordChangeResult(xhr,status,args)" />
+						<p:commandButton value="Abbrechen" update="growlpwc"
+							onclick="PF('dlgpwc').hide();" />
+					</f:facet>
+				</h:panelGrid>
+			</p:dialog> 
 		    </h:form>
+			<script type="text/javascript">
+				function handlePasswordChangeResult(xhr, status, args) {
+					if (!args.passwordChanged) {
+						PF('dlgpwc').jq.effect("shake", {
+							times : 5
+						}, 100);
+					} else {
+						PF('dlgpwc').hide();
+					}
+				}
+			</script>
 		    </ui:composition>
 	    </h:body>
 </html>
