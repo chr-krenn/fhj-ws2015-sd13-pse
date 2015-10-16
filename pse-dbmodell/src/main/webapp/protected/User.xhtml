@@ -6,7 +6,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
-		<h:form>
+		<h:form> 
+		    <p:graphicImage name="#{userView.userDTO.imageRef}" alt="Kein Foto vorhanden! " />
+				
+				<p:fileUpload fileUploadListener="#{userView.handleFileUpload}"
+				mode="advanced" dragDropSupport="true" update="messages"
+				sizeLimit="10000000" allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" 
+				rendered="#{param.mode != null and param.mode eq 'edit'}" />
+			   <p:growl id="messages" showDetail="true" />
+
 		    <h:panelGrid columns="2" cellpadding="5">
 		        <p:outputLabel value="Vorname: " />
 		        <p:inputMask id="firstName" value="#{userView.userDTO.firstName}" disabled="True"/>

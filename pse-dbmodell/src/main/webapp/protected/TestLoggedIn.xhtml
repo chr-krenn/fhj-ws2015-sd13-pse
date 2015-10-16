@@ -12,6 +12,7 @@
 		<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
 			<h:outputText value="Benutzerprofil"/>
 			<f:param name="userName" value="#{loginController.loggedInUsername}" />
+			<f:param name="mode" value="view" />
 		</h:outputLink>
 		<div>
 			<a href="#{request.contextPath}/protected/UserList.jsf">Liste aller Benutzer</a>
