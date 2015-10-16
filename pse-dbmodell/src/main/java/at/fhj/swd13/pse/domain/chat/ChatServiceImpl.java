@@ -122,4 +122,14 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.chat.ChatService#getPossibleTargetCommunities(java.lang.String, java.lang.String)
+	 */
+	public List<Community> getPossibleTargetCommunities( final String username, final String needle ) {
+	
+		//TODO: filter those that the user is allowed to post to
+		return dbContext.getCommunityDAO().getMatchingCommunities( needle );		
+	}
 }

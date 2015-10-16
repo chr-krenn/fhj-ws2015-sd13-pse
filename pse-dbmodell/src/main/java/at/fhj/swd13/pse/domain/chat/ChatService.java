@@ -59,5 +59,17 @@ public interface ChatService {
 	 *             when the adminPerson is not active or not an admin
 	 */
 	void confirmCommunity(final Person adminPerson, Community unconfirmed);
+	
+	
+	/**
+	 * Get a list of communities that his user can post to and that match the given needle (name starts with)
+	 * 
+	 * @param username username to get the communities for
+	 * 
+	 * @param needle needle for the comparison
+	 * 
+	 * @return
+	 */
+	List<Community> getPossibleTargetCommunities( final String username, final String needle );
 
 }
