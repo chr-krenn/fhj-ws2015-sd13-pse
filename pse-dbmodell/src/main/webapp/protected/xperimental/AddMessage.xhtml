@@ -7,22 +7,11 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 
-		<h:form>
-			<p:editor id="contentEditor" widgetVar="editorWidget"
-				value="#{editorView.text}" />
+	  		<ui:include src="/protected/chat/MessageEditorTag.xhtml" />
 
-			<p:commandButton value="Fertig" id="btnDone"
-				actionListener="#{editorView.done}" onComplete="handleDone()"
-				icon="ui-icon-disc" />
-		</h:form>
-		<div>
-			<a href="#{request.contextPath}/protected/xperimental/ListMessages.jsf">Demonachrichten ansehen</a>
-		</div>
 		<script type="text/javascript">
-		function handleLoginResult(xhr, status, args) {
-			alert("gespeichert!");
-			window.location.replace("/protected/ShowMsg.jsf");
-		}	
-	</script>
+			function handleLoginResult(xhr, status, args) {
+			}	
+		</script>
 	</ui:define>
 </ui:composition>
