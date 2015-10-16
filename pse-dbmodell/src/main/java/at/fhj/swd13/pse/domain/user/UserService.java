@@ -114,4 +114,6 @@ public interface UserService {
 	 *             when the document was not found via the documentId
 	 */
 	void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException;
+
+	boolean changePassword(String loggedInUsername, String password, String passwordNew);
 }

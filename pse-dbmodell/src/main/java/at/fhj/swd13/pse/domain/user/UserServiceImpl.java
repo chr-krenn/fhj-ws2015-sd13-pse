@@ -26,6 +26,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	@Inject
 	private UserSession userSession;
 
+
 	/**
 	 * Create an instance of the user service
 	 * 
@@ -189,5 +190,28 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 				throw new EntityNotFoundException("Document not found : " + documentId);
 			}
 		}
+	}
+
+	@Override
+	public boolean changePassword(String loggedInUsername, String passwordOldPlain, String passwordNewPlain) {
+		Person p;
+		try {
+			p = dbContext.getPersonDAO().getByUsername(loggedInUsername, true);
+		} catch (EntityNotFoundException e) {
+			return false;
+		}
+
+		if(!p.isMatchingPassword(passwordOldPlain))
+			return false;
+			
+		try {
+			passwordStrengthValidator.validate(passwordNewPlain);
+		} catch (WeakPasswordException e) {
+			return false;
+		}
+		
+		p.setPassword(passwordNewPlain);
+		
+		return true;
 	}
 }
