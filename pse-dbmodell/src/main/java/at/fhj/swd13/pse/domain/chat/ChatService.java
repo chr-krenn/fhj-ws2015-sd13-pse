@@ -10,6 +10,15 @@ import at.fhj.swd13.pse.service.DuplicateEntityException;
 public interface ChatService {
 
 	/**
+	 * Get the community with the given id
+	 * 
+	 * @param communityId the id of the community to retrieve
+	 * 
+	 * @return community or null if not found
+	 */
+	Community getCommunity( final int communityId );
+	
+	/**
 	 * Create a public chat community. If the creator is an administrator, the
 	 * community is confirmed.
 	 *

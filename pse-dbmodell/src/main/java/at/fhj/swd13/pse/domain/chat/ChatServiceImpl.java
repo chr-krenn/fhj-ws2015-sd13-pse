@@ -27,6 +27,15 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		super(dbContext);
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.chat.ChatService#getCommunity(int)
+	 */
+	public Community getCommunity( final int communityId ) {
+		
+		return dbContext.getCommunityDAO().get(communityId);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

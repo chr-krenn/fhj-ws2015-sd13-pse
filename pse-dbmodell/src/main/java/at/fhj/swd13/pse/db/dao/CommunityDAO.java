@@ -24,16 +24,26 @@ public interface CommunityDAO {
 	 */
 	Community getByName(final String name);
 
+	/**
+	 * Get a community from persistent storage by its id
+	 * 
+	 * @param communityId
+	 *            id of the community to get
+	 * 
+	 * @return instance of the community or null if none found
+	 */
+	Community get(final int communityId);
 
 	/**
 	 * get all communities that start with the given needle
 	 * 
-	 * @param needle string the communities must start with
+	 * @param needle
+	 *            string the communities must start with
 	 * 
 	 * @return a list of matching communities or an empty list
 	 */
-	List<Community> getMatchingCommunities( final String needle );
-	
+	List<Community> getMatchingCommunities(final String needle);
+
 	/**
 	 * Remove a community from the persistent storage by its id
 	 * 

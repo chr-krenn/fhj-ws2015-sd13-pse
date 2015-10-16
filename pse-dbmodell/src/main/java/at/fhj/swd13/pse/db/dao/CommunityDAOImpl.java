@@ -38,6 +38,18 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	}
 	
 	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#get(int)
+	 */
+	public Community get(final int communityId) {
+		
+		final Query q = dbContext.createNamedQuery("Community.findById");
+		q.setParameter("id", communityId);
+		
+		return fetchSingle(q);
+		
+	}
+	
+	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getMatchingCommunities(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
