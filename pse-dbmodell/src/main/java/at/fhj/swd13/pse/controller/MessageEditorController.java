@@ -14,7 +14,9 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
+import at.fhj.swd13.pse.domain.chat.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
 
 /*
@@ -30,12 +32,17 @@ public class MessageEditorController {
 
 	@Inject
 	private ChatService chatService;
+	
+	@Inject
+	private TagService tagService;
 
 	private String headline;
 	private String richText;
 	private String iconRef;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
+	
+	private List<String> selectedTags = new ArrayList<String>(); 
 
 	/**
 	 * 
@@ -117,6 +124,18 @@ public class MessageEditorController {
 		return false;
 	}
 
+	public List<String> completeTag(String input) {
+		
+		List<String> result = new ArrayList<String>();
+		
+		for( Tag tag : tagService.getMatchingTags( input ) ) {
+			
+			result.add( tag.getToken() );
+		}
+		
+		return result;		
+	}	
+	
 	/**
 	 * called when a community is added to the chosen list
 	 * 
@@ -140,6 +159,28 @@ public class MessageEditorController {
 	}
 
 	/**
+	 * called when a tag is added to the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleTagSelect(SelectEvent event) {
+
+		logger.info("[MSG+] handleSelect");
+	}
+
+	/**
+	 * called when a tag is removed from the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleTagUnselect(UnselectEvent event) {
+
+		logger.info("[MSG+] handleUnselect");
+	}
+
+	/**
 	 * Get the currently selected communities
 	 * 
 	 * @return list of the selected communities (may be empty)
@@ -157,11 +198,23 @@ public class MessageEditorController {
 	 */
 	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
 
-		logger.info("[MSG+] set selected with an itemcount of " + selectedCommunities.size());
+		logger.info("[MSG+] set selected communities with an itemcount of " + selectedCommunities.size());
 
 		this.selectedCommunities = selectedCommunities;
 	}
 
+	
+	public List<String> getSelectedTags() {
+		return selectedTags;
+	}
+	
+	public void setSelectedTags( List<String> selectedTags ) {
+		
+		logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
+
+		this.selectedTags = selectedTags;
+	}
+	
 	/**
 	 * 
 	 * @return
