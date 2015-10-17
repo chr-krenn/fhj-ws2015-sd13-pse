@@ -127,6 +127,16 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 		return (List<Person>) q.getResultList();
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons()
+	 */
+	@SuppressWarnings("unchecked")
+	public List <Person> getAllPersons() {
+
+		Query q = dbContext.createNamedQuery("Person.findAll");
+		return (List<Person>) q.getResultList();		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Person> getAllWithNullPasswords() {
 

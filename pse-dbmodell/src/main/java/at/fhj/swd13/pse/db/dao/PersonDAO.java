@@ -61,6 +61,13 @@ public interface PersonDAO {
 	 */
 	Person getByUsername( String username, boolean assertFound ) throws EntityNotFoundException;
 	
+	/**
+	 * Load all persons sorted by last_name, first_name
+
+	 * @return a sorted list of persons
+	 * 
+	 */
+	List <Person> getAllPersons();
 	
 	/**
 	 * Load all persons sorted by last_name, first_name
