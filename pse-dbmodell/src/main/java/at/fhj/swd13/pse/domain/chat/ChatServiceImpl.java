@@ -21,21 +21,23 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	/**
 	 * Create an instance of the chat service
 	 */
-	public ChatServiceImpl() {}
+	public ChatServiceImpl() {
+	}
 
-	public ChatServiceImpl( DbContext dbContext ) {
+	public ChatServiceImpl(DbContext dbContext) {
 		super(dbContext);
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.chat.ChatService#getCommunity(int)
 	 */
-	public Community getCommunity( final int communityId ) {
-		
+	public Community getCommunity(final int communityId) {
+
 		return dbContext.getCommunityDAO().get(communityId);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,8 +45,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public Community createChatCommunity(final String creatorUsername, final String communityName, final boolean invitationOnly)
-			throws EntityNotFoundException {
+	public Community createChatCommunity(final String creatorUsername, final String communityName,
+			final boolean invitationOnly) throws EntityNotFoundException {
 
 		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
@@ -55,10 +57,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			community.setCreatedBy(creator);
 			community.setInvitationOnly(invitationOnly);
 
-			return createCommunity(creator, community, dbContext);
+			return createCommunity(creator, community);
 
 		} else {
-			throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername);
+			throw new IllegalStateException(
+					"User is not active and can therefore not create communities: " + creatorUsername);
 		}
 	}
 
@@ -90,7 +93,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * @throws DuplicateEntityException
 	 *             if the community already exists
 	 */
-	protected Community createCommunity(final Person creator, final Community community, final DbContext dbContext) {
+	protected Community createCommunity(final Person creator, final Community community) {
 
 		CommunityDAO communityDao = dbContext.getCommunityDAO();
 
@@ -98,6 +101,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 			if (creator.isAdmin()) {
 				community.setConfirmedBy(creator);
+			} else {
+				community.setConfirmedBy(null);
 			}
 
 			communityDao.insert(community);
@@ -111,7 +116,6 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		} else {
 			throw new DuplicateEntityException("Community already exists: " + community.getName());
 		}
-
 	}
 
 	/*
@@ -128,17 +132,92 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			adminPerson.addConfirmedCommunities(unconfirmed);
 
 		} else {
-			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
+			throw new IllegalStateException("Person confirming the community is either not active or not an admin: "
+					+ adminPerson.getUserName());
 		}
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.domain.chat.ChatService#getPossibleTargetCommunities(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhj.swd13.pse.domain.chat.ChatService#getPossibleTargetCommunities(
+	 * java.lang.String, java.lang.String)
 	 */
-	public List<Community> getPossibleTargetCommunities( final String username, final String needle ) {
-	
-		//TODO: filter those that the user is allowed to post to
-		return dbContext.getCommunityDAO().getMatchingCommunities( needle );		
+	public List<Community> getPossibleTargetCommunities(final String username, final String needle) {
+
+		// TODO: filter those that the user is allowed to post to
+		return dbContext.getCommunityDAO().getMatchingCommunities(needle);
 	}
+
+	/**
+	 * Creates the user private communities (every user has a community onto
+	 * which his private messages are pushed)
+	 * 
+	 * @return the number of created communities
+	 */
+	public int createAllPrivateCommunities() {
+
+		int createdCommunities = 0;
+
+		final List<Person> allPersons = dbContext.getPersonDAO().getAllPersons();
+
+		for (Person user : allPersons) {
+
+			final String privateCommunityName = Community.PRIVATE_PREFIX + user.getUserName();
+			boolean foundPrivateCommunity = false;
+
+			for (Community community : user.getCreatedCommunities()) {
+
+				if (community.getName().equals(privateCommunityName)) {
+					foundPrivateCommunity = true;
+					break;
+				}
+			}
+
+			if (!foundPrivateCommunity) {
+				++createdCommunities;
+
+				createPrivateCommunity(user);
+			}
+		}
+
+		return createdCommunities;
+	}
+
+	/**
+	 * create a private community for the creating user
+	 * 
+	 * @param creator
+	 * 
+	 * @param community
+	 * 
+	 * @return
+	 */
+	private Community createPrivateCommunity(final Person creator) {
+
+		CommunityDAO communityDao = dbContext.getCommunityDAO();
+
+		Community community = new Community(Community.PRIVATE_PREFIX + creator.getUserName());
+
+		if (communityDao.getByName(community.getName()) == null) {
+
+			community.setConfirmedBy(creator);
+			community.setPrivateUser(creator);
+			community.setCreatedBy(creator);
+			community.setInvitationOnly(true);
+
+			communityDao.insert(community);
+			CommunityMember memberShip = community.addMember(creator, true);
+
+			if (memberShip != null) {
+				dbContext.persist(memberShip);
+			}
+
+			return community;
+		} else {
+			throw new DuplicateEntityException("Community already exists: " + community.getName());
+		}
+	}
+
 }

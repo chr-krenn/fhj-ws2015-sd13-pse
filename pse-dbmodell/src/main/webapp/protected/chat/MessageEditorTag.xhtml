@@ -69,8 +69,12 @@
 						itemLabel="#{communityDTO.name}"
 						itemValue="#{communityDTO}"
 						forceSelection="true"
-						minQueryLength="3">
-						
+						minQueryLength="3"
+						required="true"						
+						>
+						<p:ajax event="itemSelect" listener="#{messageEditorController.handleSelect}" />
+						<p:ajax event="itemUnselect" listener="#{messageEditorController.handleUnselect}" />
+
 						<f:facet name="itemTip">#{communityDTO.name}</f:facet>
 
 					</p:autoComplete>

@@ -33,6 +33,8 @@ import javax.persistence.TemporalType;
 public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static final String PRIVATE_PREFIX = "@";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "community_id", unique = true, nullable = false)

@@ -80,5 +80,12 @@ public interface ChatService {
 	 * @return
 	 */
 	List<Community> getPossibleTargetCommunities( final String username, final String needle );
+	
+	/**
+	 * Creates the user private communities (every user has a community onto which his private messages are pushed)
+	 * 
+	 * @return the number of created communities
+	 */
+	int createAllPrivateCommunities();
 
 }

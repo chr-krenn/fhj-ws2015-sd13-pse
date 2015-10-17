@@ -1,7 +1,6 @@
 package at.fhj.swd13.pse.controller.converter;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
