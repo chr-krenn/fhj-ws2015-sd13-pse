@@ -89,6 +89,19 @@ public interface UserService {
 	void setPassword(String username, String newPlainPassword) throws WeakPasswordException, EntityNotFoundException;
 
 	/**
+	 * Set a new password for the user but verify the current
+	 * 
+	 * @param loggedInUsername username of for whom to change the password
+	 * 
+	 * @param password current password that will be verified
+	 *
+	 * @param passwordNew plaintext of the new password
+	 * 
+	 * @return true when the password has been changed, false in any other case (user not found, weak pw, unmatching pw)
+     *
+	 */
+	boolean changePassword(String loggedInUsername, String password, String passwordNew);
+	/**
 	 * Update the user data base on the contents of the userDTO
 	 * !! Warning: permissions are not checked!
 	 * 
@@ -114,6 +127,4 @@ public interface UserService {
 	 *             when the document was not found via the documentId
 	 */
 	void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException;
-
-	boolean changePassword(String loggedInUsername, String password, String passwordNew);
 }

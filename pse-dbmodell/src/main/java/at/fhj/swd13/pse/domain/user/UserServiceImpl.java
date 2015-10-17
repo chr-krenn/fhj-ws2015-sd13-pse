@@ -192,6 +192,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#changePassword(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean changePassword(String loggedInUsername, String passwordOldPlain, String passwordNewPlain) {
 		Person p;
@@ -214,4 +217,6 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		
 		return true;
 	}
+	
+	
 }
