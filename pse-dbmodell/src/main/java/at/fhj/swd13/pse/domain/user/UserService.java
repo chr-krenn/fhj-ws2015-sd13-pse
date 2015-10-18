@@ -41,6 +41,14 @@ public interface UserService {
 	 * @return a list of all currently known users
 	 */
 	List<Person> getUsers();
+	
+	/**
+	 * searc users by firstname, lastname, email 
+	 * 
+	 * @return a list of all users mathcing the search
+	 */
+	public List<Person> findUsers(String search);
+	
 
 	/**
 	 * Update all passwords that are null or '--' with 12345678

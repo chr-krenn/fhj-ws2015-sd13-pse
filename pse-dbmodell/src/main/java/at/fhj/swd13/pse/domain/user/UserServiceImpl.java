@@ -153,8 +153,18 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	}
 
 	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#findUsers(java.lang.String)
+	 */
+	@Override
+	public List<Person> findUsers(String search) {
+		return dbContext.getPersonDAO().getPersonLike(search);
+	}
+	
+	
+	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.domain.user.UserService#update(at.fhj.swd13.pse.dto.UserDTO)
 	 */
+	@Override
 	public void update(final UserDTO userDTO) throws EntityNotFoundException {
 
 		Person p = dbContext.getPersonDAO().getByUsername(userDTO.getUserName(), true);

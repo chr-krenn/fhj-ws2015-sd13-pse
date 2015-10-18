@@ -34,6 +34,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * 
 	 * @see at.fhj.swd13.pse.db.PersonDAO#remove(at.fhj.swd13.pse.db.Person)
 	 */
+	@Override
 	public void remove(Person person) {
 
 		if (person == null || person.getPersonId() == 0) {
@@ -53,6 +54,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * 
 	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#remove(int)
 	 */
+	@Override
 	public void remove(int personId) {
 
 		final Query q = dbContext.createNamedQuery("Person.deleteById");
@@ -118,6 +120,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons(int, int)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Person> getAllPersons(int startRow, int maxRows) {
 
 		Query q = dbContext.createNamedQuery("Person.findAll");
@@ -131,6 +134,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons()
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public List <Person> getAllPersons() {
 
 		Query q = dbContext.createNamedQuery("Person.findAll");
@@ -138,6 +142,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Person> getAllWithNullPasswords() {
 
 		Query q = dbContext.createNamedQuery("Person.findAllNullPasswords");
@@ -184,6 +189,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * at.fhj.swd13.pse.db.PersonDAO#removeTargetRelations(at.fhj.swd13.pse.
 	 * db.Person)
 	 */
+	@Override
 	public int removeTargetRelations(final Person person) {
 
 		int removedRelationCount = 0;

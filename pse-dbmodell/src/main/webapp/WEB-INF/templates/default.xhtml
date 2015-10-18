@@ -7,21 +7,19 @@
 <h:head>
 	<title>PSE</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" media="all" href="#{request.contextPath}/css/screen.css" />
+	<link rel="stylesheet" media="all" href="#{request.contextPath}/css/theme.css" />
 </h:head>
 <h:body>
-	<div id="container">
+	<p:outputPanel id="container" deferred="true">
 		<ui:insert name="header" >
 	  		<ui:include src="/protected/UserNameTag.xhtml" />
 		</ui:insert>
-		<div id="content">
-			<ui:insert name="content">
-                    [Template content will be inserted here]
-         </ui:insert>
-		</div>
+		<p:panel id="content">
+			<ui:insert name="content">[Template content will be inserted here]</ui:insert>
+		</p:panel>
 		<div id="footer">
 			&copy; 2015 by SWD13
 		</div>
-	</div>
+	</p:outputPanel>
 </h:body>
 </html>
