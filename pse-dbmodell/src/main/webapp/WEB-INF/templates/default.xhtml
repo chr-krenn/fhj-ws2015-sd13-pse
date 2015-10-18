@@ -10,16 +10,23 @@
 	<link rel="stylesheet" media="all" href="#{request.contextPath}/css/theme.css" />
 </h:head>
 <h:body>
-	<p:outputPanel id="container" deferred="true">
-		<ui:insert name="header" >
-	  		<ui:include src="/protected/UserNameTag.xhtml" />
-		</ui:insert>
-		<p:panel id="content">
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" styleClass="ui-layout-pane-no-border">
+			<ui:insert name="header" >
+	  			<ui:include src="/protected/UserNameTag.xhtml" />
+			</ui:insert>
+		</p:layoutUnit>
+	<p:layoutUnit position="center">
+		<p:panel>
 			<ui:insert name="content">[Template content will be inserted here]</ui:insert>
 		</p:panel>
+	</p:layoutUnit>
+	<p:layoutUnit position="south" styleClass="ui-layout-pane-no-border">
 		<ui:insert name="footer">
 			<ui:include src="/Footer.xhtml" />
 		</ui:insert>
-	</p:outputPanel>
+		</p:layoutUnit>
+	
+	</p:layout>
 </h:body>
 </html>
