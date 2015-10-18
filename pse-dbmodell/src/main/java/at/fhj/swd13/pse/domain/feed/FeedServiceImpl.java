@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.repository.MessageRepository;
 
 /**
@@ -22,5 +23,10 @@ public class FeedServiceImpl implements FeedService {
 	@Override
 	public List<Message> loadFeed() {
 		return messageRepository.loadAll();
+	}
+
+	@Override
+	public List<Message> loadFeedForUser(Person user) {
+		return messageRepository.loadForUser(user);
 	}
 }

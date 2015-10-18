@@ -1591,3 +1591,8 @@
 .ui-layout-pane-no-border {
   	border: 0;
 }
+
+.ui-datascroller .ui-datascroller-item {
+    border-bottom: 1px solid #a8a8a8;
+    padding: 25px 10px;
+}
