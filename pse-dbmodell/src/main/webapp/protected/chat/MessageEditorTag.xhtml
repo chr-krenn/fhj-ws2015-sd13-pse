@@ -38,14 +38,12 @@
 			</p:row>
 			<p:row>
 				<p:column colspan="2">
-					<p:outputLabel>Icon</p:outputLabel>
-					<p:fileUpload
-						fileUploadListener="#{messageEditorController.handleIconUpload()}"
-						mode="advanced" dragDropSupport="true" update="growlMessage"
-						multiple="false" sizeLimit="10000000"
-						allowTypes="/(\.|\/)(jpe?g|png)$/" />
-				</p:column>
-			</p:row>
+
+					<p:commandButton value="Icon hochladen" actionListener="#{messageEditorController.uploadIcon}" validateClient="false" immediate="true">
+						<p:ajax event="dialogReturn" listener="#{messageEditorController.onIconUploaded}" update="messageIcon" />
+					</p:commandButton>
+				</p:column>				
+			</p:row>			
 			<p:row>
 				<p:column colspan="2">
 					<p:outputLabel>Dokument</p:outputLabel>

@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -44,6 +45,7 @@ public class MessageEditorController {
 
 	private String headline;
 	private String richText;
+	private int iconId;
 	private String iconRef;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
@@ -54,7 +56,8 @@ public class MessageEditorController {
 	 * 
 	 */
 	public void save() {
-		logger.info("[MSG+] saving message...");
+		// TODO implement
+		logger.info("[MSG+] saving message... (nothing for NOW");
 	}
 
 	/**
@@ -215,9 +218,38 @@ public class MessageEditorController {
 
 	public void setSelectedTags(List<String> selectedTags) {
 
-		logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
+		if (selectedTags != null) {
+			logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
 
-		this.selectedTags = selectedTags;
+			this.selectedTags = selectedTags;
+		} else {
+			this.selectedTags = new ArrayList<String>();
+		}
+	}
+
+	/**
+	 * open the file upload dialog and upload an image
+	 */
+	public void uploadIcon() {
+
+		logger.info("[MSG+] uploading icon");
+
+		RequestContext.getCurrentInstance().openDialog("/protected/ImageUpload");
+	}
+
+	public void onIconUploaded(SelectEvent element) {
+
+		logger.info("[MSG+] icon uploaded " + element );
+		
+		if ( element != null ) {
+			final int addedDocumentId = (Integer)element.getObject();
+			
+			logger.info("[MSG+] uploaded documentId was " + addedDocumentId );
+			
+			iconId = addedDocumentId;
+			iconRef = documentService.buildServiceUrl( iconId );
+		}
+		
 	}
 
 	/**

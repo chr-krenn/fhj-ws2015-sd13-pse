@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">	
+	
+<h:head>
+	<title>Bild hochladen</title>
+</h:head>
+<h:body>
+	<h:form>
+		<p:growl id="growlFileUpload" sticky="false" showDetail="true"
+			life="5000" />
+	
+		<p:fileUpload
+			fileUploadListener="#{fileUploadController.handleUpload}"
+			mode="advanced" 
+			dragDropSupport="true" 
+			update="growlFileUpload"
+			multiple="false" sizeLimit="10000000"
+			allowTypes="/(\.|\/)(jpe?g|png)$/" />
+
+		<p:commandButton value="Fertig" icon="ui-icon-ok"
+			actionListener="#{fileUploadController.ok}" />
+		<p:commandButton value="Abbrechen" icon="ui-icon-cancel"
+			actionListener="#{fileUploadController.cancel}" />
+	</h:form>
+</h:body>
+</html>
