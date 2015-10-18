@@ -133,7 +133,6 @@ CREATE TABLE `document` (
   `size` int(11) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`document_id`),
-  UNIQUE KEY `document_name_UNIQUE` (`name`),
   FULLTEXT KEY `document_description` (`description`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='F�r alles was vom Benutzer hochgeladen wird (pdf,jpg, png)\nFilter was erlaubt ist (Gr��e, Type) durch Applikation)';
 /*!40101 SET character_set_client = @saved_cs_client */;
