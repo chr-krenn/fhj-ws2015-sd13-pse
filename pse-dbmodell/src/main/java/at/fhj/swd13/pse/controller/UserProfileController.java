@@ -38,7 +38,7 @@ public class UserProfileController implements Serializable {
 	private Logger logger;
 	
 	private UserDTO userDTO;
-	
+		
 	@PostConstruct
 	public void setup() {
 		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
@@ -77,5 +77,15 @@ public class UserProfileController implements Serializable {
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed, invalid user");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} 
+	}
+	
+	public String getFileuploadDisplay()
+	{
+		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
+		boolean modeEdit =  ((mode != null) && (mode.equals("edit")));
+		
+		String fileuploadDisplay =  modeEdit == false ? "display:none" : "display:all";
+		
+		return fileuploadDisplay;
 	}
 }
