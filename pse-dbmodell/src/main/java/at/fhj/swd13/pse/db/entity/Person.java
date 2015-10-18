@@ -2,11 +2,14 @@ package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +39,10 @@ import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 		@NamedQuery(name = "Person.findNameLike", query = "SELECT p FROM Person p WHERE p.userName LIKE :name OR p.lastName LIKE :name ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.deleteById", query = "DELETE FROM Person p WHERE p.personId = :id") })
 public class Person implements Serializable {
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -48,7 +54,9 @@ public class Person implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -174,11 +182,11 @@ public class Person implements Serializable {
 	private List<PersonMessage> personMessages;
 
 	// bi-directional many-to-one association to PersonRelation
-	@OneToMany(mappedBy = "sourcePerson")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "sourcePerson")
 	private List<PersonRelation> personSourceRelations;
 
 	// bi-directional many-to-one association to PersonRelation
-	@OneToMany(mappedBy = "targetPerson")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "targetPerson")
 	private List<PersonRelation> personTargetRelations;
 
 	// bi-directional many-to-one association to PersonTag
@@ -275,7 +283,6 @@ public class Person implements Serializable {
 
 		hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
 	}
-
 
 	/**
 	 * Check whether the given plaintext password matches the user's password
@@ -385,9 +392,9 @@ public class Person implements Serializable {
 		return currentSessionId;
 	}
 
-	
 	/**
-	 * @param currentSessionId the currentSessionId to set
+	 * @param currentSessionId
+	 *            the currentSessionId to set
 	 */
 	public void setCurrentSessionId(String currentSessionId) {
 		this.currentSessionId = currentSessionId;
@@ -708,5 +715,28 @@ public class Person implements Serializable {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Creates a set containing all contacts of the user
+	 * 
+	 * @return a set of all contacts
+	 */
+	public Set<Person> getContacts() {
+		Set<Person> contacts = new HashSet<Person>();
+
+		if (getPersonTargetRelations() != null) {
+			for (PersonRelation pr : getPersonTargetRelations()) {
+				contacts.add(pr.getSourcePerson());
+
+			}
+		}
+
+		if (getPersonSourceRelations() != null) {
+			for (PersonRelation pr : getPersonSourceRelations()) {
+				contacts.add(pr.getTargetPerson());
+			}
+		}
+		return contacts;
 	}
 }

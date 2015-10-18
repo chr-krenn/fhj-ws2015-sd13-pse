@@ -33,7 +33,42 @@
 		 
 		        <p:outputLabel value="Telefonnummer: " />
 		        <p:inputMask id="phoneNumberMobile" value="#{userView.userDTO.phoneNumberMobile}" disabled="True"/>
+		    
+	
+		    
+		    
+		    
 		    </h:panelGrid>
+		    
+		    
+		    
+		    
+		    
+		    	    				<p:dataScroller value="#{userView.userDTO.contacts}" var="contact"
+				chunkSize="10" mode="inline" scrollHeight="500">
+				<f:facet name="header">
+            Liste der Kontakte
+        </f:facet>
+
+				<h:panelGrid columns="2" style="width:100%"
+					columnClasses="logo,detail">
+					
+
+					<p:outputPanel>
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputText value="Name:" />
+							<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+								<h:outputText value="#{contact.firstName} #{contact.lastName}"  style="font-weight: bold"/>
+								<f:param name="userName" value="#{contact.userName}" />
+								<f:param name="mode" value="view" />
+							</h:outputLink>
+
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+			</p:dataScroller>
+		    
+		    
 	       	
 		    <p:dialog widgetVar="dlg" modal="true" resizable="false" header="Values" showEffect="fade"> 
 		        <p:panelGrid id="display" columns="2" columnClasses="label,value">
