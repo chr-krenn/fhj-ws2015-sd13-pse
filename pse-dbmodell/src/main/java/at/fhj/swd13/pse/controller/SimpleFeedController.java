@@ -9,6 +9,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.OrderBy;
 
+import org.jboss.logging.Logger;
+import org.primefaces.context.RequestContext;
+
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -36,6 +40,9 @@ public class SimpleFeedController {
     @Inject
 	private UserSession userSession;
     
+    @Inject
+	private Logger logger;
+    
     @PostConstruct
     public void postConstruct() {
     	
@@ -47,7 +54,13 @@ public class SimpleFeedController {
     }
     
     public List<Message> getActivities() {
-    	return feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
+    	try {
+			return feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
+		} catch (EntityNotFoundException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[FEEDS] getActivities failed for " + userSession.getUsername() + " from " + context.toString());
+			return null;
+		}
     	
     }
 }
