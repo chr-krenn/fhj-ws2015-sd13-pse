@@ -20,7 +20,4 @@ public class DbContextProviderImpl implements DbContextProvider {
 
 		return new DbContextImpl();
 	}
-
-	@PersistenceContext
-	private EntityManager em;
 }
