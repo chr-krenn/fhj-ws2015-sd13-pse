@@ -3,19 +3,17 @@ package at.fhj.swd13.pse.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.TagService;
@@ -48,6 +46,10 @@ public class MessageEditorController {
 	private int iconId;
 	private String iconRef;
 
+	private int documentId;
+	private String documentRef;
+	private String documentName;
+
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
 
 	private List<String> selectedTags = new ArrayList<String>();
@@ -58,28 +60,6 @@ public class MessageEditorController {
 	public void save() {
 		// TODO implement
 		logger.info("[MSG+] saving message... (nothing for NOW");
-	}
-
-	/**
-	 * 
-	 * @param event
-	 */
-	public void handleIconUpload(FileUploadEvent event) {
-
-		FacesMessage message = new FacesMessage("Fehler", "Hochladen eines Icons noch nicht unterstützt");
-		message.setSeverity(FacesMessage.SEVERITY_ERROR);
-		FacesContext.getCurrentInstance().addMessage(null, message);
-	}
-
-	/**
-	 * 
-	 * @param event
-	 */
-	public void handleDocumentUpload(FileUploadEvent event) {
-
-		FacesMessage message = new FacesMessage("Fehler", "Hochladen eines Documentes noch nicht unterstützt");
-		message.setSeverity(FacesMessage.SEVERITY_ERROR);
-		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
 	/**
@@ -239,17 +219,43 @@ public class MessageEditorController {
 
 	public void onIconUploaded(SelectEvent element) {
 
-		logger.info("[MSG+] icon uploaded " + element );
-		
-		if ( element != null ) {
-			final int addedDocumentId = (Integer)element.getObject();
-			
-			logger.info("[MSG+] uploaded documentId was " + addedDocumentId );
-			
+		logger.info("[MSG+] icon uploaded " + element);
+
+		if (element != null) {
+			final int addedDocumentId = (Integer) element.getObject();
+
+			logger.info("[MSG+] uploaded documentId was " + addedDocumentId);
+
 			iconId = addedDocumentId;
-			iconRef = documentService.buildServiceUrl( iconId );
+			iconRef = documentService.buildServiceUrl(iconId);
 		}
-		
+	}
+
+	/**
+	 * open the file upload dialog and upload an image
+	 */
+	public void uploadDocument() {
+
+		logger.info("[MSG+] uploading document");
+
+		RequestContext.getCurrentInstance().openDialog("/protected/DocumentUpload");
+	}
+
+	public void onDocumentUploaded(SelectEvent element) {
+
+		logger.info("[MSG+] document uploaded " + element);
+
+		if (element != null) {
+			final int addedDocumentId = (Integer) element.getObject();
+
+			logger.info("[MSG+] uploaded documentId was " + addedDocumentId);
+
+			documentId = addedDocumentId;
+			documentRef = documentService.buildServiceUrl(documentId);
+
+			Document d = documentService.get(documentId);
+			documentName = d.getName();
+		}
 	}
 
 	/**
@@ -308,5 +314,26 @@ public class MessageEditorController {
 	 */
 	public void setIconRef(String iconRef) {
 		this.iconRef = iconRef;
+	}
+
+	public String getDocumentRef() {
+		if ( documentRef == null ) {
+			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);			
+		}
+
+		logger.info("[MSG+] documentRef: " + documentRef );		
+		return documentRef;
+	}
+
+	public void setDocumentRef(String documentRef) {
+		this.documentRef = documentRef;
+	}
+
+	public String getDocumentName() {
+		return documentName;
+	}
+
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
 	}
 }

@@ -12,7 +12,7 @@
 		<p:panelGrid>
 
 			<p:row>
-				<p:column colspan="2">Neue Nachricht eingeben: #{request.contextPath}</p:column>
+				<p:column colspan="2">Neue Nachricht eingeben</p:column>
 			</p:row>
 			<p:row>
 				<p:column></p:column>
@@ -45,15 +45,17 @@
 				</p:column>				
 			</p:row>			
 			<p:row>
-				<p:column colspan="2">
-					<p:outputLabel>Dokument</p:outputLabel>
-					<p:fileUpload
-						fileUploadListener="#{messageEditorController.handleDocumentUpload}"
-						mode="advanced" dragDropSupport="true" update="growlMessage"
-						multiple="false" sizeLimit="10000000"
-						allowTypes="/(\.|\/)(jpe?g|png)$/" />
-				</p:column>
-			</p:row>
+				<p:column colspan="1">
+					<p:commandButton value="Dokument hochladen" actionListener="#{messageEditorController.uploadDocument}" validateClient="false" immediate="true">
+						<p:ajax event="dialogReturn" listener="#{messageEditorController.onDocumentUploaded}" update="documentName" />
+					</p:commandButton>
+				</p:column>			
+				<p:column>
+					<h:outputLink id="documentName" value="#{request.contextPath}#{messageEditorController.documentRef}">
+						<h:outputText value="#{messageEditorController.documentName}" />
+					</h:outputLink>
+				</p:column>	
+			</p:row>			
 			<p:row>
 				<p:column>
 					<p:outputLabel for="targetCommunities" value="Communities" />
