@@ -1,6 +1,9 @@
 package at.fhj.swd13.pse.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -33,6 +36,8 @@ public class UserDTO {
 	private Integer locationFloor;
 
 	private String job;
+	
+	private List<Person> contacts;
 
 	public UserDTO() {}
 
@@ -49,6 +54,7 @@ public class UserDTO {
 		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
+		this.contacts = new ArrayList<Person>(person.getContacts());
 
 		if (person.getDocument() != null) {
 			// TODO: hardcoded...
@@ -279,5 +285,13 @@ public class UserDTO {
 	 */
 	public void setDateOfEntry(Date dateOfEntry) {
 		this.dateOfEntry = dateOfEntry;
+	}
+
+	public List<Person> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<Person> contacts) {
+		this.contacts = contacts;
 	}
 }

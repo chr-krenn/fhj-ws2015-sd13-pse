@@ -13,12 +13,12 @@
 						icon="ui-icon-person">
 						<p:menuitem>
 							<h:link outcome="/protected/User.jsf"
-								styleClass="ui-menuitem-link ui-corner-all">
+								styleClass="ui-menuitem-link ui-corner-left">
 								<f:param name="userName"
 									value="#{loginController.loggedInUsername}" />
 								<f:param name="mode" value="view" />
 								<span class="ui-menuitem-icon ui-icon ui-icon-home"></span>
-								<h:outputText value="Startseite" />
+								<span class="ui-menuitem-text">Startseite</span>
 							</h:link>
 						</p:menuitem>
 						<p:menuitem>
@@ -28,7 +28,7 @@
 									value="#{loginController.loggedInUsername}" />
 								<f:param name="mode" value="edit" />
 								<span class="ui-menuitem-icon ui-icon ui-icon-pencil"></span>
-								<h:outputText value="Profil bearbeiten" />
+								<span class="ui-menuitem-text">Profil bearbeiten</span>
 							</h:link>
 						</p:menuitem>
 						<p:menuitem value="Passwort ändern" onclick="PF('dlgpwc').show()"
