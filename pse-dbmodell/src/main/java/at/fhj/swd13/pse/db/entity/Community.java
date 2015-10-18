@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +35,7 @@ public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String PRIVATE_PREFIX = "@";
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "community_id", unique = true, nullable = false)
@@ -54,7 +55,7 @@ public class Community implements Serializable {
 	private boolean systemInternal;
 
 	// bi-directional many-to-one association to Person
-	@ManyToOne
+	@OneToOne(optional = true)
 	@JoinColumn(name = "private_user")
 	private Person privateUser;
 

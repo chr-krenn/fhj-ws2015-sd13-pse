@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -144,9 +146,9 @@ public class Person implements Serializable {
 	@Column(name = "user_name", nullable = false, length = 64)
 	private String userName;
 
-	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "privateUser")
-	private List<Community> privateCommunities;
+	@OneToOne
+	@PrimaryKeyJoinColumn
+	private Community privateCommunity;
 
 	// bi-directional many-to-one association to Community
 	@OneToMany(mappedBy = "confirmedBy")
@@ -400,22 +402,12 @@ public class Person implements Serializable {
 		this.currentSessionId = currentSessionId;
 	}
 
-	public List<Community> getPrivateCommunities() {
-		return this.privateCommunities;
+	public Community getPrivateCommunity() {
+		return this.privateCommunity;
 	}
 
-	public Community addPrivateCommunites(Community communities1) {
-		getPrivateCommunities().add(communities1);
-		communities1.setPrivateUser(this);
-
-		return communities1;
-	}
-
-	public Community removePrivateCommunities(Community communities1) {
-		getPrivateCommunities().remove(communities1);
-		communities1.setPrivateUser(null);
-
-		return communities1;
+	public void setPrivateCommunity(Community privateCommunity) {
+		this.privateCommunity = privateCommunity;
 	}
 
 	public List<Community> getConfirmedCommunities() {
