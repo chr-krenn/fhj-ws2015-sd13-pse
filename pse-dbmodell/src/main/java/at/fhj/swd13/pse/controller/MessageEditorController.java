@@ -118,7 +118,7 @@ public class MessageEditorController {
 		List<String> result = new ArrayList<String>();
 
 		for (Tag tag : tagService.getMatchingTags(input)) {
-
+//TODO: check against already set
 			result.add(tag.getToken());
 		}
 
