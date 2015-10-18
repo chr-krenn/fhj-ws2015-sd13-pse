@@ -29,8 +29,8 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	// TODO move to configuration
 	private static final String imageFolder = "/tmp/pse/documents";
 
-	private static final String serviceUrl = "store/media/";
-	private static final String imageFolderUrl = "protected/img/";
+	private static final String serviceUrl = "/store/media/";
+	private static final String imageFolderUrl = "/protected/img/";
 
 	/**
 	 * How many subdirectories will be used beneath imageFolder

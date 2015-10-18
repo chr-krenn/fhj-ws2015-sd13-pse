@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -17,6 +18,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.TagService;
+import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
 
 /*
@@ -25,6 +27,7 @@ import at.fhj.swd13.pse.dto.CommunityDTO;
  */
 
 @ManagedBean
+@ViewScoped
 public class MessageEditorController {
 
 	@Inject
@@ -32,17 +35,20 @@ public class MessageEditorController {
 
 	@Inject
 	private ChatService chatService;
-	
+
 	@Inject
 	private TagService tagService;
+
+	@Inject
+	DocumentService documentService;
 
 	private String headline;
 	private String richText;
 	private String iconRef;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
-	
-	private List<String> selectedTags = new ArrayList<String>(); 
+
+	private List<String> selectedTags = new ArrayList<String>();
 
 	/**
 	 * 
@@ -125,17 +131,17 @@ public class MessageEditorController {
 	}
 
 	public List<String> completeTag(String input) {
-		
+
 		List<String> result = new ArrayList<String>();
-		
-		for( Tag tag : tagService.getMatchingTags( input ) ) {
-			
-			result.add( tag.getToken() );
+
+		for (Tag tag : tagService.getMatchingTags(input)) {
+
+			result.add(tag.getToken());
 		}
-		
-		return result;		
-	}	
-	
+
+		return result;
+	}
+
 	/**
 	 * called when a community is added to the chosen list
 	 * 
@@ -203,18 +209,17 @@ public class MessageEditorController {
 		this.selectedCommunities = selectedCommunities;
 	}
 
-	
 	public List<String> getSelectedTags() {
 		return selectedTags;
 	}
-	
-	public void setSelectedTags( List<String> selectedTags ) {
-		
+
+	public void setSelectedTags(List<String> selectedTags) {
+
 		logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
 
 		this.selectedTags = selectedTags;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -257,6 +262,11 @@ public class MessageEditorController {
 	 * @return
 	 */
 	public String getIconRef() {
+
+		if (iconRef == null) {
+			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
+		}
+
 		return iconRef;
 	}
 
