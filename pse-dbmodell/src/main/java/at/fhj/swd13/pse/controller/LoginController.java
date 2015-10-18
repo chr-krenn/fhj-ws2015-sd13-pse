@@ -181,4 +181,11 @@ public class LoginController {
 		return userSession.getUsername();
 	}
 
+	/**
+	 * Indicates whether the logged-in user is an admin
+	 * @return isAdmin
+	 */
+	public boolean getIsAdmin() {
+		return userService.getUser(getLoggedInUsername()).isAdmin();
+	}
 }
