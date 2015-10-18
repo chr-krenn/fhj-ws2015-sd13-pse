@@ -32,8 +32,9 @@ public interface UserService {
 	 *            of the person to retrieve
 	 * 
 	 * @return instance of the user with the given username
+	 * @throws EntityNotFoundException 
 	 */
-	Person getUser(final String username);
+	Person getUser(final String username) throws EntityNotFoundException;
 
 	/**
 	 * get a list of all known usrs

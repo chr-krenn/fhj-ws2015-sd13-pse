@@ -5,7 +5,10 @@ import java.io.InputStream;
 import at.fhj.swd13.pse.db.entity.Document;
 
 public interface DocumentService {
+	// TODO move to configuration
+	public static final String imageFolder = "/tmp/pse/documents";
 
+	
 	/**
 	 * Store the file into the archive on the server and persist the file information
 	 * Multiple uploads of the same file are possible

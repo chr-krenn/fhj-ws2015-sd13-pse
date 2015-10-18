@@ -3,7 +3,6 @@ package at.fhj.swd13.pse.dto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -58,7 +57,7 @@ public class UserDTO {
 
 		if (person.getDocument() != null) {
 			// TODO: hardcoded...
-			this.imageRef = "/store/media/" + person.getDocument().getDocumentId();
+			this.imageRef = "/store/mediadirect/" + person.getDocument().getDocumentId();
 		} else {
 			// TODO: hardcoded...
 			this.imageRef = "/protected/img/no_img.jpg";

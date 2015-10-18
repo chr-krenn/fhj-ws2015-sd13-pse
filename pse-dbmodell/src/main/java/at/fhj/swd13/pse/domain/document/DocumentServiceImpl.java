@@ -30,8 +30,6 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 	private static Random random = new Random();
 
-	// TODO move to configuration
-	private static final String imageFolder = "/tmp/pse/documents";
 
 	/**
 	 * How many subdirectories will be used beneath imageFolder

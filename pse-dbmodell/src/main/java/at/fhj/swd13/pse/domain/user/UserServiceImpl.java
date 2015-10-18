@@ -108,6 +108,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#isMatchingPassword(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public boolean isMatchingPassword(final String username, final String plainPassword) {
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 
@@ -135,8 +136,8 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * @see at.fhj.swd13.pse.domain.user.UserService#getUser(java.lang.String)
 	 */
 	@Override
-	public Person getUser(final String username) {
-		return dbContext.getPersonDAO().getByUsername(username);
+	public Person getUser(final String username) throws EntityNotFoundException {
+		return dbContext.getPersonDAO().getByUsername(username, true);
 	}
 
 	/*
