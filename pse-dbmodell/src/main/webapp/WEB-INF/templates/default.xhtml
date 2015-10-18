@@ -17,9 +17,9 @@
 		<p:panel id="content">
 			<ui:insert name="content">[Template content will be inserted here]</ui:insert>
 		</p:panel>
-		<div id="footer">
-			&copy; 2015 by SWD13
-		</div>
+		<ui:insert name="footer">
+			<ui:include src="/Footer.xhtml" />
+		</ui:insert>
 	</p:outputPanel>
 </h:body>
 </html>
