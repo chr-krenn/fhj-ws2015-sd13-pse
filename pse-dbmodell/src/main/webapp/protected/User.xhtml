@@ -7,11 +7,14 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 		<h:form>
-			<img class="user" src="#{request.contextPath}#{userProfileController.userDTO.imageRef}" alt="Kein Foto vorhanden! " />
+			<img class="user"
+				src="#{request.contextPath}#{userProfileController.userDTO.imageRef}"
+				alt="Kein Foto vorhanden! " />
 
 			<p:fileUpload
 				fileUploadListener="#{userProfileController.handleFileUpload}"
-				mode="advanced" />
+				dragDropSupport="true" update="messages" sizeLimit="10000000"
+				allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
 			<p:growl id="messages" showDetail="true" />
 
 			<h:panelGrid columns="2" cellpadding="5">
@@ -43,21 +46,22 @@
 					disabled="True" />
 			</h:panelGrid>
 
-			<p:dataScroller value="#{userProfileController.userDTO.contacts}" var="contact"
-				chunkSize="10" mode="inline" scrollHeight="500">
+			<p:dataScroller value="#{userProfileController.userDTO.contacts}"
+				var="contact" chunkSize="10" mode="inline" scrollHeight="500">
 				<f:facet name="header">
             Liste der Kontakte
         </f:facet>
 
 				<h:panelGrid columns="2" style="width:100%"
 					columnClasses="logo,detail">
-					
+
 
 					<p:outputPanel>
 						<h:panelGrid columns="2" cellpadding="5">
 							<h:outputText value="Name:" />
-							<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{contact.firstName} #{contact.lastName}"  style="font-weight: bold"/>
+							<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+								<h:outputText value="#{contact.firstName} #{contact.lastName}"
+									style="font-weight: bold" />
 								<f:param name="userName" value="#{contact.userName}" />
 								<f:param name="mode" value="view" />
 							</h:outputLink>

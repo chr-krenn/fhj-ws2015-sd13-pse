@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -45,8 +47,8 @@ public class UserProfileController implements Serializable {
 			Person person = userService.getUser(userName);
 			userDTO =  new UserDTO(person);
 		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] user not found " + userName + " from " + context.toString());
 		}
 	}
 
@@ -56,16 +58,24 @@ public class UserProfileController implements Serializable {
 	
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile file = event.getFile();
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message = null;
 		
 		try {
 			Document document = documentService.store(file.getFileName(), file.getInputstream());
 			userService.setUserImage(getUserDTO().getUserName(), document.getDocumentId()); 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed, invalid user");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		} 
 	}
 }
