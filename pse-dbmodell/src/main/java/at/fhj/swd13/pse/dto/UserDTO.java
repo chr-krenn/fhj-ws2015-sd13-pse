@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -15,9 +17,9 @@ public class UserDTO {
 	private String emailAddress;
 
 	private Date dateOfBirth;
-	
+
 	private Date dateOfEntry;
-	
+
 	private String phoneNumberMobile;
 
 	private String imageRef;
@@ -34,7 +36,10 @@ public class UserDTO {
 
 	private String job;
 
-	public UserDTO() {}
+	private List<Person> contacts;
+
+	public UserDTO() {
+	}
 
 	public UserDTO(Person person) {
 		this.userName = person.getUserName();
@@ -49,13 +54,10 @@ public class UserDTO {
 		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
+		this.contacts = new ArrayList<Person>(person.getContacts());
 
 		if (person.getDocument() != null) {
-			// TODO: hardcoded...
-			this.imageRef = "/store/media/" + person.getDocument().getDocumentId();
-		} else {
-			// TODO: hardcoded...
-			this.imageRef = "/protected/img/no_img.jpg";
+			imageId = person.getDocument().getDocumentId();
 		}
 	}
 
@@ -249,7 +251,6 @@ public class UserDTO {
 		this.locationBuilding = locationBuilding;
 	}
 
-	
 	/**
 	 * @return the dateOfBirth
 	 */
@@ -257,15 +258,14 @@ public class UserDTO {
 		return dateOfBirth;
 	}
 
-	
 	/**
-	 * @param dateOfBirth the dateOfBirth to set
+	 * @param dateOfBirth
+	 *            the dateOfBirth to set
 	 */
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	
 	/**
 	 * @return the dateOfEntry
 	 */
@@ -273,11 +273,19 @@ public class UserDTO {
 		return dateOfEntry;
 	}
 
-	
 	/**
-	 * @param dateOfEntry the dateOfEntry to set
+	 * @param dateOfEntry
+	 *            the dateOfEntry to set
 	 */
 	public void setDateOfEntry(Date dateOfEntry) {
 		this.dateOfEntry = dateOfEntry;
+	}
+
+	public List<Person> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<Person> contacts) {
+		this.contacts = contacts;
 	}
 }

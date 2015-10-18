@@ -13,10 +13,8 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
@@ -26,10 +24,10 @@ public class LoginController {
 	private String username;
 
 	private String password;
-	
+
 	private String passwordNew;
 	private String passwordNewConfirmation;
-	
+
 	@Inject
 	private Logger logger;
 
@@ -38,7 +36,7 @@ public class LoginController {
 
 	@Inject
 	private UserSession userSession;
-	
+
 	public String login() {
 
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -52,7 +50,8 @@ public class LoginController {
 			if (user != null) {
 				loggedIn = true;
 				logger.info("[LOGIN] logged-in-user " + user);
-				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", user.getFirstName() + " " + user.getLastName());
+				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome",
+						user.getFirstName() + " " + user.getLastName());
 			} else {
 				loggedIn = false;
 				logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
@@ -73,22 +72,22 @@ public class LoginController {
 		boolean passwordChanged = false;
 		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage message = null;
-		
-		if ((password != null && passwordNew != null && passwordNewConfirmation != null) && passwordNew.equals(passwordNewConfirmation)){
+
+		if ((password != null && passwordNew != null && passwordNewConfirmation != null)
+				&& passwordNew.equals(passwordNewConfirmation)) {
 
 			passwordChanged = userService.changePassword(getLoggedInUsername(), password, passwordNew);
 
 		}
-		if(!passwordChanged)
+		if (!passwordChanged)
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Password change Error", "Invalid input");
 		else
 			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been changed!", "");
-		
+
 		FacesContext.getCurrentInstance().addMessage(null, message);
 		context.addCallbackParam("passwordChanged", passwordChanged);
 	}
-	
-	
+
 	public void logout() {
 
 		userService.logoutCurrentUser();
@@ -96,8 +95,9 @@ public class LoginController {
 		ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 		FacesContext context = FacesContext.getCurrentInstance();
 		try {
-	        String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/index.xhmtl"));
-	        extContext.redirect(url);
+			String url = extContext
+					.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/index.xhmtl"));
+			extContext.redirect(url);
 		} catch (IOException e) {
 			logger.error("[LOGIN] error redirecting after logout: " + e.getMessage());
 		}
@@ -134,7 +134,7 @@ public class LoginController {
 
 		this.password = password;
 	}
-	
+
 	/**
 	 * @return the passwordNew
 	 */
@@ -166,18 +166,18 @@ public class LoginController {
 
 		this.passwordNewConfirmation = passwordNewConfirmation;
 	}
-	
+
 	/**
 	 * @return the IsLoggedIn
-	 */     
-	public boolean getIsLoggedIn(){
+	 */
+	public boolean getIsLoggedIn() {
 		return userSession.isLoggedIn();
 	}
-	
+
 	/**
 	 * @return the LoggedInUsername
-	 */     
-	public String getLoggedInUsername(){
+	 */
+	public String getLoggedInUsername() {
 		return userSession.getUsername();
 	}
 

@@ -166,4 +166,35 @@ public class DbPersonRelation {
 			dbContext.commit();
 		}
 	}
+	
+	
+	@Test
+	public void testPersonGetContacts() throws Exception {
+		
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			Person e = personDAO.getById(p1.getPersonId());
+			Person x = personDAO.getById(p2.getPersonId());
+
+			PersonRelation rel = personDAO.createRelation(e, x);
+			assertNotNull(rel);
+			
+			assertTrue(e.isRelatedTo(x));
+			assertTrue(x.isRelatedTo(e));
+			assertFalse(e.isRelatedTo(e));
+			
+			assertEquals(1, e.getContacts().size());
+			assertEquals(1, x.getContacts().size());
+			
+			assertTrue(e.getContacts().contains(x));
+			assertTrue(x.getContacts().contains(e));
+			
+
+			dbContext.commit();
+		}
+		
+	}
+	
 }
