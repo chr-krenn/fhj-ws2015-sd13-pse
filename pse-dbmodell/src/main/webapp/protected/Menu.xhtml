@@ -11,9 +11,9 @@
 				<h:form>
 					<p:button value="Home" icon="ui-icon-home" href="/protected/TestLoggedIn.jsf"/>
 	            	<p:button value="Communities" icon="ui-icon-pencil" href="/protected/Communities.jsf"/>
-	            	<p:button value="Personen" href="/protected/UserList.jsf"/>
+	            	<p:button value="Mitarbeiter" href="/protected/UserList.jsf"/>
 	            	<p:button value="Services" icon="ui-icon-help" href="/protected/Services.jsf" />
-	            	<p:button value="Administration" icon="ui-icon-gear" href="/protected/AdminView.jsf" />
+	            	<p:button value="Administration" icon="ui-icon-gear" href="/protected/AdminView.jsf" rendered="#{loginController.isAdmin}" />
 	            	<span class="ui-separator">
 	                	<span class="ui-icon ui-icon-grip-dotted-vertical" />
 	            	</span>
