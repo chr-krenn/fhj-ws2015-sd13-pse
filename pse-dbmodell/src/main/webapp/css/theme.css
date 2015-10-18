@@ -1581,3 +1581,13 @@
 .ui-menu.ui-menubar .ui-menu-parent .ui-menu-child {
 	padding: 5px 0;
 }
+
+.ui-layout-unit .ui-layout-unit-content {
+	padding: 0.2em 0em;
+	border: 0px none;
+	overflow: hidden !important;
+}
+
+.ui-layout-pane-no-border {
+  	border: 0;
+}

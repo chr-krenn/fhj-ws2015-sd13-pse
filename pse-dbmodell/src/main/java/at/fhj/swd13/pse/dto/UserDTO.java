@@ -17,9 +17,9 @@ public class UserDTO {
 	private String emailAddress;
 
 	private Date dateOfBirth;
-	
+
 	private Date dateOfEntry;
-	
+
 	private String phoneNumberMobile;
 
 	private String imageRef;
@@ -35,10 +35,11 @@ public class UserDTO {
 	private Integer locationFloor;
 
 	private String job;
-	
+
 	private List<Person> contacts;
 
-	public UserDTO() {}
+	public UserDTO() {
+	}
 
 	public UserDTO(Person person) {
 		this.userName = person.getUserName();
@@ -61,6 +62,7 @@ public class UserDTO {
 		} else {
 			// TODO: hardcoded...
 			this.imageRef = "/protected/img/no_img.jpg";
+			imageId = person.getDocument().getDocumentId();
 		}
 	}
 
@@ -254,7 +256,6 @@ public class UserDTO {
 		this.locationBuilding = locationBuilding;
 	}
 
-	
 	/**
 	 * @return the dateOfBirth
 	 */
@@ -262,15 +263,14 @@ public class UserDTO {
 		return dateOfBirth;
 	}
 
-	
 	/**
-	 * @param dateOfBirth the dateOfBirth to set
+	 * @param dateOfBirth
+	 *            the dateOfBirth to set
 	 */
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	
 	/**
 	 * @return the dateOfEntry
 	 */
@@ -278,9 +278,9 @@ public class UserDTO {
 		return dateOfEntry;
 	}
 
-	
 	/**
-	 * @param dateOfEntry the dateOfEntry to set
+	 * @param dateOfEntry
+	 *            the dateOfEntry to set
 	 */
 	public void setDateOfEntry(Date dateOfEntry) {
 		this.dateOfEntry = dateOfEntry;

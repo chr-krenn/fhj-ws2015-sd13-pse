@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.UserDTO;
+import at.fhj.swd13.pse.dto.UserDTOBuilder;
 
 @ManagedBean
 @ViewScoped
@@ -24,13 +25,16 @@ public class UserListView implements Serializable {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private UserDTOBuilder userDTOBuilder;
+
 	public List<UserDTO> getUsers() {
 
 		List<UserDTO> result = new ArrayList<UserDTO>();
 
 		for (Person person : userService.getUsers()) {
 
-			result.add(new UserDTO(person));
+			result.add(userDTOBuilder.createFrom(person));
 
 		}
 
