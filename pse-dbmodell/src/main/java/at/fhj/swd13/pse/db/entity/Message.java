@@ -50,7 +50,7 @@ public class Message implements Serializable {
 
 	//bi-directional many-to-one association to MesasgeRating
 	@OneToMany(mappedBy="message")
-	private List<MesasgeRating> mesasgeRatings;
+	private List<MessageRating> messageRatings;
 
 	//bi-directional many-to-one association to Message
 	@ManyToOne
@@ -161,26 +161,26 @@ public class Message implements Serializable {
 		this.validFrom = validFrom;
 	}
 
-	public List<MesasgeRating> getMesasgeRatings() {
-		return this.mesasgeRatings;
+	public List<MessageRating> getMessageRatings() {
+		return this.messageRatings;
 	}
 
-	public void setMesasgeRatings(List<MesasgeRating> mesasgeRatings) {
-		this.mesasgeRatings = mesasgeRatings;
+	public void setMessageRatings(List<MessageRating> messageRatings) {
+		this.messageRatings = messageRatings;
 	}
 
-	public MesasgeRating addMesasgeRating(MesasgeRating mesasgeRating) {
-		getMesasgeRatings().add(mesasgeRating);
-		mesasgeRating.setMessage(this);
+	public MessageRating addMesasgeRating(MessageRating messageRating) {
+		getMessageRatings().add(messageRating);
+		messageRating.setMessage(this);
 
-		return mesasgeRating;
+		return messageRating;
 	}
 
-	public MesasgeRating removeMesasgeRating(MesasgeRating mesasgeRating) {
-		getMesasgeRatings().remove(mesasgeRating);
-		mesasgeRating.setMessage(null);
+	public MessageRating removeMesasgeRating(MessageRating messageRating) {
+		getMessageRatings().remove(messageRating);
+		messageRating.setMessage(null);
 
-		return mesasgeRating;
+		return messageRating;
 	}
 
 	public Message getMessageBean() {

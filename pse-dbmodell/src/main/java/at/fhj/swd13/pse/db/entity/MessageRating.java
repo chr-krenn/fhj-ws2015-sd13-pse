@@ -10,15 +10,15 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="mesasge_rating")
-@NamedQuery(name="MesasgeRating.findAll", query="SELECT m FROM MesasgeRating m")
-public class MesasgeRating implements Serializable {
+@Table(name="message_rating")
+@NamedQuery(name="MessageRating.findAll", query="SELECT m FROM MessageRating m")
+public class MessageRating implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="mesasge_rating_id", unique=true, nullable=false)
-	private int mesasgeRatingId;
+	@Column(name="message_rating_id", unique=true, nullable=false)
+	private int messageRatingId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at", nullable=false)
@@ -26,7 +26,7 @@ public class MesasgeRating implements Serializable {
 
 	//bi-directional many-to-one association to Message
 	@ManyToOne
-	@JoinColumn(name="mesasge_id")
+	@JoinColumn(name="message_id")
 	private Message message;
 
 	//bi-directional many-to-one association to Person
@@ -34,15 +34,15 @@ public class MesasgeRating implements Serializable {
 	@JoinColumn(name="rating_person_id")
 	private Person person;
 
-	public MesasgeRating() {
+	public MessageRating() {
 	}
 
-	public int getMesasgeRatingId() {
-		return this.mesasgeRatingId;
+	public int getMessageRatingId() {
+		return this.messageRatingId;
 	}
 
-	public void setMesasgeRatingId(int mesasgeRatingId) {
-		this.mesasgeRatingId = mesasgeRatingId;
+	public void setMessageRatingId(int messageRatingId) {
+		this.messageRatingId = messageRatingId;
 	}
 
 	public Date getCreatedAt() {

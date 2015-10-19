@@ -166,7 +166,7 @@ public class Person implements Serializable {
 
 	// bi-directional many-to-one association to MesasgeRating
 	@OneToMany(mappedBy = "person")
-	private List<MesasgeRating> mesasgeRatings;
+	private List<MessageRating> mesasgeRatings;
 
 	// bi-directional many-to-one association to Message
 	@OneToMany(mappedBy = "person")
@@ -486,22 +486,22 @@ public class Person implements Serializable {
 		return membership;
 	}
 
-	public List<MesasgeRating> getMesasgeRatings() {
+	public List<MessageRating> getMesasgeRatings() {
 		return this.mesasgeRatings;
 	}
 
-	public void setMesasgeRatings(List<MesasgeRating> mesasgeRatings) {
+	public void setMesasgeRatings(List<MessageRating> mesasgeRatings) {
 		this.mesasgeRatings = mesasgeRatings;
 	}
 
-	public MesasgeRating addMesasgeRating(MesasgeRating mesasgeRating) {
+	public MessageRating addMesasgeRating(MessageRating mesasgeRating) {
 		getMesasgeRatings().add(mesasgeRating);
 		mesasgeRating.setPerson(this);
 
 		return mesasgeRating;
 	}
 
-	public MesasgeRating removeMesasgeRating(MesasgeRating mesasgeRating) {
+	public MessageRating removeMesasgeRating(MessageRating mesasgeRating) {
 		getMesasgeRatings().remove(mesasgeRating);
 		mesasgeRating.setPerson(null);
 
