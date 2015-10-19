@@ -65,7 +65,7 @@ public class LoginController {
 		}
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		return loggedIn ? "/protected/TestLoggedIn" : "NotLoggedIn";
+		return loggedIn ? "/protected/Main" : "NotLoggedIn";
 	}
 
 	public void changePasswort(ActionEvent event) {
