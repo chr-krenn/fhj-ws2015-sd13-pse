@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,7 +18,6 @@ import org.primefaces.model.UploadedFile;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.UserDTO;
