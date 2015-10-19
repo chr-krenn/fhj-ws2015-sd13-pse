@@ -589,8 +589,6 @@ public class Person implements Serializable {
 
 		for (PersonRelation relation : getPersonSourceRelations()) {
 			System.out.println(personTo.equals(relation.getTargetPerson()));
-			Person person1 = personTo;
-			Person person2 = relation.getTargetPerson();
 			if (relation.getTargetPerson() == personTo) {
 
 				getPersonSourceRelations().remove(relation);

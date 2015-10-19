@@ -252,8 +252,6 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Override
 	public void removeRelation(Person sourcePerson, Person targetPerson) {
-		Person p1 = sourcePerson;
-		Person p2 = targetPerson;
 		dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
 		
 	}
