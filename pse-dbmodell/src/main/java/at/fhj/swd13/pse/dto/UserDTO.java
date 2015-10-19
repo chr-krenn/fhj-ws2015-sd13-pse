@@ -55,14 +55,8 @@ public class UserDTO {
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
 		this.contacts = new ArrayList<Person>(person.getContacts());
-
 		if (person.getDocument() != null) {
-			// TODO: hardcoded...
-			this.imageRef = "/store/mediadirect/" + person.getDocument().getDocumentId();
 			this.imageId = person.getDocument().getDocumentId();
-		} else {
-			// TODO: hardcoded...
-			this.imageRef = "/protected/img/no_img.jpg";
 		}
 	}
 

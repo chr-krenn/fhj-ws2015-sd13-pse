@@ -9,7 +9,6 @@
 
 		<h:form>
 
-
 			<p:dataScroller value="#{userListView.users}" var="user"
 				chunkSize="10" mode="inline" scrollHeight="500">
 				<f:facet name="header">
@@ -18,7 +17,7 @@
 
 				<h:panelGrid columns="2" style="width:100%"
 					columnClasses="logo,detail">
-					<p:graphicImage value="#{user.imageRef}" />
+					<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
 
 					<p:outputPanel>
 						<h:panelGrid columns="2" cellpadding="5">
@@ -37,6 +36,7 @@
 					</p:outputPanel>
 				</h:panelGrid>
 			</p:dataScroller>
+		</div>
 
 		</h:form>
 

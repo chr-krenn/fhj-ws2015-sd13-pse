@@ -21,6 +21,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.UserDTO;
+import at.fhj.swd13.pse.dto.UserDTOBuilder;
 
 @ManagedBean
 @ViewScoped
@@ -35,6 +36,9 @@ public class UserProfileController implements Serializable {
 	private DocumentService documentService;
 
 	@Inject
+	private UserDTOBuilder userDTOBuilder;
+
+	@Inject
 	private Logger logger;
 
 	private UserDTO userDTO;
@@ -45,7 +49,7 @@ public class UserProfileController implements Serializable {
 
 		try {
 			Person person = userService.getUser(userName);
-			userDTO = new UserDTO(person);
+			userDTO = userDTOBuilder.createFrom(person);
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[USERPROFILE] user not found " + userName + " from " + context.toString());
@@ -63,7 +67,9 @@ public class UserProfileController implements Serializable {
 
 		try {
 			Document document = documentService.store(file.getFileName(), file.getInputstream());
+			int documentid = document.getDocumentId();
 			userService.setUserImage(getUserDTO().getUserName(), document.getDocumentId());
+			getUserDTO().setImageRef(documentService.buildServiceUrl(documentid));
 		} catch (IOException e) {
 			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed");

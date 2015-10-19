@@ -7,13 +7,13 @@
 	<ui:define name="content">
 		<h:form>
 			<p:dataScroller value="#{userSearchController.result}" var="user"
-				chunkSize="10" mode="inline" scrollHeight="100%">
+				chunkSize="10" mode="inline" scrollHeight="500">
 				<f:facet name="header">
             		Suchergebnis
 		       </f:facet>
 				<h:panelGrid columns="2" 
 					columnClasses="logo,detail">
-					<p:graphicImage value="#{user.imageRef}" />
+					<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
 
 					<p:outputPanel>
 						<h:panelGrid columns="2" cellpadding="5">
