@@ -150,19 +150,19 @@ UNLOCK TABLES;
 -- Table structure for table `mesasge_rating`
 --
 
-DROP TABLE IF EXISTS `mesasge_rating`;
+DROP TABLE IF EXISTS `message_rating`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mesasge_rating` (
-  `mesasge_rating_id` int(11) NOT NULL AUTO_INCREMENT,
-  `mesasge_id` int(11) DEFAULT NULL,
+CREATE TABLE `message_rating` (
+  `message_rating_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_id` int(11) DEFAULT NULL,
   `rating_person_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`mesasge_rating_id`),
-  UNIQUE KEY `mesasge_rating_id_UNIQUE` (`mesasge_rating_id`),
+  PRIMARY KEY (`message_rating_id`),
+  UNIQUE KEY `message_rating_id_UNIQUE` (`message_rating_id`),
   KEY `rating_person_idx` (`rating_person_id`),
-  KEY `rated_message_idx` (`mesasge_id`),
-  CONSTRAINT `rated_message` FOREIGN KEY (`mesasge_id`) REFERENCES `message` (`message_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `rated_message_idx` (`message_id`),
+  CONSTRAINT `rated_message` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `rating_person` FOREIGN KEY (`rating_person_id`) REFERENCES `person` (`person_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ein Eintrag in der table entspricht einem like';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -171,9 +171,9 @@ CREATE TABLE `mesasge_rating` (
 -- Dumping data for table `mesasge_rating`
 --
 
-LOCK TABLES `mesasge_rating` WRITE;
-/*!40000 ALTER TABLE `mesasge_rating` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mesasge_rating` ENABLE KEYS */;
+LOCK TABLES `message_rating` WRITE;
+/*!40000 ALTER TABLE `message_rating` DISABLE KEYS */;
+/*!40000 ALTER TABLE `message_rating` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -402,13 +402,33 @@ CREATE TABLE `tag` (
 
 --
 -- Dumping data for table `tag`
---
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+DROP TABLE IF EXISTS `document_library_entry`;
+
+CREATE TABLE `document_library_entry` (
+	`document_library_entry_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`document_id` INT(11) NOT NULL DEFAULT '0',
+	`community_id` INT(11) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`document_library_entry_id`),
+	INDEX `FK_document_id` (`document_id`),
+	INDEX `FK_file_library_entry_community` (`community_id`),
+	CONSTRAINT `FK_document_id` FOREIGN KEY (`document_id`) REFERENCES `document` (`document_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT `FK_document_library_entry_community` FOREIGN KEY (`community_id`) REFERENCES `community` (`community_id`) ON UPDATE CASCADE ON DELETE CASCADE
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+
+LOCK TABLES `document_library_entry` WRITE;
+/*!40000 ALTER TABLE `document_library_entry` DISABLE KEYS */;
+/*!40000 ALTER TABLE `document_library_entry` ENABLE KEYS */;
+UNLOCK TABLES;
 --
 -- Dumping routines for database 'pse'
 --
