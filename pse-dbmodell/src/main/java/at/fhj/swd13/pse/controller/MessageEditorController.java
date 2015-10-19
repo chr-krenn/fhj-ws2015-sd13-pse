@@ -39,7 +39,7 @@ public class MessageEditorController {
 	private TagService tagService;
 
 	@Inject
-	DocumentService documentService;
+	private DocumentService documentService;
 
 	private String headline;
 	private String richText;
@@ -59,7 +59,7 @@ public class MessageEditorController {
 	 */
 	public void save() {
 		// TODO implement
-		logger.info("[MSG+] saving message... (nothing for NOW");
+		logger.info("[MSG+] saving message... (nothing for NOW)");
 	}
 
 	/**
@@ -76,9 +76,7 @@ public class MessageEditorController {
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
 		for (Community community : chatService.getPossibleTargetCommunities("des wird no ignoriert", input)) {
-			// TODO - cleanup add copyctor to CommunityDTO
-			CommunityDTO communityDTO = new CommunityDTO(Integer.toString(community.getCommunityId()),
-					community.getName());
+			CommunityDTO communityDTO = new CommunityDTO(community);
 
 			if (!isAlreadySelected(communityDTO.getToken())) {
 				result.add(communityDTO);
