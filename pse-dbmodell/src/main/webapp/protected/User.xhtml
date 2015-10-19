@@ -7,71 +7,80 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 		<h:form>
-			<p:graphicImage id="userimage" styleClass="userimage" value="#{userProfileController.userDTO.imageRef}" cache="false" />		
+			<p:graphicImage id="userimage" styleClass="userimage"
+				value="#{userProfileController.userDTO.imageRef}" cache="false" />
 
-			<h:panelGroup id="fileUploadGroup" style="#{userProfileController.fileuploadDisplay}" >
-				<p:fileUpload 
-				    fileUploadListener="#{userProfileController.handleFileUpload}"
-					dragDropSupport="true" update="messages,userimage" sizeLimit="10000000"
+			<h:panelGroup id="fileUploadGroup"
+				style="#{userProfileController.fileuploadDisplay}">
+				<p:fileUpload
+					fileUploadListener="#{userProfileController.handleFileUpload}"
+					dragDropSupport="true" update="messages,userimage"
+					sizeLimit="10000000"
 					allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<h:panelGrid columns="2" cellpadding="5">
+			<p:panelGrid columns="2" layout="grid">
 				<p:outputLabel value="Vorname: " />
-				<p:inputMask id="firstName"
-					value="#{userProfileController.userDTO.firstName}" disabled="True" />
+				<p:inputMask id="firstName" styleClass="forminput"
+					value="#{userProfileController.userDTO.firstName}" readonly="True" />
 
 				<p:outputLabel value="Nachname: " />
-				<p:inputMask id="lastName"
-					value="#{userProfileController.userDTO.lastName}" disabled="True" />
+				<p:inputMask id="lastName" styleClass="forminput"
+					value="#{userProfileController.userDTO.lastName}" readonly="True" />
 
 				<p:outputLabel value="E-Mail: " />
-				<p:inputMask id="emailAddress"
+				<p:inputMask id="emailAddress" styleClass="forminput"
 					value="#{userProfileController.userDTO.emailAddress}"
-					disabled="True" />
+					readonly="True" />
 
 				<p:outputLabel value="Abteilung: " />
-				<p:inputMask id="department"
-					value="#{userProfileController.userDTO.department}" disabled="True" />
+				<p:inputMask id="department" styleClass="forminput"
+					value="#{userProfileController.userDTO.department}" readonly="True" />
+
+				<p:outputLabel value="Gebäude: " />
+				<p:inputMask
+					value="#{userProfileController.userDTO.locationBuilding}"
+					styleClass="forminput" readonly="True" />
+
+				<p:outputLabel value="Stockwerk: " />
+				<p:inputMask
+					value="#{userProfileController.userDTO.locationFloor}"
+					styleClass="forminput" readonly="True" />
 
 				<p:outputLabel value="Zimmer: " />
 				<p:inputMask
 					value="#{userProfileController.userDTO.locationRoomNumber}"
-					disabled="True" />
+					styleClass="forminput" readonly="True" />
+
 
 				<p:outputLabel value="Telefonnummer: " />
-				<p:inputMask id="phoneNumberMobile"
+				<p:inputMask id="phoneNumberMobile" styleClass="forminput"
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
-					disabled="True" />
-			</h:panelGrid>
-			
-			<p:commandButton value="#{userProfileController.contactButtonText()}" type="submit" icon="ui-icon-home" actionListener="#{userProfileController.contactButtonAction()}" rendered="#{userProfileController.addToContactVisible()}"/>
+					readonly="True" />
+			</p:panelGrid>
 
-			<p:dataScroller value="#{userProfileController.userDTO.contacts}"
-				var="contact" chunkSize="10" mode="inline" scrollHeight="500">
-				<f:facet name="header">
-            Liste der Kontakte
-        </f:facet>
+			<p:commandButton value="#{userProfileController.contactButtonText()}"
+				type="submit" icon="ui-icon-home"
+				actionListener="#{userProfileController.contactButtonAction()}"
+				rendered="#{userProfileController.addToContactVisible()}" />
 
-				<h:panelGrid columns="2" style="width:100%"
-					columnClasses="logo,detail">
-
-
-					<p:outputPanel>
-						<h:panelGrid columns="2" cellpadding="5">
-							<h:outputText value="Name:" />
-							<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{contact.firstName} #{contact.lastName}"
-									style="font-weight: bold" />
-								<f:param name="userName" value="#{contact.userName}" />
-								<f:param name="mode" value="view" />
-							</h:outputLink>
-
-						</h:panelGrid>
-					</p:outputPanel>
-				</h:panelGrid>
-			</p:dataScroller>
+			<p:panel id="basic" header="Kontakte">
+				<p:dataScroller value="#{userProfileController.userDTO.contacts}"
+					var="contact" chunkSize="10" mode="inline" scrollHeight="200">
+	
+					<h:panelGrid columns="2" 
+						columnClasses="logo,detail">
+						<h:outputText value="Name:" />
+						<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+							<h:outputText value="#{contact.firstName} #{contact.lastName}"
+								style="font-weight: bold" />
+							<f:param name="userName" value="#{contact.userName}" />
+							<f:param name="mode" value="view" />
+						</h:outputLink>
+					</h:panelGrid>
+				</p:dataScroller>
+			</p:panel>	
 
 
 

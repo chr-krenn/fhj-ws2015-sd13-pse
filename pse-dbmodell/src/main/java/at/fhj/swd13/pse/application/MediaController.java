@@ -61,34 +61,4 @@ public class MediaController {
 			return Response.status(Status.FORBIDDEN).build();
 		}
 	}
-
-	@GET
-	@Path("/mediadirect/{id:[0-9][0-9]*}")
-	public Response getMediaDirect(@PathParam("id") final int documentId) {
-
-		logger.info(">>> [DOC] getting media for " + documentId);
-
-		if (userSession.isLoggedIn()) {
-
-			Document d = documentService.get(documentId);
-
-			if (d != null) {
-
-				File file = new File( documentService.getServerPath(d) );
-				
-				logger.info("[DOCS] MEDIA have file :" + d.getName());
-				logger.info("[DOCS] storage location : " + file.getAbsolutePath() );
-
-				ResponseBuilder responseBuilder = Response.ok((Object) file );
-				responseBuilder.header("Content-Type", d.getMimeType());
-				return responseBuilder.build();
-			} else {
-
-				return Response.status(Status.NOT_FOUND).build();
-			}
-		} else {
-
-			return Response.status(Status.FORBIDDEN).build();
-		}
-	}
 }
