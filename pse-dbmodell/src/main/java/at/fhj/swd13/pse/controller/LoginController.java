@@ -7,7 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -68,10 +67,9 @@ public class LoginController {
 		return loggedIn ? "/protected/Main" : "NotLoggedIn";
 	}
 
-	public void changePasswort(ActionEvent event) {
+	public String changePassword() {
 
 		boolean passwordChanged = false;
-		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage message = null;
 
 		if ((password != null && passwordNew != null && passwordNewConfirmation != null)
@@ -86,7 +84,7 @@ public class LoginController {
 			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been changed!", "");
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		context.addCallbackParam("passwordChanged", passwordChanged);
+		return passwordChanged ? "/protected/Main" : "/protected/UserPasswordChange";
 	}
 
 	public void logout() {
