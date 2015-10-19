@@ -64,12 +64,14 @@
 					value="#{userProfileController.userDTO.online}" disabled="True" />
 			</p:panelGrid>
 
-			<p:commandButton value="#{userProfileController.contactButtonText()}"
-				type="submit" icon="ui-icon-home"
-				actionListener="#{userProfileController.contactButtonAction()}"
-				rendered="#{userProfileController.addToContactVisible()}" />
+			<p:panel id="addtocontact">
+				<p:commandButton value="#{userProfileController.contactButtonText()}"
+					type="submit" icon="ui-icon-home"
+					actionListener="#{userProfileController.contactButtonAction()}"
+					rendered="#{userProfileController.addToContactVisible()}" />
+			</p:panel>
 
-			<p:panel id="basic" header="Kontakte">
+			<p:panel id="contacts" header="Kontakte">
 				<p:dataScroller value="#{userProfileController.userDTO.contacts}"
 					var="contact" chunkSize="10" mode="inline" scrollHeight="200">
 
