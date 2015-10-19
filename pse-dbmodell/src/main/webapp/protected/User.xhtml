@@ -20,7 +20,7 @@
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<p:panelGrid columns="2" layout="grid">
+			<p:panelGrid columns="4" style="width: 100%">
 				<p:outputLabel value="Vorname: " />
 				<p:inputMask id="firstName" styleClass="forminput"
 					value="#{userProfileController.userDTO.firstName}" readonly="True" />
@@ -44,8 +44,7 @@
 					styleClass="forminput" readonly="True" />
 
 				<p:outputLabel value="Stockwerk: " />
-				<p:inputMask
-					value="#{userProfileController.userDTO.locationFloor}"
+				<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
 					styleClass="forminput" readonly="True" />
 
 				<p:outputLabel value="Zimmer: " />
@@ -58,6 +57,11 @@
 				<p:inputMask id="phoneNumberMobile" styleClass="forminput"
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
 					readonly="True" />
+
+
+				<p:outputLabel value="Online: " />
+				<p:selectBooleanCheckbox
+					value="#{userProfileController.userDTO.online}" disabled="True" />
 			</p:panelGrid>
 
 			<p:commandButton value="#{userProfileController.contactButtonText()}"
@@ -68,9 +72,8 @@
 			<p:panel id="basic" header="Kontakte">
 				<p:dataScroller value="#{userProfileController.userDTO.contacts}"
 					var="contact" chunkSize="10" mode="inline" scrollHeight="200">
-	
-					<h:panelGrid columns="2" 
-						columnClasses="logo,detail">
+
+					<h:panelGrid columns="2" columnClasses="logo,detail">
 						<h:outputText value="Name:" />
 						<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 							<h:outputText value="#{contact.firstName} #{contact.lastName}"
@@ -80,38 +83,7 @@
 						</h:outputLink>
 					</h:panelGrid>
 				</p:dataScroller>
-			</p:panel>	
-
-
-
-			<p:dialog widgetVar="dlg" modal="true" resizable="false"
-				header="Values" showEffect="fade">
-				<p:panelGrid id="display" columns="2" columnClasses="label,value">
-					<h:outputText value="Vorname: " />
-					<h:outputText id="firstNameValue"
-						value="#{userProfileController.userDTO.firstName}" />
-
-					<h:outputText value="Nachname: " />
-					<h:outputText id="lastNameValue"
-						value="#{userProfileController.userDTO.lastName}" />
-
-					<h:outputText value="E-Mail: " />
-					<h:outputText id="emailAddressValue"
-						value="#{userProfileController.userDTO.emailAddress}" />
-
-					<h:outputText value="Abteilung: " />
-					<h:outputText id="departmentValue"
-						value="#{userProfileController.userDTO.department}" />
-
-					<h:outputText value="Zimmer: " />
-					<h:outputText id="locationRoomNumberValue"
-						value="#{userProfileController.userDTO.locationRoomNumber}" />
-
-					<h:outputText value="Telefonnummer: " />
-					<h:outputText id="phoneNumberMobileValue"
-						value="#{userProfileController.userDTO.phoneNumberMobile}" />
-				</p:panelGrid>
-			</p:dialog>
+			</p:panel>
 		</h:form>
 	</ui:define>
 </ui:composition>

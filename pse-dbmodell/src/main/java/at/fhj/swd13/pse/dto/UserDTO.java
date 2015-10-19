@@ -36,6 +36,9 @@ public class UserDTO {
 
 	private String job;
 
+	private Boolean online;
+
+	
 	private List<Person> contacts;
 
 	public UserDTO() {
@@ -54,6 +57,7 @@ public class UserDTO {
 		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
+		this.online = person.isOnline();
 		this.contacts = new ArrayList<Person>(person.getContacts());
 		if (person.getDocument() != null) {
 			this.imageId = person.getDocument().getDocumentId();
@@ -278,6 +282,15 @@ public class UserDTO {
 	 */
 	public void setDateOfEntry(Date dateOfEntry) {
 		this.dateOfEntry = dateOfEntry;
+	}
+
+	public Boolean getOnline() {
+		return online;
+	}
+
+	
+	public void setOnline(Boolean online) {
+		this.online = online;
 	}
 
 	public List<Person> getContacts() {
