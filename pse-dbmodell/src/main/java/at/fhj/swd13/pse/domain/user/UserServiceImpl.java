@@ -9,6 +9,7 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -71,6 +72,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			userSession.logout();
 		}
+	}
+	
+	
+	
+	@Override
+	public Person getLoggedInUser() {
+		if(userSession.isLoggedIn()) {
+			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
+			return p;
+		}
+		return null;
 	}
 
 	/*
@@ -229,5 +241,21 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return true;
 	}
 	
+	
+	@Override
+	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
+		PersonRelation relation;
+		
+		relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
+		return relation;
+	}
+
+	@Override
+	public void removeRelation(Person sourcePerson, Person targetPerson) {
+		Person p1 = sourcePerson;
+		Person p2 = targetPerson;
+		dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
+		
+	}
 	
 }

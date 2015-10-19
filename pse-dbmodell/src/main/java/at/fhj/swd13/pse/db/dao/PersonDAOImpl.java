@@ -206,4 +206,27 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 		return removedRelationCount;
 	}
+
+	
+	/*
+	 * 
+	 * for now, deleting of a relation is possible for the source person and the target person
+	 * therefore, both combinations are executed 
+	 * (non-Javadoc)
+	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#removeRelation(at.fhj.swd13.pse.db.entity.Person, at.fhj.swd13.pse.db.entity.Person)
+	 */
+	
+	@Override
+	public void removeRelation(Person sourcePerson, Person targetPerson) {
+		
+		final Query q = dbContext.createNamedQuery("PersonRelation.deleteByPersonIds");
+		q.setParameter("sourcePerson", sourcePerson).setParameter("targetPerson", targetPerson);
+		q.executeUpdate();	
+
+		final Query q2 = dbContext.createNamedQuery("PersonRelation.deleteByPersonIds");
+		q2.setParameter("sourcePerson", targetPerson).setParameter("targetPerson", sourcePerson);
+		q2.executeUpdate();	
+
+		
+	}
 }

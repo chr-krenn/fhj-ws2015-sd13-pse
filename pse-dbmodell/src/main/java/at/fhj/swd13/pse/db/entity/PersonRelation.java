@@ -11,7 +11,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="person_relation")
-@NamedQuery(name="PersonRelation.findAll", query="SELECT p FROM PersonRelation p")
+@NamedQueries({
+	@NamedQuery(name="PersonRelation.findAll", query="SELECT p FROM PersonRelation p"),
+	@NamedQuery(name = "PersonRelation.deleteByPersonIds", query = "DELETE FROM PersonRelation p WHERE p.sourcePerson = :sourcePerson AND p.targetPerson = :targetPerson") })
 public class PersonRelation implements Serializable {
 	private static final long serialVersionUID = 1L;
 

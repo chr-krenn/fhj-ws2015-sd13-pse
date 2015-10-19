@@ -47,6 +47,8 @@
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
 					disabled="True" />
 			</h:panelGrid>
+			
+			<p:commandButton value="#{userProfileController.contactButtonText()}" type="submit" icon="ui-icon-home" actionListener="#{userProfileController.contactButtonAction()}" rendered="#{userProfileController.addToContactVisible()}"/>
 
 			<p:dataScroller value="#{userProfileController.userDTO.contacts}"
 				var="contact" chunkSize="10" mode="inline" scrollHeight="500">

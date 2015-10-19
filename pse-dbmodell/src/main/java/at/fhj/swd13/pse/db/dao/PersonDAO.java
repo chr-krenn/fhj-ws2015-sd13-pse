@@ -119,5 +119,14 @@ public interface PersonDAO {
 	 * @return the number of removed target relations
 	 */
 	int removeTargetRelations( Person person );
+	
+	
+	/**
+	 * Removes a relation
+	 * 
+	 * @param sourcePerson
+	 * @param targetPerson
+	 */
+	void removeRelation(Person sourcePerson, Person targetPerson);
 
 }
