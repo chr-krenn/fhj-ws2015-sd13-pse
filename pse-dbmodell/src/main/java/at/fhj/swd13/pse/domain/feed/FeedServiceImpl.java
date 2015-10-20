@@ -11,7 +11,9 @@ import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.DeliverySystem;
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -45,7 +47,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void saveMessage(String headline, String text, String username) {
+	public void saveMessage(String headline, String text, String username, Document document, Community community) {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
@@ -55,16 +57,23 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		}
-		message.setCreatedAt(new Date());
-		message.setCreatedOn(new Date());
 		
+		Date createdDate = new Date();
+		
+		message.setCreatedAt(createdDate);
+		message.setCreatedOn(createdDate);
+		message.setValidFrom(createdDate);
+		
+		// TODO Correctly handle delivery system
 		DeliverySystem deliverySystem = new DeliverySystem();
 		deliverySystem.setName("TEST");
 		deliverySystem.setToken("TEST");
 		dbContext.persist(deliverySystem);
 		
 		message.setDeliverySystem(deliverySystem);
-		message.setValidFrom(new Date());
+		message.setAttachment(document);
+		message.setCommunity(community);
+		
 		dbContext.getMessageDAO().insert(message);
 	}
 }

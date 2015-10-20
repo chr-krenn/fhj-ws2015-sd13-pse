@@ -12,12 +12,23 @@ public interface ChatService {
 	/**
 	 * Get the community with the given id
 	 * 
-	 * @param communityId the id of the community to retrieve
+	 * @param communityId
+	 *            the id of the community to retrieve
 	 * 
 	 * @return community or null if not found
 	 */
-	Community getCommunity( final int communityId );
-	
+	Community getCommunity(final int communityId);
+
+	/**
+	 * Get the community with the given name
+	 * 
+	 * @param communityName
+	 *            the id of the community to retrieve
+	 * 
+	 * @return community or null if not found
+	 */
+	Community getCommunity(final String communityName);
+
 	/**
 	 * Create a public chat community. If the creator is an administrator, the
 	 * community is confirmed.
@@ -42,8 +53,8 @@ public interface ChatService {
 	 * @throws IllegalStateException
 	 *             if the user is not active
 	 */
-	Community createChatCommunity(String creatorUsername, String communityName, boolean invitationOnly)
-			throws EntityNotFoundException;
+	Community createChatCommunity(String creatorUsername, String communityName,
+			boolean invitationOnly) throws EntityNotFoundException;
 
 	/**
 	 * Get a list of all currently unconfirmed communities
@@ -68,21 +79,25 @@ public interface ChatService {
 	 *             when the adminPerson is not active or not an admin
 	 */
 	void confirmCommunity(final Person adminPerson, Community unconfirmed);
-	
-	
+
 	/**
-	 * Get a list of communities that his user can post to and that match the given needle (name starts with)
+	 * Get a list of communities that his user can post to and that match the
+	 * given needle (name starts with)
 	 * 
-	 * @param username username to get the communities for
+	 * @param username
+	 *            username to get the communities for
 	 * 
-	 * @param needle needle for the comparison
+	 * @param needle
+	 *            needle for the comparison
 	 * 
 	 * @return
 	 */
-	List<Community> getPossibleTargetCommunities( final String username, final String needle );
-	
+	List<Community> getPossibleTargetCommunities(final String username,
+			final String needle);
+
 	/**
-	 * Creates the user private communities (every user has a community onto which his private messages are pushed)
+	 * Creates the user private communities (every user has a community onto
+	 * which his private messages are pushed)
 	 * 
 	 * @return the number of created communities
 	 */

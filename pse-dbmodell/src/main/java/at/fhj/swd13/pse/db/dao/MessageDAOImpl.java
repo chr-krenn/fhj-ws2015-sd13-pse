@@ -33,16 +33,15 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 	@Override
 	public List<Message> loadAll() {
 
-		Query query = dbContext
-				.createQuery("SELECT m FROM Message m ORDER BY m.createdOn DESC");
+		Query query = dbContext.createNamedQuery("Message.findAllOrderedByNewest");
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Message> loadForUser(Person user) {
-		Query query = dbContext.createQuery("SELECT m FROM Message m "
-						+ "WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC");
+		// TODO Update query
+		Query query = dbContext.createNamedQuery("Message.findForUser");
 		return query.getResultList();
 	}
 

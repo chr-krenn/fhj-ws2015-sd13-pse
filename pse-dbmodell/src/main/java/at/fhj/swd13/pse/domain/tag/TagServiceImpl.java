@@ -1,4 +1,4 @@
-package at.fhj.swd13.pse.domain.chat;
+package at.fhj.swd13.pse.domain.tag;
 
 import java.util.List;
 

@@ -7,21 +7,6 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 		<h1>Welcome to PSE!</h1>
-
-		<h:dataTable var="message" value="#{messages}"
-			rendered="#{not empty messages}" styleClass="simpletablestyle">
-			<h:column>
-				<f:facet name="header">Headline</f:facet>
-                #{message.headline}
-            </h:column>
-			<h:column>
-				<f:facet name="header">Message</f:facet>
-                #{sesionService.username}
-            </h:column>
-			<h:column>
-				<f:facet name="header">createdOn</f:facet>
-			</h:column>
-		</h:dataTable>
 		<h:form>
 			<h:panelGroup rendered="#{!loginController.isLoggedIn}">
 				Um mit der Arbeit zu beginnen, müssen sie sich <em><a href="javascript:void(0)"

@@ -6,92 +6,94 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the message database table.
  * 
  */
 @Entity
-@Table(name="message")
-@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m")
+@Table(name = "message")
+@NamedQueries({
+		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
+		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC") })
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="message_id", unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "message_id", unique = true, nullable = false)
 	private int messageId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_at", nullable=false)
+	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_on", nullable=false)
+	@Column(name = "created_on", nullable = false)
 	private Date createdOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="expires_on")
+	@Column(name = "expires_on")
 	private Date expiresOn;
 
-	@Column(length=45)
+	@Column(length = 45)
 	private String headline;
 
-	@Column(nullable=false, length=2048)
+	@Column(nullable = false, length = 2048)
 	private String message;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="updated_on")
+	@Column(name = "updated_on")
 	private Date updatedOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="valid_from", nullable=false)
+	@Column(name = "valid_from", nullable = false)
 	private Date validFrom;
 
-	//bi-directional many-to-one association to MesasgeRating
-	@OneToMany(mappedBy="message")
+	// bi-directional many-to-one association to MesasgeRating
+	@OneToMany(mappedBy = "message")
 	private List<MessageRating> messageRatings;
 
-	//bi-directional many-to-one association to Message
+	// bi-directional many-to-one association to Message
 	@ManyToOne
-	@JoinColumn(name="commented_on_message_id")
+	@JoinColumn(name = "commented_on_message_id")
 	private Message messageBean;
 
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="messageBean")
+	// bi-directional many-to-one association to Message
+	@OneToMany(mappedBy = "messageBean")
 	private List<Message> messages;
 
-	//bi-directional many-to-one association to DeliverySystem
+	// bi-directional many-to-one association to DeliverySystem
 	@ManyToOne
-	@JoinColumn(name="delivered_by", nullable=false)
+	@JoinColumn(name = "delivered_by", nullable = false)
 	private DeliverySystem deliverySystem;
 
-	//bi-directional many-to-one association to Document
+	// bi-directional many-to-one association to Document
 	@ManyToOne
-	@JoinColumn(name="document_attachment_id")
+	@JoinColumn(name = "document_attachment_id")
 	private Document attachment;
 
-	//bi-directional many-to-one association to Document
+	// bi-directional many-to-one association to Document
 	@ManyToOne
-	@JoinColumn(name="document_icon_id")
+	@JoinColumn(name = "document_icon_id")
 	private Document icon;
 
-	//bi-directional many-to-one association to Person
+	// bi-directional many-to-one association to Person
 	@ManyToOne
-	@JoinColumn(name="created_by", nullable=false)
+	@JoinColumn(name = "created_by", nullable = false)
 	private Person person;
 
-	//bi-directional many-to-one association to Community
+	// bi-directional many-to-one association to Community
 	@ManyToOne
-	@JoinColumn(name="posted_in")
+	@JoinColumn(name = "posted_in")
 	private Community community;
 
-	//bi-directional many-to-one association to MessageTag
-	@OneToMany(mappedBy="message")
+	// bi-directional many-to-one association to MessageTag
+	@OneToMany(mappedBy = "message")
 	private List<MessageTag> messageTags;
 
-	//bi-directional many-to-one association to PersonMessage
-	@OneToMany(mappedBy="message")
+	// bi-directional many-to-one association to PersonMessage
+	@OneToMany(mappedBy = "message")
 	private List<PersonMessage> personMessages;
 
 	public Message() {

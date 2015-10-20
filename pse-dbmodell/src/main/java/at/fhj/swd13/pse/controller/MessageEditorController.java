@@ -1,10 +1,13 @@
 package at.fhj.swd13.pse.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -16,9 +19,9 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.TagService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
+import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
@@ -63,12 +66,25 @@ public class MessageEditorController {
 	private List<String> selectedTags = new ArrayList<String>();
 
 	/**
-	 * 
+	 * Save the entered message to the database
 	 */
 	public void save() {
-		// TODO implement
-		logger.info("[MSG+] saving message... (nothing for NOW)");
-		feedService.saveMessage(headline, richText, userSession.getUsername());
+		logger.info("[MSG+] saving message... ");
+		
+		Document document = documentService.get(documentId);
+		Community community = chatService.getCommunity(selectedCommunities.get(0).getName());
+		
+		feedService.saveMessage(headline, richText, userSession.getUsername(), document, community);
+
+		ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			String url = extContext
+					.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
+			extContext.redirect(url);
+		} catch (IOException e) {
+			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
+		}
 	}
 
 	/**
