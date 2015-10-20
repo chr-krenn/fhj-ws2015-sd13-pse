@@ -130,9 +130,9 @@ public class UserProfileController implements Serializable {
 
 	public String contactButtonText() {
 		if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
-			return "Kontakt entfernen";
+			return "Aus meinen Kontakten entfernen";
 		} else {
-			return "Kontakt hinzufügen";
+			return "Zu meinen Kontakten hinzufügen";
 		}
 	}
 

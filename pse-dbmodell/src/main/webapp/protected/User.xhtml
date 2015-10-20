@@ -65,40 +65,60 @@
 				<p:outputLabel value="" />
 				<p:outputLabel value="" />
 
-				<p:outputLabel value="Active: "  rendered="#{userProfileController.isAdmin()}"/>
-				<p:selectBooleanCheckbox  rendered="#{userProfileController.isAdmin()}"
-					value="#{userProfileController.userDTO.active}"/>
-				<p:outputLabel value="Login Allowed: "  rendered="#{userProfileController.isAdmin()}"/>
-				<p:selectBooleanCheckbox  rendered="#{userProfileController.isAdmin()}"
-					value="#{userProfileController.userDTO.loginAllowed}"/>
+				<p:outputLabel value="Aktiv "
+					rendered="#{userProfileController.isAdmin()}" />
+				<p:selectBooleanCheckbox
+					rendered="#{userProfileController.isAdmin()}"
+					value="#{userProfileController.userDTO.active}" />
+				<p:outputLabel value="Login erlaubt: "
+					rendered="#{userProfileController.isAdmin()}" />
+				<p:selectBooleanCheckbox
+					rendered="#{userProfileController.isAdmin()}"
+					value="#{userProfileController.userDTO.loginAllowed}" />
 
-				<p:outputLabel value="" rendered="#{userProfileController.isAdmin()}"/>
-				<p:commandButton value="Speichern"  rendered="#{userProfileController.isAdmin()}"
-					action="#{userProfileController.updateProfile}"  update="messages"
-					type="submit" icon="ui-icon-disk"/>
+				<p:outputLabel value=""
+					rendered="#{userProfileController.isAdmin()}" />
+				<p:commandButton value="Speichern"
+					rendered="#{userProfileController.isAdmin()}"
+					action="#{userProfileController.updateProfile}" update="messages"
+					type="submit" icon="ui-icon-disk" />
 			</p:panelGrid>
 
 			<p:panel id="addtocontact">
-				<p:commandButton value="#{userProfileController.contactButtonText()}"
-					type="submit" icon="ui-icon-home"
+				<p:commandButton
+					value="#{userProfileController.contactButtonText()}" type="submit"
+					icon="ui-icon-home"
 					actionListener="#{userProfileController.contactButtonAction()}"
 					rendered="#{userProfileController.addToContactVisible()}" />
 			</p:panel>
 
-			<p:panel id="contacts" header="Kontakte">
-				<p:dataScroller value="#{userProfileController.userDTO.contacts}"
-					var="contact" chunkSize="10" mode="inline" scrollHeight="200">
-
-					<h:panelGrid columns="2" columnClasses="logo,detail">
-						<h:outputText value="Name:" />
-						<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-							<h:outputText value="#{contact.firstName} #{contact.lastName}"
-								style="font-weight: bold" />
-							<f:param name="userName" value="#{contact.userName}" />
-							<f:param name="mode" value="view" />
-						</h:outputLink>
-					</h:panelGrid>
-				</p:dataScroller>
+			<p:panel id="contacts">
+				<p:tabView>
+					<p:tab title="Kontakte">
+						<p:dataTable var="contact" value="#{userProfileController.userDTO.contacts}">
+						    <p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{contact.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{contact.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+						    </p:column>
+						    <p:column headerText="Vorname">
+						        <h:outputText value="#{contact.firstName}" />
+						    </p:column>
+						</p:dataTable>				
+					</p:tab>
+					<p:tab title="Communities">
+					<p:tab title="Kontakte">
+						<p:dataTable var="community" value="#{userProfileController.userDTO.communities}">
+						    <p:column headerText="Name">
+						        <h:outputText value="#{community.name}" />
+						    </p:column>
+						</p:dataTable>				
+					</p:tab>
+					</p:tab>
+				</p:tabView>
 			</p:panel>
 		</h:form>
 	</ui:define>

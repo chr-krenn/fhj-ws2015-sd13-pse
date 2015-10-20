@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
 
 public class UserDTO {
@@ -44,6 +45,8 @@ public class UserDTO {
 	
 	private List<Person> contacts;
 
+	private List<Community> communities;
+
 	public UserDTO() {
 	}
 
@@ -63,7 +66,8 @@ public class UserDTO {
 		this.online = person.isOnline();
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
-		this.contacts = new ArrayList<Person>(person.getContacts());
+		this.setContacts(new ArrayList<Person>(person.getContacts()));
+		this.setCommunities(person.getConfirmedCommunities());
 		if (person.getDocument() != null) {
 			this.imageId = person.getDocument().getDocumentId();
 		}
@@ -304,6 +308,14 @@ public class UserDTO {
 
 	public void setContacts(List<Person> contacts) {
 		this.contacts = contacts;
+	}
+
+	public List<Community> getCommunities() {
+		return communities;
+	}
+
+	public void setCommunities(List<Community> communities) {
+		this.communities = communities;
 	}
 
 	public Boolean getActive() {

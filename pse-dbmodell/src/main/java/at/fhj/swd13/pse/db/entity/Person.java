@@ -149,7 +149,7 @@ public class Person implements Serializable {
 	private List<Community> privateCommunities;
 
 	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "confirmedBy")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "confirmedBy")
 	private List<Community> confirmedCommunities;
 
 	// bi-directional many-to-one association to Community
