@@ -8,6 +8,7 @@ import java.util.List;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 
 /**
@@ -20,5 +21,5 @@ public interface FeedService {
 	
 	List<Message> loadFeedForUser(Person user);
 	
-	void saveMessage(String headline, String text, String username, Document document, Community community);
+	void saveMessage(String headline, String text, String username, Document document, List<Community> communities, List<MessageTag> messageTags);
 }

@@ -27,6 +27,9 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 
 	@Override
 	public void remove(int messageId) {
+		final Query q = dbContext.createNamedQuery("Message.deleteById");
+		q.setParameter("id", messageId);
+		q.executeUpdate();
 	}
 
 	@SuppressWarnings("unchecked")

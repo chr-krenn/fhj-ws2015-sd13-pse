@@ -8,4 +8,6 @@ public interface TagService {
 
 	List<Tag> getMatchingTags(String needle);
 	
+	Tag getTagByToken(String token);
+	
 }

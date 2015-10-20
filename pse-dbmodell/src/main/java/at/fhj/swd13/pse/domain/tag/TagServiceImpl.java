@@ -38,4 +38,9 @@ public class TagServiceImpl extends ServiceBase implements TagService {
 
 		return dbContext.getTagDAO().getByTokenLike(needle);
 	}
+
+	@Override
+	public Tag getTagByToken(String token) {
+		return dbContext.getTagDAO().getByToken(token);
+	}
 }

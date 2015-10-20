@@ -186,7 +186,6 @@ DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `created_by` int(11) NOT NULL,
-  `posted_in` int(11) DEFAULT NULL,
   `headline` varchar(128) DEFAULT NULL,
   `message` varchar(2048) NOT NULL,
   `document_icon_id` int(11) DEFAULT NULL,
@@ -203,16 +202,14 @@ CREATE TABLE `message` (
   KEY `person_created_idx` (`created_by`),
   KEY `document_icon_idx` (`document_icon_id`),
   KEY `document_attachment_idx` (`document_attachment_id`),
-  KEY `posted_community_idx` (`posted_in`),
   KEY `commented_on_idx` (`commented_on_message_id`),
   KEY `delivered_by_idx` (`delivered_by`),
   CONSTRAINT `commented_on` FOREIGN KEY (`commented_on_message_id`) REFERENCES `message` (`message_id`),
   CONSTRAINT `delivered_by` FOREIGN KEY (`delivered_by`) REFERENCES `delivery_system` (`delivery_system_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `document_attachment` FOREIGN KEY (`document_attachment_id`) REFERENCES `document` (`document_id`),
   CONSTRAINT `document_icon` FOREIGN KEY (`document_icon_id`) REFERENCES `document` (`document_id`),
-  CONSTRAINT `person_created` FOREIGN KEY (`created_by`) REFERENCES `person` (`person_id`),
-  CONSTRAINT `posted_community` FOREIGN KEY (`posted_in`) REFERENCES `community` (`community_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='	';
+  CONSTRAINT `person_created` FOREIGN KEY (`created_by`) REFERENCES `person` (`person_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,14 +230,11 @@ DROP TABLE IF EXISTS `message_tag`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `message_tag` (
   `message_tag_id` int(11) NOT NULL AUTO_INCREMENT,
-  `message_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`message_tag_id`),
   UNIQUE KEY `message_tag_id_UNIQUE` (`message_tag_id`),
-  KEY `tag_message_idx` (`message_id`),
   KEY `tag_tag_idx` (`tag_id`),
-  CONSTRAINT `tag_message` FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tag_tag` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -429,6 +423,28 @@ LOCK TABLES `document_library_entry` WRITE;
 /*!40000 ALTER TABLE `document_library_entry` DISABLE KEYS */;
 /*!40000 ALTER TABLE `document_library_entry` ENABLE KEYS */;
 UNLOCK TABLES;
+
+DROP TABLE IF EXISTS message_community;
+
+CREATE TABLE message_community (
+	messages_message_id INT(11) NOT NULL DEFAULT 0,
+	communities_community_id INT(11) NOT NULL DEFAULT 0,
+	PRIMARY KEY (messages_message_id, communities_community_id),
+	CONSTRAINT FK_message_id FOREIGN KEY (messages_message_id) REFERENCES message (message_id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT FK_community_id FOREIGN KEY (communities_community_id) REFERENCES community (community_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS message_tag_message;
+
+CREATE TABLE message_tag_message (
+	messageTags_message_tag_id INT(11) NOT NULL DEFAULT 0,
+	messages_message_id INT(11) NOT NULL DEFAULT 0,
+	PRIMARY KEY (messageTags_message_tag_id, messages_message_id),
+	CONSTRAINT FK_messagetag_tag_id FOREIGN KEY (messageTags_message_tag_id) REFERENCES message_tag (message_tag_id) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT FK_message_tag_message_id FOREIGN KEY (messages_message_id) REFERENCES message (message_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
 --
 -- Dumping routines for database 'pse'
 --

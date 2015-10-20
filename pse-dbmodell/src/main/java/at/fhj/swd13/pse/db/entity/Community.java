@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -73,7 +74,7 @@ public class Community implements Serializable {
 	private List<CommunityMember> communityMembers;
 
 	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "community")
+	@ManyToMany(mappedBy = "communities")
 	private List<Message> messages;
 
 	public Community() {
@@ -237,14 +238,14 @@ public class Community implements Serializable {
 
 	public Message addMessage(Message message) {
 		getMessages().add(message);
-		message.setCommunity(this);
+		message.getCommunities().add(this);
 
 		return message;
 	}
 
 	public Message removeMessage(Message message) {
 		getMessages().remove(message);
-		message.setCommunity(null);
+		message.getCommunities().remove(this);
 
 		return message;
 	}

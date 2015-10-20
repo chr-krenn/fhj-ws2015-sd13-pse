@@ -1,10 +1,25 @@
 package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the message database table.
@@ -15,7 +30,8 @@ import java.util.List;
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
-		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC") })
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -84,13 +100,12 @@ public class Message implements Serializable {
 	private Person person;
 
 	// bi-directional many-to-one association to Community
-	@ManyToOne
-	@JoinColumn(name = "posted_in")
-	private Community community;
+	@ManyToMany
+	private List<Community> communities;
 
 	// bi-directional many-to-one association to MessageTag
-	@OneToMany(mappedBy = "message")
-	private List<MessageTag> messageTags;
+	@ManyToMany(mappedBy = "messages", cascade=CascadeType.PERSIST)
+	private List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
 	// bi-directional many-to-one association to PersonMessage
 	@OneToMany(mappedBy = "message")
@@ -247,12 +262,12 @@ public class Message implements Serializable {
 		this.person = person;
 	}
 
-	public Community getCommunity() {
-		return this.community;
+	public List<Community> getCommunities() {
+		return this.communities;
 	}
 
-	public void setCommunity(Community community) {
-		this.community = community;
+	public void setCommunities(List<Community> communities) {
+		this.communities = communities;
 	}
 
 	public List<MessageTag> getMessageTags() {
@@ -260,19 +275,21 @@ public class Message implements Serializable {
 	}
 
 	public void setMessageTags(List<MessageTag> messageTags) {
-		this.messageTags = messageTags;
+		for(MessageTag messageTag : messageTags){
+			this.addMessageTag(messageTag);
+		}
 	}
 
 	public MessageTag addMessageTag(MessageTag messageTag) {
-		getMessageTags().add(messageTag);
-		messageTag.setMessage(this);
+		messageTags.add(messageTag);
+		messageTag.getMessages().add(this);
 
 		return messageTag;
 	}
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
-		getMessageTags().remove(messageTag);
-		messageTag.setMessage(null);
+		messageTags.remove(messageTag);
+		messageTag.getMessages().remove(messageTag);
 
 		return messageTag;
 	}
