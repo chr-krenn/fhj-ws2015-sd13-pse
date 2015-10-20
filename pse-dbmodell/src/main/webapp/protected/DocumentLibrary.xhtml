@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable var="entry" value="#{documentLibraryController.entries}">
+		<p:column headerText="Name">
+			<h:outputText value="#{entry.name}" />
+		</p:column>
+		<p:column headerText="Beschreibung">
+			<h:outputText value="#{entry.description}" />
+		</p:column>
+		<p:column headerText="Erstellt">
+			<h:outputText value="#{entry.createdAt}" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>
