@@ -32,6 +32,7 @@ public class UserSession implements Serializable {
 	private DbContext dbContext;
 
 	private String loggedInUser = null;
+	private boolean isAdmin = false;
 
 	@PostConstruct
 	protected void init() {
@@ -52,10 +53,14 @@ public class UserSession implements Serializable {
 		}
 	}
 
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
 	public void logout() {
-		
 		logger.info("[USERSESSION] logged out " + loggedInUser );
 		loggedInUser = null;
+		isAdmin = false;
 	}
 	
 	public String login(final String username) {
@@ -69,6 +74,11 @@ public class UserSession implements Serializable {
 		return loggedInUser != null;
 	}
 
+	public boolean isAdmin() {
+		return loggedInUser != null && isAdmin;
+	}
+
+	
 	public String getUsername() {
 		return loggedInUser == null ? "Not YOU!" : loggedInUser;
 	}

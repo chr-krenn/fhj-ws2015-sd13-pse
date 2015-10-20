@@ -56,6 +56,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		if (p != null && p.isLoginAllowed() && p.isMatchingPassword(plainPassword)) {
 			p.setIsOnline(true);
 			p.setCurrentSessionId(userSession.login(username));
+			userSession.setAdmin(p.isAdmin());
 			return p;
 		}
 
@@ -196,8 +197,11 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		p.setLocationBuilding(userDTO.getLocationBuilding());
 		p.setLocationFloor(userDTO.getLocationFloor());
 		p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
+		p.setIsActive(userDTO.getActive());
+		p.setIsLoginAllowed(userDTO.getLoginAllowed());
 	}
 
+	@Override
 	public void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException {
 
 		Person p = dbContext.getPersonDAO().getByUsername(username, true);

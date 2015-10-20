@@ -22,6 +22,7 @@ import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.dto.UserDTOBuilder;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @ViewScoped
@@ -31,6 +32,9 @@ public class UserProfileController implements Serializable {
 
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private UserSession userSession;
 
 	@Inject
 	private DocumentService documentService;
@@ -45,14 +49,13 @@ public class UserProfileController implements Serializable {
 
 	@PostConstruct
 	public void setup() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
-
 		try {
+			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info("[USERPROFILE] user not found " + userName + " from " + context.toString());
+			logger.info("[USERPROFILE] user not found " + userSession.getUsername() + " from " + context.toString());
 		}
 	}
 
@@ -72,15 +75,15 @@ public class UserProfileController implements Serializable {
 			getUserDTO().setImageRef(documentService.buildServiceUrl(documentid));
 		} catch (IOException e) {
 			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed");
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (RuntimeException e) {
 			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed");
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (EntityNotFoundException e) {
 			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "handleFileUpload Error", "File upload failed, invalid user");
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen, Benutzer ungültig");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
@@ -94,6 +97,27 @@ public class UserProfileController implements Serializable {
 		return fileuploadDisplay;
 	}
 
+	public void updateProfile() {
+		try {
+			userService.update(userDTO);
+		} catch (EntityNotFoundException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] updateProfile failed for " + userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler", "Aktualisiserung für Benutzer fehlgeschlagen, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+		
+		logger.info("[USERPROFILE] updateProfile successful for " + userDTO.getFullname() + " from " + RequestContext.getCurrentInstance().toString());
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aktualisiserung erfolgreich", "");
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		
+	}
+	
+	public boolean isAdmin() {
+		return userSession.isAdmin();
+	}
+	
 	public boolean addToContactVisible() {
 		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
 		boolean ownProfile = ((mode != null) && (mode.equals("edit")));
@@ -110,7 +134,6 @@ public class UserProfileController implements Serializable {
 		} else {
 			return "Kontakt hinzufügen";
 		}
-
 	}
 
 	public void contactButtonAction() {

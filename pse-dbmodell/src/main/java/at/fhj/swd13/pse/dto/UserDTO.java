@@ -38,6 +38,9 @@ public class UserDTO {
 
 	private Boolean online;
 
+	private Boolean active;
+
+	private Boolean loginAllowed;
 	
 	private List<Person> contacts;
 
@@ -58,6 +61,8 @@ public class UserDTO {
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
 		this.online = person.isOnline();
+		this.setActive(person.isActive());
+		this.setLoginAllowed(person.isLoginAllowed());
 		this.contacts = new ArrayList<Person>(person.getContacts());
 		if (person.getDocument() != null) {
 			this.imageId = person.getDocument().getDocumentId();
@@ -299,5 +304,21 @@ public class UserDTO {
 
 	public void setContacts(List<Person> contacts) {
 		this.contacts = contacts;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Boolean getLoginAllowed() {
+		return loginAllowed;
+	}
+
+	public void setLoginAllowed(Boolean loginAllowed) {
+		this.loginAllowed = loginAllowed;
 	}
 }

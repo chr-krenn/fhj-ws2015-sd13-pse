@@ -58,10 +58,24 @@
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
 					readonly="True" />
 
-
-				<p:outputLabel value="Online: " />
+				<p:outputLabel value="Online:" />
 				<p:selectBooleanCheckbox
 					value="#{userProfileController.userDTO.online}" disabled="True" />
+
+				<p:outputLabel value="" />
+				<p:outputLabel value="" />
+
+				<p:outputLabel value="Active: "  rendered="#{userProfileController.isAdmin()}"/>
+				<p:selectBooleanCheckbox  rendered="#{userProfileController.isAdmin()}"
+					value="#{userProfileController.userDTO.active}"/>
+				<p:outputLabel value="Login Allowed: "  rendered="#{userProfileController.isAdmin()}"/>
+				<p:selectBooleanCheckbox  rendered="#{userProfileController.isAdmin()}"
+					value="#{userProfileController.userDTO.loginAllowed}"/>
+
+				<p:outputLabel value="" rendered="#{userProfileController.isAdmin()}"/>
+				<p:commandButton value="Speichern"  rendered="#{userProfileController.isAdmin()}"
+					action="#{userProfileController.updateProfile}"  update="messages"
+					type="submit" icon="ui-icon-disk"/>
 			</p:panelGrid>
 
 			<p:panel id="addtocontact">
