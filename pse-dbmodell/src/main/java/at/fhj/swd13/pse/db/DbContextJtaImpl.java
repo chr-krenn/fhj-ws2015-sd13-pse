@@ -14,6 +14,8 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
+import at.fhj.swd13.pse.db.dao.MessageDAO;
+import at.fhj.swd13.pse.db.dao.MessageDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -103,6 +105,11 @@ public class DbContextJtaImpl implements DbContext {
 		return new DocumentDAOImpl(this);
 	}
 	
+	@Override
+	public MessageDAO getMessageDAO() {
+		return new MessageDAOImpl(this);
+	}
+	
 	
 	@PostConstruct
 	protected void postConstruct() {
@@ -116,4 +123,6 @@ public class DbContextJtaImpl implements DbContext {
 	
 	@Override
 	public void close() throws Exception {}
+
+	
 }

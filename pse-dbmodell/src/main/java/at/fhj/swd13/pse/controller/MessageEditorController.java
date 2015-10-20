@@ -18,7 +18,9 @@ import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.TagService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
  * Test data 
@@ -41,6 +43,12 @@ public class MessageEditorController {
 	@Inject
 	private DocumentService documentService;
 
+	@Inject
+	private FeedService feedService;
+	
+	@Inject
+	private UserSession userSession;
+	
 	private String headline;
 	private String richText;
 	private int iconId;
@@ -60,6 +68,7 @@ public class MessageEditorController {
 	public void save() {
 		// TODO implement
 		logger.info("[MSG+] saving message... (nothing for NOW)");
+		feedService.saveMessage(headline, richText, userSession.getUsername());
 	}
 
 	/**

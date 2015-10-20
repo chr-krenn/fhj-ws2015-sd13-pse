@@ -17,4 +17,6 @@ public interface FeedService {
 	List<Message> loadFeed();
 	
 	List<Message> loadFeedForUser(Person user);
+	
+	void saveMessage(String headline, String text, String username);
 }
