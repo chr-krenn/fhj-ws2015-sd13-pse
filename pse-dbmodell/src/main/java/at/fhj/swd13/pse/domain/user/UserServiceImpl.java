@@ -53,7 +53,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 
-		if (p != null && p.isLoginAllowed() && p.isMatchingPassword(plainPassword)) {
+		if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
 			p.setIsOnline(true);
 			p.setCurrentSessionId(userSession.login(username));
 			userSession.setAdmin(p.isAdmin());
