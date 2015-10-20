@@ -36,7 +36,7 @@ public class Tag implements Serializable {
 	private String token;
 
 	//bi-directional many-to-one association to MessageTag
-	@OneToMany(mappedBy="tag")
+	@OneToMany(mappedBy="tag",fetch=FetchType.EAGER)
 	private List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
 	//bi-directional many-to-one association to PersonTag

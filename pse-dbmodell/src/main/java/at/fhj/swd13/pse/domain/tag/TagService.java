@@ -10,4 +10,5 @@ public interface TagService {
 	
 	Tag getTagByToken(String token);
 	
+	void insert(Tag tag);
 }

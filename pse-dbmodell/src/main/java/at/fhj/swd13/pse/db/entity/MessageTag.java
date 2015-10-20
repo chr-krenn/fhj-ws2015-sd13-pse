@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +47,7 @@ public class MessageTag implements Serializable {
 	private List<Message> messages = new ArrayList<Message>();
 
 	// bi-directional many-to-one association to Tag
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "tag_id", nullable = false)
 	private Tag tag;
 

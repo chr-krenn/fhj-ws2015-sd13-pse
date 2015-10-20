@@ -1,6 +1,7 @@
 package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -150,7 +151,7 @@ public class Person implements Serializable {
 
 	// bi-directional many-to-one association to Community
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "confirmedBy")
-	private List<Community> confirmedCommunities;
+	private List<Community> confirmedCommunities = new ArrayList<Community>();
 
 	// bi-directional many-to-one association to Community
 	@OneToMany(mappedBy = "createdBy")

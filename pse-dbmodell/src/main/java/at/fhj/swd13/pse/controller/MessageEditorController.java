@@ -86,6 +86,7 @@ public class MessageEditorController {
 				tag = new Tag();
 				tag.setToken(tagString);
 				tag.setDescription(tagString);
+				tagService.insert(tag);
 			}
 			messageTag = new MessageTag();
 			messageTag.setTag(tag);
