@@ -5,7 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:dataTable var="entry" value="#{documentLibraryController.entries}">
+	<p:dataTable var="entry" value="#{documentLibraryController.entries}" rendered="#{documentLibraryController.canViewLibrary}">
 		<p:column headerText="Name">
 			<h:outputText value="#{entry.name}" />
 		</p:column>
@@ -14,6 +14,9 @@
 		</p:column>
 		<p:column headerText="Erstellt">
 			<h:outputText value="#{entry.createdAt}" />
+		</p:column>
+		<p:column headerText="Aktion" rendered="#{documentLibraryController.canEditLibrary}">
+			<h:outputText value="Delete" />
 		</p:column>
 	</p:dataTable>
 </ui:composition>
