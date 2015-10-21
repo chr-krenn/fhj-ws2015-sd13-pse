@@ -84,16 +84,34 @@
 					type="submit" icon="ui-icon-disk" />
 			</p:panelGrid>
 
-			<p:panel id="addtocontact">
+			<p:panel id="addtocontact" cache="false">
 				<p:commandButton
-					value="#{userProfileController.contactButtonText()}" type="submit"
+					id = "contactButton"
+					value="#{userProfileController.contactButtonText()}" 
+					type="submit"
 					icon="ui-icon-home"
 					actionListener="#{userProfileController.contactButtonAction()}"
-					rendered="#{userProfileController.addToContactVisible()}" />
+					rendered="#{userProfileController.addToContactVisible()}" 
+					update="addtocontact,contacts"/>
 			</p:panel>
 
 			<p:panel id="contacts">
 				<p:tabView>
+					<p:tab title="Abteilung">
+						<p:dataTable var="userWithDepartment" value="#{userProfileController.usersWithDepartment}">
+						    <p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{userWithDepartment.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{userWithDepartment.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+						    </p:column>
+						    <p:column headerText="Vorname">
+						        <h:outputText value="#{userWithDepartment.firstName}" />
+						    </p:column>
+						</p:dataTable>				
+					</p:tab>
 					<p:tab title="Kontakte">
 						<p:dataTable var="contact" value="#{userProfileController.userDTO.contacts}">
 						    <p:column headerText="Nachname">

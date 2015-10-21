@@ -52,6 +52,14 @@ public interface UserService {
 	List<Person> getUsers();
 	
 	/**
+	 * get a list of all known usrs with the given department
+	 * @param deparment
+	 *           of the persons to retrieve
+	 * @return a list of all currently known users
+	 */
+	List<Person> getUsersWithDepartment(String department);
+	
+	/**
 	 * searc users by firstname, lastname, email 
 	 * 
 	 * @return a list of all users mathcing the search
@@ -155,6 +163,7 @@ public interface UserService {
 	PersonRelation createRelation(Person sourcePerson, Person targetPerson);
 	
 	
-	void removeRelation(Person sourcePerson, Person targetPerson); 
+	void removeRelation(Person sourcePerson, Person targetPerson);
+
 	
 }

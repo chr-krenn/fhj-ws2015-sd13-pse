@@ -2,6 +2,8 @@ package at.fhj.swd13.pse.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -46,6 +48,9 @@ public class UserProfileController implements Serializable {
 	private Logger logger;
 
 	private UserDTO userDTO;
+	
+	//TODO Eigentlich UserDTO
+	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
 	public void setup() {
@@ -53,6 +58,7 @@ public class UserProfileController implements Serializable {
 			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
+			setUsersWithDepartment(userService.getUsersWithDepartment(person.getDepartment()));
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[USERPROFILE] user not found " + userSession.getUsername() + " from " + context.toString());
@@ -119,8 +125,9 @@ public class UserProfileController implements Serializable {
 	}
 	
 	public boolean addToContactVisible() {
-		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		boolean ownProfile = ((mode != null) && (mode.equals("edit")));
+		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
+		
 		if (ownProfile) {
 			return false;
 		} else {
@@ -143,15 +150,30 @@ public class UserProfileController implements Serializable {
 				
 				userService.removeRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
 				
+				//Update userDTO
+				userDTO.getContacts().remove(userService.getLoggedInUser());
+				
 			} else {
 				System.out.println(userService.getLoggedInUser().getContacts().size());
 				userService.createRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
 				
-				
-				System.out.println(userService.getLoggedInUser().getContacts().size());
+				//Update userDTO
+				userDTO.getContacts().add(userService.getLoggedInUser());
 			}
+			
+			
+			
 		} catch (EntityNotFoundException e) {
 
 		}
+	}
+
+	public List<UserDTO> getUsersWithDepartment() {
+		return usersWithDepartment;
+	}
+
+	public void setUsersWithDepartment(List<Person> usersWithDepartment) {
+		for (Person p : usersWithDepartment)
+			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
 	}
 }

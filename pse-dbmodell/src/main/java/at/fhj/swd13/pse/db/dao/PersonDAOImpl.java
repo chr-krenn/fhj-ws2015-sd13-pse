@@ -129,6 +129,21 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 		return (List<Person>) q.getResultList();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhj.swd13.pse.db.PersonDAO#getAllPersonsWithDepartment(String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Person> getAllPersonsWithDepartment(String department) {
+		Query q = dbContext.createNamedQuery("Person.findAllWithDepartment");
+		q.setParameter("department", department);
+
+		return (List<Person>) q.getResultList();
+	}
 
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.db.dao.PersonDAO#getAllPersons()

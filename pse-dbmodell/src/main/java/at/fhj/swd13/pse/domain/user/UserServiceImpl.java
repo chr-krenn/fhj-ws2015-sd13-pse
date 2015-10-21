@@ -165,6 +165,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return dbContext.getPersonDAO().getAllPersons(0, 1000);
 
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#getUsersWithDepartment()
+	 */
+	@Override
+	public List<Person> getUsersWithDepartment(String department) {
+		return dbContext.getPersonDAO().getAllPersonsWithDepartment(department);
+
+	}
 
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.domain.user.UserService#findUsers(java.lang.String)

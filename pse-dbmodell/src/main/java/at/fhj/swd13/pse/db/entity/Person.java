@@ -34,6 +34,7 @@ import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 @Entity
 @Table(name = "person")
 @NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p ORDER BY p.lastName, p.firstName"),
+		@NamedQuery(name = "Person.findAllWithDepartment", query = "SELECT p FROM Person p WHERE p.department = :department ORDER BY p.lastName, p.firstName"), 
 		@NamedQuery(name = "Person.findAllNullPasswords", query = "SELECT p FROM Person p WHERE p.hashedPassword IS NULL OR p.hashedPassword = '--' ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.personId = :id"),
 		@NamedQuery(name = "Person.findByUserName", query = "SELECT p FROM Person p WHERE p.userName = :uname"),
