@@ -13,8 +13,12 @@
 		       </f:facet>
 				<h:panelGrid columns="2" 
 					columnClasses="logo,detail">
-					<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
-
+					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+						<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
+						<f:param name="userName" value="#{user.userName}" />
+						<f:param name="mode" value="view" />
+					</h:outputLink>
+					
 					<p:outputPanel>
 						<h:panelGrid columns="2" cellpadding="5">
 							<h:outputText value="Name:" />
