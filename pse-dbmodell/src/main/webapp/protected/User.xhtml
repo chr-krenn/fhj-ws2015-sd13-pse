@@ -142,13 +142,13 @@
 						</p:dataTable>
 					</p:tab>
 					<p:tab title="Interessen">
-						<p:dataTable var="persontag"
+						<p:dataTable var="persontag"  editable="true"
 							value="#{userProfileController.userDTO.tags}">
 							<p:column headerText="Interesse">
-								<h:outputText value="#{persontag.getTag().token}" />
+								<h:outputText value="#{persontag.tag.token}" />
 							</p:column>
 							<p:column headerText="Beschreibung">
-								<h:outputText value="#{persontag.getTag().token}" />
+								<h:outputText value="#{persontag.tag.description}" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
