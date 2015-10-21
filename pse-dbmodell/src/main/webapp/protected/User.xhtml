@@ -72,14 +72,14 @@
 				<p:outputLabel value="" />
 
 				<p:outputLabel value="Aktiv "
-					rendered="#{userProfileController.isAdmin()}" />
+					rendered="#{userProfileController.activeVisible()}" />
 				<p:selectBooleanCheckbox
-					rendered="#{userProfileController.isAdmin()}"
+					rendered="#{userProfileController.activeVisible()}"
 					value="#{userProfileController.userDTO.active}" />
 				<p:outputLabel value="Login erlaubt: "
-					rendered="#{userProfileController.isAdmin()}" />
+					rendered="#{userProfileController.loginAllowedVisible()}" />
 				<p:selectBooleanCheckbox
-					rendered="#{userProfileController.isAdmin()}"
+					rendered="#{userProfileController.loginAllowedVisible()}"
 					value="#{userProfileController.userDTO.loginAllowed}" />
 
 				<p:outputLabel value=""

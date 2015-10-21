@@ -167,6 +167,28 @@ public class UserProfileController implements Serializable {
 
 		}
 	}
+	
+	public boolean activeVisible() {
+		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
+		
+		if (ownProfile || !isAdmin()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public boolean loginAllowedVisible() {
+		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
+		
+		if (ownProfile || !isAdmin()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	public List<UserDTO> getUsersWithDepartment() {
 		return usersWithDepartment;
