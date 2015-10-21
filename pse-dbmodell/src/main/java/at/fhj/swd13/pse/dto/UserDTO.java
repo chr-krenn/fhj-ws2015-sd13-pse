@@ -6,6 +6,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonTag;
 
 public class UserDTO {
 
@@ -47,6 +48,9 @@ public class UserDTO {
 
 	private List<Community> communities;
 
+	private List<PersonTag> tags;
+
+	
 	public UserDTO() {
 	}
 
@@ -68,6 +72,7 @@ public class UserDTO {
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
 		this.setCommunities(person.getConfirmedCommunities());
+		this.setTags(person.getPersonTags());
 		if (person.getDocument() != null) {
 			this.imageId = person.getDocument().getDocumentId();
 		}
@@ -316,6 +321,14 @@ public class UserDTO {
 
 	public void setCommunities(List<Community> communities) {
 		this.communities = communities;
+	}
+
+	public List<PersonTag> getTags() {
+		return tags;
+	}
+	
+	public void setTags(List<PersonTag> tags) {
+		this.tags = tags;
 	}
 
 	public Boolean getActive() {

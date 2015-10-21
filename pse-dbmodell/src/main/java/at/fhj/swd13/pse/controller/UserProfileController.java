@@ -96,7 +96,7 @@ public class UserProfileController implements Serializable {
 
 	public String getFileuploadDisplay() {
 		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		boolean modeEdit = ((mode != null) && (mode.equals("edit")));
+		boolean modeEdit = ((mode != null) && (mode.equals("edit"))) || isAdmin();
 
 		String fileuploadDisplay = modeEdit == false ? "display:none" : "display:all";
 

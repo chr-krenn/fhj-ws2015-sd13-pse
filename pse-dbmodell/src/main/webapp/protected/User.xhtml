@@ -23,40 +23,46 @@
 			<p:panelGrid columns="4" style="width: 100%">
 				<p:outputLabel value="Vorname: " />
 				<p:inputMask id="firstName" styleClass="forminput"
-					value="#{userProfileController.userDTO.firstName}" readonly="True" />
+					value="#{userProfileController.userDTO.firstName}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Nachname: " />
 				<p:inputMask id="lastName" styleClass="forminput"
-					value="#{userProfileController.userDTO.lastName}" readonly="True" />
+					value="#{userProfileController.userDTO.lastName}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="E-Mail: " />
 				<p:inputMask id="emailAddress" styleClass="forminput"
 					value="#{userProfileController.userDTO.emailAddress}"
-					readonly="True" />
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Abteilung: " />
 				<p:inputMask id="department" styleClass="forminput"
-					value="#{userProfileController.userDTO.department}" readonly="True" />
+					value="#{userProfileController.userDTO.department}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Gebäude: " />
 				<p:inputMask
 					value="#{userProfileController.userDTO.locationBuilding}"
-					styleClass="forminput" readonly="True" />
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Stockwerk: " />
 				<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
-					styleClass="forminput" readonly="True" />
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Zimmer: " />
 				<p:inputMask
 					value="#{userProfileController.userDTO.locationRoomNumber}"
-					styleClass="forminput" readonly="True" />
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 
 				<p:outputLabel value="Telefonnummer: " />
 				<p:inputMask id="phoneNumberMobile" styleClass="forminput"
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
-					readonly="True" />
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Online:" />
 				<p:selectBooleanCheckbox
@@ -85,56 +91,66 @@
 			</p:panelGrid>
 
 			<p:panel id="addtocontact" cache="false">
-				<p:commandButton
-					id = "contactButton"
-					value="#{userProfileController.contactButtonText()}" 
-					type="submit"
+				<p:commandButton id="contactButton"
+					value="#{userProfileController.contactButtonText()}" type="submit"
 					icon="ui-icon-home"
 					actionListener="#{userProfileController.contactButtonAction()}"
-					rendered="#{userProfileController.addToContactVisible()}" 
-					update="addtocontact,contacts"/>
+					rendered="#{userProfileController.addToContactVisible()}"
+					update="addtocontact,contacts" />
 			</p:panel>
 
 			<p:panel id="contacts">
 				<p:tabView>
 					<p:tab title="Abteilung">
-						<p:dataTable var="userWithDepartment" value="#{userProfileController.usersWithDepartment}">
-						    <p:column headerText="Nachname">
+						<p:dataTable var="userWithDepartment"
+							value="#{userProfileController.usersWithDepartment}">
+							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{userWithDepartment.lastName}"
 										style="font-weight: bold" />
 									<f:param name="userName" value="#{userWithDepartment.userName}" />
 									<f:param name="mode" value="view" />
 								</h:outputLink>
-						    </p:column>
-						    <p:column headerText="Vorname">
-						        <h:outputText value="#{userWithDepartment.firstName}" />
-						    </p:column>
-						</p:dataTable>				
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{userWithDepartment.firstName}" />
+							</p:column>
+						</p:dataTable>
 					</p:tab>
 					<p:tab title="Kontakte">
-						<p:dataTable var="contact" value="#{userProfileController.userDTO.contacts}">
-						    <p:column headerText="Nachname">
+						<p:dataTable var="contact"
+							value="#{userProfileController.userDTO.contacts}">
+							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{contact.lastName}"
 										style="font-weight: bold" />
 									<f:param name="userName" value="#{contact.userName}" />
 									<f:param name="mode" value="view" />
 								</h:outputLink>
-						    </p:column>
-						    <p:column headerText="Vorname">
-						        <h:outputText value="#{contact.firstName}" />
-						    </p:column>
-						</p:dataTable>				
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{contact.firstName}" />
+							</p:column>
+						</p:dataTable>
 					</p:tab>
 					<p:tab title="Communities">
-					<p:tab title="Kontakte">
-						<p:dataTable var="community" value="#{userProfileController.userDTO.communities}">
-						    <p:column headerText="Name">
-						        <h:outputText value="#{community.name}" />
-						    </p:column>
-						</p:dataTable>				
+						<p:dataTable var="community"
+							value="#{userProfileController.userDTO.communities}">
+							<p:column headerText="Name">
+								<h:outputText value="#{community.name}" />
+							</p:column>
+						</p:dataTable>
 					</p:tab>
+					<p:tab title="Interessen">
+						<p:dataTable var="persontag"
+							value="#{userProfileController.userDTO.tags}">
+							<p:column headerText="Interesse">
+								<h:outputText value="#{persontag.getTag().token}" />
+							</p:column>
+							<p:column headerText="Beschreibung">
+								<h:outputText value="#{persontag.getTag().token}" />
+							</p:column>
+						</p:dataTable>
 					</p:tab>
 				</p:tabView>
 			</p:panel>
