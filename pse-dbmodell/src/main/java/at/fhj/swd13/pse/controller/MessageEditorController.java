@@ -74,6 +74,7 @@ public class MessageEditorController {
 		logger.info("[MSG+] saving message... ");
 
 		Document document = documentService.get(documentId);
+		Document icon = documentService.get(iconId);
 		List<Community> communities = new ArrayList<Community>();
 		List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
@@ -99,7 +100,7 @@ public class MessageEditorController {
 		}
 
 		feedService.saveMessage(headline, richText, userSession.getUsername(),
-				document, communities, messageTags);
+				document, icon, communities, messageTags);
 
 		ExternalContext extContext = FacesContext.getCurrentInstance()
 				.getExternalContext();

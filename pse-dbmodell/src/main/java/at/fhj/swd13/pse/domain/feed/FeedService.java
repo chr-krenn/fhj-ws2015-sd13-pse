@@ -21,5 +21,5 @@ public interface FeedService {
 	
 	List<Message> loadFeedForUser(Person user);
 	
-	void saveMessage(String headline, String text, String username, Document document, List<Community> communities, List<MessageTag> messageTags);
+	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags);
 }

@@ -51,7 +51,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username,
-			Document document, List<Community> communities, List<MessageTag> messageTags) {
+			Document document, Document icon, List<Community> communities, List<MessageTag> messageTags) {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
@@ -72,8 +72,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		message.setDeliverySystem(deliverySystemDAO.getPseService());
 		
 		message.setAttachment(document);
-		//TODO
-		//message.setIcon(icon);
+		message.setIcon(icon);
 
 		dbContext.getMessageDAO().insert(message);
 		message.setMessageTags(messageTags);		
