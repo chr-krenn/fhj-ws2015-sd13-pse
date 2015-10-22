@@ -26,6 +26,11 @@ public interface DocumentService {
 	 *         occured
 	 */
 	Document store(String filename, InputStream data);
+	
+	
+	
+	Document store(String filename, InputStream data, String description);
+	
 
 	/**
 	 * Get the document with the given id

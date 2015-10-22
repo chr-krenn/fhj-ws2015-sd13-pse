@@ -28,7 +28,7 @@
 					</div>
 				</div>
 				<div class="ui-grid-row">
-					<div class="ui-grid-col-8">
+					<div class="ui-grid-col-7">
 						<p:panel header="Activities">
 							<p:dataScroller value="#{simpleFeedController.activities}"
 								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
@@ -52,10 +52,9 @@
 							</p:dataScroller>
 						</p:panel>
 					</div>
-					<div class="ui-grid-col-4">
+					<div class="ui-grid-col-5">
 						<p:panel header="Dokumentenbibliothek">
 							<ui:include src="DocumentLibrary.xhtml">
-								<ui:param name="communityId" value="1"/>
 							</ui:include>
 						</p:panel>
 					</div>

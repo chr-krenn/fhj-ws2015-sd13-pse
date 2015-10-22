@@ -74,6 +74,7 @@ public class MessageEditorController {
 		logger.info("[MSG+] saving message... ");
 
 		Document document = documentService.get(documentId);
+		Document icon = documentService.get(iconId);
 		List<Community> communities = new ArrayList<Community>();
 		List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
@@ -99,7 +100,7 @@ public class MessageEditorController {
 		}
 
 		feedService.saveMessage(headline, richText, userSession.getUsername(),
-				document, communities, messageTags);
+				document, icon, communities, messageTags);
 
 		ExternalContext extContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -132,7 +133,7 @@ public class MessageEditorController {
 				"des wird no ignoriert", input)) {
 			CommunityDTO communityDTO = new CommunityDTO(community);
 
-			if (!isAlreadySelected(communityDTO.getToken())) {
+			if (!isCommunityAlreadySelected(communityDTO.getToken())) {
 				result.add(communityDTO);
 			}
 		}
@@ -152,7 +153,7 @@ public class MessageEditorController {
 	 * @return true if the communityDTO has already been selected, false
 	 *         otherwise
 	 */
-	private boolean isAlreadySelected(final String token) {
+	private boolean isCommunityAlreadySelected(final String token) {
 
 		logger.info("[MSG+] checking already selected for " + token);
 		logger.info("[MSG+] selected count " + selectedCommunities.size());
@@ -170,8 +171,11 @@ public class MessageEditorController {
 
 		List<String> result = new ArrayList<String>();
 
+		logger.info( "[MSG+] completeTag - selcted tag count " + selectedTags.size() );
+		
 		for (Tag tag : tagService.getMatchingTags(input)) {
-			if (!selectedTags.contains(tag)) {
+			
+			if (! isTagAlreadySelected(tag.getToken())) {
 				result.add(tag.getToken());
 			}
 		}
@@ -183,6 +187,20 @@ public class MessageEditorController {
 		return result;
 	}
 
+	private boolean isTagAlreadySelected( final String token ) {
+		
+		final String needle = token.toLowerCase();
+		
+		for( String tag : selectedTags ) {
+		
+			if ( tag.toLowerCase().equals(needle)) {
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * called when a community is added to the chosen list
 	 * 
