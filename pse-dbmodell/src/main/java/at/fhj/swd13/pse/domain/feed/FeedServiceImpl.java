@@ -11,6 +11,8 @@ import javax.inject.Inject;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.DeliverySystem;
 import at.fhj.swd13.pse.db.entity.Document;
@@ -66,17 +68,15 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		message.setCreatedOn(createdDate);
 		message.setValidFrom(createdDate);		
 
-		// TODO Correctly handle delivery system
-		DeliverySystem deliverySystem = new DeliverySystem();
-		deliverySystem.setName("TEST");
-		deliverySystem.setToken("TEST");
-		dbContext.persist(deliverySystem);
-
-		message.setDeliverySystem(deliverySystem);
+		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
+		message.setDeliverySystem(deliverySystemDAO.getPseService());
+		
 		message.setAttachment(document);
-		message.setCommunities(communities);	
+		//TODO
+		//message.setIcon(icon);
 
 		dbContext.getMessageDAO().insert(message);
 		message.setMessageTags(messageTags);		
+		message.setCommunities(communities);	
 	}
 }
