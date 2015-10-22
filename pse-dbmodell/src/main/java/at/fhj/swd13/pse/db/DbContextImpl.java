@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.db;
 
+import javax.enterprise.inject.Alternative;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -15,6 +16,8 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
+import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
+import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.MessageDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageTagDAO;
@@ -28,6 +31,7 @@ import at.fhj.swd13.pse.db.dao.TagDAOImpl;
  * Implementaition fo a db session using jpa/ mysql
  *
  */
+@Alternative
 public class DbContextImpl implements AutoCloseable, DbContext {
 
 	private static final String PERSISTENCE_UNIT_NAME = "pseDbModell";
@@ -242,11 +246,15 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 			if (transaction.isActive()) {
 				transaction.rollback();
 			}
-
 			transaction = null;
 		}
 
 		entityManager.close();
+	}
+
+	@Override
+	public DocumentLibraryEntryDAO getDocumentLibraryDAO() {
+		return new DocumentLibraryEntryDAOImpl(this);
 	}
 
 	

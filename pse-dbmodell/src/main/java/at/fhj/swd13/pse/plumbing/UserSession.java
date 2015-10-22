@@ -10,7 +10,6 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.CurrentDbContext;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -28,7 +27,6 @@ public class UserSession implements Serializable {
 	private Logger logger;
 
 	@Inject
-	@CurrentDbContext
 	private DbContext dbContext;
 
 	private String loggedInUser = null;
