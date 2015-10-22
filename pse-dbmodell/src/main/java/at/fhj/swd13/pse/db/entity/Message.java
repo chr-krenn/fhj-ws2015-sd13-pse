@@ -1,97 +1,114 @@
 package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the message database table.
  * 
  */
 @Entity
-@Table(name="message")
-@NamedQuery(name="Message.findAll", query="SELECT m FROM Message m")
+@Table(name = "message")
+@NamedQueries({
+		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
+		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="message_id", unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "message_id", unique = true, nullable = false)
 	private int messageId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_at", nullable=false)
+	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_on", nullable=false)
+	@Column(name = "created_on", nullable = false)
 	private Date createdOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="expires_on")
+	@Column(name = "expires_on")
 	private Date expiresOn;
 
-	@Column(length=45)
+	@Column(length = 45)
 	private String headline;
 
-	@Column(nullable=false, length=2048)
+	@Column(nullable = false, length = 2048)
 	private String message;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="updated_on")
+	@Column(name = "updated_on")
 	private Date updatedOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="valid_from", nullable=false)
+	@Column(name = "valid_from", nullable = false)
 	private Date validFrom;
 
-	//bi-directional many-to-one association to MesasgeRating
-	@OneToMany(mappedBy="message")
-	private List<MesasgeRating> mesasgeRatings;
+	// bi-directional many-to-one association to MesasgeRating
+	@OneToMany(mappedBy = "message")
+	private List<MessageRating> messageRatings;
 
-	//bi-directional many-to-one association to Message
+	// bi-directional many-to-one association to Message
 	@ManyToOne
-	@JoinColumn(name="commented_on_message_id")
+	@JoinColumn(name = "commented_on_message_id")
 	private Message messageBean;
 
-	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="messageBean")
+	// bi-directional many-to-one association to Message
+	@OneToMany(mappedBy = "messageBean")
 	private List<Message> messages;
 
-	//bi-directional many-to-one association to DeliverySystem
+	// bi-directional many-to-one association to DeliverySystem
 	@ManyToOne
-	@JoinColumn(name="delivered_by", nullable=false)
+	@JoinColumn(name = "delivered_by", nullable = false)
 	private DeliverySystem deliverySystem;
 
-	//bi-directional many-to-one association to Document
+	// bi-directional many-to-one association to Document
 	@ManyToOne
-	@JoinColumn(name="document_attachment_id")
+	@JoinColumn(name = "document_attachment_id")
 	private Document attachment;
 
-	//bi-directional many-to-one association to Document
+	// bi-directional many-to-one association to Document
 	@ManyToOne
-	@JoinColumn(name="document_icon_id")
+	@JoinColumn(name = "document_icon_id")
 	private Document icon;
 
-	//bi-directional many-to-one association to Person
+	// bi-directional many-to-one association to Person
 	@ManyToOne
-	@JoinColumn(name="created_by", nullable=false)
+	@JoinColumn(name = "created_by", nullable = false)
 	private Person person;
 
-	//bi-directional many-to-one association to Community
-	@ManyToOne
-	@JoinColumn(name="posted_in")
-	private Community community;
+	// bi-directional many-to-one association to Community
+	@ManyToMany
+	private List<Community> communities;
 
-	//bi-directional many-to-one association to MessageTag
-	@OneToMany(mappedBy="message")
-	private List<MessageTag> messageTags;
+	// bi-directional many-to-one association to MessageTag
+	@ManyToMany(mappedBy = "messages", cascade=CascadeType.PERSIST)
+	private List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
-	//bi-directional many-to-one association to PersonMessage
-	@OneToMany(mappedBy="message")
+	// bi-directional many-to-one association to PersonMessage
+	@OneToMany(mappedBy = "message")
 	private List<PersonMessage> personMessages;
 
 	public Message() {
@@ -161,26 +178,26 @@ public class Message implements Serializable {
 		this.validFrom = validFrom;
 	}
 
-	public List<MesasgeRating> getMesasgeRatings() {
-		return this.mesasgeRatings;
+	public List<MessageRating> getMessageRatings() {
+		return this.messageRatings;
 	}
 
-	public void setMesasgeRatings(List<MesasgeRating> mesasgeRatings) {
-		this.mesasgeRatings = mesasgeRatings;
+	public void setMessageRatings(List<MessageRating> messageRatings) {
+		this.messageRatings = messageRatings;
 	}
 
-	public MesasgeRating addMesasgeRating(MesasgeRating mesasgeRating) {
-		getMesasgeRatings().add(mesasgeRating);
-		mesasgeRating.setMessage(this);
+	public MessageRating addMesasgeRating(MessageRating messageRating) {
+		getMessageRatings().add(messageRating);
+		messageRating.setMessage(this);
 
-		return mesasgeRating;
+		return messageRating;
 	}
 
-	public MesasgeRating removeMesasgeRating(MesasgeRating mesasgeRating) {
-		getMesasgeRatings().remove(mesasgeRating);
-		mesasgeRating.setMessage(null);
+	public MessageRating removeMesasgeRating(MessageRating messageRating) {
+		getMessageRatings().remove(messageRating);
+		messageRating.setMessage(null);
 
-		return mesasgeRating;
+		return messageRating;
 	}
 
 	public Message getMessageBean() {
@@ -245,12 +262,12 @@ public class Message implements Serializable {
 		this.person = person;
 	}
 
-	public Community getCommunity() {
-		return this.community;
+	public List<Community> getCommunities() {
+		return this.communities;
 	}
 
-	public void setCommunity(Community community) {
-		this.community = community;
+	public void setCommunities(List<Community> communities) {
+		this.communities = communities;
 	}
 
 	public List<MessageTag> getMessageTags() {
@@ -258,19 +275,21 @@ public class Message implements Serializable {
 	}
 
 	public void setMessageTags(List<MessageTag> messageTags) {
-		this.messageTags = messageTags;
+		for(MessageTag messageTag : messageTags){
+			this.addMessageTag(messageTag);
+		}
 	}
 
 	public MessageTag addMessageTag(MessageTag messageTag) {
-		getMessageTags().add(messageTag);
-		messageTag.setMessage(this);
+		messageTags.add(messageTag);
+		messageTag.getMessages().add(this);
 
 		return messageTag;
 	}
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
-		getMessageTags().remove(messageTag);
-		messageTag.setMessage(null);
+		messageTags.remove(messageTag);
+		messageTag.getMessages().remove(messageTag);
 
 		return messageTag;
 	}

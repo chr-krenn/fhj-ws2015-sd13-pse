@@ -9,6 +9,7 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -52,9 +53,10 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 
-		if (p != null && p.isLoginAllowed() && p.isMatchingPassword(plainPassword)) {
+		if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
 			p.setIsOnline(true);
 			p.setCurrentSessionId(userSession.login(username));
+			userSession.setAdmin(p.isAdmin());
 			return p;
 		}
 
@@ -71,6 +73,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			userSession.logout();
 		}
+	}
+	
+	
+	
+	@Override
+	public Person getLoggedInUser() {
+		if(userSession.isLoggedIn()) {
+			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
+			return p;
+		}
+		return null;
 	}
 
 	/*
@@ -152,6 +165,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return dbContext.getPersonDAO().getAllPersons(0, 1000);
 
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#getUsersWithDepartment()
+	 */
+	@Override
+	public List<Person> getUsersWithDepartment(String department) {
+		return dbContext.getPersonDAO().getAllPersonsWithDepartment(department);
+
+	}
 
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.domain.user.UserService#findUsers(java.lang.String)
@@ -184,8 +208,11 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		p.setLocationBuilding(userDTO.getLocationBuilding());
 		p.setLocationFloor(userDTO.getLocationFloor());
 		p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
+		p.setIsActive(userDTO.getActive());
+		p.setIsLoginAllowed(userDTO.getLoginAllowed());
 	}
 
+	@Override
 	public void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException {
 
 		Person p = dbContext.getPersonDAO().getByUsername(username, true);
@@ -229,5 +256,19 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return true;
 	}
 	
+	
+	@Override
+	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
+		PersonRelation relation;
+		
+		relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
+		return relation;
+	}
+
+	@Override
+	public void removeRelation(Person sourcePerson, Person targetPerson) {
+		dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
+		
+	}
 	
 }

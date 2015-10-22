@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.db;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 public class DbContextProviderImpl implements DbContextProvider {
 

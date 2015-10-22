@@ -82,6 +82,17 @@ public interface PersonDAO {
 	List<Person> getAllPersons( int startRow, int maxRows );
 	
 	/**
+	 * Load all persons sorted by last_name, first_name
+	 * and provide paging with the given department
+	 * 
+	 * @param department
+	 *              of persons to retrieve
+	 * 
+	 * @return a list of persons with the given department
+	 */
+	List<Person> getAllPersonsWithDepartment( String department);
+	
+	/**
 	 * Load all persons that have no hashedPassword (IS NULL)
 	 * 
 	 * @return List of persons with no password, empty if none found
@@ -119,5 +130,14 @@ public interface PersonDAO {
 	 * @return the number of removed target relations
 	 */
 	int removeTargetRelations( Person person );
+	
+	
+	/**
+	 * Removes a relation
+	 * 
+	 * @param sourcePerson
+	 * @param targetPerson
+	 */
+	void removeRelation(Person sourcePerson, Person targetPerson);
 
 }

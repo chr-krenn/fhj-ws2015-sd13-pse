@@ -1,6 +1,7 @@
 package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 @Entity
 @Table(name = "person")
 @NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p ORDER BY p.lastName, p.firstName"),
+		@NamedQuery(name = "Person.findAllWithDepartment", query = "SELECT p FROM Person p WHERE p.department = :department ORDER BY p.lastName, p.firstName"), 
 		@NamedQuery(name = "Person.findAllNullPasswords", query = "SELECT p FROM Person p WHERE p.hashedPassword IS NULL OR p.hashedPassword = '--' ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.personId = :id"),
 		@NamedQuery(name = "Person.findByUserName", query = "SELECT p FROM Person p WHERE p.userName = :uname"),
@@ -151,8 +153,8 @@ public class Person implements Serializable {
 	private Community privateCommunity;
 
 	// bi-directional many-to-one association to Community
-	@OneToMany(mappedBy = "confirmedBy")
-	private List<Community> confirmedCommunities;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "confirmedBy")
+	private List<Community> confirmedCommunities = new ArrayList<Community>();
 
 	// bi-directional many-to-one association to Community
 	@OneToMany(mappedBy = "createdBy")
@@ -168,7 +170,7 @@ public class Person implements Serializable {
 
 	// bi-directional many-to-one association to MesasgeRating
 	@OneToMany(mappedBy = "person")
-	private List<MesasgeRating> mesasgeRatings;
+	private List<MessageRating> mesasgeRatings;
 
 	// bi-directional many-to-one association to Message
 	@OneToMany(mappedBy = "person")
@@ -192,7 +194,7 @@ public class Person implements Serializable {
 	private List<PersonRelation> personTargetRelations;
 
 	// bi-directional many-to-one association to PersonTag
-	@OneToMany(mappedBy = "person", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "person", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
 	private List<PersonTag> personTags;
 
 	@Column(name = "current_session_id", nullable = true, length = 64)
@@ -478,22 +480,22 @@ public class Person implements Serializable {
 		return membership;
 	}
 
-	public List<MesasgeRating> getMesasgeRatings() {
+	public List<MessageRating> getMesasgeRatings() {
 		return this.mesasgeRatings;
 	}
 
-	public void setMesasgeRatings(List<MesasgeRating> mesasgeRatings) {
+	public void setMesasgeRatings(List<MessageRating> mesasgeRatings) {
 		this.mesasgeRatings = mesasgeRatings;
 	}
 
-	public MesasgeRating addMesasgeRating(MesasgeRating mesasgeRating) {
+	public MessageRating addMesasgeRating(MessageRating mesasgeRating) {
 		getMesasgeRatings().add(mesasgeRating);
 		mesasgeRating.setPerson(this);
 
 		return mesasgeRating;
 	}
 
-	public MesasgeRating removeMesasgeRating(MesasgeRating mesasgeRating) {
+	public MessageRating removeMesasgeRating(MessageRating mesasgeRating) {
 		getMesasgeRatings().remove(mesasgeRating);
 		mesasgeRating.setPerson(null);
 
@@ -580,6 +582,7 @@ public class Person implements Serializable {
 	public void removeRelationTo(Person personTo) {
 
 		for (PersonRelation relation : getPersonSourceRelations()) {
+			System.out.println(personTo.equals(relation.getTargetPerson()));
 			if (relation.getTargetPerson() == personTo) {
 
 				getPersonSourceRelations().remove(relation);

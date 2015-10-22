@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,8 +36,8 @@ public class Tag implements Serializable {
 	private String token;
 
 	//bi-directional many-to-one association to MessageTag
-	@OneToMany(mappedBy="tag")
-	private List<MessageTag> messageTags;
+	@OneToMany(mappedBy="tag",fetch=FetchType.EAGER)
+	private List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
 	//bi-directional many-to-one association to PersonTag
 	@OneToMany(mappedBy="tag", cascade={CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)

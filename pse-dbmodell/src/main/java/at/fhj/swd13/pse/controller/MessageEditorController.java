@@ -1,10 +1,14 @@
 package at.fhj.swd13.pse.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -14,11 +18,14 @@ import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
+import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.TagService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.feed.FeedService;
+import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
  * Test data 
@@ -39,7 +46,13 @@ public class MessageEditorController {
 	private TagService tagService;
 
 	@Inject
-	DocumentService documentService;
+	private DocumentService documentService;
+
+	@Inject
+	private FeedService feedService;
+
+	@Inject
+	private UserSession userSession;
 
 	private String headline;
 	private String richText;
@@ -55,11 +68,51 @@ public class MessageEditorController {
 	private List<String> selectedTags = new ArrayList<String>();
 
 	/**
-	 * 
+	 * Save the entered message to the database
 	 */
 	public void save() {
-		// TODO implement
-		logger.info("[MSG+] saving message... (nothing for NOW");
+		logger.info("[MSG+] saving message... ");
+
+		Document document = documentService.get(documentId);
+		List<Community> communities = new ArrayList<Community>();
+		List<MessageTag> messageTags = new ArrayList<MessageTag>();
+
+		Tag tag;
+		MessageTag messageTag;
+
+		for (String tagString : selectedTags) {
+			tag = tagService.getTagByToken(tagString);
+			if (tag == null) {
+				tag = new Tag();
+				tag.setToken(tagString);
+				tag.setDescription(tagString);
+				tagService.insert(tag);
+			}
+			messageTag = new MessageTag();
+			messageTag.setTag(tag);
+			messageTag.setCreatedAt(new Date());
+			messageTags.add(messageTag);
+		}
+
+		for (CommunityDTO communityDto : selectedCommunities) {
+			communities.add(chatService.getCommunity(communityDto.getName()));
+		}
+
+		feedService.saveMessage(headline, richText, userSession.getUsername(),
+				document, communities, messageTags);
+
+		ExternalContext extContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			String url = extContext.encodeActionURL(context.getApplication()
+					.getViewHandler()
+					.getActionURL(context, "/protected/Main.jsf"));
+			extContext.redirect(url);
+		} catch (IOException e) {
+			logger.error("[MSG+] error redirecting after logout: "
+					+ e.getMessage());
+		}
 	}
 
 	/**
@@ -75,17 +128,17 @@ public class MessageEditorController {
 
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
-		for (Community community : chatService.getPossibleTargetCommunities("des wird no ignoriert", input)) {
-			// TODO - cleanup add copyctor to CommunityDTO
-			CommunityDTO communityDTO = new CommunityDTO(Integer.toString(community.getCommunityId()),
-					community.getName());
+		for (Community community : chatService.getPossibleTargetCommunities(
+				"des wird no ignoriert", input)) {
+			CommunityDTO communityDTO = new CommunityDTO(community);
 
 			if (!isAlreadySelected(communityDTO.getToken())) {
 				result.add(communityDTO);
 			}
 		}
 
-		logger.info("[MSG+] matching and not already selected communities found: " + result.size());
+		logger.info("[MSG+] matching and not already selected communities found: "
+				+ result.size());
 
 		return result;
 	}
@@ -118,8 +171,13 @@ public class MessageEditorController {
 		List<String> result = new ArrayList<String>();
 
 		for (Tag tag : tagService.getMatchingTags(input)) {
-//TODO: check against already set
-			result.add(tag.getToken());
+			if (!selectedTags.contains(tag)) {
+				result.add(tag.getToken());
+			}
+		}
+
+		if (result.size() == 0 && !selectedTags.contains(input)) {
+			result.add(input);
 		}
 
 		return result;
@@ -187,7 +245,8 @@ public class MessageEditorController {
 	 */
 	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
 
-		logger.info("[MSG+] set selected communities with an itemcount of " + selectedCommunities.size());
+		logger.info("[MSG+] set selected communities with an itemcount of "
+				+ selectedCommunities.size());
 
 		this.selectedCommunities = selectedCommunities;
 	}
@@ -199,7 +258,8 @@ public class MessageEditorController {
 	public void setSelectedTags(List<String> selectedTags) {
 
 		if (selectedTags != null) {
-			logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
+			logger.info("[MSG+] set selected tags with an itemcount of "
+					+ selectedTags.size());
 
 			this.selectedTags = selectedTags;
 		} else {
@@ -214,7 +274,8 @@ public class MessageEditorController {
 
 		logger.info("[MSG+] uploading icon");
 
-		RequestContext.getCurrentInstance().openDialog("/protected/ImageUpload");
+		RequestContext.getCurrentInstance()
+				.openDialog("/protected/ImageUpload");
 	}
 
 	public void onIconUploaded(SelectEvent element) {
@@ -238,7 +299,8 @@ public class MessageEditorController {
 
 		logger.info("[MSG+] uploading document");
 
-		RequestContext.getCurrentInstance().openDialog("/protected/DocumentUpload");
+		RequestContext.getCurrentInstance().openDialog(
+				"/protected/DocumentUpload");
 	}
 
 	public void onDocumentUploaded(SelectEvent element) {
@@ -302,7 +364,8 @@ public class MessageEditorController {
 	public String getIconRef() {
 
 		if (iconRef == null) {
-			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
+			return documentService
+					.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
 		}
 
 		return iconRef;
@@ -317,11 +380,12 @@ public class MessageEditorController {
 	}
 
 	public String getDocumentRef() {
-		if ( documentRef == null ) {
-			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);			
+		if (documentRef == null) {
+			return documentService
+					.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);
 		}
 
-		logger.info("[MSG+] documentRef: " + documentRef );		
+		logger.info("[MSG+] documentRef: " + documentRef);
 		return documentRef;
 	}
 

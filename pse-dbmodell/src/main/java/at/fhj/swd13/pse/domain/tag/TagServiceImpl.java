@@ -1,6 +1,8 @@
-package at.fhj.swd13.pse.domain.chat;
+package at.fhj.swd13.pse.domain.tag;
 
 import java.util.List;
+
+import javax.ejb.Stateless;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -12,6 +14,7 @@ import at.fhj.swd13.pse.service.ServiceBase;
  * @author Gustav Gans
  *
  */
+@Stateless
 public class TagServiceImpl extends ServiceBase implements TagService {
 
 	/**
@@ -37,5 +40,15 @@ public class TagServiceImpl extends ServiceBase implements TagService {
 	public List<Tag> getMatchingTags(final String needle) {
 
 		return dbContext.getTagDAO().getByTokenLike(needle);
+	}
+
+	@Override
+	public Tag getTagByToken(String token) {
+		return dbContext.getTagDAO().getByToken(token);
+	}
+
+	@Override
+	public void insert(Tag tag) {
+		dbContext.getTagDAO().insert(tag);
 	}
 }

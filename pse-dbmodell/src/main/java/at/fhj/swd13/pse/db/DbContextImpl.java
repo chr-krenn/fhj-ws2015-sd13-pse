@@ -15,6 +15,10 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
+import at.fhj.swd13.pse.db.dao.MessageDAO;
+import at.fhj.swd13.pse.db.dao.MessageDAOImpl;
+import at.fhj.swd13.pse.db.dao.MessageTagDAO;
+import at.fhj.swd13.pse.db.dao.MessageTagDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAOImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -211,6 +215,19 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 
 		return new DocumentDAOImpl(this);
 	}
+	
+	@Override
+	public MessageDAO getMessageDAO() {
+		
+		return new MessageDAOImpl(this);
+	}
+	
+	@Override
+	public MessageTagDAO getMessageTagDAO() {
+		
+		return new MessageTagDAOImpl(this);
+	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -231,4 +248,8 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 
 		entityManager.close();
 	}
+
+	
+
+	
 }

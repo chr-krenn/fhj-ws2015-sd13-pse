@@ -7,7 +7,7 @@
 		<class>at.fhj.swd13.pse.db.entity.CommunityMember</class>
 		<class>at.fhj.swd13.pse.db.entity.DeliverySystem</class>
 		<class>at.fhj.swd13.pse.db.entity.Document</class>
-		<class>at.fhj.swd13.pse.db.entity.MesasgeRating</class>
+		<class>at.fhj.swd13.pse.db.entity.MessageRating</class>
 		<class>at.fhj.swd13.pse.db.entity.Message</class>
 		<class>at.fhj.swd13.pse.db.entity.MessageTag</class>
 		<class>at.fhj.swd13.pse.db.entity.Person</class>
@@ -15,7 +15,8 @@
 		<class>at.fhj.swd13.pse.db.entity.PersonRelation</class>
 		<class>at.fhj.swd13.pse.db.entity.PersonTag</class>
 		<class>at.fhj.swd13.pse.db.entity.Tag</class>
-		
+		<class>at.fhj.swd13.pse.db.entity.DocumentLibraryEntry</class>
+	
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/pse"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>

@@ -33,7 +33,6 @@ public class UserListView implements Serializable {
 		List<UserDTO> result = new ArrayList<UserDTO>();
 
 		for (Person person : userService.getUsers()) {
-
 			result.add(userDTOBuilder.createFrom(person));
 
 		}

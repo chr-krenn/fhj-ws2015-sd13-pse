@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonTag;
 
 public class UserDTO {
 
@@ -36,8 +38,19 @@ public class UserDTO {
 
 	private String job;
 
+	private Boolean online;
+
+	private Boolean active;
+
+	private Boolean loginAllowed;
+	
 	private List<Person> contacts;
 
+	private List<Community> communities;
+
+	private List<PersonTag> tags;
+
+	
 	public UserDTO() {
 	}
 
@@ -54,15 +67,14 @@ public class UserDTO {
 		this.locationRoomNumber = person.getLocationRoomNumber();
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
-		this.contacts = new ArrayList<Person>(person.getContacts());
-
+		this.online = person.isOnline();
+		this.setActive(person.isActive());
+		this.setLoginAllowed(person.isLoginAllowed());
+		this.setContacts(new ArrayList<Person>(person.getContacts()));
+		this.setCommunities(person.getConfirmedCommunities());
+		this.setTags(person.getPersonTags());
 		if (person.getDocument() != null) {
-			// TODO: hardcoded...
-			this.imageRef = "/store/mediadirect/" + person.getDocument().getDocumentId();
 			this.imageId = person.getDocument().getDocumentId();
-		} else {
-			// TODO: hardcoded...
-			this.imageRef = "/protected/img/no_img.jpg";
 		}
 	}
 
@@ -286,11 +298,52 @@ public class UserDTO {
 		this.dateOfEntry = dateOfEntry;
 	}
 
+	public Boolean getOnline() {
+		return online;
+	}
+
+	
+	public void setOnline(Boolean online) {
+		this.online = online;
+	}
+
 	public List<Person> getContacts() {
 		return contacts;
 	}
 
 	public void setContacts(List<Person> contacts) {
 		this.contacts = contacts;
+	}
+
+	public List<Community> getCommunities() {
+		return communities;
+	}
+
+	public void setCommunities(List<Community> communities) {
+		this.communities = communities;
+	}
+
+	public List<PersonTag> getTags() {
+		return tags;
+	}
+	
+	public void setTags(List<PersonTag> tags) {
+		this.tags = tags;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Boolean getLoginAllowed() {
+		return loginAllowed;
+	}
+
+	public void setLoginAllowed(Boolean loginAllowed) {
+		this.loginAllowed = loginAllowed;
 	}
 }
