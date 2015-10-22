@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.DAOBase;
@@ -11,6 +12,8 @@ import at.fhj.swd13.pse.db.entity.ParameterException;
 
 public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
+	
+	@Inject
 	public CommunityDAOImpl(DbContext dbContext) {
 
 		super(dbContext);

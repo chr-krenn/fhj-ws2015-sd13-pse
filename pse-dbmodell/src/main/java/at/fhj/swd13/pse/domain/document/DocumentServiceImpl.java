@@ -46,12 +46,10 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	}
 
 	public DocumentServiceImpl(DbContext dbContext) {
-
 		super(dbContext);
 	}
 
-	
-	
+
 	@Override
 	public Document store(String filename, InputStream data, String description) {
 		Document document = new Document();
