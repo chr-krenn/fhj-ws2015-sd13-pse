@@ -68,8 +68,10 @@
 				<p:selectBooleanCheckbox
 					value="#{userProfileController.userDTO.online}" disabled="True" />
 
-				<p:outputLabel value="" />
-				<p:outputLabel value="" />
+				<p:outputLabel value="Job:" />
+				<p:inputMask id="job" styleClass="forminput"
+				    value="#{userProfileController.userDTO.job}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Aktiv "
 					rendered="#{userProfileController.activeVisible()}" />
