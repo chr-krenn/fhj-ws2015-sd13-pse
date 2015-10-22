@@ -8,6 +8,9 @@ import javax.persistence.*;
  *
  */
 @Entity
+@Table(name="document_library_entry")
+@NamedQueries({ @NamedQuery(name = "DocumentLibraryEntry.findById", query = "SELECT e FROM DocumentLibraryEntry e WHERE e.documentLibraryEntryId = :id"),
+				@NamedQuery(name = "DocumentLibraryEntry.getAllForCommunity", query = "SELECT e FROM DocumentLibraryEntry e WHERE e.community = :community")})
 public class DocumentLibraryEntry implements Serializable {
 
 	@Id
