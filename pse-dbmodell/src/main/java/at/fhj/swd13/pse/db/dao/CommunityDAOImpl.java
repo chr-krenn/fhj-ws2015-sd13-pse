@@ -8,6 +8,7 @@ import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.ParameterException;
+import at.fhj.swd13.pse.db.entity.Person;
 
 public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
@@ -104,5 +105,13 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		}
 
 		dbContext.remove(community);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Community> getCommunities(final Person person) {
+		final Query q = dbContext.createNamedQuery("Community.findCommunitiesByMember");
+		q.setParameter("person", person);
+		return (List<Community>)q.getResultList();
 	}
 }
