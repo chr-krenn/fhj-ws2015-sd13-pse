@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.DAOBase;
@@ -65,5 +66,18 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 		q.setParameter("id", tagId);
 
 		q.executeUpdate();
+	}
+
+	@Override
+	public Tag getByToken(String token) {
+		final Query q = dbContext.createNamedQuery("Tag.findByToken");
+		q.setParameter("token", token);
+		
+		try {
+			return (Tag) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}		
+
 	}
 }

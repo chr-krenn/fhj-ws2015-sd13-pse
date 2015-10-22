@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<f:metadata>
+		<f:viewParam name="communityId"
+			value="#{documentLibraryController.communityId}" />
+		<f:event type="preRenderView"
+			listener="#{documentLibraryController.init}" />
+	</f:metadata>
+	<h:form id="documentLibraryFrm">
+		<p:toolbar rendered="#{documentLibraryController.canEditLibrary}">
+			<f:facet name="left">
+
+				<p:commandButton id="uploadDocumentBtn" value="Neu"
+					icon="ui-icon-circle-plus" type="button" />
+				<p:overlayPanel id="uploadDocumentPnl" for="uploadDocumentBtn"
+					hideEffect="fade">
+					<p:fileUpload auto="true" mode="advanced"
+						fileUploadListener="#{documentLibraryController.uploadFileDocument}">
+					</p:fileUpload>
+					<p:inputText
+						value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
+					<p:commandButton value="Speichern" id="commitUploadedDocumentBtn"
+						update="documentLibraryFrm"
+						actionListener="#{documentLibraryController.saveNewDocument}" />
+				</p:overlayPanel>
+				<p:button value="Löschen" icon="ui-icon-circle-close"
+					href="/protected/Main.jsf" />
+
+			</f:facet>
+		</p:toolbar>
+		<p:dataTable var="entry" value="#{documentLibraryController.entries}"
+			rendered="#{documentLibraryController.canViewLibrary}">
+			<!--  <p:column selectionMode="single" style="width:16px;text-align:center"/>-->
+			<p:column headerText="Name">
+				<p:link value="#{entry.name}" />
+			</p:column>
+			<p:column headerText="Beschreibung">
+				<h:outputText value="#{entry.description}" />
+			</p:column>
+			<p:column headerText="Erstellt">
+				<h:outputText value="#{entry.createdAt}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</ui:composition>

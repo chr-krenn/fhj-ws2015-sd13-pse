@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+			<div>
+				<a
+					href="#{request.contextPath}/protected/xperimental/AddMessage.jsf">Demonachricht
+					eingeben</a>
+			</div>
+			<div>
+				<a
+					href="#{request.contextPath}/protected/xperimental/ListMessages.jsf">Demonachrichten
+					ansehen</a>
+			</div>
+
+
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-12">
+						<p:panel header="News">
+						</p:panel>
+					</div>
+				</div>
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-7">
+						<p:panel header="Activities">
+							<p:dataScroller value="#{simpleFeedController.activities}"
+								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
+								<h:panelGrid columns="1" style="width:100%"
+									columnClasses="logo,detail">
+									<p:outputPanel>
+										<h:panelGrid columns="4" cellpadding="5">
+											<h:outputText value="Autor:" />
+											<h:outputText
+												value="#{activity.person.firstName} #{activity.person.lastName}"
+												style="font-weight: bold" />
+											<h:outputText value="Datum:" />
+											<h:outputText value="#{activity.createdAt}"
+												style="font-weight: bold">
+												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+											</h:outputText>
+										</h:panelGrid>
+										<h:outputText value="#{activity.message}" />
+									</p:outputPanel>
+								</h:panelGrid>
+							</p:dataScroller>
+						</p:panel>
+					</div>
+					<div class="ui-grid-col-5">
+						<p:panel header="Dokumentenbibliothek">
+							<ui:include src="DocumentLibrary.xhtml">
+							</ui:include>
+						</p:panel>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -7,102 +7,169 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
 		<h:form>
-			<img class="user"
-				src="#{request.contextPath}#{userProfileController.userDTO.imageRef}"
-				alt="Kein Foto vorhanden! " />
+			<p:graphicImage id="userimage" styleClass="userimage"
+				value="#{userProfileController.userDTO.imageRef}" cache="false" />
 
-			<h:panelGroup id="fileUploadGroup" style="#{userProfileController.fileuploadDisplay}" >
-				<p:fileUpload 
-				    fileUploadListener="#{userProfileController.handleFileUpload}"
-					dragDropSupport="true" update="messages fileUploadGroup" sizeLimit="10000000"
+			<h:panelGroup id="fileUploadGroup"
+				style="#{userProfileController.fileuploadDisplay}">
+				<p:fileUpload
+					fileUploadListener="#{userProfileController.handleFileUpload}"
+					dragDropSupport="true" update="messages,userimage"
+					sizeLimit="10000000"
 					allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<h:panelGrid columns="2" cellpadding="5">
+			<p:panelGrid columns="4" style="width: 100%">
 				<p:outputLabel value="Vorname: " />
-				<p:inputMask id="firstName"
-					value="#{userProfileController.userDTO.firstName}" disabled="True" />
+				<p:inputMask id="firstName" styleClass="forminput"
+					value="#{userProfileController.userDTO.firstName}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Nachname: " />
-				<p:inputMask id="lastName"
-					value="#{userProfileController.userDTO.lastName}" disabled="True" />
+				<p:inputMask id="lastName" styleClass="forminput"
+					value="#{userProfileController.userDTO.lastName}"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="E-Mail: " />
-				<p:inputMask id="emailAddress"
+				<p:inputMask id="emailAddress" styleClass="forminput"
 					value="#{userProfileController.userDTO.emailAddress}"
-					disabled="True" />
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Abteilung: " />
-				<p:inputMask id="department"
-					value="#{userProfileController.userDTO.department}" disabled="True" />
+				<p:inputMask id="department" styleClass="forminput"
+					value="#{userProfileController.userDTO.department}"
+					readonly="#{!(userProfileController.isAdmin())}" />
+
+				<p:outputLabel value="Gebäude: " />
+				<p:inputMask
+					value="#{userProfileController.userDTO.locationBuilding}"
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
+
+				<p:outputLabel value="Stockwerk: " />
+				<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
 
 				<p:outputLabel value="Zimmer: " />
 				<p:inputMask
 					value="#{userProfileController.userDTO.locationRoomNumber}"
-					disabled="True" />
+					styleClass="forminput"
+					readonly="#{!(userProfileController.isAdmin())}" />
+
 
 				<p:outputLabel value="Telefonnummer: " />
-				<p:inputMask id="phoneNumberMobile"
+				<p:inputMask id="phoneNumberMobile" styleClass="forminput"
 					value="#{userProfileController.userDTO.phoneNumberMobile}"
-					disabled="True" />
-			</h:panelGrid>
+					readonly="#{!(userProfileController.isAdmin())}" />
 
-			<p:dataScroller value="#{userProfileController.userDTO.contacts}"
-				var="contact" chunkSize="10" mode="inline" scrollHeight="500">
-				<f:facet name="header">
-            Liste der Kontakte
-        </f:facet>
+				<p:outputLabel value="Online:" />
+				<p:selectBooleanCheckbox
+					value="#{userProfileController.userDTO.online}" disabled="True" />
 
-				<h:panelGrid columns="2" style="width:100%"
-					columnClasses="logo,detail">
+				<p:outputLabel value="" />
+				<p:outputLabel value="" />
 
+				<p:outputLabel value="Aktiv "
+					rendered="#{userProfileController.activeVisible()}" />
+				<p:selectBooleanCheckbox
+					rendered="#{userProfileController.activeVisible()}"
+					value="#{userProfileController.userDTO.active}" />
+				<p:outputLabel value="Login erlaubt: "
+					rendered="#{userProfileController.loginAllowedVisible()}" />
+				<p:selectBooleanCheckbox
+					rendered="#{userProfileController.loginAllowedVisible()}"
+					value="#{userProfileController.userDTO.loginAllowed}" />
 
-					<p:outputPanel>
-						<h:panelGrid columns="2" cellpadding="5">
-							<h:outputText value="Name:" />
-							<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{contact.firstName} #{contact.lastName}"
-									style="font-weight: bold" />
-								<f:param name="userName" value="#{contact.userName}" />
-								<f:param name="mode" value="view" />
-							</h:outputLink>
+				<p:outputLabel value=""
+					rendered="#{userProfileController.isAdmin()}" />
+				<p:commandButton value="Speichern"
+					rendered="#{userProfileController.isAdmin()}"
+					action="#{userProfileController.updateProfile}" update="messages"
+					type="submit" icon="ui-icon-disk" />
+			</p:panelGrid>
 
-						</h:panelGrid>
-					</p:outputPanel>
-				</h:panelGrid>
-			</p:dataScroller>
+			<p:panel id="addtocontact" cache="false">
+				<p:commandButton id="contactButton"
+					value="#{userProfileController.contactButtonText()}" type="submit"
+					icon="ui-icon-home"
+					actionListener="#{userProfileController.contactButtonAction()}"
+					rendered="#{userProfileController.addToContactVisible()}"
+					update="addtocontact,contacts" />
+			</p:panel>
 
-
-
-			<p:dialog widgetVar="dlg" modal="true" resizable="false"
-				header="Values" showEffect="fade">
-				<p:panelGrid id="display" columns="2" columnClasses="label,value">
-					<h:outputText value="Vorname: " />
-					<h:outputText id="firstNameValue"
-						value="#{userProfileController.userDTO.firstName}" />
-
-					<h:outputText value="Nachname: " />
-					<h:outputText id="lastNameValue"
-						value="#{userProfileController.userDTO.lastName}" />
-
-					<h:outputText value="E-Mail: " />
-					<h:outputText id="emailAddressValue"
-						value="#{userProfileController.userDTO.emailAddress}" />
-
-					<h:outputText value="Abteilung: " />
-					<h:outputText id="departmentValue"
-						value="#{userProfileController.userDTO.department}" />
-
-					<h:outputText value="Zimmer: " />
-					<h:outputText id="locationRoomNumberValue"
-						value="#{userProfileController.userDTO.locationRoomNumber}" />
-
-					<h:outputText value="Telefonnummer: " />
-					<h:outputText id="phoneNumberMobileValue"
-						value="#{userProfileController.userDTO.phoneNumberMobile}" />
-				</p:panelGrid>
-			</p:dialog>
+			<p:panel id="contacts">
+				<p:tabView>
+					<p:tab title="Abteilung">
+						<p:dataTable var="userWithDepartment"
+							value="#{userProfileController.usersWithDepartment}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{userWithDepartment.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{userWithDepartment.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{userWithDepartment.firstName}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Kontakte">
+						<p:dataTable var="contact"
+							value="#{userProfileController.userDTO.contacts}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{contact.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{contact.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{contact.firstName}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Communities">
+						<p:dataTable var="community"
+							value="#{userProfileController.userDTO.communities}">
+							<p:column headerText="Name">
+								<h:outputText value="#{community.name}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Interessen">
+						<p:dataTable var="persontag" editable="true" id="persontags" value="#{userProfileController.userDTO.tags}" rowKey="#{persontag.personTagId}">
+							<p:column headerText="Interesse">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{persontag.tag.token}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:selectOneMenu id="tags" value="#{persontag.tag}" style="width: 100%"> 
+											<f:selectItems value="#{userProfileController.tags}" var="mytag" itemLabel="#{mytag.token}" itemValue="#{mytag.tagId}"/>
+												<p:column>
+												<h:outputText value="#{mytag.token}" />
+											</p:column>											
+										</p:selectOneMenu>
+										
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Actions">
+								<p:rowEditor />
+							</p:column>							
+						</p:dataTable>
+						<p:commandButton id="addtagButton" value="Hinzufügen"
+							icon="ui-icon-home" type="submit"
+							actionListener="#{userProfileController.addNewTag()}"
+							update="persontags" />
+					</p:tab>
+				</p:tabView>
+			</p:panel>
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -1,26 +1,31 @@
 package at.fhj.swd13.pse.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.Document;
+import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.TagService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.feed.FeedService;
+import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
  * Test data 
@@ -41,45 +46,74 @@ public class MessageEditorController {
 	private TagService tagService;
 
 	@Inject
-	DocumentService documentService;
+	private DocumentService documentService;
+
+	@Inject
+	private FeedService feedService;
+
+	@Inject
+	private UserSession userSession;
 
 	private String headline;
 	private String richText;
 	private int iconId;
 	private String iconRef;
 
+	private int documentId;
+	private String documentRef;
+	private String documentName;
+
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
 
 	private List<String> selectedTags = new ArrayList<String>();
 
 	/**
-	 * 
+	 * Save the entered message to the database
 	 */
 	public void save() {
-		// TODO implement
-		logger.info("[MSG+] saving message... (nothing for NOW");
-	}
+		logger.info("[MSG+] saving message... ");
 
-	/**
-	 * 
-	 * @param event
-	 */
-	public void handleIconUpload(FileUploadEvent event) {
+		Document document = documentService.get(documentId);
+		Document icon = documentService.get(iconId);
+		List<Community> communities = new ArrayList<Community>();
+		List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
-		FacesMessage message = new FacesMessage("Fehler", "Hochladen eines Icons noch nicht unterstützt");
-		message.setSeverity(FacesMessage.SEVERITY_ERROR);
-		FacesContext.getCurrentInstance().addMessage(null, message);
-	}
+		Tag tag;
+		MessageTag messageTag;
 
-	/**
-	 * 
-	 * @param event
-	 */
-	public void handleDocumentUpload(FileUploadEvent event) {
+		for (String tagString : selectedTags) {
+			tag = tagService.getTagByToken(tagString);
+			if (tag == null) {
+				tag = new Tag();
+				tag.setToken(tagString);
+				tag.setDescription(tagString);
+				tagService.insert(tag);
+			}
+			messageTag = new MessageTag();
+			messageTag.setTag(tag);
+			messageTag.setCreatedAt(new Date());
+			messageTags.add(messageTag);
+		}
 
-		FacesMessage message = new FacesMessage("Fehler", "Hochladen eines Documentes noch nicht unterstützt");
-		message.setSeverity(FacesMessage.SEVERITY_ERROR);
-		FacesContext.getCurrentInstance().addMessage(null, message);
+		for (CommunityDTO communityDto : selectedCommunities) {
+			communities.add(chatService.getCommunity(communityDto.getName()));
+		}
+
+		feedService.saveMessage(headline, richText, userSession.getUsername(),
+				document, icon, communities, messageTags);
+
+		ExternalContext extContext = FacesContext.getCurrentInstance()
+				.getExternalContext();
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			String url = extContext.encodeActionURL(context.getApplication()
+					.getViewHandler()
+					.getActionURL(context, "/protected/Main.jsf"));
+			extContext.redirect(url);
+		} catch (IOException e) {
+			logger.error("[MSG+] error redirecting after logout: "
+					+ e.getMessage());
+		}
 	}
 
 	/**
@@ -95,17 +129,17 @@ public class MessageEditorController {
 
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
-		for (Community community : chatService.getPossibleTargetCommunities("des wird no ignoriert", input)) {
-			// TODO - cleanup add copyctor to CommunityDTO
-			CommunityDTO communityDTO = new CommunityDTO(Integer.toString(community.getCommunityId()),
-					community.getName());
+		for (Community community : chatService.getPossibleTargetCommunities(
+				"des wird no ignoriert", input)) {
+			CommunityDTO communityDTO = new CommunityDTO(community);
 
-			if (!isAlreadySelected(communityDTO.getToken())) {
+			if (!isCommunityAlreadySelected(communityDTO.getToken())) {
 				result.add(communityDTO);
 			}
 		}
 
-		logger.info("[MSG+] matching and not already selected communities found: " + result.size());
+		logger.info("[MSG+] matching and not already selected communities found: "
+				+ result.size());
 
 		return result;
 	}
@@ -119,7 +153,7 @@ public class MessageEditorController {
 	 * @return true if the communityDTO has already been selected, false
 	 *         otherwise
 	 */
-	private boolean isAlreadySelected(final String token) {
+	private boolean isCommunityAlreadySelected(final String token) {
 
 		logger.info("[MSG+] checking already selected for " + token);
 		logger.info("[MSG+] selected count " + selectedCommunities.size());
@@ -137,14 +171,36 @@ public class MessageEditorController {
 
 		List<String> result = new ArrayList<String>();
 
+		logger.info( "[MSG+] completeTag - selcted tag count " + selectedTags.size() );
+		
 		for (Tag tag : tagService.getMatchingTags(input)) {
+			
+			if (! isTagAlreadySelected(tag.getToken())) {
+				result.add(tag.getToken());
+			}
+		}
 
-			result.add(tag.getToken());
+		if (result.size() == 0 && !selectedTags.contains(input)) {
+			result.add(input);
 		}
 
 		return result;
 	}
 
+	private boolean isTagAlreadySelected( final String token ) {
+		
+		final String needle = token.toLowerCase();
+		
+		for( String tag : selectedTags ) {
+		
+			if ( tag.toLowerCase().equals(needle)) {
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * called when a community is added to the chosen list
 	 * 
@@ -207,7 +263,8 @@ public class MessageEditorController {
 	 */
 	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
 
-		logger.info("[MSG+] set selected communities with an itemcount of " + selectedCommunities.size());
+		logger.info("[MSG+] set selected communities with an itemcount of "
+				+ selectedCommunities.size());
 
 		this.selectedCommunities = selectedCommunities;
 	}
@@ -219,7 +276,8 @@ public class MessageEditorController {
 	public void setSelectedTags(List<String> selectedTags) {
 
 		if (selectedTags != null) {
-			logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
+			logger.info("[MSG+] set selected tags with an itemcount of "
+					+ selectedTags.size());
 
 			this.selectedTags = selectedTags;
 		} else {
@@ -234,22 +292,50 @@ public class MessageEditorController {
 
 		logger.info("[MSG+] uploading icon");
 
-		RequestContext.getCurrentInstance().openDialog("/protected/ImageUpload");
+		RequestContext.getCurrentInstance()
+				.openDialog("/protected/ImageUpload");
 	}
 
 	public void onIconUploaded(SelectEvent element) {
 
-		logger.info("[MSG+] icon uploaded " + element );
-		
-		if ( element != null ) {
-			final int addedDocumentId = (Integer)element.getObject();
-			
-			logger.info("[MSG+] uploaded documentId was " + addedDocumentId );
-			
+		logger.info("[MSG+] icon uploaded " + element);
+
+		if (element != null) {
+			final int addedDocumentId = (Integer) element.getObject();
+
+			logger.info("[MSG+] uploaded documentId was " + addedDocumentId);
+
 			iconId = addedDocumentId;
-			iconRef = documentService.buildServiceUrl( iconId );
+			iconRef = documentService.buildServiceUrl(iconId);
 		}
-		
+	}
+
+	/**
+	 * open the file upload dialog and upload an image
+	 */
+	public void uploadDocument() {
+
+		logger.info("[MSG+] uploading document");
+
+		RequestContext.getCurrentInstance().openDialog(
+				"/protected/DocumentUpload");
+	}
+
+	public void onDocumentUploaded(SelectEvent element) {
+
+		logger.info("[MSG+] document uploaded " + element);
+
+		if (element != null) {
+			final int addedDocumentId = (Integer) element.getObject();
+
+			logger.info("[MSG+] uploaded documentId was " + addedDocumentId);
+
+			documentId = addedDocumentId;
+			documentRef = documentService.buildServiceUrl(documentId);
+
+			Document d = documentService.get(documentId);
+			documentName = d.getName();
+		}
 	}
 
 	/**
@@ -296,7 +382,8 @@ public class MessageEditorController {
 	public String getIconRef() {
 
 		if (iconRef == null) {
-			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
+			return documentService
+					.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
 		}
 
 		return iconRef;
@@ -308,5 +395,27 @@ public class MessageEditorController {
 	 */
 	public void setIconRef(String iconRef) {
 		this.iconRef = iconRef;
+	}
+
+	public String getDocumentRef() {
+		if (documentRef == null) {
+			return documentService
+					.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);
+		}
+
+		logger.info("[MSG+] documentRef: " + documentRef);
+		return documentRef;
+	}
+
+	public void setDocumentRef(String documentRef) {
+		this.documentRef = documentRef;
+	}
+
+	public String getDocumentName() {
+		return documentName;
+	}
+
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
 	}
 }

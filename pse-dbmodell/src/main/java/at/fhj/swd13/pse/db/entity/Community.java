@@ -10,10 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,7 +37,7 @@ public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String PRIVATE_PREFIX = "@";
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "community_id", unique = true, nullable = false)
@@ -55,7 +57,7 @@ public class Community implements Serializable {
 	private boolean systemInternal;
 
 	// bi-directional many-to-one association to Person
-	@ManyToOne
+	@OneToOne(optional = true)
 	@JoinColumn(name = "private_user")
 	private Person privateUser;
 
@@ -74,7 +76,7 @@ public class Community implements Serializable {
 	private List<CommunityMember> communityMembers;
 
 	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "community")
+	@ManyToMany(mappedBy = "communities")
 	private List<Message> messages;
 
 	public Community() {
@@ -238,14 +240,14 @@ public class Community implements Serializable {
 
 	public Message addMessage(Message message) {
 		getMessages().add(message);
-		message.setCommunity(this);
+		message.getCommunities().add(this);
 
 		return message;
 	}
 
 	public Message removeMessage(Message message) {
 		getMessages().remove(message);
-		message.setCommunity(null);
+		message.getCommunities().remove(this);
 
 		return message;
 	}

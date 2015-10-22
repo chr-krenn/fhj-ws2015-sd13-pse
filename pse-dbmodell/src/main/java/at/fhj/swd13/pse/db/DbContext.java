@@ -5,8 +5,12 @@ import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
+import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
+import at.fhj.swd13.pse.db.dao.MessageDAO;
+import at.fhj.swd13.pse.db.dao.MessageTagDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
+import at.fhj.swd13.pse.db.entity.DocumentLibraryEntry;
 
 /**
  * Connection to a persistent storage service
@@ -103,6 +107,24 @@ public interface DbContext extends AutoCloseable {
 	 * @return an instance of a DAO
 	 */
 	DocumentDAO getDocumentDAO();
+	
+	/**
+	 * Get a dao for messages
+	 * 
+	 * @return an instance of a DAO
+	 */
+	MessageDAO getMessageDAO();
+	
+	/**
+	 * Get a dao for MessageTags
+	 * 
+	 * @return an instance of a DAO
+	 */
+	MessageTagDAO getMessageTagDAO();
+	
+	
+	DocumentLibraryEntryDAO getDocumentLibraryDAO();
+	
 	
 	/**
 	 * Close DbContext 

@@ -1,5 +1,8 @@
 package at.fhj.swd13.pse.dto;
 
+import at.fhj.swd13.pse.db.entity.Community;
+
+
 /**
  * DTO for the community entity
  *
@@ -24,6 +27,17 @@ public class CommunityDTO {
 	public CommunityDTO( final String token, final String name ) {
 		this.token = token;
 		this.name = name;
+	}
+	
+	/**
+	 * 
+	 * Ctor to create a new CommunityDTO from a community instance
+	 * @param community
+	 * The community which is the source for the new CommunityD
+	 */
+	public CommunityDTO(Community community){
+		this.token = Integer.toString(community.getCommunityId());
+		this.name = community.getName();
 	}
 	
 	@Override

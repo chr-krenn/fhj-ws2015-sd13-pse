@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.dto.UserDTO;
 
 public interface UserService {
@@ -24,6 +25,13 @@ public interface UserService {
 	 * logout the user in the current session
 	 */
 	void logoutCurrentUser();
+	
+	/**
+	 * get the currently logged in user from the session
+	 * 
+	 * @return the logged in user
+	 */
+	public Person getLoggedInUser();
 
 	/**
 	 * Get the user with the given username
@@ -42,6 +50,14 @@ public interface UserService {
 	 * @return a list of all currently known users
 	 */
 	List<Person> getUsers();
+	
+	/**
+	 * get a list of all known usrs with the given department
+	 * @param deparment
+	 *           of the persons to retrieve
+	 * @return a list of all currently known users
+	 */
+	List<Person> getUsersWithDepartment(String department);
 	
 	/**
 	 * searc users by firstname, lastname, email 
@@ -136,4 +152,18 @@ public interface UserService {
 	 *             when the document was not found via the documentId
 	 */
 	void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException;
+	
+	/**
+	 * Create a relation between two persons
+	 * 
+	 * @param the person who initiates the relation
+	 * @param the person who is added to the relation
+	 * @return a relation object
+	 */	
+	PersonRelation createRelation(Person sourcePerson, Person targetPerson);
+	
+	
+	void removeRelation(Person sourcePerson, Person targetPerson);
+
+	
 }
