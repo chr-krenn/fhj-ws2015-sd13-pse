@@ -43,8 +43,9 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Message> loadForUser(Person user) {
-		// TODO Update query
+		// TODO Update query (work in progress by Christine!)
 		Query query = dbContext.createNamedQuery("Message.findForUser");
+		query.setParameter("communities", dbContext.getCommunityDAO().getCommunities(user));
 		return query.getResultList();
 	}
 

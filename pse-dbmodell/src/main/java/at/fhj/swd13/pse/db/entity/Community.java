@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
 		@NamedQuery(name = "Community.findMatching", query = "SELECT c FROM Community c WHERE c.name LIKE :needle"),
 		@NamedQuery(name = "Community.findUnconfirmed", query = "SELECT c FROM Community c WHERE c.confirmedBy IS NULL"),
 		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"), 
-		@NamedQuery(name="Community.findCommunitiesByMember", query = "SELECT c FROM Community c JOIN c.communityMembers m WHERE m.member = :person") })
+		@NamedQuery(name="Community.findCommunitiesByMember", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person") })
 public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
