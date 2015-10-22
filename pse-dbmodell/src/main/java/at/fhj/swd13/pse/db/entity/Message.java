@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.jsoup.Jsoup;
+
 /**
  * The persistent class for the message database table.
  * 
@@ -158,6 +160,10 @@ public class Message implements Serializable {
 		return this.message;
 	}
 
+	public String getPlainMessage() {
+		return Jsoup.parse(message).text();
+	}
+	
 	public void setMessage(String message) {
 		this.message = message;
 	}
