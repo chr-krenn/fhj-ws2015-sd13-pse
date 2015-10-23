@@ -45,6 +45,7 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 	public List<Message> loadForUser(Person user) {
 		// TODO Update query (work in progress by Christine!)
 		Query query = dbContext.createNamedQuery("Message.findForUser");
+		query.setParameter("person", user);
 		query.setParameter("communities", dbContext.getCommunityDAO().getCommunities(user));
 		return query.getResultList();
 	}

@@ -32,7 +32,7 @@ import org.jsoup.Jsoup;
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
-		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdOn DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
