@@ -20,6 +20,7 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
@@ -45,7 +46,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<Message> loadFeedForUser(Person user) {
+	public List<MessageDTO> loadFeedForUser(Person user) {
 		return dbContext.getMessageDAO().loadForUser(user);
 	}
 

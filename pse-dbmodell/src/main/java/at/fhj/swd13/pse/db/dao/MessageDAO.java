@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.MessageDTO;
 
 public interface MessageDAO {
 	/**
@@ -34,5 +35,5 @@ public interface MessageDAO {
 	
 	List<Message> loadAll();
 	
-	List<Message> loadForUser(Person user);
+	List<MessageDTO> loadForUser(Person user);
 }

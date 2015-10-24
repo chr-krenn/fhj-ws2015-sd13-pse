@@ -9,7 +9,7 @@ insert into message
 
 insert into message 
 	(message_id, created_by, message, valid_from, delivered_by) 
-	values (3, 108, "Community message", CURRENT_TIMESTAMP, 1);
+	values (3, 107, "Community message", CURRENT_TIMESTAMP, 1);
 	
 insert into message 
 	(message_id, created_by, message, valid_from, delivered_by) 

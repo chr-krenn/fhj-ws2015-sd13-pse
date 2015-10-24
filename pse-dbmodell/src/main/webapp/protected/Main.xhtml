@@ -35,18 +35,21 @@
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
 									<p:outputPanel>
-										<h:panelGrid columns="4" cellpadding="5">
+										<h:panelGrid columns="5" cellpadding="5">
+											<h:outputLabel value="#{activity.privateMessage ? 'Private' : 
+												activity.community}" style="font-weight: bold; font-style: italic"/>
 											<h:outputText value="Autor:" />
 											<h:outputText
-												value="#{activity.person.firstName} #{activity.person.lastName}"
+												value="#{activity.author}"
 												style="font-weight: bold" />
 											<h:outputText value="Datum:" />
-											<h:outputText value="#{activity.createdAt}"
+											<h:outputText value="#{activity.date}"
 												style="font-weight: bold">
 												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 											</h:outputText>
 										</h:panelGrid>
-										<h:outputText value="#{activity.message}" escape="false"/>
+										<h:outputText value="#{activity.headline} &lt;br/&gt;" escape="false" style="font-weight: bold" />				
+										<h:outputText value="#{activity.text}" escape="false"/>
 									</p:outputPanel>
 								</h:panelGrid>
 							</p:dataScroller>

@@ -15,6 +15,7 @@ import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 
@@ -46,7 +47,7 @@ public class DbMessageTest {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 			
-			List<Message> activities = messageDAO.loadForUser(getPerson(108));
+			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(108));
 
 			assertNotNull(activities);
 		}  

@@ -16,6 +16,7 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**
@@ -53,7 +54,7 @@ public class SimpleFeedController {
     	return messages;
     }
     
-    public List<Message> getActivities() {
+    public List<MessageDTO> getActivities() {
     	try {
 			return feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
 		} catch (EntityNotFoundException e) {
