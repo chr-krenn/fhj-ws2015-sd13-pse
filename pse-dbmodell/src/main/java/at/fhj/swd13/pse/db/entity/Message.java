@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -109,6 +110,14 @@ public class Message implements Serializable {
 	@OneToMany(mappedBy = "message")
 	private List<PersonMessage> personMessages;
 
+	/**
+	 * before the update set the updatedOn property
+	 */
+	@PreUpdate
+	private final void onPreUpdate() {
+		updatedOn = new Date();
+	}
+	
 	public Message() {
 	}
 
