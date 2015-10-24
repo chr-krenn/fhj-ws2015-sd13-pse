@@ -65,7 +65,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		message.setCreatedOn(createdDate);
 		message.setValidFrom(createdDate);		
 
 		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);

@@ -31,8 +31,8 @@ import org.jsoup.Jsoup;
 @Table(name = "message")
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
-		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
-		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -45,10 +45,6 @@ public class Message implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_on", nullable = false)
-	private Date createdOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "expires_on")
@@ -130,14 +126,6 @@ public class Message implements Serializable {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	public Date getCreatedOn() {
-		return this.createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
 	}
 
 	public Date getExpiresOn() {

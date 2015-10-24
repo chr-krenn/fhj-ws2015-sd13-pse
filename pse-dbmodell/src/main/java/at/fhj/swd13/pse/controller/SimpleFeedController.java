@@ -28,7 +28,7 @@ public class SimpleFeedController {
 
     @Produces
     @Named
-    @OrderBy("createdOn ASC")
+    @OrderBy("createdAt ASC")
 	private List<Message> messages;
     
     @Inject
