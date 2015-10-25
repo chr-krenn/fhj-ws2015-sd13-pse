@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -21,13 +20,7 @@ public class DbMessageTest extends DbTestBase {
 		DbTestBase.prepare();
 	}
 
-	/*
-	 * Test not working yet because the query used in loadForUser only works
-	 * with Hibernate, but the tests are currently not using Hibernate
-	 * Test will be improved once the basics work...
-	 */
 	@Test
-	@Ignore
 	public void testActivityStream() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
