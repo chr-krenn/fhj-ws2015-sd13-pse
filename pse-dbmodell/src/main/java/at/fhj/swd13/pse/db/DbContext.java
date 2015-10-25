@@ -24,7 +24,7 @@ public interface DbContext extends AutoCloseable {
 	 * 
 	 * @param target the object to add
 	 */
-	void persist(Object target);
+	void persist(Object target) throws ConstraintViolationException;
 
 	/**
 	 * Remove an object from the persistent storage

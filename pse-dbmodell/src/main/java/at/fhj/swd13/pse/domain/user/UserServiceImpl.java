@@ -5,6 +5,9 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.jboss.logging.Logger;
+
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
@@ -27,6 +30,8 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	@Inject
 	private UserSession userSession;
 
+	@Inject
+	private Logger logger;
 
 	/**
 	 * Create an instance of the user service
@@ -259,9 +264,14 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	
 	@Override
 	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
-		PersonRelation relation;
+		PersonRelation relation = null;
 		
-		relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
+		try {
+			relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
+		} catch (ConstraintViolationException e) {
+			
+			logger.error("[USER] ConstraintViolation while creating relation ... oopsi");
+		}
 		return relation;
 	}
 

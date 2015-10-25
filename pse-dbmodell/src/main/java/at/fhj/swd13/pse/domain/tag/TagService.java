@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.domain.tag;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Tag;
 
 public interface TagService {
@@ -10,5 +11,5 @@ public interface TagService {
 	
 	Tag getTagByToken(String token);
 	
-	void insert(Tag tag);
+	void insert(Tag tag) throws ConstraintViolationException;
 }

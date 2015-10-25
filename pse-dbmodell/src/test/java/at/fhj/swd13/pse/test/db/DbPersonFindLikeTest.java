@@ -10,14 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Person;
 
-public class DbPersonFindLikeTest {
-
-	private static DbContextProvider contextProvider;
+public class DbPersonFindLikeTest extends DbTestBase {
 
 	private static Person p1 = new Person("etester", "Ausprobierer", "Ehrenfried", "12345678");
 	private static Person p2 = new Person("xtester", "Probierer", "Xaver", "12345678");
@@ -26,17 +22,18 @@ public class DbPersonFindLikeTest {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		contextProvider = new DbContextProviderImpl();
+
+		DbTestBase.prepare();
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			personDAO.insert( p1 );
-			personDAO.insert( p2 );
-			personDAO.insert( p3 );
-			personDAO.insert( p4 );
-			
+
+			personDAO.insert(p1);
+			personDAO.insert(p2);
+			personDAO.insert(p3);
+			personDAO.insert(p4);
+
 			dbContext.commit();
 		}
 	}
@@ -47,14 +44,14 @@ public class DbPersonFindLikeTest {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			personDAO.remove( p1.getPersonId() );
-			personDAO.remove( p2.getPersonId() );
-			personDAO.remove( p3.getPersonId() );
-			personDAO.remove( p4.getPersonId() );
-			
+
+			personDAO.remove(p1.getPersonId());
+			personDAO.remove(p2.getPersonId());
+			personDAO.remove(p3.getPersonId());
+			personDAO.remove(p4.getPersonId());
+
 			dbContext.commit();
-		}		
+		}
 	}
 
 	@Test
@@ -62,24 +59,23 @@ public class DbPersonFindLikeTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			List<Person> result = personDAO.getPersonLike( "xxx"); 
-			
-			assertEquals( 0, result.size() );
+
+			List<Person> result = personDAO.getPersonLike("xxx");
+
+			assertEquals(0, result.size());
 		}
 	}
-	
-	
+
 	@Test
 	public void testFetch1() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			List<Person> result = personDAO.getPersonLike( "mai"); 
-			
-			assertEquals( 1, result.size() );
-			assertEquals("Maier", result.get(0).getLastName() );
+
+			List<Person> result = personDAO.getPersonLike("mai");
+
+			assertEquals(1, result.size());
+			assertEquals("Maier", result.get(0).getLastName());
 		}
 	}
 
@@ -88,10 +84,10 @@ public class DbPersonFindLikeTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			List<Person> result = personDAO.getPersonLike( "xtes"); 
-			
-			assertEquals( 2, result.size() );
+
+			List<Person> result = personDAO.getPersonLike("xtes");
+
+			assertEquals(2, result.size());
 		}
 	}
 
@@ -100,13 +96,13 @@ public class DbPersonFindLikeTest {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			PersonDAO personDAO = dbContext.getPersonDAO();
-			
-			List<Person> result = personDAO.getPersonLike( "probier"); 
-			
-			assertEquals( 2, result.size() );
-			
-			for( Person person : result ) {
-				assertTrue( person.getLastName().toLowerCase().contains( "probier") );
+
+			List<Person> result = personDAO.getPersonLike("probier");
+
+			assertEquals(2, result.size());
+
+			for (Person person : result) {
+				assertTrue(person.getLastName().toLowerCase().contains("probier"));
 			}
 		}
 	}

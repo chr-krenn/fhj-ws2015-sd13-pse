@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -13,7 +14,7 @@ public interface CommunityDAO {
 	 * @param community
 	 *            the community to add
 	 */
-	void insert(final Community community);
+	void insert(final Community community) throws ConstraintViolationException;
 
 	/**
 	 * Get a community from persistent storage by its unique name

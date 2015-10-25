@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -70,7 +71,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			logger.info("[DOCS] storage location is " + document.getStorageLocation());
 
 			return document;
-		} catch (IOException x) {
+		} catch ( ConstraintViolationException | IOException x) {
 			logger.error("[DOCS] Error storing file " + filename + " : " + x.getMessage());
 			return null;
 		} finally {

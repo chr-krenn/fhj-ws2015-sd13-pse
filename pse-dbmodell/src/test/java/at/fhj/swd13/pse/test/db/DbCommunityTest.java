@@ -7,20 +7,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 
-public class DbCommunityTest {
-
-	private static DbContextProvider contextProvider;
+public class DbCommunityTest extends DbTestBase {
 
 	@BeforeClass
 	public static void setup() {
 
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 	}
 
 	@Test
@@ -81,22 +77,22 @@ public class DbCommunityTest {
 			assertNull(c);
 		}
 	}
-	
-	@Test(expected=ParameterException.class)
+
+	@Test(expected = ParameterException.class)
 	public void removeIdUnpersisted() throws Exception {
-		
-		try ( DbContext context = contextProvider.getDbContext() ) {
-		
-			context.getCommunityDAO().remove( 0 );			
-		}		
+
+		try (DbContext context = contextProvider.getDbContext()) {
+
+			context.getCommunityDAO().remove(0);
+		}
 	}
 
-	@Test(expected=ParameterException.class)
+	@Test(expected = ParameterException.class)
 	public void removeObjectUnpersisted() throws Exception {
-		
-		try ( DbContext context = contextProvider.getDbContext() ) {
-		
-			context.getCommunityDAO().remove( null );			
-		}		
+
+		try (DbContext context = contextProvider.getDbContext()) {
+
+			context.getCommunityDAO().remove(null);
+		}
 	}
 }

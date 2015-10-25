@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryEntry;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProvider;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProviderFactory;
@@ -57,7 +58,13 @@ public class DocumentLibraryController {
 	{
 		InputStream is = new ByteArrayInputStream(uploadedFileContent);
 		
-		documentLibraryService.addEntry(uploadedFileName, newDocumentDescription, is, communityId);
+		try {
+			documentLibraryService.addEntry(uploadedFileName, newDocumentDescription, is, communityId);
+		} catch (ConstraintViolationException e) {
+//FIXME: need to handle failure on document generation			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		uploadedFileContent = null;
 		uploadedFileName = null;

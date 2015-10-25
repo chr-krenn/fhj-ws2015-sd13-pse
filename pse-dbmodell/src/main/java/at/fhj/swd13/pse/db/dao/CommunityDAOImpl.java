@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Community;
@@ -28,7 +29,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * Community)
 	 */
 	@Override
-	public void insert(Community community) {
+	public void insert(Community community) throws ConstraintViolationException{
 
 		dbContext.persist(community);
 	}

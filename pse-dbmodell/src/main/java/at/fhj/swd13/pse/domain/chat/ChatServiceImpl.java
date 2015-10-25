@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.domain.chat;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
@@ -21,8 +22,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	/**
 	 * Create an instance of the chat service
 	 */
-	public ChatServiceImpl() {
-	}
+	public ChatServiceImpl() {}
 
 	public ChatServiceImpl(DbContext dbContext) {
 		super(dbContext);
@@ -51,12 +51,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public Community createChatCommunity(final String creatorUsername,
-			final String communityName, final boolean invitationOnly)
+	public Community createChatCommunity(final String creatorUsername, final String communityName, final boolean invitationOnly)
 			throws EntityNotFoundException {
 
-		Person creator = dbContext.getPersonDAO().getByUsername(
-				creatorUsername, true);
+		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
 		if (creator.isActive()) {
 
@@ -68,9 +66,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			return createCommunity(creator, community);
 
 		} else {
-			throw new IllegalStateException(
-					"User is not active and can therefore not create communities: "
-							+ creatorUsername);
+			throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername);
 		}
 	}
 
@@ -102,8 +98,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * @throws DuplicateEntityException
 	 *             if the community already exists
 	 */
-	protected Community createCommunity(final Person creator,
-			final Community community) {
+	protected Community createCommunity(final Person creator, final Community community) {
 
 		CommunityDAO communityDao = dbContext.getCommunityDAO();
 
@@ -115,17 +110,20 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				community.setConfirmedBy(null);
 			}
 
-			communityDao.insert(community);
-			CommunityMember memberShip = community.addMember(creator, true);
+			try {
+				communityDao.insert(community);
+				CommunityMember memberShip = community.addMember(creator, true);
 
-			if (memberShip != null) {
-				dbContext.persist(memberShip);
+				if (memberShip != null) {
+					dbContext.persist(memberShip);
+				}
+			} catch (ConstraintViolationException x) {
+				throw new DuplicateEntityException("Community already exists: " + community.getName());
+
 			}
-
 			return community;
 		} else {
-			throw new DuplicateEntityException("Community already exists: "
-					+ community.getName());
+			throw new DuplicateEntityException("Community already exists: " + community.getName());
 		}
 	}
 
@@ -143,9 +141,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			adminPerson.addConfirmedCommunities(unconfirmed);
 
 		} else {
-			throw new IllegalStateException(
-					"Person confirming the community is either not active or not an admin: "
-							+ adminPerson.getUserName());
+			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
 
@@ -156,8 +152,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * at.fhj.swd13.pse.domain.chat.ChatService#getPossibleTargetCommunities(
 	 * java.lang.String, java.lang.String)
 	 */
-	public List<Community> getPossibleTargetCommunities(final String username,
-			final String needle) {
+	public List<Community> getPossibleTargetCommunities(final String username, final String needle) {
 
 		// TODO: filter those that the user is allowed to post to
 		return dbContext.getCommunityDAO().getMatchingCommunities(needle);
@@ -173,13 +168,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 		int createdCommunities = 0;
 
-		final List<Person> allPersons = dbContext.getPersonDAO()
-				.getAllPersons();
+		final List<Person> allPersons = dbContext.getPersonDAO().getAllPersons();
 
 		for (Person user : allPersons) {
 
-			final String privateCommunityName = Community.PRIVATE_PREFIX
-					+ user.getUserName();
+			final String privateCommunityName = Community.PRIVATE_PREFIX + user.getUserName();
 			boolean foundPrivateCommunity = false;
 
 			for (Community community : user.getCreatedCommunities()) {
@@ -213,8 +206,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 		CommunityDAO communityDao = dbContext.getCommunityDAO();
 
-		Community community = new Community(Community.PRIVATE_PREFIX
-				+ creator.getUserName());
+		Community community = new Community(Community.PRIVATE_PREFIX + creator.getUserName());
 
 		if (communityDao.getByName(community.getName()) == null) {
 
@@ -223,17 +215,20 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			community.setCreatedBy(creator);
 			community.setInvitationOnly(true);
 
-			communityDao.insert(community);
-			CommunityMember memberShip = community.addMember(creator, true);
+			try {
+				communityDao.insert(community);
+				CommunityMember memberShip = community.addMember(creator, true);
 
-			if (memberShip != null) {
-				dbContext.persist(memberShip);
+				if (memberShip != null) {
+					dbContext.persist(memberShip);
+				}
+			} catch (ConstraintViolationException x) {
+				throw new DuplicateEntityException("Community already exists: " + community.getName());
 			}
 
 			return community;
 		} else {
-			throw new DuplicateEntityException("Community already exists: "
-					+ community.getName());
+			throw new DuplicateEntityException("Community already exists: " + community.getName());
 		}
 	}
 

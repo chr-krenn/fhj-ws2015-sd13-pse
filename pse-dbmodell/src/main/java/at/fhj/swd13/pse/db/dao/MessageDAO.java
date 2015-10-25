@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -13,7 +14,7 @@ public interface MessageDAO {
 	 * @param message
 	 *            the message to persist
 	 */
-	void insert(Message message);
+	void insert(Message message) throws ConstraintViolationException;
 
 	/**
 	 * Get a message by its id

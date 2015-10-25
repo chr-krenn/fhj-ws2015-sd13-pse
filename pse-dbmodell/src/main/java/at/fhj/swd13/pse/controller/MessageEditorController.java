@@ -16,6 +16,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -87,7 +88,11 @@ public class MessageEditorController {
 				tag = new Tag();
 				tag.setToken(tagString);
 				tag.setDescription(tagString);
-				tagService.insert(tag);
+				try {
+					tagService.insert(tag);
+				} catch ( ConstraintViolationException x) {
+					logger.error("[MSG+] error creating new tag (duplicate...)");
+				}
 			}
 			messageTag = new MessageTag();
 			messageTag.setTag(tag);

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -22,7 +23,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * @see
 	 * at.fhj.swd13.pse.db.dao.TagDAO#insert(at.fhj.swd13.pse.db.entity.Tag)
 	 */
-	public void insert(Tag tag) {
+	public void insert(Tag tag) throws ConstraintViolationException{
 
 		dbContext.persist(tag);
 	}

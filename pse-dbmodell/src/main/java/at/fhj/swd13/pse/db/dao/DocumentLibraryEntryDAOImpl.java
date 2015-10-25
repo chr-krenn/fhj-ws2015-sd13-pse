@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -20,7 +21,7 @@ public class DocumentLibraryEntryDAOImpl extends DAOBase implements DocumentLibr
 	}
 
 	@Override
-	public void insert(DocumentLibraryEntry entry) {
+	public void insert(DocumentLibraryEntry entry) throws ConstraintViolationException{
 		dbContext.persist(entry);
 	}
 

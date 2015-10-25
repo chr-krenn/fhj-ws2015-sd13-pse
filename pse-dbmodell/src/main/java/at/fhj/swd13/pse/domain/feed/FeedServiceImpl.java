@@ -9,12 +9,14 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.jboss.logging.Logger;
+
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
 import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.entity.Community;
-import at.fhj.swd13.pse.db.entity.DeliverySystem;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -33,6 +35,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private Logger logger;
+	
 	public FeedServiceImpl() {
 	}
 
@@ -74,8 +79,14 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		message.setAttachment(document);
 		message.setIcon(icon);
 
-		dbContext.getMessageDAO().insert(message);
-		message.setMessageTags(messageTags);		
-		message.setCommunities(communities);	
+		try {
+
+			dbContext.getMessageDAO().insert(message);
+			message.setMessageTags(messageTags);		
+			message.setCommunities(communities);
+			
+		} catch (ConstraintViolationException e) {
+			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + message.getHeadline() );
+		}
 	}
 }

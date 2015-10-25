@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 
 public interface MessageTagDAO {
@@ -11,7 +12,7 @@ public interface MessageTagDAO {
 	 * @param messageTag
 	 *            the messageTag to persist
 	 */
-	void insert(MessageTag messageTag);
+	void insert(MessageTag messageTag) throws ConstraintViolationException;
 
 	/**
 	 * Get a MessageTag by its id

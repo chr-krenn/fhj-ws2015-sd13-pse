@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -24,7 +25,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * @see at.fhj.swd13.pse.db.PersonDAO#insert(at.fhj.swd13.pse.db.Person)
 	 */
 	@Override
-	public void insert(Person person) {
+	public void insert(Person person) throws ConstraintViolationException{
 
 		dbContext.persist(person);
 	}
@@ -188,7 +189,7 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 	 * at.fhj.swd13.pse.db.Person)
 	 */
 	@Override
-	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
+	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) throws ConstraintViolationException {
 
 		PersonRelation relation = new PersonRelation(sourcePerson, targetPerson);
 

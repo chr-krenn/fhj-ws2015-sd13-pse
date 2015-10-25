@@ -7,22 +7,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Tag;
 
-public class DbTagFindLikeTest {
-
-	private DbContextProvider contextProvider;
+public class DbTagFindLikeTest extends DbTestBase {
 
 	Tag ballroomTag = new Tag("Ballroom", "Alles was mit Tanzen zu tun hat.");
-	Tag ballgamesTag = new Tag("Ballspiele", "Alles was mit Fußball, Handball usw zu tun hat.");
+	Tag ballgamesTag = new Tag("Ballspiele", "Alles was mit Fuï¿½ball, Handball usw zu tun hat.");
 	Tag cyclingTag = new Tag("Radfahren", "Alles was mit Radfahren zu tun hat.");
 
 	@Before
 	public void setup() throws Exception {
-		contextProvider = new DbContextProviderImpl();
+
+		DbTestBase.prepare();
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -53,23 +50,23 @@ public class DbTagFindLikeTest {
 
 	@Test
 	public void findLikeBall() throws Exception {
-		
+
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			
+
 			TagDAO tagDAO = dbContext.getTagDAO();
-			
-			assertEquals( 2, tagDAO.getByTokenLike( "Ball").size() );			
+
+			assertEquals(2, tagDAO.getByTokenLike("Ball").size());
 		}
 	}
 
 	@Test
 	public void findLikeball() throws Exception {
-		
+
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			
+
 			TagDAO tagDAO = dbContext.getTagDAO();
-			
-			assertEquals( 2, tagDAO.getByTokenLike( "ball").size() );			
+
+			assertEquals(2, tagDAO.getByTokenLike("ball").size());
 		}
 	}
 }

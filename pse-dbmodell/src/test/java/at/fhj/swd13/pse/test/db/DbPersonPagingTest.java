@@ -9,22 +9,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Person;
 
-public class DbPersonPagingTest {
+public class DbPersonPagingTest extends DbTestBase {
 
 	private static final int NUMBER_OF_USERS = 100;
 	private static final String USER_NAME_PREFIX = "PAGING_USER_";
 
-	private static DbContextProvider contextProvider;
-
 	@BeforeClass
 	public static void setup() throws Exception {
 
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -81,28 +77,28 @@ public class DbPersonPagingTest {
 	public void testPagingFull() throws Exception {
 
 		int pageSize = 30;
-		
+
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDao = dbContext.getPersonDAO();
-			
-			for( int i = 0; i < NUMBER_OF_USERS / pageSize; ++i ) {
-				
-				List<Person> persons = personDao.getAllPersons( pageSize * i + 1, pageSize );
 
-				assertEquals( pageSize, persons.size());				
+			for (int i = 0; i < NUMBER_OF_USERS / pageSize; ++i) {
+
+				List<Person> persons = personDao.getAllPersons(pageSize * i + 1, pageSize);
+
+				assertEquals(pageSize, persons.size());
 			}
-			
+
 			int remainingRows = NUMBER_OF_USERS % pageSize;
-			
-			if ( remainingRows > 0 ) {
+
+			if (remainingRows > 0) {
 
 				int startPos = NUMBER_OF_USERS - remainingRows;
-				
-				List<Person> persons = personDao.getAllPersons( startPos, pageSize );
 
-				assertEquals( remainingRows, persons.size());								
-			}			
+				List<Person> persons = personDao.getAllPersons(startPos, pageSize);
+
+				assertEquals(remainingRows, persons.size());
+			}
 		}
 	}
 }

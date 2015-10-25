@@ -14,8 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.PasswortStrengthValidatorImpl;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -23,10 +21,10 @@ import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
+import at.fhj.swd13.pse.test.db.DbTestBase;
 
-public class DbUserServiceTest {
+public class DbUserServiceTest extends DbTestBase {
 
-	private DbContextProvider contextProvider;
 	private UserSession userSession;
 
 	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");
@@ -37,7 +35,7 @@ public class DbUserServiceTest {
 	@Before
 	public void setup() throws Exception {
 
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 
 		try (DbContext context = contextProvider.getDbContext()) {
 
@@ -210,8 +208,8 @@ public class DbUserServiceTest {
 	public void updateUser() throws Exception {
 
 		@SuppressWarnings("deprecation")
-		final Date doe = new Date( 1980,1,1);
-		
+		final Date doe = new Date(1980, 1, 1);
+
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			final UserService userService = new UserServiceImpl(dbContext, userSession);
@@ -223,11 +221,10 @@ public class DbUserServiceTest {
 
 			userDTO.setFirstName("Hans-Otto");
 			userDTO.setLocationBuilding("Stall");
-			userDTO.setDateOfEntry( doe );
-			
-			//TODO - test more
-			
-			
+			userDTO.setDateOfEntry(doe);
+
+			// TODO - test more
+
 			userService.update(userDTO);
 
 			dbContext.commit();
@@ -242,9 +239,9 @@ public class DbUserServiceTest {
 
 			Person p = userService.getUser(pwPerson.getUserName());
 
-			assertEquals("Hans-Otto",p.getFirstName());
-			assertEquals("Stall",p.getLocationBuilding());			
-			assertEquals(doe,p.getDateOfEntry() );			
+			assertEquals("Hans-Otto", p.getFirstName());
+			assertEquals("Stall", p.getLocationBuilding());
+			assertEquals(doe, p.getDateOfEntry());
 		}
 	}
 }
