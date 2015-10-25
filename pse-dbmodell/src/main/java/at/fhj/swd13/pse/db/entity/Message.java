@@ -114,7 +114,7 @@ public class Message implements Serializable {
 	 * before the update set the updatedOn property
 	 */
 	@PreUpdate
-	private final void onPreUpdate() {
+	private void onPreUpdate() {
 		updatedOn = new Date();
 	}
 	
