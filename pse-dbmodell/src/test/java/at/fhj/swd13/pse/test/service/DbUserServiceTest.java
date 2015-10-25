@@ -73,8 +73,9 @@ public class DbUserServiceTest extends DbTestBase {
 
 			final UserService userService = new UserServiceImpl(dbContext, userSession);
 			userService.setPasswordStrengthValidator(new PasswortStrengthValidatorImpl());
-
-			assertEquals(1, userService.updateNullPasswords());
+			
+			//-2: the two users i created above since they have passwords
+			assertEquals(dbContext.getPersonDAO().getAllPersons().size() - 2, userService.updateNullPasswords());
 		}
 		try (DbContext context = contextProvider.getDbContext()) {
 			context.clearCache();
