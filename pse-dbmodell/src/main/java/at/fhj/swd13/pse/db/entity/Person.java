@@ -194,7 +194,7 @@ public class Person implements Serializable {
 	private List<PersonRelation> personTargetRelations;
 
 	// bi-directional many-to-one association to PersonTag
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "person", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "person", cascade = { CascadeType.PERSIST, CascadeType.DETACH } )	
 	private List<PersonTag> personTags;
 
 	@Column(name = "current_session_id", nullable = true, length = 64)

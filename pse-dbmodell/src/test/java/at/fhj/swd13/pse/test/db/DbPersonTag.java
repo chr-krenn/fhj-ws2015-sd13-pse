@@ -74,7 +74,12 @@ public class DbPersonTag extends DbTestBase {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			Person x = personDAO.getById(p1.getPersonId());
+
+			assertNotNull( x );
+			
 			Tag l = tagDAO.getById(t.getTagId());
+
+			assertNotNull( l );
 
 			x.addTag(l);
 
