@@ -17,7 +17,7 @@ public class LoggerProducer {
 	@Produces
 	public Logger getLogger(InjectionPoint injectionPoint) {
 
-		logger.info("[LOG] giving away a logger to " + injectionPoint.getMember().getDeclaringClass().getName());
+		logger.debug("[LOG] giving away a logger to " + injectionPoint.getMember().getDeclaringClass().getName());
 
 		return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
 	}
