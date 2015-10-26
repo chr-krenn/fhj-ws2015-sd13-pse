@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.db.dao;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -23,8 +24,9 @@ public interface MessageDAO {
 	 *            the id of the message to fetch
 	 * 
 	 * @return message instance or null if none could be found
+	 * @throws EntityNotFoundException 
 	 */
-	Message getById(int messageId);
+	Message getById(int messageId) throws EntityNotFoundException;
 
 	/**
 	 * remove a message identified by its messageId

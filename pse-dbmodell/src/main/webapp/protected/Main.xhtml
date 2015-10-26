@@ -35,8 +35,8 @@
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
 									<p:outputPanel>
-										<h:panelGrid columns="5" cellpadding="5">
-											<h:outputLabel value="#{activity.privateMessage ? 'Private' : 
+										<h:panelGrid columns="6" cellpadding="5">
+											<h:outputLabel value="#{activity.privateMessage ? 'Privat' : 
 												activity.community}" style="font-weight: bold; font-style: italic"/>
 											<h:outputText value="Autor:" />
 											<h:outputText
@@ -47,6 +47,10 @@
 												style="font-weight: bold">
 												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 											</h:outputText>
+											<h:commandButton action="#{messageDetailsController.openDetailView}" value="Details"
+												icon="ui-icon-search">
+												<f:param name="messageId" value="#{activity.id}" />
+											</h:commandButton>
 										</h:panelGrid>
 										<h:outputText value="#{activity.headline} &lt;br/&gt;" escape="false" style="font-weight: bold" />				
 										<h:outputText value="#{activity.text}" escape="false"/>

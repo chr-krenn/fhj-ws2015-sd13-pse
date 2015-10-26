@@ -89,4 +89,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + message.getHeadline() );
 		}
 	}
+
+	@Override
+	public Message getMessageById(int messageId) throws EntityNotFoundException {
+		return dbContext.getMessageDAO().getById(messageId);
+	}
 }
