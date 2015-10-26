@@ -290,4 +290,22 @@ public class UserProfileController implements Serializable {
 		for (Person p : usersWithDepartment)
 			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
 	}
+	
+	public String getContactListEntryStyle(String username, String department)
+	{
+		if(!username.equals(userSession.getUsername()))
+			return "font-weight: bold";
+		
+		Person person = null;
+		try {
+			person = userService.getUser(userSession.getUsername());
+		} catch (EntityNotFoundException e) {
+			return "font-weight: bold";
+		}
+		
+		if (department.equals(person.getDepartment()))
+			return "font-weight: bold; color:green";
+		else
+			return "font-weight: bold";
+	}
 }
