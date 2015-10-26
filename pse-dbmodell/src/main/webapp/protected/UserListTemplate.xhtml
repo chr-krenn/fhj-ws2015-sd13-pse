@@ -27,6 +27,9 @@
 
 					<h:outputText value="Funktion:" />
 					<h:outputText value="#{user.job}" style="font-weight: bold" />
+					
+					<h:outputText value="Online:" />
+					<p:selectBooleanCheckbox value="#{user.online}" style="font-weight: bold" disabled="True" />
 				</h:panelGrid>
 			</p:outputPanel>
 		</h:panelGrid>
