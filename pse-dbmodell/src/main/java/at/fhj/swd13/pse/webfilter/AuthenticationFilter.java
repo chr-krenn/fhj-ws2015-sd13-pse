@@ -33,16 +33,14 @@ public class AuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 
-		logger.info("[AUTH] requesting url " + req.getRequestURI());
-
 		if (req.getRequestURI().indexOf("/protected") < 0 || isLoggedIn(request)) {
 
-			logger.info("[AUTH] ++ allowed");
+			logger.info("[AUTH] allowed " + req.getRequestURI() );
 			chain.doFilter(request, response);
 
 		} else {
 
-			logger.info("[AUTH] -- denied, redirected to Gandalf");
+			logger.info("[AUTH] denied " + req.getRequestURI() );
 
 			HttpServletResponse servletResponse = (HttpServletResponse) response;
 			servletResponse.sendRedirect(req.getContextPath() + "/NotLoggedIn.jsf");
