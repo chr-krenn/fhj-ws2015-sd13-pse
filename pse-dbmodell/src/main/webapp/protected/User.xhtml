@@ -5,8 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
-	<ui:define name="content">
-		<h:form>
+	<ui:define name="content" >
+		<h:form >
 			<p:graphicImage id="userimage" styleClass="userimage"
 				value="#{userProfileController.userDTO.imageRef}" cache="false" />
 
@@ -20,7 +20,7 @@
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<p:panelGrid style="width: 50%">
+			<p:panelGrid style="width: 50%; height: 50%; overflow: auto">
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Vorname"/>
