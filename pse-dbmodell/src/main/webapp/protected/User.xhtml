@@ -105,17 +105,18 @@
 				</p:row>
 				<p:row>
 					<p:column>
-						<p:outputLabel for="messageTags" value="Interessen/Expertisen:" />
+						<p:outputLabel for="personTags" value="Interessen/Expertisen:" />
 					</p:column>
 					<p:column>
-						<p:autoComplete id="messageTags" multiple="true"
+						<p:inputText id="personTagsDisplay" style="#{userProfileController.tagDisplayStyle}" styleClass="forminput"
+							value="#{userProfileController.tagDisplayString}" readonly="true"/>
+						<p:autoComplete id="personTags" multiple="true" style="#{userProfileController.tagEditStyle}"
 							value="#{userProfileController.userDTO.tags}"
 							completeMethod="#{userProfileController.completeTag}"
 							forceSelection="true"
 							minQueryLength="3">
 							<p:ajax event="itemSelect" listener="#{userProfileController.handleTagSelect}" />
 							<p:ajax event="itemUnselect" listener="#{userProfileController.handleTagUnselect}" />
-	
 						</p:autoComplete>
 					</p:column>
 				</p:row>
@@ -155,13 +156,14 @@
 					</p:column>			
 				</p:row>
 
-				<p:row>
+				<p:row style="#{userProfileController.getModeEditAdminDisplay()}">
 					<p:column>			
 					</p:column>			
 					<p:column>			
 						<p:commandButton value="Speichern"
 							action="#{userProfileController.updateProfile}" update="messages"
 							type="submit" icon="ui-icon-disk" />
+						
 					</p:column>			
 				</p:row>
 			</p:panelGrid>

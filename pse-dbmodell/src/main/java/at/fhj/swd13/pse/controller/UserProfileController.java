@@ -206,7 +206,25 @@ public class UserProfileController implements Serializable {
 
 		logger.info("[USERPROFILE] handleUnselect");
 	}	
+	
+	public String getTagEditStyle() {
+		return !isLoggedInUser() ? "display:none" : "display:all";
+	}
 
+	public String getTagDisplayStyle() {
+		return isLoggedInUser() ? "display:none" : "display:all";
+	}
+	
+	public String getTagDisplayString() {
+		StringBuffer result = new StringBuffer();
+		for (String tag : getUserDTO().getTags()) {
+			if (result.length() > 0)
+				result.append(" ");
+			result.append(tag);
+		}
+		return result.toString();
+	}
+	
 	public boolean addToContactVisible() {
 		return !isLoggedInUser();
 	}
