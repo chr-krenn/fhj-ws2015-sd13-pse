@@ -151,7 +151,7 @@
 					<p:column>			
 					</p:column>			
 					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled)}" />
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled)}"/>
 						<p:outputLabel value="  Abwesend"/>
 					</p:column>			
 				</p:row>
@@ -162,7 +162,9 @@
 					<p:column>			
 						<p:commandButton value="Speichern"
 							action="#{userProfileController.updateProfile}" update="messages"
-							type="submit" icon="ui-icon-disk" />
+							type="submit" icon="ui-icon-disk">
+							<f:param name="mode" value="edit" disable="#{!(userProfileController.isModeEdit)}" />	
+						</p:commandButton>
 						
 					</p:column>			
 				</p:row>
