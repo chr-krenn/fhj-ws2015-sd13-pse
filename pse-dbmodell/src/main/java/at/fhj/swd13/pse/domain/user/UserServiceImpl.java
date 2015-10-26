@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.domain.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -13,6 +14,9 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
+import at.fhj.swd13.pse.db.entity.PersonTag;
+import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -29,6 +33,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private UserSession userSession;
+
+	@Inject
+	private TagService tagService;
 
 	@Inject
 	private Logger logger;
@@ -217,6 +224,36 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		p.setIsActive(userDTO.getActive());
 		p.setIsExtern(userDTO.getExtern());
 		p.setIsLoginAllowed(userDTO.getLoginAllowed());
+
+		// remove deleted tags
+		List<PersonTag> deletedTags = new ArrayList<PersonTag>();
+		for (PersonTag personTag : p.getPersonTags()) {
+			if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+				deletedTags.add(personTag);
+			}
+		}
+		
+		for (PersonTag personTag : deletedTags) {
+			p.removePersonTag(personTag);
+		}		
+	
+		// add new tags
+		for (String token : userDTO.getTags()) {
+			boolean bExists = false;
+			for (PersonTag personTag : p.getPersonTags()) {
+				if (personTag.getTag().getToken().equals(token)) {
+					bExists = true;
+					break;
+				}
+			}
+			
+			if (!bExists) {
+				Tag tag = tagService.getTagByToken(token);
+				PersonTag personTag = new PersonTag();
+				personTag.setTag(tag);
+				p.addPersonTag(personTag);
+			}
+		}
 	}
 
 	@Override

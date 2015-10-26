@@ -11,7 +11,7 @@
 				value="#{userProfileController.userDTO.imageRef}" cache="false" />
 
 			<h:panelGroup id="fileUploadGroup"
-				style="#{userProfileController.getModeEditAdminDisplay()}">
+				style="#{userProfileController.modeEditAdminDisplay}">
 				<p:fileUpload
 					fileUploadListener="#{userProfileController.handleFileUpload}"
 					dragDropSupport="true" update="messages,userimage"
@@ -20,84 +20,150 @@
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<p:panelGrid columns="4" style="width: 100%">
-				<p:outputLabel value="Vorname: " />
-				<p:inputMask id="firstName" styleClass="forminput"
-					value="#{userProfileController.userDTO.firstName}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Nachname: " />
-				<p:inputMask id="lastName" styleClass="forminput"
-					value="#{userProfileController.userDTO.lastName}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="E-Mail: " />
-				<p:inputMask id="emailAddress" styleClass="forminput"
-					value="#{userProfileController.userDTO.emailAddress}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Abteilung: " />
-				<p:inputMask id="department" styleClass="forminput"
-					value="#{userProfileController.userDTO.department}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Gebäude: " />
-				<p:inputMask
-					value="#{userProfileController.userDTO.locationBuilding}"
-					styleClass="forminput"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Stockwerk: " />
-				<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
-					styleClass="forminput"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Zimmer: " />
-				<p:inputMask
-					value="#{userProfileController.userDTO.locationRoomNumber}"
-					styleClass="forminput"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-
-				<p:outputLabel value="Telefonnummer: " />
-				<p:inputMask id="phoneNumberMobile" styleClass="forminput"
-					value="#{userProfileController.userDTO.phoneNumberMobile}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Online:" />
-				<p:selectBooleanCheckbox
-					value="#{userProfileController.userDTO.online}" disabled="True" />
-
-				<p:outputLabel value="Abwesend:" />
-				<p:selectBooleanCheckbox
-					value="#{userProfileController.userDTO.extern}" 
-					disabled="#{!(userProfileController.externEnabled())}" />
-				<p:outputLabel value="" />
-				<p:outputLabel value="" />
+			<p:panelGrid style="width: 50%">
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Vorname"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask id="firstName" styleClass="forminput"
+							value="#{userProfileController.userDTO.firstName}"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Nachname"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask id="lastName" styleClass="forminput"
+							value="#{userProfileController.userDTO.lastName}"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="E-Mail"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask id="emailAddress" styleClass="forminput"
+							value="#{userProfileController.userDTO.emailAddress}"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Abteilung"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask id="department" styleClass="forminput"
+							value="#{userProfileController.userDTO.department}"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Gebäude"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask
+							value="#{userProfileController.userDTO.locationBuilding}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Stockwerk"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Zimmer"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask
+							value="#{userProfileController.userDTO.locationRoomNumber}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Telefonnummer"/>
+					</p:column>			
+					<p:column>			
+						<p:inputMask id="phoneNumberMobile" styleClass="forminput"
+							value="#{userProfileController.userDTO.phoneNumberMobile}"
+							readonly="#{!(userProfileController.isAdmin())}" />
+					</p:column>			
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="messageTags" value="Interessen/Expertisen:" />
+					</p:column>
+					<p:column>
+						<p:autoComplete id="messageTags" multiple="true"
+							value="#{userProfileController.userDTO.tags}"
+							completeMethod="#{userProfileController.completeTag}"
+							forceSelection="true"
+							minQueryLength="3">
+							<p:ajax event="itemSelect" listener="#{userProfileController.handleTagSelect}" />
+							<p:ajax event="itemUnselect" listener="#{userProfileController.handleTagUnselect}" />
+	
+						</p:autoComplete>
+					</p:column>
+				</p:row>
 				
+				<p:row>
+					<p:column>			
+					</p:column>			
+					<p:column>			
+						<p:selectBooleanCheckbox
+							value="#{userProfileController.userDTO.online}" disabled="True" />
+						<p:outputLabel value="  Online" />
+					</p:column>			
+				</p:row>
+				<p:row rendered="#{userProfileController.activeVisible()}" >
+					<p:column>			
+					</p:column>			
+					<p:column>			
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.active}" />
+						<p:outputLabel value="  Aktiv"/>
+					</p:column>			
+				</p:row>
+				<p:row rendered="#{userProfileController.loginAllowedVisible()}">
+					<p:column>			
+					</p:column>			
+					<p:column>			
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.loginAllowed}" />
+						<p:outputLabel value="  Login erlaubt"/>
+					</p:column>			
+				</p:row>
+				
+				<p:row rendered="#{userProfileController.loginAllowedVisible()}">
+					<p:column>			
+					</p:column>			
+					<p:column>			
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled())}" />
+						<p:outputLabel value="  Abwesend:"/>
+					</p:column>			
+				</p:row>
 
-				<p:outputLabel value="Job:" />
-				<p:inputMask id="job" styleClass="forminput"
-				    value="#{userProfileController.userDTO.job}"
-					readonly="#{!(userProfileController.isAdmin())}" />
-
-				<p:outputLabel value="Aktiv "
-					rendered="#{userProfileController.activeVisible()}" />
-				<p:selectBooleanCheckbox
-					rendered="#{userProfileController.activeVisible()}"
-					value="#{userProfileController.userDTO.active}" />
-				<p:outputLabel value="Login erlaubt: "
-					rendered="#{userProfileController.loginAllowedVisible()}" />
-				<p:selectBooleanCheckbox
-					rendered="#{userProfileController.loginAllowedVisible()}"
-					value="#{userProfileController.userDTO.loginAllowed}" />
-
-				<p:outputLabel value=""
-				    style="#{userProfileController.getModeEditAdminDisplay()}" />
-				<p:commandButton value="Speichern"
-					style="#{userProfileController.getModeEditAdminDisplay()}"
-					action="#{userProfileController.updateProfile}" update="messages"
-					type="submit" icon="ui-icon-disk" />
+				<p:row>
+					<p:column>			
+					</p:column>			
+					<p:column>			
+						<p:commandButton value="Speichern"
+							action="#{userProfileController.updateProfile}" update="messages"
+							type="submit" icon="ui-icon-disk" />
+					</p:column>			
+				</p:row>
 			</p:panelGrid>
 
 			<p:panel id="addtocontact" cache="false">
@@ -150,33 +216,6 @@
 								<h:outputText value="#{community.name}" />
 							</p:column>
 						</p:dataTable>
-					</p:tab>
-					<p:tab title="Interessen">
-						<p:dataTable var="persontag" editable="true" id="persontags" value="#{userProfileController.userDTO.tags}" rowKey="#{persontag.personTagId}">
-							<p:column headerText="Interesse">
-								<p:cellEditor>
-									<f:facet name="output">
-										<h:outputText value="#{persontag.tag.token}" />
-									</f:facet>
-									<f:facet name="input">
-										<p:selectOneMenu id="tags" value="#{persontag.tag}" style="width: 100%"> 
-											<f:selectItems value="#{userProfileController.tags}" var="mytag" itemLabel="#{mytag.token}" itemValue="#{mytag.tagId}"/>
-												<p:column>
-												<h:outputText value="#{mytag.token}" />
-											</p:column>											
-										</p:selectOneMenu>
-										
-									</f:facet>
-								</p:cellEditor>
-							</p:column>
-							<p:column headerText="Actions">
-								<p:rowEditor />
-							</p:column>							
-						</p:dataTable>
-						<p:commandButton id="addtagButton" value="Hinzufügen"
-							icon="ui-icon-home" type="submit"
-							actionListener="#{userProfileController.addNewTag()}"
-							update="persontags" />
 					</p:tab>
 				</p:tabView>
 			</p:panel>

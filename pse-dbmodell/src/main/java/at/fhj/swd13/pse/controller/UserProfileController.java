@@ -15,12 +15,14 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.UploadedFile;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
@@ -55,6 +57,7 @@ public class UserProfileController implements Serializable {
 
 	private UserDTO userDTO;
 	
+	//TODO Eigentlich UserDTO
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
@@ -108,9 +111,24 @@ public class UserProfileController implements Serializable {
 	}
 
 	public void updateProfile() {
-		System.out.println("updatee asdfsed");
 		try {
+			// add tag if not already existing
+			for (String token : getUserDTO().getTags()) {
+				Tag tag = tagService.getTagByToken(token);
+				if (tag == null) {
+					tag = new Tag();
+					tag.setToken(token);
+					tag.setDescription(token);
+					try {
+						tagService.insert(tag);
+					} catch ( ConstraintViolationException x) {
+						logger.error("[MSG+] error creating new tag (duplicate...)");
+					}
+				}
+			}
+			
 			userService.update(userDTO);
+
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[USERPROFILE] updateProfile failed for " + userDTO.getFullname() + " from " + context.toString());
@@ -139,27 +157,56 @@ public class UserProfileController implements Serializable {
 		return ((userName != null) && (userName.equals(userSession.getUsername())));		
 	}
 	
-	public void addNewTag() {
-		if (getTags().size() > 0) {
-			Person person;
-			try {
-				person = userService.getUser(userDTO.getUserName());
-	
-				PersonTag tag = new PersonTag();
-				tag.setPerson(person);
-				tag.setTag(getTags().get(0));
-				getUserDTO().getTags().add(tag);
-			} catch (EntityNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public List<String> completeTag(String input) {
+		List<String> result = new ArrayList<String>();
+		logger.info( "[USERPROFILE] completeTag - selcted tag count " + userDTO.getTags().size());
+		
+		
+		for (Tag tag : tagService.getMatchingTags(input)) {
+			if (!isTagAlreadySelected(tag.getToken())) {
+				result.add(tag.getToken());
 			}
 		}
-    }
+			
+		if (result.isEmpty()) {
+			result.add(input);
+		}
+
+		return result;
+	}
+
+	private boolean isTagAlreadySelected( final String token ) {
+		final String needle = token.toLowerCase();
+		for (String tag : userDTO.getTags()) {
+			if ( tag.toLowerCase().equals(needle)) {
+				return true;
+			}			
+		}
+		return false;
+	}
 	
-	public List<Tag> getTags() {
-		return tagService.getMatchingTags("");
-    }
-	
+	/**
+	 * called when a tag is added to the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleTagSelect(SelectEvent event) {
+
+		logger.info("[USERPROFILE] handleSelect");
+	}
+
+	/**
+	 * called when a tag is removed from the chosen list
+	 * 
+	 * @param event
+	 *            event data
+	 */
+	public void handleTagUnselect(UnselectEvent event) {
+
+		logger.info("[USERPROFILE] handleUnselect");
+	}	
+
 	public boolean addToContactVisible() {
 		return !isLoggedInUser();
 	}
