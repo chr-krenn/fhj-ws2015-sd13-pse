@@ -9,6 +9,7 @@ import org.junit.Test;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbTagFindLikeTest extends DbTestBase {
 

@@ -19,7 +19,8 @@ import java.util.List;
 	@NamedQuery(name="Tag.findById", query="SELECT t FROM Tag t WHERE t.tagId = :id" ),
 	@NamedQuery(name="Tag.findByToken", query="SELECT t FROM Tag t WHERE t.token = :token" ),
 	@NamedQuery(name="Tag.findByTokenLike", query="SELECT t FROM Tag t WHERE t.token LIKE :token" ),
-	@NamedQuery(name="Tag.deleteById", query="DELETE FROM Tag t WHERE t.tagId = :id")
+	@NamedQuery(name="Tag.deleteById", query="DELETE FROM Tag t WHERE t.tagId = :id"),
+	@NamedQuery(name="Tag.findByPerson", query="SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person")
 } )
 public class Tag implements Serializable {
 	private static final long serialVersionUID = 1L;

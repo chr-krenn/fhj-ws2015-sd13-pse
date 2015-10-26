@@ -6,3 +6,8 @@
 .forminput {
 	width: 80%;
 }
+
+.centerpanel {
+	height: 100%;
+	overflow: auto;
+}

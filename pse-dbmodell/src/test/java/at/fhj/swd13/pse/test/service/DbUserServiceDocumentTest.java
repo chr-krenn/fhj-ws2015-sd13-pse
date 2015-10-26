@@ -15,7 +15,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.plumbing.UserSession;
-import at.fhj.swd13.pse.test.db.DbTestBase;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbUserServiceDocumentTest extends DbTestBase {
 

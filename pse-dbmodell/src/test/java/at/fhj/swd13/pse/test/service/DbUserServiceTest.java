@@ -21,7 +21,7 @@ import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
-import at.fhj.swd13.pse.test.db.DbTestBase;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbUserServiceTest extends DbTestBase {
 

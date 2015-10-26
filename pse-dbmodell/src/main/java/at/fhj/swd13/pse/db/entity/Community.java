@@ -56,7 +56,11 @@ public class Community implements Serializable {
 	@Column(name = "system_internal", nullable = false)
 	private boolean systemInternal;
 
-	// bi-directional many-to-one association to Person
+	/*
+	 * If privateUser is not null, this is the private community of a person
+	 * Private communities are not displayed on the Communities page and
+	 * are only used for private messages to that person
+	 */
 	@OneToOne(optional = true)
 	@JoinColumn(name = "private_user")
 	private Person privateUser;

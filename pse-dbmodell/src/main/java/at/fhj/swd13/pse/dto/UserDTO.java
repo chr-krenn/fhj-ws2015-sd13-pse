@@ -42,7 +42,7 @@ public class UserDTO {
 
 	private Boolean active;
 	
-	private Boolean extern;
+	private Boolean extern;	
 
 	private Boolean loginAllowed;
 	
@@ -50,7 +50,7 @@ public class UserDTO {
 
 	private List<Community> communities;
 
-	private List<PersonTag> tags;
+	private List<String> tags;
 
 	
 	public UserDTO() {
@@ -75,7 +75,12 @@ public class UserDTO {
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
 		this.setCommunities(person.getConfirmedCommunities());
-		this.setTags(person.getPersonTags());
+		
+		tags = new ArrayList<String>();
+		for (PersonTag personTag : person.getPersonTags()) {
+			tags.add(personTag.getTag().getToken());
+		}
+
 		if (person.getDocument() != null) {
 			this.imageId = person.getDocument().getDocumentId();
 		}
@@ -326,11 +331,11 @@ public class UserDTO {
 		this.communities = communities;
 	}
 
-	public List<PersonTag> getTags() {
+	public List<String> getTags() {
 		return tags;
 	}
 	
-	public void setTags(List<PersonTag> tags) {
+	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
 

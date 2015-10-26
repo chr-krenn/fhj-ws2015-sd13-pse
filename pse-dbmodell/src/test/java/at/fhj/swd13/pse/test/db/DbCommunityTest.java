@@ -10,6 +10,7 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.ParameterException;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbCommunityTest extends DbTestBase {
 

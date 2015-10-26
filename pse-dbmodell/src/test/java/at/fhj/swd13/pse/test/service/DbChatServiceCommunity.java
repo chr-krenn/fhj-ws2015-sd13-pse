@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.test.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -20,7 +22,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
-import at.fhj.swd13.pse.test.db.DbTestBase;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbChatServiceCommunity extends DbTestBase {
 
@@ -30,10 +32,21 @@ public class DbChatServiceCommunity extends DbTestBase {
 
 	private List<Community> toDelete = new ArrayList<Community>();
 
+	@BeforeClass
+	public static void init() throws Exception {
+		
+		DbTestBase.prepare();
+		
+		//Setting up private communities per user
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			ChatService chatService = new ChatServiceImpl(dbContext);
+			chatService.createAllPrivateCommunities();
+			dbContext.commit();
+		}
+	}
+	
 	@Before
 	public void setup() throws Exception {
-
-		DbTestBase.prepare();
 
 		try (DbContext context = contextProvider.getDbContext()) {
 
@@ -287,6 +300,15 @@ public class DbChatServiceCommunity extends DbTestBase {
 			chatService.confirmCommunity(p, unconfirmed);
 
 			dbContext.commit();
+		}
+	}
+	
+	@Test
+	public void testCreateAllPrivateCommunities() throws Exception {
+
+		try(DbContext dbContext = contextProvider.getDbContext()) {
+			ChatService chatService = new ChatServiceImpl(dbContext);
+			assertNotNull(chatService.getCommunity("@pompenig13"));
 		}
 	}
 }

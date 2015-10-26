@@ -33,7 +33,28 @@ import org.jsoup.Jsoup;
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
-		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
+				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
+				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND (c.communityId IS NULL OR :person = cm.member) ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findByTags", query = "SELECT m FROM Message m LEFT JOIN m.messageTags mt LEFT JOIN m.communities c " +
+				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND mt.tag IN (:tags) AND c.invitationOnly = false ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findByContacts", query = "SELECT m FROM Message m " +
+				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN p.personTargetRelations tr " +
+					"where sr.targetPerson = :person or tr.sourcePerson = :person) " +
+				"ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findForUserAndTagsAndContacts", query = "SELECT m FROM Message m LEFT JOIN m.messageTags mt " +
+				"LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
+				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND ((mt.tag IN (SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person) AND c.invitationOnly = false) " +
+					"OR c.communityId IS NULL OR :person = cm.member)" +
+					"OR m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN p.personTargetRelations tr " +
+					"where sr.targetPerson = :person or tr.sourcePerson = :person) "+
+				"ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -3,39 +3,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/templates/default.xhtml">
+	template="/protected/UserListTemplate.xhtml">
 	<ui:define name="content">
 		<h:form>
 			<p:dataScroller value="#{userSearchController.result}" var="user"
-				chunkSize="10" mode="inline" scrollHeight="500">
+				chunkSize="10" mode="inline">
 				<f:facet name="header">
             		Suchergebnis
 		       </f:facet>
-				<h:panelGrid columns="2" 
-					columnClasses="logo,detail">
-					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-						<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
-						<f:param name="userName" value="#{user.userName}" />
-						<f:param name="mode" value="view" />
-					</h:outputLink>
-					
-					<p:outputPanel>
-						<h:panelGrid columns="2" cellpadding="5">
-							<h:outputText value="Name:" />
-							<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{user.fullname}"  style="font-weight: bold"/>
-								<f:param name="userName" value="#{user.userName}" />
-								<f:param name="mode" value="view" />
-							</h:outputLink>
-
-							<h:outputText value="Abteilung:" />
-							<h:outputText value="#{user.department}" style="font-weight: bold" />
-
-							<h:outputText value="Funktion:" />
-							<h:outputText value="#{user.job}" style="font-weight: bold" />
-						</h:panelGrid>
-					</p:outputPanel>
-				</h:panelGrid>
+			<ui:insert name="userList" />
 			</p:dataScroller>
 		</h:form>
 	</ui:define>
