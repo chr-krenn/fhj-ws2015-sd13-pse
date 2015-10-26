@@ -232,4 +232,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		}
 	}
 
+
+	@Override
+	public List<Community> getAllCommunities() {
+		
+		return dbContext.getCommunityDAO().getAllCommunities();
+		
+	}
 }

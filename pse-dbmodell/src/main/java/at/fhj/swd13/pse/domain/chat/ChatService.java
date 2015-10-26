@@ -102,5 +102,7 @@ public interface ChatService {
 	 * @return the number of created communities
 	 */
 	int createAllPrivateCommunities();
+	
+	List<Community> getAllCommunities();
 
 }

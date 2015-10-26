@@ -74,4 +74,6 @@ public interface CommunityDAO {
 	 * @return list of communities of the person
 	 */
 	List<Community> getCommunities(final Person person);
+	
+	List<Community> getAllCommunities();
 }
