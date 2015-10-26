@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -51,5 +52,10 @@ public class TagServiceImpl extends ServiceBase implements TagService {
 	@Override
 	public void insert(Tag tag) throws ConstraintViolationException{
 		dbContext.getTagDAO().insert(tag);
+	}
+
+	@Override
+	public List<Tag> getTagsforPerson(Person p) {
+		return dbContext.getTagDAO().getByPerson(p);
 	}
 }

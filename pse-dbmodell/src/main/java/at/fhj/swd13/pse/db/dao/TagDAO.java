@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.db.dao;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
 
 public interface TagDAO {
@@ -53,4 +54,13 @@ public interface TagDAO {
 	 *            id of the tag to remove
 	 */
 	void remove(int tagId);
+	
+	/**
+	 * Get all tags for a person
+	 * 
+	 * @param p
+	 * 			Person
+	 * @return
+	 */
+	List<Tag> getByPerson(Person p);
 }

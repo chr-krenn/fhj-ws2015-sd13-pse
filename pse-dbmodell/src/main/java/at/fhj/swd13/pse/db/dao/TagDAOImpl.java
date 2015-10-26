@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
 
 public class TagDAOImpl extends DAOBase implements TagDAO {
@@ -80,5 +81,13 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 			return null;
 		}		
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Tag> getByPerson(Person p) {
+		final Query q = dbContext.createNamedQuery("Tag.findByPerson");
+		q.setParameter("person", p);
+		return q.getResultList();
 	}
 }
