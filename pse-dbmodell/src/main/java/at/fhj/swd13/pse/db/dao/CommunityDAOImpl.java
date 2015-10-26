@@ -2,15 +2,20 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.ParameterException;
+import at.fhj.swd13.pse.db.entity.Person;
 
 public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
+	
+	@Inject
 	public CommunityDAOImpl(DbContext dbContext) {
 
 		super(dbContext);
@@ -24,7 +29,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * Community)
 	 */
 	@Override
-	public void insert(Community community) {
+	public void insert(Community community) throws ConstraintViolationException{
 
 		dbContext.persist(community);
 	}
@@ -104,5 +109,13 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		}
 
 		dbContext.remove(community);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Community> getCommunities(final Person person) {
+		final Query q = dbContext.createNamedQuery("Community.findCommunitiesByMember");
+		q.setParameter("person", person);
+		return (List<Community>)q.getResultList();
 	}
 }

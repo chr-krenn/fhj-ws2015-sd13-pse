@@ -11,23 +11,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 
-public class DbPersonRelation {
+public class DbPersonRelation extends DbTestBase {
 
 	private Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
 	private Person p2 = new Person("xtester", "Tester", "Xaver", "1234567");
 	private Person p3 = new Person("mtester", "Tester", "Mario", "1234567");
 
-	private static DbContextProvider contextProvider;
-
 	@BeforeClass
 	public static void construct() {
-		contextProvider = new DbContextProviderImpl();
+
+		DbTestBase.prepare();
 	}
 
 	@Before
@@ -166,11 +163,10 @@ public class DbPersonRelation {
 			dbContext.commit();
 		}
 	}
-	
-	
+
 	@Test
 	public void testPersonGetContacts() throws Exception {
-		
+
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
@@ -180,21 +176,20 @@ public class DbPersonRelation {
 
 			PersonRelation rel = personDAO.createRelation(e, x);
 			assertNotNull(rel);
-			
+
 			assertTrue(e.isRelatedTo(x));
 			assertTrue(x.isRelatedTo(e));
 			assertFalse(e.isRelatedTo(e));
-			
+
 			assertEquals(1, e.getContacts().size());
 			assertEquals(1, x.getContacts().size());
-			
+
 			assertTrue(e.getContacts().contains(x));
 			assertTrue(x.getContacts().contains(e));
-			
 
 			dbContext.commit();
 		}
-		
+
 	}
-	
+
 }

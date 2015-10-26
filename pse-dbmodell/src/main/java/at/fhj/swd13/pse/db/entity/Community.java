@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,12 +31,13 @@ import javax.persistence.TemporalType;
 		@NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
 		@NamedQuery(name = "Community.findMatching", query = "SELECT c FROM Community c WHERE c.name LIKE :needle"),
 		@NamedQuery(name = "Community.findUnconfirmed", query = "SELECT c FROM Community c WHERE c.confirmedBy IS NULL"),
-		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"), })
+		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"), 
+		@NamedQuery(name="Community.findCommunitiesByMember", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person") })
 public class Community implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String PRIVATE_PREFIX = "@";
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "community_id", unique = true, nullable = false)
@@ -55,7 +57,7 @@ public class Community implements Serializable {
 	private boolean systemInternal;
 
 	// bi-directional many-to-one association to Person
-	@ManyToOne
+	@OneToOne(optional = true)
 	@JoinColumn(name = "private_user")
 	private Person privateUser;
 

@@ -9,15 +9,20 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.jboss.logging.Logger;
+
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.entity.Community;
-import at.fhj.swd13.pse.db.entity.DeliverySystem;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
@@ -30,6 +35,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private Logger logger;
+	
 	public FeedServiceImpl() {
 	}
 
@@ -43,13 +51,13 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<Message> loadFeedForUser(Person user) {
+	public List<MessageDTO> loadFeedForUser(Person user) {
 		return dbContext.getMessageDAO().loadForUser(user);
 	}
 
 	@Override
 	public void saveMessage(String headline, String text, String username,
-			Document document, List<Community> communities, List<MessageTag> messageTags) {
+			Document document, Document icon, List<Community> communities, List<MessageTag> messageTags) {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
@@ -63,20 +71,22 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		message.setCreatedOn(createdDate);
 		message.setValidFrom(createdDate);		
 
-		// TODO Correctly handle delivery system
-		DeliverySystem deliverySystem = new DeliverySystem();
-		deliverySystem.setName("TEST");
-		deliverySystem.setToken("TEST");
-		dbContext.persist(deliverySystem);
-
-		message.setDeliverySystem(deliverySystem);
+		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
+		message.setDeliverySystem(deliverySystemDAO.getPseService());
+		
 		message.setAttachment(document);
-		message.setCommunities(communities);	
+		message.setIcon(icon);
 
-		dbContext.getMessageDAO().insert(message);
-		message.setMessageTags(messageTags);		
+		try {
+
+			dbContext.getMessageDAO().insert(message);
+			message.setMessageTags(messageTags);		
+			message.setCommunities(communities);
+			
+		} catch (ConstraintViolationException e) {
+			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + message.getHeadline() );
+		}
 	}
 }

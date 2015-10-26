@@ -20,7 +20,10 @@ import org.primefaces.model.UploadedFile;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonTag;
+import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.dto.UserDTOBuilder;
@@ -35,6 +38,9 @@ public class UserProfileController implements Serializable {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private TagService tagService;
+	
 	@Inject
 	private UserSession userSession;
 
@@ -123,6 +129,27 @@ public class UserProfileController implements Serializable {
 	public boolean isAdmin() {
 		return userSession.isAdmin();
 	}
+	
+	public void addNewTag() {
+		if (getTags().size() > 0) {
+			Person person;
+			try {
+				person = userService.getUser(userDTO.getUserName());
+	
+				PersonTag tag = new PersonTag();
+				tag.setPerson(person);
+				tag.setTag(getTags().get(0));
+				getUserDTO().getTags().add(tag);
+			} catch (EntityNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    }
+	
+	public List<Tag> getTags() {
+		return tagService.getMatchingTags("");
+    }
 	
 	public boolean addToContactVisible() {
 		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");

@@ -10,17 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.plumbing.UserSession;
+import at.fhj.swd13.pse.test.db.DbTestBase;
 
-public class DbUserServiceDocumentTest {
+public class DbUserServiceDocumentTest extends DbTestBase {
 
-	private DbContextProvider contextProvider;
 	private UserSession userSession;
 
 	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");
@@ -31,7 +29,7 @@ public class DbUserServiceDocumentTest {
 	@Before
 	public void setup() throws Exception {
 
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 
 		try (DbContext context = contextProvider.getDbContext()) {
 
@@ -71,44 +69,43 @@ public class DbUserServiceDocumentTest {
 
 	@Test
 	public void sanity() throws Exception {
-		
-		try( DbContext dbContext = contextProvider.getDbContext() ) {
-			
-			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId() );
-			
-			
-			assertNull( p.getDocument());
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId());
+
+			assertNull(p.getDocument());
 		}
 	}
-	
+
 	@Test
 	public void setDocument() throws Exception {
 
-		try( DbContext dbContext = contextProvider.getDbContext() ) {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			final UserService userService = new UserServiceImpl(dbContext, userSession);
-		
-			userService.setUserImage( plainPerson.getUserName(), document.getDocumentId() );
+
+			userService.setUserImage(plainPerson.getUserName(), document.getDocumentId());
 
 			dbContext.commit();
-		}		
-
-		try( DbContext dbContext = contextProvider.getDbContext() ) {
-
-			dbContext.clearCache();
-		
-			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId() );
-			
-			assertEquals( document.getDocumentId(), p.getDocument().getDocumentId() );
 		}
 
-		try( DbContext dbContext = contextProvider.getDbContext() ) {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			dbContext.clearCache();
-		
-			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId() );
-			
-			assertEquals( document.getDocumentId(), p.getDocument().getDocumentId() );
+
+			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId());
+
+			assertEquals(document.getDocumentId(), p.getDocument().getDocumentId());
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			dbContext.clearCache();
+
+			Person p = dbContext.getPersonDAO().getById(plainPerson.getPersonId());
+
+			assertEquals(document.getDocumentId(), p.getDocument().getDocumentId());
 		}
 	}
 }

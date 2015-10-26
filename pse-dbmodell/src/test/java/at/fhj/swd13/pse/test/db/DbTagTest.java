@@ -10,18 +10,15 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Tag;
 
-public class DbTagTest {
-
-	private DbContextProvider contextProvider;
+public class DbTagTest extends DbTestBase {
 
 	@Before
 	public void setup() {
-		contextProvider = new DbContextProviderImpl();
+		
+		DbTestBase.prepare();
 	}
 
 	@Test
@@ -34,7 +31,6 @@ public class DbTagTest {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			tagDAO.insert(t);
-
 
 			dbContext.commit();
 
@@ -56,7 +52,7 @@ public class DbTagTest {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			tagDAO.remove(t.getTagId());
-			
+
 			dbContext.commit();
 		}
 
@@ -67,7 +63,7 @@ public class DbTagTest {
 			assertNull(tagDAO.getById(t.getTagId()));
 		}
 	}
-	
+
 	@Test
 	public void insertDuplicate() throws Exception {
 
@@ -79,12 +75,11 @@ public class DbTagTest {
 
 			tagDAO.insert(t);
 
-
 			dbContext.commit();
 
 			assertFalse(t.getTagId() == 0);
 		}
-		
+
 		Tag t2 = new Tag("Ballroom", "Alles was mit Tanzen zu tun hat.");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -92,12 +87,10 @@ public class DbTagTest {
 
 			tagDAO.insert(t2);
 
-
 			dbContext.commit();
 			fail("Expected ConstraintViolation (duplicte key)");
-		}
-		catch( ConstraintViolationException e ) {
-			
+		} catch (ConstraintViolationException e) {
+
 		}
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -105,8 +98,8 @@ public class DbTagTest {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			tagDAO.remove(t.getTagId());
-			
+
 			dbContext.commit();
-		}		
-	}	
+		}
+	}
 }

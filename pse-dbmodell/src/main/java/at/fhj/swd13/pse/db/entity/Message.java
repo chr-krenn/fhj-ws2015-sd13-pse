@@ -17,9 +17,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.jsoup.Jsoup;
 
 /**
  * The persistent class for the message database table.
@@ -29,8 +32,8 @@ import javax.persistence.TemporalType;
 @Table(name = "message")
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
-		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdOn DESC"),
-		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m WHERE (m.expiresOn is null or m.expiresOn > CURRENT_TIMESTAMP) ORDER BY m.createdOn DESC"),
+		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -43,10 +46,6 @@ public class Message implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_on", nullable = false)
-	private Date createdOn;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "expires_on")
@@ -111,6 +110,14 @@ public class Message implements Serializable {
 	@OneToMany(mappedBy = "message")
 	private List<PersonMessage> personMessages;
 
+	/**
+	 * before the update set the updatedOn property
+	 */
+	@PreUpdate
+	private void onPreUpdate() {
+		updatedOn = new Date();
+	}
+	
 	public Message() {
 	}
 
@@ -128,14 +135,6 @@ public class Message implements Serializable {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-
-	public Date getCreatedOn() {
-		return this.createdOn;
-	}
-
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
 	}
 
 	public Date getExpiresOn() {
@@ -158,6 +157,10 @@ public class Message implements Serializable {
 		return this.message;
 	}
 
+	public String getPlainMessage() {
+		return Jsoup.parse(message).text();
+	}
+	
 	public void setMessage(String message) {
 		this.message = message;
 	}

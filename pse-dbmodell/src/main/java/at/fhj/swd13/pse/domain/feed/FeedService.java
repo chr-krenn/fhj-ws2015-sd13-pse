@@ -10,6 +10,7 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.MessageDTO;
 
 /**
  * @author florian.genser
@@ -19,7 +20,7 @@ public interface FeedService {
 
 	List<Message> loadFeed();
 	
-	List<Message> loadFeedForUser(Person user);
+	List<MessageDTO> loadFeedForUser(Person user);
 	
-	void saveMessage(String headline, String text, String username, Document document, List<Community> communities, List<MessageTag> messageTags);
+	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags);
 }

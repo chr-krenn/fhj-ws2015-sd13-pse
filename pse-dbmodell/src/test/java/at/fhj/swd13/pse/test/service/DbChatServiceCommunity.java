@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
@@ -22,10 +20,9 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
+import at.fhj.swd13.pse.test.db.DbTestBase;
 
-public class DbChatServiceCommunity {
-
-	private DbContextProvider contextProvider;
+public class DbChatServiceCommunity extends DbTestBase {
 
 	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");
 	private Person adminPerson = new Person("adminPerson", "Person", "Plain", "12345678");
@@ -36,7 +33,7 @@ public class DbChatServiceCommunity {
 	@Before
 	public void setup() throws Exception {
 
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 
 		try (DbContext context = contextProvider.getDbContext()) {
 
@@ -80,7 +77,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
-			
+
 			dbContext.commit();
 		}
 
@@ -110,7 +107,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(adminPerson.getUserName(), "confirmed", false));
-			
+
 			dbContext.commit();
 		}
 
@@ -161,7 +158,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "sanityR", false));
-			
+
 			dbContext.commit();
 		}
 
@@ -182,7 +179,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
-			
+
 			dbContext.commit();
 		}
 		/*
@@ -214,7 +211,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
-			
+
 			dbContext.commit();
 		}
 
@@ -263,7 +260,7 @@ public class DbChatServiceCommunity {
 
 			final ChatService chatService = new ChatServiceImpl(dbContext);
 			toDelete.add(chatService.createChatCommunity(plainPerson.getUserName(), "unconfirmed", false));
-			
+
 			dbContext.commit();
 		}
 		/*

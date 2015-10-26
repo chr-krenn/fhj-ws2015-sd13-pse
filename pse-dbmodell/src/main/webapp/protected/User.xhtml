@@ -144,15 +144,31 @@
 						</p:dataTable>
 					</p:tab>
 					<p:tab title="Interessen">
-						<p:dataTable var="persontag"  editable="true"
-							value="#{userProfileController.userDTO.tags}">
+						<p:dataTable var="persontag" editable="true" id="persontags" value="#{userProfileController.userDTO.tags}" rowKey="#{persontag.personTagId}">
 							<p:column headerText="Interesse">
-								<h:outputText value="#{persontag.tag.token}" />
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{persontag.tag.token}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:selectOneMenu id="tags" value="#{persontag.tag}" style="width: 100%"> 
+											<f:selectItems value="#{userProfileController.tags}" var="mytag" itemLabel="#{mytag.token}" itemValue="#{mytag.tagId}"/>
+												<p:column>
+												<h:outputText value="#{mytag.token}" />
+											</p:column>											
+										</p:selectOneMenu>
+										
+									</f:facet>
+								</p:cellEditor>
 							</p:column>
-							<p:column headerText="Beschreibung">
-								<h:outputText value="#{persontag.tag.description}" />
-							</p:column>
+							<p:column headerText="Actions">
+								<p:rowEditor />
+							</p:column>							
 						</p:dataTable>
+						<p:commandButton id="addtagButton" value="Hinzufügen"
+							icon="ui-icon-home" type="submit"
+							actionListener="#{userProfileController.addNewTag()}"
+							update="persontags" />
 					</p:tab>
 				</p:tabView>
 			</p:panel>

@@ -10,20 +10,17 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 
-public class DbPersonTest {
-
-	private static DbContextProvider contextProvider;
+public class DbPersonTest extends DbTestBase {
 
 	@BeforeClass
 	public static void setup() {
-		contextProvider = new DbContextProviderImpl();
+
+		DbTestBase.prepare();
 	}
 
 	@Test
@@ -34,7 +31,7 @@ public class DbPersonTest {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			Person p = personDAO.getById(1); // 1 is the system internal user
-												// that should always exist
+											 // that should always exist
 
 			assertEquals(p.getUserName(), "pse_system");
 
@@ -44,14 +41,14 @@ public class DbPersonTest {
 		}
 	}
 
-	@Test(expected=EntityNotFoundException.class)
+	@Test(expected = EntityNotFoundException.class)
 	public void getByIdNoneFound() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			personDAO.getById(-1); 
+			personDAO.getById(-1);
 		}
 	}
 
@@ -125,7 +122,8 @@ public class DbPersonTest {
 			e.printStackTrace();
 			fail("Exception " + e.getMessage());
 
-		} finally {
+		}
+		finally {
 
 			if (p.getPersonId() != 0) {
 				try (DbContext dbContext = contextProvider.getDbContext()) {

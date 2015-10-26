@@ -28,34 +28,36 @@
 					</div>
 				</div>
 				<div class="ui-grid-row">
-					<div class="ui-grid-col-8">
+					<div class="ui-grid-col-7">
 						<p:panel header="Activities">
 							<p:dataScroller value="#{simpleFeedController.activities}"
 								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
 									<p:outputPanel>
-										<h:panelGrid columns="4" cellpadding="5">
+										<h:panelGrid columns="5" cellpadding="5">
+											<h:outputLabel value="#{activity.privateMessage ? 'Private' : 
+												activity.community}" style="font-weight: bold; font-style: italic"/>
 											<h:outputText value="Autor:" />
 											<h:outputText
-												value="#{activity.person.firstName} #{activity.person.lastName}"
+												value="#{activity.author}"
 												style="font-weight: bold" />
 											<h:outputText value="Datum:" />
-											<h:outputText value="#{activity.createdAt}"
+											<h:outputText value="#{activity.date}"
 												style="font-weight: bold">
 												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 											</h:outputText>
 										</h:panelGrid>
-										<h:outputText value="#{activity.message}" />
+										<h:outputText value="#{activity.headline} &lt;br/&gt;" escape="false" style="font-weight: bold" />				
+										<h:outputText value="#{activity.text}" escape="false"/>
 									</p:outputPanel>
 								</h:panelGrid>
 							</p:dataScroller>
 						</p:panel>
 					</div>
-					<div class="ui-grid-col-4">
+					<div class="ui-grid-col-5">
 						<p:panel header="Dokumentenbibliothek">
 							<ui:include src="DocumentLibrary.xhtml">
-								<ui:param name="communityId" value="1"/>
 							</ui:include>
 						</p:panel>
 					</div>

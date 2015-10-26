@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Tag;
 
 public interface TagDAO {
@@ -12,7 +13,7 @@ public interface TagDAO {
 	 * @param tag
 	 *            the tag to persist
 	 */
-	void insert(Tag tag);
+	void insert(Tag tag) throws ConstraintViolationException;
 
 	/**
 	 * Get a tag by its id

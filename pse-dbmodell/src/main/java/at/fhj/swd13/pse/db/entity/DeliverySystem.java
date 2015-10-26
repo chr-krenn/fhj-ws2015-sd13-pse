@@ -11,7 +11,10 @@ import java.util.List;
  */
 @Entity
 @Table(name="delivery_system")
-@NamedQuery(name="DeliverySystem.findAll", query="SELECT d FROM DeliverySystem d")
+@NamedQueries({
+	@NamedQuery(name="DeliverySystem.findAll", query="SELECT d FROM DeliverySystem d"),
+	@NamedQuery(name="DeliverySystem.findByToken", query="SELECT d FROM DeliverySystem d WHERE d.token = :token")
+})
 public class DeliverySystem implements Serializable {
 	private static final long serialVersionUID = 1L;
 

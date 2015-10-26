@@ -4,16 +4,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 
-public class DbContextTest {
-
-	private static DbContextProvider contextProvider;
+public class DbContextTest extends DbTestBase {
 
 	@BeforeClass
 	public static void setup() {
-		contextProvider = new DbContextProviderImpl();
+
+		DbTestBase.prepare();
 	}
 
 	@Test(expected = IllegalStateException.class)

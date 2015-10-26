@@ -14,6 +14,8 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
+import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
+import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.MessageDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageTagDAO;
@@ -24,7 +26,6 @@ import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.dao.TagDAOImpl;
 
 @RequestScoped
-@CurrentDbContext
 public class DbContextJtaImpl implements DbContext {
 
 	@PersistenceContext
@@ -37,9 +38,7 @@ public class DbContextJtaImpl implements DbContext {
 
 	@Override
 	public void persist(Object target) {
-
 		entityManager.persist(target);
-
 	}
 
 	@Override
@@ -130,6 +129,11 @@ public class DbContextJtaImpl implements DbContext {
 	
 	@Override
 	public void close() throws Exception {}
+
+	@Override
+	public DocumentLibraryEntryDAO getDocumentLibraryDAO() {
+		return new DocumentLibraryEntryDAOImpl(this);
+	}
 
 	
 }

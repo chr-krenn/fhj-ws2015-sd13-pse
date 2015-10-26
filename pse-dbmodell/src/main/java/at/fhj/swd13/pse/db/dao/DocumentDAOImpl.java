@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.db.dao;
 
 import javax.persistence.Query;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
@@ -17,7 +18,7 @@ public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 	 * @see at.fhj.swd13.pse.db.dao.DocumentDAO#insert(at.fhj.swd13.pse.db.entity.Document)
 	 */
 	@Override
-	public void insert(Document document) {
+	public void insert(Document document) throws ConstraintViolationException{
 		dbContext.persist(document);
 	}
 

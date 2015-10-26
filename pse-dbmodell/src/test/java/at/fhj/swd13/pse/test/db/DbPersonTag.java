@@ -11,25 +11,21 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.DbContextProvider;
-import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
 
-public class DbPersonTag {
+public class DbPersonTag extends DbTestBase {
 
 	private Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
 	private Person p2 = new Person("xtester", "Tester", "Xaver", "1234567");
 
 	private Tag t = new Tag("ballroom", "Gesellschftstanz in allen Varianten");
 
-	private static DbContextProvider contextProvider;
-
 	@BeforeClass
 	public static void construct() {
-		contextProvider = new DbContextProviderImpl();
+		DbTestBase.prepare();
 	}
 
 	@Before
@@ -78,7 +74,12 @@ public class DbPersonTag {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			Person x = personDAO.getById(p1.getPersonId());
+
+			assertNotNull( x );
+			
 			Tag l = tagDAO.getById(t.getTagId());
+
+			assertNotNull( l );
 
 			x.addTag(l);
 

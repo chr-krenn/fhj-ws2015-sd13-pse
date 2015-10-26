@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -46,20 +47,12 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	}
 
 	public DocumentServiceImpl(DbContext dbContext) {
-
 		super(dbContext);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.fhj.swd13.pse.domain.document.DocumentService#store(java.lang.String,
-	 * java.io.InputStream)
-	 */
-	@Override
-	public Document store(final String filename, InputStream data) {
 
+	@Override
+	public Document store(String filename, InputStream data, String description) {
 		Document document = new Document();
 
 		try {
@@ -67,7 +60,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 			document.setName(file.getName());
 			document.setMimeType(Files.probeContentType(Paths.get(filename)));
-
+			document.setDescription(description);
 			document.setSize((int) file.length());
 
 			document.setStorageLocation(storeFile(data));
@@ -78,7 +71,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			logger.info("[DOCS] storage location is " + document.getStorageLocation());
 
 			return document;
-		} catch (IOException x) {
+		} catch ( ConstraintViolationException | IOException x) {
 			logger.error("[DOCS] Error storing file " + filename + " : " + x.getMessage());
 			return null;
 		} finally {
@@ -89,6 +82,19 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhj.swd13.pse.domain.document.DocumentService#store(java.lang.String,
+	 * java.io.InputStream)
+	 */
+	@Override
+	public Document store(final String filename, InputStream data) {
+		return store(filename, data, null);	
 	}
 
 	/*
@@ -164,4 +170,6 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			return buildImageUrl("no_img.jpg");
 		}
 	}
+
+	
 }
