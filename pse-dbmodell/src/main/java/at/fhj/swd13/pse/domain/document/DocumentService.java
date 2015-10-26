@@ -5,8 +5,6 @@ import java.io.InputStream;
 import at.fhj.swd13.pse.db.entity.Document;
 
 public interface DocumentService {
-	// TODO move to configuration
-	public static final String imageFolder = "/tmp/pse/documents";
 
 	enum DocumentCategory {
 		MESSAGE_ICON, USER_IMAGE

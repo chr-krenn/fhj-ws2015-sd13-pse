@@ -9,14 +9,17 @@ import java.nio.file.Paths;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
+import at.fhj.swd13.pse.plumbing.ConfigurationHelper;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 @Stateless
@@ -27,8 +30,9 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 	private static Random random = new Random();
 
-	private static final String serviceUrl = "/store/media/";
-	private static final String imageFolderUrl = "/protected/img/";
+	private static String serviceUrl = "/store/media/";
+	private static String imageFolderUrl = "/protected/img/";
+	private static String imageFolder = "/tmp/pse/documents";
 
 	/**
 	 * How many subdirectories will be used beneath imageFolder
@@ -48,9 +52,38 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 	public DocumentServiceImpl(DbContext dbContext) {
 		super(dbContext);
+
+		loadSettings();
 	}
 
+	@PostConstruct
+	protected void onPostConstruct() {
+		loadSettings();
+	}
+	
+	/**
+	 * load the properties from the current system property file.
+	 * Properties loaded are
+	 * 
+	 * at.fhj.swd13.pse.mediaUrl
+	 * at.fhj.swd13.pse.imageFolderUrl
+	 * 
+	 * at.fhj.swd13.pse.imageFolder
+	 * at.fhj.swd13.pse.maxSubIndices
+	 * 
+	 */
+	protected void loadSettings() {
 
+		if ( logger != null ) {
+			logger.info("[DOCS] loading properties");
+		}
+		
+		serviceUrl = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.mediaUrl", serviceUrl);
+		imageFolderUrl = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.imageFolderUrl", imageFolderUrl);
+		
+		imageFolder = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.imageFolder", imageFolder);
+		maxSubIndices = ConfigurationHelper.saveSetPropertyInt("at.fhj.swd13.pse.maxSubIndices", "9");
+	}
 	@Override
 	public Document store(String filename, InputStream data, String description) {
 		Document document = new Document();
@@ -58,6 +91,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		try {
 			File file = new File(filename);
 
+			//FIXME: check filename length and match to name column length - truncate or throw exception and document correctly
 			document.setName(file.getName());
 			document.setMimeType(Files.probeContentType(Paths.get(filename)));
 			document.setDescription(description);
@@ -71,10 +105,11 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			logger.info("[DOCS] storage location is " + document.getStorageLocation());
 
 			return document;
-		} catch ( ConstraintViolationException | IOException x) {
+		} catch (ConstraintViolationException | IOException x) {
 			logger.error("[DOCS] Error storing file " + filename + " : " + x.getMessage());
 			return null;
-		} finally {
+		}
+		finally {
 			try {
 				data.close();
 			} catch (IOException e) {
@@ -83,8 +118,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			}
 		}
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -94,7 +128,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	 */
 	@Override
 	public Document store(final String filename, InputStream data) {
-		return store(filename, data, null);	
+		return store(filename, data, null);
 	}
 
 	/*
@@ -107,6 +141,13 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		return dbContext.getDocumentDAO().getById(documentId);
 	}
 
+	
+	public void remove( final Document document ) {
+		//TODO: remove from db
+		//TODO: remove file
+		throw new NotImplementedException("must implement!!!");
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -171,5 +212,4 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		}
 	}
 
-	
 }
