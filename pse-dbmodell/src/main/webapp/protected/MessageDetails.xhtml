@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		Work in progress...
+		<h:outputText value="Error loading message" rendered="!#{messageDetailsController.messageDTO}"/>
+		
+		<h:form>
+			<h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail" rendered="#{messageDetailsController.messageDTO}">
+				<p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" />
+
+				<p:outputPanel>
+					<h:panelGrid columns="1" cellpadding="5">
+						<h:outputText value="#{messageDetailsController.messageDTO.headline}" style="font-weight: bold" />
+						<h:outputText value="#{messageDetailsController.messageDTO.text}" escape="false"/>
+					</h:panelGrid>
+				</p:outputPanel>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

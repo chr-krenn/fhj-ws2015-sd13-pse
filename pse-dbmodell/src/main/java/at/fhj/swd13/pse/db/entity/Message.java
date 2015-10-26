@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,6 +34,7 @@ import org.jsoup.Jsoup;
 @NamedQueries({
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
+		@NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.messageId = :id"),
 		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
@@ -120,7 +122,7 @@ public class Message implements Serializable {
 	private Person person;
 
 	// bi-directional many-to-one association to Community
-	@ManyToMany
+	@ManyToMany (fetch = FetchType.EAGER)
 	private List<Community> communities;
 
 	// bi-directional many-to-one association to MessageTag

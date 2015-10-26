@@ -3,10 +3,13 @@ package at.fhj.swd13.pse.dto;
 import java.util.Date;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 
 public class MessageDTO {
 
+	private int id;
+	
 	private String author;
 	
 	private Date date;
@@ -18,19 +21,33 @@ public class MessageDTO {
 	private boolean privateMessage;
 	
 	private String community;
+	
+	private Document icon;
 
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
 		this();
+		this.id = m.getMessageId();
 		this.author = m.getPerson().getFirstName() + m.getPerson().getLastName();
 		this.date = m.getCreatedAt();
 		this.headline = m.getHeadline();
 		this.text = m.getMessage();
 		this.privateMessage = isPrivateMessage(m);
 		this.community = getCommunity(m);
+		this.icon = m.getIcon();
 	}
 	
+	
+	public int getId() {
+		return id;
+	}
+
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getAuthor() {
 		return author;
 	}
@@ -108,5 +125,15 @@ public class MessageDTO {
 	
 	public void setCommunity(String community) {
 		this.community = community;
+	}
+
+	
+	public Document getIcon() {
+		return icon;
+	}
+
+	
+	public void setIcon(Document icon) {
+		this.icon = icon;
 	}
 }
