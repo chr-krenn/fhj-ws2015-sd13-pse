@@ -227,33 +227,39 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 		// remove deleted tags
 		List<PersonTag> deletedTags = new ArrayList<PersonTag>();
-		for (PersonTag personTag : p.getPersonTags()) {
-			if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+		if (userDTO.getTags() != null) {
+			for (PersonTag personTag : p.getPersonTags()) {
+				if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+					deletedTags.add(personTag);
+				}
+			}
+		
+			// add new tags
+			for (String token : userDTO.getTags()) {
+				boolean bExists = false;
+				for (PersonTag personTag : p.getPersonTags()) {
+					if (personTag.getTag().getToken().equals(token)) {
+						bExists = true;
+						break;
+					}
+				}
+				
+				if (!bExists) {
+					Tag tag = tagService.getTagByToken(token);
+					PersonTag personTag = new PersonTag();
+					personTag.setTag(tag);
+					p.addPersonTag(personTag);
+				}
+			}
+		} else {
+			for (PersonTag personTag : p.getPersonTags()) {
 				deletedTags.add(personTag);
 			}
 		}
-		
+
 		for (PersonTag personTag : deletedTags) {
 			p.removePersonTag(personTag);
 		}		
-	
-		// add new tags
-		for (String token : userDTO.getTags()) {
-			boolean bExists = false;
-			for (PersonTag personTag : p.getPersonTags()) {
-				if (personTag.getTag().getToken().equals(token)) {
-					bExists = true;
-					break;
-				}
-			}
-			
-			if (!bExists) {
-				Tag tag = tagService.getTagByToken(token);
-				PersonTag personTag = new PersonTag();
-				personTag.setTag(tag);
-				p.addPersonTag(personTag);
-			}
-		}
 	}
 
 	@Override

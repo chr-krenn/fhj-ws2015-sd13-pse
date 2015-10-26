@@ -42,7 +42,7 @@ public class UserProfileController implements Serializable {
 
 	@Inject
 	private TagService tagService;
-	
+
 	@Inject
 	private UserSession userSession;
 
@@ -56,14 +56,15 @@ public class UserProfileController implements Serializable {
 	private Logger logger;
 
 	private UserDTO userDTO;
-	
-	//TODO Eigentlich UserDTO
+
+	// TODO Eigentlich UserDTO
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
 	public void setup() {
 		try {
-			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+					.get("userName");
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
 			setUsersWithDepartment(userService.getUsersWithDepartment(person.getDepartment()));
@@ -88,16 +89,20 @@ public class UserProfileController implements Serializable {
 			userService.setUserImage(getUserDTO().getUserName(), document.getDocumentId());
 			getUserDTO().setImageRef(documentService.buildServiceUrl(documentid));
 		} catch (IOException e) {
-			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			logger.info(
+					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (RuntimeException e) {
-			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			logger.info(
+					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (EntityNotFoundException e) {
-			logger.info("[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen, Benutzer ungültig");
+			logger.info(
+					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler",
+					"File Upload fehlgeschlagen, Benutzer ungültig");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
@@ -113,61 +118,66 @@ public class UserProfileController implements Serializable {
 	public void updateProfile() {
 		try {
 			// add tag if not already existing
-			for (String token : getUserDTO().getTags()) {
-				Tag tag = tagService.getTagByToken(token);
-				if (tag == null) {
-					tag = new Tag();
-					tag.setToken(token);
-					tag.setDescription(token);
-					try {
-						tagService.insert(tag);
-					} catch ( ConstraintViolationException x) {
-						logger.error("[MSG+] error creating new tag (duplicate...)");
+			if (getUserDTO().getTags() != null) {
+				for (String token : getUserDTO().getTags()) {
+					Tag tag = tagService.getTagByToken(token);
+					if (tag == null) {
+						tag = new Tag();
+						tag.setToken(token);
+						tag.setDescription(token);
+						try {
+							tagService.insert(tag);
+						} catch (ConstraintViolationException x) {
+							logger.error("[USERPROFILE] error creating new tag (duplicate...)");
+						}
 					}
 				}
 			}
-			
+
 			userService.update(userDTO);
 
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info("[USERPROFILE] updateProfile failed for " + userDTO.getFullname() + " from " + context.toString());
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler", "Aktualisiserung für Benutzer fehlgeschlagen, ungültiger Username");
+			logger.info(
+					"[USERPROFILE] updateProfile failed for " + userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler",
+					"Aktualisiserung für Benutzer fehlgeschlagen, ungültiger Username");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
-		
-		logger.info("[USERPROFILE] updateProfile successful for " + userDTO.getFullname() + " from " + RequestContext.getCurrentInstance().toString());
+
+		logger.info("[USERPROFILE] updateProfile successful for " + userDTO.getFullname() + " from "
+				+ RequestContext.getCurrentInstance().toString());
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aktualisiserung erfolgreich", "");
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		
+
 	}
-	
+
 	public boolean isAdmin() {
 		return userSession.isAdmin();
 	}
-	
+
 	private boolean isModeEdit() {
 		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		return ((mode != null) && (mode.equals("edit")));		
+		return ((mode != null) && (mode.equals("edit")));
 	}
-	
+
 	private boolean isLoggedInUser() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
-		return ((userName != null) && (userName.equals(userSession.getUsername())));		
+		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("userName");
+		return ((userName != null) && (userName.equals(userSession.getUsername())));
 	}
-	
+
 	public List<String> completeTag(String input) {
 		List<String> result = new ArrayList<String>();
-		logger.info( "[USERPROFILE] completeTag - selcted tag count " + userDTO.getTags().size());
-		
-		
+		logger.info("[USERPROFILE] completeTag - selcted tag count " + userDTO.getTags().size());
+
 		for (Tag tag : tagService.getMatchingTags(input)) {
 			if (!isTagAlreadySelected(tag.getToken())) {
 				result.add(tag.getToken());
 			}
 		}
-			
+
 		if (result.isEmpty()) {
 			result.add(input);
 		}
@@ -175,16 +185,16 @@ public class UserProfileController implements Serializable {
 		return result;
 	}
 
-	private boolean isTagAlreadySelected( final String token ) {
+	private boolean isTagAlreadySelected(final String token) {
 		final String needle = token.toLowerCase();
 		for (String tag : userDTO.getTags()) {
-			if ( tag.toLowerCase().equals(needle)) {
+			if (tag.toLowerCase().equals(needle)) {
 				return true;
-			}			
+			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * called when a tag is added to the chosen list
 	 * 
@@ -205,8 +215,8 @@ public class UserProfileController implements Serializable {
 	public void handleTagUnselect(UnselectEvent event) {
 
 		logger.info("[USERPROFILE] handleUnselect");
-	}	
-	
+	}
+
 	public String getTagEditStyle() {
 		return !isLoggedInUser() ? "display:none" : "display:all";
 	}
@@ -214,7 +224,7 @@ public class UserProfileController implements Serializable {
 	public String getTagDisplayStyle() {
 		return isLoggedInUser() ? "display:none" : "display:all";
 	}
-	
+
 	public String getTagDisplayString() {
 		StringBuffer result = new StringBuffer();
 		for (String tag : getUserDTO().getTags()) {
@@ -224,7 +234,7 @@ public class UserProfileController implements Serializable {
 		}
 		return result.toString();
 	}
-	
+
 	public boolean addToContactVisible() {
 		return !isLoggedInUser();
 	}
@@ -238,38 +248,36 @@ public class UserProfileController implements Serializable {
 	}
 
 	public void contactButtonAction() {
-		
+
 		try {
 			if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
-				
+
 				userService.removeRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
-				
-				//Update userDTO
+
+				// Update userDTO
 				userDTO.getContacts().remove(userService.getLoggedInUser());
-				
+
 			} else {
 				System.out.println(userService.getLoggedInUser().getContacts().size());
 				userService.createRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
-				
-				//Update userDTO
+
+				// Update userDTO
 				userDTO.getContacts().add(userService.getLoggedInUser());
 			}
-			
-			
-			
+
 		} catch (EntityNotFoundException e) {
 
 		}
 	}
-	
+
 	public boolean activeVisible() {
 		return (!isLoggedInUser() && isAdmin());
 	}
-	
+
 	public boolean loginAllowedVisible() {
 		return (!isLoggedInUser() && isAdmin());
 	}
-	
+
 	public boolean externEnabled() {
 		return isModeEdit();
 	}
