@@ -147,12 +147,12 @@
 					</p:column>			
 				</p:row>
 				
-				<p:row rendered="#{userProfileController.loginAllowedVisible()}">
+				<p:row>
 					<p:column>			
 					</p:column>			
 					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled())}" />
-						<p:outputLabel value="  Abwesend:"/>
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled)}" />
+						<p:outputLabel value="  Abwesend"/>
 					</p:column>			
 				</p:row>
 

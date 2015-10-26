@@ -218,11 +218,11 @@ public class UserProfileController implements Serializable {
 	}
 
 	public String getTagEditStyle() {
-		return !isLoggedInUser() ? "display:none" : "display:all";
+		return !isLoggedInUser() && !isAdmin() ? "display:none" : "display:all";
 	}
 
 	public String getTagDisplayStyle() {
-		return isLoggedInUser() ? "display:none" : "display:all";
+		return isLoggedInUser() || isAdmin() ? "display:none" : "display:all";
 	}
 
 	public String getTagDisplayString() {
@@ -278,7 +278,7 @@ public class UserProfileController implements Serializable {
 		return (!isLoggedInUser() && isAdmin());
 	}
 
-	public boolean externEnabled() {
+	public boolean getExternEnabled() {
 		return isModeEdit();
 	}
 
