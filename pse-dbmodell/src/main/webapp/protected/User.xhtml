@@ -203,13 +203,15 @@
 							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{contact.lastName}"
-										style="font-weight: bold" />
+										style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}"
+										/>
 									<f:param name="userName" value="#{contact.userName}" />
 									<f:param name="mode" value="view" />
 								</h:outputLink>
 							</p:column>
 							<p:column headerText="Vorname">
-								<h:outputText value="#{contact.firstName}" />
+								<h:outputText value="#{contact.firstName}"
+								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
