@@ -36,7 +36,7 @@ import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 @Entity
 @Table(name = "person")
 @NamedQueries({ @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p ORDER BY p.lastName, p.firstName"),
-		@NamedQuery(name = "Person.findAllWithDepartment", query = "SELECT p FROM Person p WHERE p.department = :department ORDER BY p.lastName, p.firstName"), 
+		@NamedQuery(name = "Person.findAllWithDepartment", query = "SELECT p FROM Person p WHERE p.department = :department ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findAllNullPasswords", query = "SELECT p FROM Person p WHERE p.hashedPassword IS NULL OR p.hashedPassword = '--' ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.personId = :id"),
 		@NamedQuery(name = "Person.findByUserName", query = "SELECT p FROM Person p WHERE p.userName = :uname"),
@@ -118,6 +118,9 @@ public class Person implements Serializable {
 	@Column(name = "is_active", nullable = false)
 	private boolean isActive;
 
+	@Column(name = "is_extern", nullable = false)
+	private boolean isExtern;
+
 	@Column(name = "is_login_allowed", nullable = false)
 	private boolean isLoginAllowed;
 
@@ -194,7 +197,7 @@ public class Person implements Serializable {
 	private List<PersonRelation> personTargetRelations;
 
 	// bi-directional many-to-one association to PersonTag
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "person", cascade = { CascadeType.PERSIST, CascadeType.DETACH } )	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "person", cascade = { CascadeType.PERSIST, CascadeType.DETACH })
 	private List<PersonTag> personTags;
 
 	@Column(name = "current_session_id", nullable = true, length = 64)
@@ -203,6 +206,7 @@ public class Person implements Serializable {
 	public Person() {
 
 		isActive = true;
+		isExtern = false;
 		isAdmin = false;
 		isLoginAllowed = true;
 		isOnline = false;
@@ -307,6 +311,14 @@ public class Person implements Serializable {
 
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public boolean isExtern() {
+		return this.isExtern;
+	}
+
+	public void setIsExtern(boolean isExtern) {
+		this.isExtern = isExtern;
 	}
 
 	public boolean isLoginAllowed() {

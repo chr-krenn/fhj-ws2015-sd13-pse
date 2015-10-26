@@ -41,6 +41,8 @@ public class UserDTO {
 	private Boolean online;
 
 	private Boolean active;
+	
+	private Boolean extern;
 
 	private Boolean loginAllowed;
 	
@@ -68,6 +70,7 @@ public class UserDTO {
 		this.locationFloor = person.getLocationFloor();
 		this.job = person.getJobPosition();
 		this.online = person.isOnline();
+		this.setExtern(person.isExtern());
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
@@ -345,5 +348,13 @@ public class UserDTO {
 
 	public void setLoginAllowed(Boolean loginAllowed) {
 		this.loginAllowed = loginAllowed;
+	}
+
+	public Boolean getExtern() {
+		return extern;
+	}
+
+	public void setExtern(Boolean extern) {
+		this.extern = extern;
 	}
 }

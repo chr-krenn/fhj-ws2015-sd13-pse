@@ -270,6 +270,7 @@ CREATE TABLE `person` (
   `date_of_birth` date DEFAULT NULL,
   `date_of_entry` date DEFAULT NULL,
   `is_active` bit(1) NOT NULL DEFAULT b'1',
+  `is_extern` bit(1) NOT NULL DEFAULT b'0',
   `is_login_allowed` bit(1) NOT NULL DEFAULT b'1',
   `is_online` bit(1) NOT NULL DEFAULT b'0',
   `is_admin`  bit(1) NOT NULL DEFAULT b'0',
@@ -288,7 +289,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,1,NULL, NULL);
+INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,1,NULL,NULL);
 
 UNLOCK TABLES;
 

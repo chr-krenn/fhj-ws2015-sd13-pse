@@ -79,12 +79,10 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			userSession.logout();
 		}
 	}
-	
-	
-	
+
 	@Override
 	public Person getLoggedInUser() {
-		if(userSession.isLoggedIn()) {
+		if (userSession.isLoggedIn()) {
 			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
 			return p;
 		}
@@ -170,7 +168,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		return dbContext.getPersonDAO().getAllPersons(0, 1000);
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -182,16 +180,19 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#findUsers(java.lang.String)
 	 */
 	@Override
 	public List<Person> findUsers(String search) {
 		return dbContext.getPersonDAO().getPersonLike(search);
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#update(at.fhj.swd13.pse.dto.UserDTO)
 	 */
 	@Override
@@ -214,6 +215,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		p.setLocationFloor(userDTO.getLocationFloor());
 		p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
 		p.setIsActive(userDTO.getActive());
+		p.setIsExtern(userDTO.getExtern());
 		p.setIsLoginAllowed(userDTO.getLoginAllowed());
 	}
 
@@ -235,7 +237,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#changePassword(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -247,29 +251,28 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			return false;
 		}
 
-		if(!p.isMatchingPassword(passwordOldPlain))
+		if (!p.isMatchingPassword(passwordOldPlain))
 			return false;
-			
+
 		try {
 			passwordStrengthValidator.validate(passwordNewPlain);
 		} catch (WeakPasswordException e) {
 			return false;
 		}
-		
+
 		p.setPassword(passwordNewPlain);
-		
+
 		return true;
 	}
-	
-	
+
 	@Override
 	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
 		PersonRelation relation = null;
-		
+
 		try {
 			relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
 		} catch (ConstraintViolationException e) {
-			
+
 			logger.error("[USER] ConstraintViolation while creating relation ... oopsi");
 		}
 		return relation;
@@ -278,7 +281,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	@Override
 	public void removeRelation(Person sourcePerson, Person targetPerson) {
 		dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
-		
+
 	}
-	
+
 }

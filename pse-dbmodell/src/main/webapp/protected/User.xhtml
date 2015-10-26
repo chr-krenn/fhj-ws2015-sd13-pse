@@ -11,7 +11,7 @@
 				value="#{userProfileController.userDTO.imageRef}" cache="false" />
 
 			<h:panelGroup id="fileUploadGroup"
-				style="#{userProfileController.fileuploadDisplay}">
+				style="#{userProfileController.getModeEditAdminDisplay()}">
 				<p:fileUpload
 					fileUploadListener="#{userProfileController.handleFileUpload}"
 					dragDropSupport="true" update="messages,userimage"
@@ -68,6 +68,14 @@
 				<p:selectBooleanCheckbox
 					value="#{userProfileController.userDTO.online}" disabled="True" />
 
+				<p:outputLabel value="Abwesend:" />
+				<p:selectBooleanCheckbox
+					value="#{userProfileController.userDTO.extern}" 
+					disabled="#{!(userProfileController.externEnabled())}" />
+				<p:outputLabel value="" />
+				<p:outputLabel value="" />
+				
+
 				<p:outputLabel value="Job:" />
 				<p:inputMask id="job" styleClass="forminput"
 				    value="#{userProfileController.userDTO.job}"
@@ -85,9 +93,9 @@
 					value="#{userProfileController.userDTO.loginAllowed}" />
 
 				<p:outputLabel value=""
-					rendered="#{userProfileController.isAdmin()}" />
+				    style="#{userProfileController.getModeEditAdminDisplay()}" />
 				<p:commandButton value="Speichern"
-					rendered="#{userProfileController.isAdmin()}"
+					style="#{userProfileController.getModeEditAdminDisplay()}"
 					action="#{userProfileController.updateProfile}" update="messages"
 					type="submit" icon="ui-icon-disk" />
 			</p:panelGrid>

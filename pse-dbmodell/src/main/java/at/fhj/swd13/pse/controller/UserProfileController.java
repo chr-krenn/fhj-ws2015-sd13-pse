@@ -55,7 +55,6 @@ public class UserProfileController implements Serializable {
 
 	private UserDTO userDTO;
 	
-	//TODO Eigentlich UserDTO
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
@@ -100,16 +99,16 @@ public class UserProfileController implements Serializable {
 		}
 	}
 
-	public String getFileuploadDisplay() {
-		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		boolean modeEdit = ((mode != null) && (mode.equals("edit"))) || isAdmin();
+	public String getModeEditAdminDisplay() {
+		boolean modeEdit = isModeEdit() || isAdmin();
 
-		String fileuploadDisplay = modeEdit == false ? "display:none" : "display:all";
+		String display = modeEdit == false ? "display:none" : "display:all";
 
-		return fileuploadDisplay;
+		return display;
 	}
 
 	public void updateProfile() {
+		System.out.println("updatee asdfsed");
 		try {
 			userService.update(userDTO);
 		} catch (EntityNotFoundException e) {
@@ -128,6 +127,16 @@ public class UserProfileController implements Serializable {
 	
 	public boolean isAdmin() {
 		return userSession.isAdmin();
+	}
+	
+	private boolean isModeEdit() {
+		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
+		return ((mode != null) && (mode.equals("edit")));		
+	}
+	
+	private boolean isLoggedInUser() {
+		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+		return ((userName != null) && (userName.equals(userSession.getUsername())));		
 	}
 	
 	public void addNewTag() {
@@ -152,14 +161,7 @@ public class UserProfileController implements Serializable {
     }
 	
 	public boolean addToContactVisible() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
-		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
-		
-		if (ownProfile) {
-			return false;
-		} else {
-			return true;
-		}
+		return !isLoggedInUser();
 	}
 
 	public String contactButtonText() {
@@ -196,25 +198,15 @@ public class UserProfileController implements Serializable {
 	}
 	
 	public boolean activeVisible() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
-		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
-		
-		if (ownProfile || !isAdmin()) {
-			return false;
-		} else {
-			return true;
-		}
+		return (!isLoggedInUser() && isAdmin());
 	}
 	
 	public boolean loginAllowedVisible() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
-		boolean ownProfile = ((userName != null) && (userName.equals(userSession.getUsername())));
-		
-		if (ownProfile || !isAdmin()) {
-			return false;
-		} else {
-			return true;
-		}
+		return (!isLoggedInUser() && isAdmin());
+	}
+	
+	public boolean externEnabled() {
+		return isModeEdit();
 	}
 
 	public List<UserDTO> getUsersWithDepartment() {
