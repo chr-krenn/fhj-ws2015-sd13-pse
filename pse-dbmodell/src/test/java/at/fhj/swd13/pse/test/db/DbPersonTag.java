@@ -15,6 +15,7 @@ import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbPersonTag extends DbTestBase {
 

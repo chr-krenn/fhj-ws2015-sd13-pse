@@ -4,6 +4,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbContextTest extends DbTestBase {
 

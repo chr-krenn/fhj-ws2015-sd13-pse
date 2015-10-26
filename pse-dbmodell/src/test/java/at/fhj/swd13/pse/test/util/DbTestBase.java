@@ -1,8 +1,7 @@
-package at.fhj.swd13.pse.test.db;
+package at.fhj.swd13.pse.test.util;
 
 import at.fhj.swd13.pse.db.DbContextProvider;
 import at.fhj.swd13.pse.db.DbContextProviderImpl;
-import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 public abstract class DbTestBase {
 

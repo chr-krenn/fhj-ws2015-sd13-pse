@@ -11,6 +11,7 @@ import org.junit.Test;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbPersonPagingTest extends DbTestBase {
 

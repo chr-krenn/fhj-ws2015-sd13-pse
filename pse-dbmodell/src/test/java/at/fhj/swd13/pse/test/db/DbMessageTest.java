@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.test.db;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
@@ -11,13 +12,27 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.chat.ChatService;
+import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.dto.MessageDTO;
+import at.fhj.swd13.pse.test.util.DbTestBase;
+import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 public class DbMessageTest extends DbTestBase {
-
+	
+	private static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
+	
 	@BeforeClass
-	public static void init() {
+	public static void init() throws Exception {
 		DbTestBase.prepare();
+		//Setting up private communities per user
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			ChatService chatService = new ChatServiceImpl(dbContext);
+			chatService.createAllPrivateCommunities();
+			dbContext.commit();
+		}
+		//Adding private message
+		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
 	}
 
 	@Test
@@ -29,6 +44,7 @@ public class DbMessageTest extends DbTestBase {
 			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(108));
 
 			assertNotNull(activities);
+			assertEquals(4, activities.size());
 		}
 	}
 
@@ -40,4 +56,5 @@ public class DbMessageTest extends DbTestBase {
 			return personDAO.getById(id);
 		}
 	}
+	
 }
