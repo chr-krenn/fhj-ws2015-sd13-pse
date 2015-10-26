@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.domain.document;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import at.fhj.swd13.pse.db.entity.Document;
@@ -79,4 +80,10 @@ public interface DocumentService {
 	 * @return full app-relative path to the image
 	 */
 	String getDefaultDocumentRef(DocumentCategory documentCategory);
+	
+	/**
+	 * check if all needed folders exist in the file system
+	 * if not, try to create them
+	 */
+	void assertDocumentFolders() throws IOException;
 }

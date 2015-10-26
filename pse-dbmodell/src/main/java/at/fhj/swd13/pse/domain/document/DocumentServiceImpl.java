@@ -191,14 +191,23 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		return Paths.get(subDirIndex.toString(), filename);
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#buildImageUrl(java.lang.String)
+	 */
 	public String buildImageUrl(final String filename) {
 		return imageFolderUrl + filename;
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#buildServiceUrl(int)
+	 */
 	public String buildServiceUrl(final int documentId) {
 		return serviceUrl + Integer.toString(documentId);
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#getDefaultDocumentRef(at.fhj.swd13.pse.domain.document.DocumentService.DocumentCategory)
+	 */
 	public String getDefaultDocumentRef(DocumentCategory documentCategory) {
 
 		switch (documentCategory) {
@@ -211,4 +220,22 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhj.swd13.pse.domain.document.DocumentService#assertDocumentFolders()
+	 */
+	public void assertDocumentFolders() throws IOException  {
+		
+		Path documentPath = Paths.get( imageFolder );
+		
+		Files.createDirectories( documentPath );
+		logger.info("[DOCS] checked document folder " + documentPath );
+		
+		for( int i = 1; i <= maxSubIndices; ++i ) {
+			
+			Path documentSubPath = Paths.get( imageFolder + "/" + i );
+			
+			Files.createDirectories( documentSubPath );
+			logger.info("[DOCS] checked document folder " + documentSubPath );
+		}
+	}
 }
