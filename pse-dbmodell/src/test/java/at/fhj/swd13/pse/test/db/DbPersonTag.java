@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -182,6 +184,18 @@ public class DbPersonTag extends DbTestBase {
 
 			assertNotNull(l);
 			assertEquals(1, l.getPersonTags().size());
+		}
+	}
+	
+	@Test
+	public void getTagsForPerson() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			TagDAO tagDAO = dbContext.getTagDAO();
+			List<Tag> tags = tagDAO.getByPerson(personDAO.getById(108));
+			
+			assertNotNull(tags);
+			assertEquals(2, tags.size());
 		}
 	}
 }

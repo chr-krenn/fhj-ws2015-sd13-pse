@@ -41,4 +41,82 @@ insert into message
 	(message_id, created_by, message, valid_from, delivered_by) 
 	values (5, 108, "Test message by pompenig13", CURRENT_TIMESTAMP, 1);
 	
+--Public community
+insert into community
+	(invitation_only, name, created_by, confirmed_by)
+	values(0,"Public community", 2, 2);
 
+--Private community
+insert into community
+	(invitation_only, name, created_by, confirmed_by)
+	values(1,"Private community", 2, 2);
+
+--Tags
+insert into tag
+	(token)
+	values("Software");
+
+insert into tag
+	(token)
+	values("Other");
+
+insert into tag
+	(token)
+	values("NZ");
+
+--Adding tag to test person
+insert into person_tag
+	(person_id, tag_id)
+	values(108, (select tag_id from tag where token = "Software"));
+
+insert into person_tag
+	(person_id, tag_id)
+	values(108, (select tag_id from tag where token = "NZ"));
+	
+--Creating messages for public community
+insert into message 
+	(created_by, headline, message, delivered_by) 
+	values (102, "New software", "Message in public community tagged with Software", 1);
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where headline = "New software"), (select community_id from community where name = "Public community"));
+
+--Creating message for private community
+insert into message 
+	(created_by, headline, message, delivered_by) 
+	values (102, "Bug report", "----", 1);
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where headline = "Bug report"), (select community_id from community where name = "Private community"));
+
+--Adding tag to message in public community
+insert into message_tag
+	(tag_id)
+	values((select tag_id from tag where token = "Software"));
+
+insert into message_tag_message
+	(messageTags_message_tag_id, messages_message_id)
+	values((select message_tag_id from message_tag where tag_id in (select tag_id from tag where token = "Software")),
+			(select message_id from message where headline = "New software"));
+
+--Adding tag to message in private community
+insert into message_tag_message
+	(messageTags_message_tag_id, messages_message_id)
+	values((select message_tag_id from message_tag where tag_id in (select tag_id from tag where token = "Software")),
+			(select message_id from message where headline = "Bug report"));
+
+--Creating messages for public community
+insert into message 
+	(created_by, headline, message, delivered_by) 
+	values (100, "Public message without tag", "Message in public community by contact of pompenig13", 1);
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where headline = "Public message without tag"), (select community_id from community where name = "Public community"));
+
+--Adding message author to contacts of test person
+insert into person_relation
+	(source_person_id, target_person_id)
+	values(100, 108);
