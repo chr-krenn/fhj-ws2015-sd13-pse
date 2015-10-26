@@ -63,4 +63,17 @@ public class DbDocumentTest extends DbTestBase {
 		assertEquals( StringUtils.leftPad(".txt", JpaHelper.getColumneLength(d, "name") ).length(), d.getName().length() );
 		assertEquals( StringUtils.leftPad(".txt", JpaHelper.getColumneLength(d, "name") ), d.getName() );
 	}
+
+	@Test
+	public void testSetName_4() throws NoSuchFieldException, SecurityException {
+
+		Document d = new Document();
+		
+		final String testName = StringUtils.leftPad("x", JpaHelper.getColumneLength(d, "name") + 4);
+		
+		d.setName(testName);
+		
+		assertEquals( StringUtils.leftPad(" ", JpaHelper.getColumneLength(d, "name") ).length(), d.getName().length() );
+		assertEquals( StringUtils.leftPad(" ", JpaHelper.getColumneLength(d, "name") ), d.getName() );
+	}
 }
