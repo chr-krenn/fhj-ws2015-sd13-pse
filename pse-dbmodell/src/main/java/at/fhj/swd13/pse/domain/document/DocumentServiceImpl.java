@@ -91,7 +91,6 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		try {
 			File file = new File(filename);
 
-			//FIXME: check filename length and match to name column length - truncate or throw exception and document correctly
 			document.setName(file.getName());
 			document.setMimeType(Files.probeContentType(Paths.get(filename)));
 			document.setDescription(description);

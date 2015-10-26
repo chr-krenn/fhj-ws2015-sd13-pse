@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `document`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `document` (
   `document_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `mime_type` varchar(64) NOT NULL,
   `description` varchar(128) DEFAULT NULL,
   `storage_location` varchar(128) NOT NULL,

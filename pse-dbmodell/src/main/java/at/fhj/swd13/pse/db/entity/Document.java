@@ -17,20 +17,22 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import at.fhj.swd13.pse.plumbing.JpaHelper;
+
 /**
  * The persistent class for the document database table.
  * 
  */
 @Entity
 @Table(name = "document")
-@NamedQueries( {
-	@NamedQuery(name = "Document.findAll", query = "SELECT d FROM Document d"),
-	@NamedQuery(name = "Document.findById", query = "SELECT d FROM Document d WHERE d.documentId = :id"),
-	@NamedQuery(name = "Document.deleteById", query = "DELETE FROM Document d WHERE d.documentId = :id")
-})
+@NamedQueries({ @NamedQuery(name = "Document.findAll", query = "SELECT d FROM Document d"),
+		@NamedQuery(name = "Document.findById", query = "SELECT d FROM Document d WHERE d.documentId = :id"),
+		@NamedQuery(name = "Document.deleteById", query = "DELETE FROM Document d WHERE d.documentId = :id") })
 public class Document implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final int nameLength = JpaHelper.getColumneLength(Document.class, "name");
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +49,7 @@ public class Document implements Serializable {
 	@Column(name = "mime_type", nullable = false, length = 64)
 	private String mimeType;
 
-	@Column(nullable = false, length = 45)
+	@Column(nullable = false, length = 64)
 	private String name;
 
 	@Column(nullable = false)
@@ -70,12 +72,11 @@ public class Document implements Serializable {
 
 	public Document() {}
 
-
 	@PrePersist
 	protected void prePersist() {
-		setCreatedAt( new Date() );
+		setCreatedAt(new Date());
 	}
-	
+
 	public int getDocumentId() {
 		return this.documentId;
 	}
@@ -113,7 +114,24 @@ public class Document implements Serializable {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+
+		if (nameLength == 0 || name.length() <= nameLength ) {
+
+			this.name = name;
+		} else {
+			//name is too long to fit into the db column --> truncate
+			
+			final int charsTooMuch = name.length() - nameLength;
+			final int lastDot = name.lastIndexOf( '.');
+			
+			if ( lastDot > charsTooMuch ) {
+				
+				this.name = name.substring( 0, lastDot - charsTooMuch);
+				this.name = this.name + name.substring( lastDot );
+			} else {
+				this.name = name.substring(0, nameLength);
+			}
+		}
 	}
 
 	public int getSize() {
