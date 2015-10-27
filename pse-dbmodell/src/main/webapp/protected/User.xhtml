@@ -20,94 +20,94 @@
 			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<p:panelGrid style="width: 50%; height: 50%; overflow: auto">
+			<p:panelGrid style="width: 50%;">
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Vorname"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask id="firstName" styleClass="forminput"
 							value="#{userProfileController.userDTO.firstName}"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Nachname"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask id="lastName" styleClass="forminput"
 							value="#{userProfileController.userDTO.lastName}"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="E-Mail"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask id="emailAddress" styleClass="forminput"
 							value="#{userProfileController.userDTO.emailAddress}"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Abteilung"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask id="department" styleClass="forminput"
 							value="#{userProfileController.userDTO.department}"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Gebäude"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask
 							value="#{userProfileController.userDTO.locationBuilding}"
 							styleClass="forminput"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Stockwerk"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask value="#{userProfileController.userDTO.locationFloor}"
 							styleClass="forminput"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Zimmer"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask
 							value="#{userProfileController.userDTO.locationRoomNumber}"
 							styleClass="forminput"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Telefonnummer"/>
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:inputMask id="phoneNumberMobile" styleClass="forminput"
 							value="#{userProfileController.userDTO.phoneNumberMobile}"
-							readonly="#{!(userProfileController.isAdmin())}" />
+							readonly="#{!(userProfileController.admin)}" />
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>
 						<p:outputLabel for="personTags" value="Interessen/Expertisen:" />
 					</p:column>
-					<p:column>
+					<p:column colspan="2">
 						<p:inputText id="personTagsDisplay" style="#{userProfileController.tagDisplayStyle}" styleClass="forminput"
 							value="#{userProfileController.tagDisplayString}" readonly="true"/>
 						<p:autoComplete id="personTags" multiple="true" style="#{userProfileController.tagEditStyle}"
@@ -126,40 +126,31 @@
 					</p:column>			
 					<p:column>			
 						<p:selectBooleanCheckbox
-							value="#{userProfileController.userDTO.online}" disabled="True" />
+							value="#{userProfileController.userDTO.online}" disabled="true" />
 						<p:outputLabel value="  Online" />
 					</p:column>			
-				</p:row>
-				<p:row rendered="#{userProfileController.activeVisible()}" >
 					<p:column>			
-					</p:column>			
-					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.active}" />
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.active}" disabled="#{!(userProfileController.activeFlagEnabled)}"/>
 						<p:outputLabel value="  Aktiv"/>
 					</p:column>			
 				</p:row>
-				<p:row rendered="#{userProfileController.loginAllowedVisible()}">
-					<p:column>			
-					</p:column>			
-					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.loginAllowed}" />
-						<p:outputLabel value="  Login erlaubt"/>
-					</p:column>			
-				</p:row>
-				
 				<p:row>
 					<p:column>			
 					</p:column>			
+					<p:column>	
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.loginAllowed}" disabled="#{!(userProfileController.loginAllowedFlagEnabled)}"/>
+						<p:outputLabel value="  Login erlaubt"/>
+					</p:column>			
 					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externEnabled)}"/>
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externFlagEnabled)}"/>
 						<p:outputLabel value="  Abwesend"/>
 					</p:column>			
 				</p:row>
-
+				
 				<p:row style="#{userProfileController.getModeEditAdminDisplay()}">
 					<p:column>			
 					</p:column>			
-					<p:column>			
+					<p:column colspan="2">			
 						<p:commandButton value="Speichern"
 							action="#{userProfileController.updateProfile}" update="messages"
 							type="submit" icon="ui-icon-disk">
