@@ -239,4 +239,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		return dbContext.getCommunityDAO().getAllCommunities();
 		
 	}
+	
+	@Override
+	public List<Community> getAllCommunities(String searchfieldText) {
+
+		return dbContext.getCommunityDAO().getAllCommunities(searchfieldText);
+	}
 }
