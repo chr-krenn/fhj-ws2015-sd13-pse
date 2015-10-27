@@ -56,6 +56,9 @@ public class UserProfileController implements Serializable {
 	private Logger logger;
 
 	private UserDTO userDTO;
+	
+	private String editMode;
+	private String userName;
 
 	// TODO Eigentlich UserDTO
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
@@ -63,8 +66,9 @@ public class UserProfileController implements Serializable {
 	@PostConstruct
 	public void setup() {
 		try {
-			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-					.get("userName");
+			userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("userName");
+			editMode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
+			
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
 			setUsersWithDepartment(userService.getUsersWithDepartment(person.getDepartment()));
@@ -153,19 +157,34 @@ public class UserProfileController implements Serializable {
 
 	}
 
+	/**
+	 * returns true if the current login user is administrator
+	 *
+ 	 * @return true / false
+	 * 
+	 */	
 	public boolean isAdmin() {
 		return userSession.isAdmin();
 	}
 
+	/**
+	 * returns true if the current page is opened in login mode
+	 *
+ 	 * @return true if the current page is opened in login mode
+	 * 
+	 */	
 	private boolean isModeEdit() {
-		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		return ((mode != null) && (mode.equals("edit")));
+		return editMode != null && editMode.equals("edit");
 	}
 
+	/**
+	 * returns true if the current user is the login user
+	 *
+ 	 * @return true / false
+	 * 
+	 */	
 	private boolean isLoggedInUser() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("userName");
-		return ((userName != null) && (userName.equals(userSession.getUsername())));
+		return userName != null && userName.equals(userSession.getUsername());
 	}
 
 	public List<String> completeTag(String input) {
@@ -225,6 +244,12 @@ public class UserProfileController implements Serializable {
 		return isLoggedInUser() || isAdmin() ? "display:none" : "display:all";
 	}
 
+	/**
+	 * returns the display representation for tags
+	 *
+ 	 * @return display representation for tags
+	 * 
+	 */
 	public String getTagDisplayString() {
 		StringBuffer result = new StringBuffer();
 		for (String tag : getUserDTO().getTags()) {
@@ -270,16 +295,16 @@ public class UserProfileController implements Serializable {
 		}
 	}
 
-	public boolean activeVisible() {
+	public boolean isActiveFlagEnabled() {
 		return (!isLoggedInUser() && isAdmin());
 	}
 
-	public boolean loginAllowedVisible() {
+	public boolean isLoginAllowedFlagEnabled() {
 		return (!isLoggedInUser() && isAdmin());
 	}
 
-	public boolean getExternEnabled() {
-		return isModeEdit();
+	public boolean isExternFlagEnabled() {
+		return isModeEdit() || isAdmin();
 	}
 
 	public List<UserDTO> getUsersWithDepartment() {
