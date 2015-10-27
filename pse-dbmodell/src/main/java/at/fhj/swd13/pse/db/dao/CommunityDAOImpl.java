@@ -122,10 +122,19 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllCommunities() {
-		// Load all news from database (Pagination @see: LazyCommunityImpl)
-		System.out.println("-----> CommunityDaoImpl findAllCommunities <-----");
+
 		final Query q = dbContext.createNamedQuery("Community.findAll");
-		System.out.println("-----> CommunityDaoImpl Query: "+ q.toString() +" <-----");
+
 		return (List<Community>)q.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Community> getAllCommunities(String searchFieldText) {
+
+		final Query q = dbContext.createNamedQuery("Community.findMatching");
+		q.setParameter("needle", searchFieldText+"%");
+		return (List<Community>)q.getResultList();
+	}
+	
 }
