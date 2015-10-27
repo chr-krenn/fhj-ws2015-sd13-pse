@@ -140,5 +140,7 @@ public interface PersonDAO {
 	 * @param targetPerson
 	 */
 	void removeRelation(Person sourcePerson, Person targetPerson);
+	
+	Person getByEmailAddress(String emailAddress);
 
 }

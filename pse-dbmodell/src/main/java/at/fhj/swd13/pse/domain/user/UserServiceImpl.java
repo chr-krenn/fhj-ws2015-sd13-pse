@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 
 import org.jboss.logging.Logger;
 
+import at.fhj.swd13.pse.application.EmailController;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -39,6 +41,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private Logger logger;
+	
+	@Inject
+	private EmailController emailController;
+	
+	 @Inject
+	 private PasswordCreator passwordCreator;
 
 	/**
 	 * Create an instance of the user service
@@ -327,4 +335,23 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	}
 
+	@Override
+	public void resetPassword(String emailAddress) {
+		Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
+		
+		if(person != null) {
+			String randomPassword = passwordCreator.createRandomPassword();
+			person.setPassword(randomPassword);
+			
+			try {
+				emailController.sendNewPassword(emailAddress, randomPassword);
+			} catch (MessagingException e) {
+				logger.error("Error while sending the E-Mail");
+			}
+		}
+		
+		
+	}
+
+	
 }

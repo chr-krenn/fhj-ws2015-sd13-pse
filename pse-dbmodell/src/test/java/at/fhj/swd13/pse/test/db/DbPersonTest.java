@@ -217,4 +217,23 @@ public class DbPersonTest extends DbTestBase {
 			personDAO.remove(p);
 		}
 	}
+	
+	
+	@Test
+	public void getByEmailAddress() {
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			Person p = personDAO.getByEmailAddress("pse@edu.fh-joanneum.at");
+
+			assertEquals(p.getPersonId(), 2);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception " + e.getMessage());
+		}
+	}
+	
 }

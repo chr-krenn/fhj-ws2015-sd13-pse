@@ -17,6 +17,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
+
 @ManagedBean
 @Stateless
 public class LoginController {
@@ -101,6 +102,7 @@ public class LoginController {
 			logger.error("[LOGIN] error redirecting after logout: " + e.getMessage());
 		}
 	}
+	
 
 	/**
 	 * @return the username
