@@ -240,15 +240,15 @@ public class MessageEditorController {
 	 *            event data
 	 */
 	public void handleUnselect(UnselectEvent event) {
-		logger.info("[MSG+] Community handleUnselect");
-		if (targetCommunity != null
-				&& !selectedCommunities
-						.stream()
-						.filter(c -> c.getName().equals(
-								targetCommunity.getName())).findAny()
-						.isPresent()) {
-			selectedCommunities.add(new CommunityDTO(targetCommunity));
-		}
+		CommunityDTO removedCommunity = (CommunityDTO) event.getObject();
+		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
+		
+		// TODO Prevent unselection of preselected items
+		
+		// if (targetCommunity != null &&
+		// removedCommunity.getName().equals(targetCommunity.getName())) {
+		// selectedCommunities.add(new CommunityDTO(targetCommunity));
+		// }
 	}
 
 	/**
