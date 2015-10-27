@@ -104,5 +104,7 @@ public interface ChatService {
 	int createAllPrivateCommunities();
 	
 	List<Community> getAllCommunities();
+	
+	List <Community> getAllCommunities(String searchfieldText);
 
 }
