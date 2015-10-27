@@ -43,6 +43,21 @@
 				</p:row>
 				<p:row>
 					<p:column>			
+						<p:outputLabel value="Geburtsdatum"/>
+					</p:column>			
+					<p:column colspan="2">			
+						<p:calendar id="dateOfBirth" styleClass="forminput" showOn="button"
+							value="#{userProfileController.userDTO.dateOfBirth}"
+							rendered="#{userProfileController.admin}" />
+						<p:inputText id="dateOfBirthDisplay" rendered="#{!(userProfileController.admin)}" styleClass="forminput"
+							value="#{userProfileController.userDTO.dateOfBirth}" readonly="true">
+							<f:convertDateTime pattern="dd.MM.yy" />
+						</p:inputText>	
+					</p:column>			
+				</p:row>
+				
+				<p:row>
+					<p:column>			
 						<p:outputLabel value="E-Mail"/>
 					</p:column>			
 					<p:column colspan="2">			
