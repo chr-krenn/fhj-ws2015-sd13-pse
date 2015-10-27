@@ -245,4 +245,13 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 		
 	}
+
+	@Override
+	public Person getByEmailAddress(String emailAddress) {
+		final Query q = dbContext.createNamedQuery("Person.findByEmailAddress");
+		q.setParameter("emailAddress", emailAddress);
+
+		return fetchSingle(q);
+	
+	}
 }

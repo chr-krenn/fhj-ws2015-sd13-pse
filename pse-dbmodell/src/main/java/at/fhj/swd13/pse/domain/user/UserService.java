@@ -164,6 +164,9 @@ public interface UserService {
 	
 	
 	void removeRelation(Person sourcePerson, Person targetPerson);
+	
+	
+	void resetPassword(String emailAddress);
 
 	
 }
