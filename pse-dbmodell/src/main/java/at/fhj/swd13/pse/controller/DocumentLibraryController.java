@@ -1,19 +1,14 @@
 package at.fhj.swd13.pse.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryEntry;

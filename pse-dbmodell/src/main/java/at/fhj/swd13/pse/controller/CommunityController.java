@@ -10,14 +10,10 @@ import javax.inject.Named;
 import javax.persistence.OrderBy;
 
 import org.jboss.logging.Logger;
-import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
-import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.dto.CommunityDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**

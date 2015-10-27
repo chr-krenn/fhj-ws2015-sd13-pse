@@ -182,7 +182,14 @@
 					icon="ui-icon-home"
 					actionListener="#{userProfileController.contactButtonAction()}"
 					rendered="#{userProfileController.addToContactVisible()}"
-					update="addtocontact,contacts" />
+					update="addtocontact,contacts,sendmessage" />
+			</p:panel>
+			<p:panel id="sendmessage" cache="false">
+				<p:commandButton id="sendMessageButton"
+					value="#{userProfileController.sendMessageButtonText()}" type="submit"
+					icon="ui-icon-mail-closed"
+					action="#{userProfileController.sendMessageButtonAction()}"
+					rendered="#{userProfileController.canSendMessage()}" />
 			</p:panel>
 
 			<p:panel id="contacts">
