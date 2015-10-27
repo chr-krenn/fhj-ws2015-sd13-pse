@@ -26,9 +26,6 @@ public class ResetPasswordController {
 		}
 		return null;
 	}
-
-	
-	
 	
 	public String getEmailAddress() {
 		return emailAddress;
