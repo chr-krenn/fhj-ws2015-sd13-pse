@@ -158,6 +158,23 @@ insert into message_tag_message
 ----------------------------------------------
 
 ----------------------------------------------
+--Required for DBMessageTest: news entry (message in "Portal-News" Community (ID 1)) with tag
+--should NOT be selected in testActivityStream()
+insert into message 
+	(created_by, message, delivered_by) 
+	values (2, "Second news entry", 1);
+	
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message = "Second news entry" limit 1), 2);
+
+insert into message_tag_message
+	(messageTags_message_tag_id, messages_message_id)
+	values((select message_tag_id from message_tag where tag_id in (select tag_id from tag where token = "Software")),
+			(select message_id from message where message = "Second news entry" limit 1));
+----------------------------------------------
+
+----------------------------------------------
 --Adding message author to contacts of test person
 insert into person_relation
 	(source_person_id, target_person_id)

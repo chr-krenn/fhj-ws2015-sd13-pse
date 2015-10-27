@@ -54,7 +54,7 @@ CREATE TABLE `community` (
 
 LOCK TABLES `community` WRITE;
 /*!40000 ALTER TABLE `community` DISABLE KEYS */;
-INSERT INTO `community` VALUES (1,0,0,'Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,0,0,'Document Library','2015-10-04 19:35:38',1,NULL,1);
+INSERT INTO `community` VALUES (1,1,0,'Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,1,0,'Document Library','2015-10-04 19:35:38',1,NULL,1);
 /*!40000 ALTER TABLE `community` ENABLE KEYS */;
 UNLOCK TABLES;
 

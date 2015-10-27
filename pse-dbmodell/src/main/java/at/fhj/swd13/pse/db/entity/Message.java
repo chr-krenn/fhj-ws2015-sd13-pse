@@ -38,20 +38,21 @@ import org.jsoup.Jsoup;
 		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
-				"AND (c.communityId IS NULL OR c.communityId IN (:communities)) ORDER BY m.createdAt DESC"),
+				"AND c.systemInternal = false AND (c.communityId IS NULL OR c.communityId IN (:communities)) " +
+				"ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
-				"AND (c.communityId IS NULL OR :person = cm.member) ORDER BY m.createdAt DESC"),
+				"AND (c.communityId IS NULL OR (c.systemInternal = false AND :person = cm.member)) ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findByTags", query = "SELECT m FROM Message m LEFT JOIN m.messageTags mt LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
-				"AND mt.tag IN (:tags) AND c.invitationOnly = false ORDER BY m.createdAt DESC"),
+				"AND mt.tag IN (:tags) AND c.systemInternal = false AND c.invitationOnly = false ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findByContacts", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
 				"AND m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN p.personTargetRelations tr " +
-					"where sr.targetPerson = :person or tr.sourcePerson = :person) AND c.invitationOnly = false " +
+					"where sr.targetPerson = :person or tr.sourcePerson = :person) AND c.systemInternal = false AND c.invitationOnly = false " +
 				"ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findForUserAndTagsAndContacts", query = "SELECT m FROM Message m LEFT JOIN m.messageTags mt " +
 				"LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
@@ -61,7 +62,7 @@ import org.jsoup.Jsoup;
 					"OR ((mt.tag IN (SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person) " +
 					"OR m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN " +
 						"p.personTargetRelations tr WHERE sr.targetPerson = :person or tr.sourcePerson = :person)) " +
-						"AND c.invitationOnly = false)) " +
+						"AND c.systemInternal = false AND c.invitationOnly = false)) " +
 				"ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
 public class Message implements Serializable {
