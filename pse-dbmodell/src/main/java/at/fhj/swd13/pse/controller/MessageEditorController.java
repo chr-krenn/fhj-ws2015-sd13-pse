@@ -58,6 +58,26 @@ public class MessageEditorController {
 
 	private String headline;
 	private String richText;
+	
+	
+	/**
+	 * @return the dtFrom
+	 */
+	public Date getDtFrom() {
+		return dtFrom;
+	}
+
+	
+	/**
+	 * @param dtFrom the dtFrom to set
+	 */
+	public void setDtFrom(Date dtFrom) {
+		this.dtFrom = dtFrom;
+	}
+
+	private Date dtFrom;
+	private Date dtUntil;
+	
 	private int iconId;
 	private String iconRef;
 
@@ -119,6 +139,7 @@ public class MessageEditorController {
 			communities.add(chatService.getCommunity(communityDto.getName()));
 		}
 
+		//FIXME valid from - valid until - also use MessageDTO
 		feedService.saveMessage(headline, richText, userSession.getUsername(),
 				document, icon, communities, messageTags);
 
@@ -445,5 +466,19 @@ public class MessageEditorController {
 
 	public void setDocumentName(String documentName) {
 		this.documentName = documentName;
+	}
+	/**
+	 * @return the dtUntil
+	 */
+	public Date getDtUntil() {
+		return dtUntil;
+	}
+
+	
+	/**
+	 * @param dtUntil the dtUntil to set
+	 */
+	public void setDtUntil(Date dtUntil) {
+		this.dtUntil = dtUntil;
 	}
 }

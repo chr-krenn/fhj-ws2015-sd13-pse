@@ -103,6 +103,15 @@
 				</p:column>
 			</p:row>
 			<p:row>
+				<p:column>Nachrichtengültigkeit</p:column>
+				<p:column>
+					<p:outputLabel for="dtFrom" value="Von:" />
+					<p:calendar id="dtFrom" value="#{messageEditorController.dtFrom}" pattern="yyyy/MM/dd HH:mm" />
+					<p:outputLabel for="dtUntil" value="Bis:" />
+					<p:calendar id="dtUntil" value="#{messageEditorController.dtUntil}" pattern="yyyy/MM/dd HH:mm" />
+				</p:column>
+			</p:row>
+			<p:row>
 				<p:column rowspan="2">
 					<p:commandButton value="Speichern" icon="ui-icon-disk"
 						validateClient="true" ajax="false"
