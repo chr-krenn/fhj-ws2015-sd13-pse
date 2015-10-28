@@ -29,7 +29,7 @@ public class MessageDTO {
 	public MessageDTO(Message m) {
 		this();
 		this.id = m.getMessageId();
-		this.author = m.getPerson().getFirstName() + m.getPerson().getLastName();
+		this.author = m.getPerson().getFirstName() +" " + m.getPerson().getLastName();
 		this.date = m.getCreatedAt();
 		this.headline = m.getHeadline();
 		this.text = m.getMessage();
