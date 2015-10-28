@@ -271,6 +271,10 @@ public class Person implements Serializable {
 		this.firstName = firstName;
 	}
 
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
+	
 	public String getHashedPassword() {
 		return this.hashedPassword;
 	}
@@ -285,8 +289,6 @@ public class Person implements Serializable {
 	 * @param plainPassword
 	 *            the user's password in plain text
 	 * 
-	 * @throws WeakPasswordException
-	 *             when the password is not strong enough
 	 */
 	public void setPassword(String plainPassword) {
 

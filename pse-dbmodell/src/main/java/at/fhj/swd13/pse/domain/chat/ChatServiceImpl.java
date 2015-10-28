@@ -8,6 +8,7 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
+import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
 import at.fhj.swd13.pse.service.ServiceBase;
@@ -232,17 +233,35 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		}
 	}
 
-
 	@Override
 	public List<Community> getAllCommunities() {
-		
+
 		return dbContext.getCommunityDAO().getAllCommunities();
-		
+
 	}
-	
+
 	@Override
 	public List<Community> getAllCommunities(String searchfieldText) {
 
 		return dbContext.getCommunityDAO().getAllCommunities(searchfieldText);
+	}
+
+	public String resolveReceipientsMail(final Message message) {
+
+		StringBuilder builder = new StringBuilder();
+
+		if (message.getCommunities() != null) {
+
+			for (Community community : message.getCommunities()) {
+				if (community.isPrivateChannel()) {
+					if ( builder.length() > 0 ) {
+						builder.append(",");
+					}
+					builder.append( community.getPrivateUser().getEmailAddress());
+				}
+			}
+		} 
+
+		return builder.toString();
 	}
 }

@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.plumbing;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.PostConstruct;
@@ -80,9 +82,9 @@ public class MailServiceImpl implements MailService {
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		try {
-			mimeMessage.setFrom(fromMailAddress);
-			// FIXME
-			mimeMessage.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse("loe@loe.at"));
+			mimeMessage.setFrom( new InternetAddress( message.getPerson().getEmailAddress(), message.getPerson().getFullName() ) );
+
+			mimeMessage.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(receipientList));
 
 			mimeMessage.setSubject("[PSE] " + message.getHeadline());
 
@@ -109,11 +111,14 @@ public class MailServiceImpl implements MailService {
 
 			logger.info("[MAIL] sent message " + message.getMessageId() + " to " + receipientList);
 		} catch (MessagingException e) {
-
+//FIXME: due to async annotation, message is not shown to user!
 			logger.error("[MAIL] unable to send message " + message.getMessageId() + " to " + receipientList);
 			logger.error(e);
 
 			throw e;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

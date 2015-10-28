@@ -141,6 +141,10 @@ public class Community implements Serializable {
 		this.privateUser = person1;
 	}
 
+	public boolean isPrivateChannel() {
+		return privateUser != null;
+	}
+	
 	public boolean isConfirmed() {
 
 		return confirmedBy != null;
