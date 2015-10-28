@@ -336,20 +336,28 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	}
 
 	@Override
-	public void resetPassword(String emailAddress) {
-		Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
+	public void resetPassword(String emailAddress) throws InvalidEmailAddressException {
+		Person person;
+		try {
+			person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
+		
+		} catch (EntityNotFoundException e1) {
+			
+			throw new InvalidEmailAddressException("No user found for given E-Mail address");
+		}
 		
 		if(person != null) {
 			String randomPassword = passwordCreator.createRandomPassword();
 			person.setPassword(randomPassword);
 			
+			
+			//ToDo: Changing the E-Mail sender from EMailController to MailService
 			try {
 				emailController.sendNewPassword(emailAddress, randomPassword);
 			} catch (MessagingException e) {
 				logger.error("Error while sending the E-Mail");
 			}
-		}
-		
+		}		
 		
 	}
 

@@ -19,8 +19,7 @@ public class EmailController {
 	//TODO: Remove hard coded properties
 	
 	public EmailController() {
-
-		System.out.println("EmailConstructor");
+		
 		properties = new Properties();
 		properties.put("mail.smtp.host", "smtp.gmail.com");
 		properties.put("mail.smtp.socketFactory.port", "465");
@@ -47,7 +46,6 @@ public class EmailController {
 		message.setText("Ihr neues Password: \n" + password);
 
 		Transport.send(message);
-
 	}
 
 }

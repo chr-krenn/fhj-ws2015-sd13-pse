@@ -236,4 +236,12 @@ public class DbPersonTest extends DbTestBase {
 		}
 	}
 	
+	@Test(expected = EntityNotFoundException.class)
+	public void getUserByInvalidEMailAddress() throws Exception {
+		DbContext dbContext = contextProvider.getDbContext();
+		
+		PersonDAO personDAO = dbContext.getPersonDAO();
+		Person p = personDAO.getByEmailAddress("xx@yy.at");
+	}
+	
 }
