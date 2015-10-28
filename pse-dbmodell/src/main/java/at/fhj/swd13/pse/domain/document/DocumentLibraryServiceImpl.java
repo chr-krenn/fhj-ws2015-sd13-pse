@@ -30,15 +30,20 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 		this.communityDAO = communityDAO;		
 	}
 	
+	private DocumentLibraryEntry convert(at.fhj.swd13.pse.db.entity.DocumentLibraryEntry other)
+	{
+		String serverPath = documentService.getServerPath(other.getDocument());
+		
+		return new DocumentLibraryEntry(other.getDocumentLibraryEntryId(), other.getDocument().getName(), 
+				other.getDocument().getDescription(), other.getDocument().getCreatedAt().toString(), 
+				other.getDocument().getDocumentId(),serverPath, other.getDocument().getMimeType());	
+	}
+	
+	
 	public List<DocumentLibraryEntry> getEntriesForCommunity(int communityId)
 	{
 		List<at.fhj.swd13.pse.db.entity.DocumentLibraryEntry> entries = documentLibraryEntryDAO.getAllForCommunity(communityId);
-		
-		
-		return entries.stream().map(x -> new DocumentLibraryEntry(x.getDocumentLibraryEntryId(), x.getDocument().getName(), 
-														   x.getDocument().getDescription(), x.getDocument().getCreatedAt().toString(), 
-														   x.getDocument().getDocumentId()))
-						.collect(Collectors.toList());
+		return entries.stream().map(x -> convert(x)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -59,5 +64,12 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 	@Override
 	public void deleteEntry(int documentLibraryEntryId) throws EntityNotFoundException {
 		documentLibraryEntryDAO.remove(documentLibraryEntryId);
+	}
+
+	@Override
+	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) {
+		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry = documentLibraryEntryDAO.getEntryById(documentLibraryEntryId);
+		return convert(entry);
+		
 	}
 }

@@ -25,7 +25,9 @@
 			<p:dataTable var="entry" value="#{documentLibraryController.entries}"
 				rendered="#{documentLibraryController.canViewLibrary and not documentLibraryController.isInNewDocumentMode}">
 				<p:column headerText="Name">
-					<p:link value="#{entry.name}" />
+					<p:commandLink value="#{entry.name}" ajax="false">
+						<p:fileDownload value="#{documentLibraryController.downloadDocument(entry.id)}" />
+					</p:commandLink>
 				</p:column>
 				<p:column headerText="Beschreibung">
 					<h:outputText value="#{entry.description}" />

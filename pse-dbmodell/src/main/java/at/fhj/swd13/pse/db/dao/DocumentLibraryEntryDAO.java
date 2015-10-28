@@ -13,4 +13,6 @@ public interface DocumentLibraryEntryDAO {
 	void remove(int documentLibraryEntryId) throws EntityNotFoundException;
 	
 	List<DocumentLibraryEntry> getAllForCommunity(int communityId); 
+	
+	DocumentLibraryEntry getEntryById(int documentEntryId);
 }
