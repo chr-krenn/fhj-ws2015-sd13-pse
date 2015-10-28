@@ -13,4 +13,7 @@ public interface DocumentLibraryService {
 	void addEntry(String fileName, String descrition, InputStream content, int communityId) throws ConstraintViolationException; 
 	
 	void deleteEntry(int documentLibraryEntryId) throws EntityNotFoundException;
+	
+	DocumentLibraryEntry getEntryById(int documentLibraryEntryId);
+	
 }

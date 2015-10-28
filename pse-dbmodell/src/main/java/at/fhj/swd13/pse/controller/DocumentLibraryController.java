@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -9,6 +11,8 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
@@ -84,6 +88,17 @@ public class DocumentLibraryController {
 		return documentLibraryService.getEntriesForCommunity(communityId);
 	}
 	
+	public StreamedContent downloadDocument(int id)
+	{
+		try {
+			DocumentLibraryEntry entry = documentLibraryService.getEntryById(id);	
+	        InputStream stream = new FileInputStream(entry.getServerPath());
+	        return new DefaultStreamedContent(stream, entry.getContentType(), entry.getName());	
+		} catch (FileNotFoundException e) {
+			//TODO create error message
+			return null;
+		}
+	}
 	
 	public boolean getCanViewLibrary()
 	{
