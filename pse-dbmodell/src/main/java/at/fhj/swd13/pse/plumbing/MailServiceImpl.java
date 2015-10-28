@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -83,6 +84,7 @@ public class MailServiceImpl implements MailService {
 
 		try {
 			mimeMessage.setFrom( new InternetAddress( message.getPerson().getEmailAddress(), message.getPerson().getFullName() ) );
+			mimeMessage.setReplyTo( new Address[] { new InternetAddress( message.getPerson().getEmailAddress(), message.getPerson().getFullName() ) } );
 
 			mimeMessage.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(receipientList));
 
@@ -120,5 +122,5 @@ public class MailServiceImpl implements MailService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}	
 }
