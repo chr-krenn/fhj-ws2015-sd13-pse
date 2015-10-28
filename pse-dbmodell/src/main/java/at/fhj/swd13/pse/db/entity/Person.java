@@ -27,8 +27,6 @@ import javax.persistence.TemporalType;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import at.fhj.swd13.pse.domain.user.WeakPasswordException;
-
 /**
  * The persistent class for the person database table.
  * 
