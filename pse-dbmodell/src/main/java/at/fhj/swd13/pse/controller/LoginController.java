@@ -65,7 +65,7 @@ public class LoginController {
 		}
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
-		return loggedIn ? "/protected/Main" : "NotLoggedIn";
+		return ((loggedIn ? "/protected/Main" : "NotLoggedIn") + "?faces-redirect=true");
 	}
 
 	public String changePassword() {
