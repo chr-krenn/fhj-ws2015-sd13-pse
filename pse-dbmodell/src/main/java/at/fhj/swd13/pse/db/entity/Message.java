@@ -35,6 +35,9 @@ import org.jsoup.Jsoup;
 		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.messageId = :id"),
+		@NamedQuery(name = "Message.findNews", query = "SELECT m FROM Message m JOIN m.communities c WHERE " +
+			    "(m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+			    "AND (m.validFrom < CURRENT_TIMESTAMP) AND c.communityId = :id"),
 		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
