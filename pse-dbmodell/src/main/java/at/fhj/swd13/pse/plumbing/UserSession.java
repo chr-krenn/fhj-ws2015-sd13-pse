@@ -6,13 +6,12 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.user.UserService;
 
 @SessionScoped
 public class UserSession implements Serializable {
@@ -28,7 +27,7 @@ public class UserSession implements Serializable {
 	private Logger logger;
 
 	@Inject
-	private Instance<DbContext> contextSource;
+	private UserService userService;
 
 	private String loggedInUser = null;
 	private boolean isAdmin = false;
@@ -39,16 +38,15 @@ public class UserSession implements Serializable {
 	}
 
 	@PreDestroy
+	@Transactional
 	protected void preDestroy() {
 		logger.info("[USERSESSION] preDestroy for " + loggedInUser);
 
-		if (isLoggedIn()) {
-			Person p = contextSource.get().getPersonDAO().getByUsername(loggedInUser);
+		try {
 
-			p.setCurrentSessionId(null);
-			p.setIsOnline(false);
-
-			logout();
+			userService.logoutCurrentUser();
+		} catch (Exception e) {
+			logger.error("[USERSESSION] error durin preDestroy: " + e.getMessage());
 		}
 	}
 
