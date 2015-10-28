@@ -99,7 +99,7 @@ public class Message implements Serializable {
 	private Date validFrom;
 
 	// bi-directional many-to-one association to MesasgeRating
-	@OneToMany(mappedBy = "message")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message")
 	private List<MessageRating> messageRatings;
 
 	// bi-directional many-to-one association to Message

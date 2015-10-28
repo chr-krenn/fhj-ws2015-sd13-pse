@@ -14,6 +14,7 @@ import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -56,7 +57,18 @@ public class SimpleFeedController {
     
     public List<MessageDTO> getActivities() {
     	try {
-			return feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
+    		List<MessageDTO> messageList = feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
+    		List<MessageRating> ratingList;
+    		for(int i = 0; i < messageList.size(); i++) {
+    			ratingList = messageList.get(i).getRatingList();
+    			
+    			for(int j = 0; j < ratingList.size(); j++) {
+    				if(ratingList.get(j).getPerson().getUserName().equals(userSession.getUsername())) {
+    					messageList.get(i).setLike(true);
+    				}
+    			}
+    		}
+    		return messageList;
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getActivities failed for " + userSession.getUsername() + " from " + context.toString());
