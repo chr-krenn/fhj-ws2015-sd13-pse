@@ -26,7 +26,8 @@
 				rendered="#{documentLibraryController.canViewLibrary and not documentLibraryController.isInNewDocumentMode}">
 				<p:column headerText="Name">
 					<p:commandLink value="#{entry.name}" ajax="false">
-						<p:fileDownload value="#{documentLibraryController.downloadDocument(entry.id)}" />
+						<p:fileDownload
+							value="#{documentLibraryController.downloadDocument(entry.id)}" />
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="Beschreibung">
@@ -38,25 +39,49 @@
 					</p:splitButton>
 				</p:column>
 			</p:dataTable>
+		</h:form>
+		<p:panel id="UploadDocumentPnl"
+			rendered="#{documentLibraryController.isInNewDocumentMode}">
+			<h:form id="documentFrm">
+				<p:panelGrid>
+					<p:row>
+						<p:column colspan="2">
+							<p:fileUpload update="UploadDocumentPnl" mode="advanced"
+								auto="true" process="documentFrm"
+								fileUploadListener="#{documentLibraryController.uploadFileDocument}">
+							</p:fileUpload>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Datei:" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{documentLibraryController.uploadedFileName}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Beschreibung:" />
+						</p:column>
+						<p:column>
+							<p:inputText
+								value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="2">
+							<p:commandButton value="Speichern" id="commitUploadedDocumentBtn"
+								action="#{documentLibraryController.saveNewDocument}"
+								process="documentFrm" update="documentLibraryPnl" />
+							<p:commandButton value="Abbrechen"
+								action="#{documentLibraryController.setIsInNewDocumentMode(false)}"
+								process="@this" update="documentLibraryPnl" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</h:form>
-				<p:panel id="UploadDocumentPnl"
-					rendered="#{documentLibraryController.isInNewDocumentMode}">
-					<h:form id="documentFrm">
-						<p:fileUpload update="UploadDocumentPnl" mode="advanced"
-							auto="true" process="documentFrm"
-							fileUploadListener="#{documentLibraryController.uploadFileDocument}">
-						</p:fileUpload>
-						<p:outputLabel
-							value="#{documentLibraryController.uploadedFileName}" />
-						<p:inputText
-							value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
-						<p:commandButton value="Speichern" id="commitUploadedDocumentBtn"
-							action="#{documentLibraryController.saveNewDocument}"
-							process="documentFrm" update="documentLibraryPnl" />
-						<p:commandButton value="Abbrechen"
-							action="#{documentLibraryController.setIsInNewDocumentMode(false)}"
-							process="@this" update="documentLibraryPnl" />
-					</h:form>
-				</p:panel>
+		</p:panel>
 	</p:panel>
 </ui:composition>
