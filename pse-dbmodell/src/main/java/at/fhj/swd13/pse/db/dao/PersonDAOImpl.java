@@ -245,4 +245,19 @@ public class PersonDAOImpl extends DAOBase implements PersonDAO {
 
 		
 	}
+
+	@Override
+	public Person getByEmailAddress(String emailAddress) throws EntityNotFoundException{
+		final Query q = dbContext.createNamedQuery("Person.findByEmailAddress");
+		q.setParameter("emailAddress", emailAddress);
+
+		Person p = fetchSingle(q);
+		
+		if(p == null) {
+			throw new EntityNotFoundException("Unknown user with E-Mail-Address " + emailAddress);
+		}
+		
+		return p;
+	
+	}
 }

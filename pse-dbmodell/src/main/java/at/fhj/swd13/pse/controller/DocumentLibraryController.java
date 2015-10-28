@@ -1,14 +1,10 @@
 package at.fhj.swd13.pse.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
@@ -87,9 +83,6 @@ public class DocumentLibraryController {
 	{
 		return documentLibraryService.getEntriesForCommunity(communityId);
 	}
-	
-	
-	
 	
 	
 	public boolean getCanViewLibrary()

@@ -35,4 +35,8 @@ public class DocumentLibraryEntry {
 	public String getCreatedAt() {
 		return createdAt;
 	}
+
+	public int getDocumentId() {
+		return documentId;
+	}
 }

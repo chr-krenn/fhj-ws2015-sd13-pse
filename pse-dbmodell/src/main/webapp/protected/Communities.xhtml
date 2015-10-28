@@ -8,18 +8,18 @@
 	<ui:define name="content">
     <h:form id="communitySearch">
 	    	<h1>Communities</h1>
-	    	<p:inputText value="" />
-			<p:commandLink id="ajax" update="communities" actionListener="#{dtCommunitiesView.search}">
+	    	<p:inputText value="#{communityController.searchFieldText}"/>
+			<p:commandLink id="ajax" update="communities" actionListener="#{communityController.search}">
 	       		<p:commandButton value="search" id="communitySearch"/>
 	   		</p:commandLink>
 	   		<br/><br/><br/>
 			<p:dataTable var="community" value="#{communityController.communities}" id="communities"
 				paginator="true" rows="10"
                	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-               	selectionMode="single" selection="#{dtCommunitiesView.selectedCommunity}" 
+               	selectionMode="single" selection="#{communityController.selectedCommunity}" 
                	rowKey="#{community.communityId}"
 			>
-			<p:ajax event="rowSelect" listener="#{dtCommunitiesView.onCommunitySelected}" ></p:ajax>
+			<p:ajax event="rowSelect" listener="#{communityController.onCommunitySelected}" ></p:ajax>
 			    <p:column headerText="Community Name">
 			        <h:outputText value="#{community.name}" />
 			    </p:column>

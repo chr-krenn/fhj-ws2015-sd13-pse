@@ -10,15 +10,10 @@ import javax.inject.Named;
 import javax.persistence.OrderBy;
 
 import org.jboss.logging.Logger;
-import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
-import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.dto.CommunityDTO;
-import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**
  * 
@@ -37,14 +32,10 @@ public class CommunityController {
     private ChatService chatService;
     
     @Inject
-	private UserService userService;
-    
-    @Inject
-	private UserSession userSession;
-    
-    @Inject
 	private Logger logger;
     
+	private transient Community selectedCommunity = null;
+	
     private String searchFieldText = "";
 
 	@PostConstruct
@@ -64,10 +55,21 @@ public class CommunityController {
 		this.searchFieldText = searchFieldText;
 	}
 	
-	/*
-	 public String search() {s
-	    	communities = chatService.getSubscribedCommunitiesForUser(searchFieldText, CookieHelper.getAuthTokenValue());
-	    	return "communities";
-	 }*/
+	public String search() {
+	 	communities = chatService.getAllCommunities(searchFieldText);
+    	return "communities";
+    }
+	
+	public Community getSelectedCommunity() {
+		return selectedCommunity;
+	}
+
+	public void setSelectedCommunity(Community selectedCommunity) {
+		this.selectedCommunity = selectedCommunity;
+	}
+	
+	public void onCommunitySelected(SelectEvent object){
+    
+    }
 	    
 }

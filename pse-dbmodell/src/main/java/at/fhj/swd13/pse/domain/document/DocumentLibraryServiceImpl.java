@@ -1,7 +1,6 @@
 package at.fhj.swd13.pse.domain.document;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

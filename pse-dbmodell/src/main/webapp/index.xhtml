@@ -9,11 +9,14 @@
 		<h1>Welcome to PSE!</h1>
 		<h:form>
 			<h:panelGroup rendered="#{!loginController.isLoggedIn}">
-				Um mit der Arbeit zu beginnen, müssen sie sich <em><a href="javascript:void(0)"
-					onclick="PF('dlg').show()">einloggen!</a></em>
+				Um mit der Arbeit zu beginnen, müssen sie sich <em><a
+					href="javascript:void(0)" onclick="PF('dlg').show()">einloggen!</a></em>
 			</h:panelGroup>
 			<h:panelGroup rendered="#{loginController.isLoggedIn}">
-				<div>Du bist bereits eingeloggt. Weiter gehts <a href="#{request.contextPath}/protected/Main.jsf">hier</a></div>
+				<div>
+					Du bist bereits eingeloggt. Weiter gehts <a
+						href="#{request.contextPath}/protected/Main.jsf">hier</a>
+				</div>
 			</h:panelGroup>
 			<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
 
@@ -30,10 +33,13 @@
 
 					<f:facet name="footer">
 						<p:commandButton value="Anmelden" update="growl"
-							action="#{loginController.login}"/>
+							action="#{loginController.login}" />
 						<p:commandButton value="Abbrechen" update="growl"
 							onclick="PF('dlg').hide();" />
 					</f:facet>
+
+					<p:link outcome="ResetPassword.xhtml" value="Passwort vergessen">
+					</p:link>
 
 				</h:panelGrid>
 			</p:dialog>

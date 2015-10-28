@@ -69,11 +69,22 @@ public interface CommunityDAO {
 	List<Community> getUnconfirmedCommunites();
 	
 	/**
-	 * Get a list of all communities the person is a member of
+	 * Get a list of all communities
 	 * @param person
 	 * @return list of communities of the person
 	 */
 	List<Community> getCommunities(final Person person);
 	
+	/**
+	 * Get a list of all communities
+	 * @return list of communities
+	 */
 	List<Community> getAllCommunities();
+	
+	/**
+	 * Get a list of all communities with a search string
+	 * @param searchFieldText
+	 * @return list of communities
+	 */
+	List<Community> getAllCommunities(String searchFieldText);
 }

@@ -2,6 +2,8 @@ package at.fhj.swd13.pse.domain.user;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
@@ -164,6 +166,15 @@ public interface UserService {
 	
 	
 	void removeRelation(Person sourcePerson, Person targetPerson);
+	
+	
+	/**
+	 * Resets the password of the user with a given E-Mail-Address to a random value
+	 * @param emailAddress the E-Mail-Address as String
+	 * @throws InvalidEmailAddressException
+	 */
+	
+	void resetPassword(String emailAddress) throws InvalidEmailAddressException, MessagingException;
 
 	
 }

@@ -54,7 +54,7 @@ CREATE TABLE `community` (
 
 LOCK TABLES `community` WRITE;
 /*!40000 ALTER TABLE `community` DISABLE KEYS */;
-INSERT INTO `community` VALUES (1,0,0,'Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,0,0,'Document Library','2015-10-04 19:35:38',1,NULL,1);
+INSERT INTO `community` VALUES (1,1,0,'Portal-News','2015-10-04 19:29:56',1,NULL,1),(2,1,0,'Document Library','2015-10-04 19:35:38',1,NULL,1);
 /*!40000 ALTER TABLE `community` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,20 +278,12 @@ CREATE TABLE `person` (
   `current_session_id` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`person_id`),
   UNIQUE KEY `user_name_UNIQUE` (`user_name`),
+  UNIQUE KEY `user_email_UNIQUE` (`email_address`),
   KEY `FK_person_image_idx` (`document_image_id`),
   CONSTRAINT `FK_person_image` FOREIGN KEY (`document_image_id`) REFERENCES `document` (`document_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `person`
---
-
-LOCK TABLES `person` WRITE;
-/*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','mario.loefler@edu.fh-joanneum.at','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,1,NULL,NULL);
-
-UNLOCK TABLES;
 
 --
 -- Table structure for table `person_message`

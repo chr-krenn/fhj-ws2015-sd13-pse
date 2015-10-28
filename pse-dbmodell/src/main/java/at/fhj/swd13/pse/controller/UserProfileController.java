@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -21,6 +22,7 @@ import org.primefaces.model.UploadedFile;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -57,20 +59,28 @@ public class UserProfileController implements Serializable {
 
 	private UserDTO userDTO;
 
+	private String editMode;
+	private String userName;
+
 	// TODO Eigentlich UserDTO
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
 	public void setup() {
 		try {
-			String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-					.get("userName");
+			userName = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("userName");
+			editMode = FacesContext.getCurrentInstance().getExternalContext()
+					.getRequestParameterMap().get("mode");
+
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
-			setUsersWithDepartment(userService.getUsersWithDepartment(person.getDepartment()));
+			setUsersWithDepartment(userService.getUsersWithDepartment(person
+					.getDepartment()));
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info("[USERPROFILE] user not found " + userSession.getUsername() + " from " + context.toString());
+			logger.info("[USERPROFILE] user not found "
+					+ userSession.getUsername() + " from " + context.toString());
 		}
 	}
 
@@ -84,24 +94,30 @@ public class UserProfileController implements Serializable {
 		FacesMessage message = null;
 
 		try {
-			Document document = documentService.store(file.getFileName(), file.getInputstream());
+			Document document = documentService.store(file.getFileName(),
+					file.getInputstream());
 			int documentid = document.getDocumentId();
-			userService.setUserImage(getUserDTO().getUserName(), document.getDocumentId());
-			getUserDTO().setImageRef(documentService.buildServiceUrl(documentid));
+			userService.setUserImage(getUserDTO().getUserName(),
+					document.getDocumentId());
+			getUserDTO().setImageRef(
+					documentService.buildServiceUrl(documentid));
 		} catch (IOException e) {
-			logger.info(
-					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
+			logger.info("[USERPROFILE] handleFileUpload failed for "
+					+ file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (RuntimeException e) {
-			logger.info(
-					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", "File Upload fehlgeschlagen");
+			logger.info("[USERPROFILE] handleFileUpload failed for "
+					+ file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"File-Upload Fehler", "File Upload fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (EntityNotFoundException e) {
-			logger.info(
-					"[USERPROFILE] handleFileUpload failed for " + file.getFileName() + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler",
+			logger.info("[USERPROFILE] handleFileUpload failed for "
+					+ file.getFileName() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"File-Upload Fehler",
 					"File Upload fehlgeschlagen, Benutzer ungültig");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
@@ -138,39 +154,58 @@ public class UserProfileController implements Serializable {
 
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info(
-					"[USERPROFILE] updateProfile failed for " + userDTO.getFullname() + " from " + context.toString());
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler",
+			logger.info("[USERPROFILE] updateProfile failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Aktualisiserung Fehler",
 					"Aktualisiserung für Benutzer fehlgeschlagen, ungültiger Username");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
 
-		logger.info("[USERPROFILE] updateProfile successful for " + userDTO.getFullname() + " from "
+		logger.info("[USERPROFILE] updateProfile successful for "
+				+ userDTO.getFullname() + " from "
 				+ RequestContext.getCurrentInstance().toString());
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Aktualisiserung erfolgreich", "");
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"Aktualisiserung erfolgreich", "");
 		FacesContext.getCurrentInstance().addMessage(null, message);
 
 	}
 
+	/**
+	 * returns true if the current login user is administrator
+	 *
+	 * @return true / false
+	 * 
+	 */
 	public boolean isAdmin() {
 		return userSession.isAdmin();
 	}
 
+	/**
+	 * returns true if the current page is opened in login mode
+	 *
+	 * @return true if the current page is opened in login mode
+	 * 
+	 */
 	private boolean isModeEdit() {
-		String mode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mode");
-		return ((mode != null) && (mode.equals("edit")));
+		return editMode != null && editMode.equals("edit");
 	}
 
+	/**
+	 * returns true if the current user is the login user
+	 *
+	 * @return true / false
+	 * 
+	 */
 	private boolean isLoggedInUser() {
-		String userName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("userName");
-		return ((userName != null) && (userName.equals(userSession.getUsername())));
+		return userName != null && userName.equals(userSession.getUsername());
 	}
 
 	public List<String> completeTag(String input) {
 		List<String> result = new ArrayList<String>();
-		logger.info("[USERPROFILE] completeTag - selcted tag count " + userDTO.getTags().size());
+		logger.info("[USERPROFILE] completeTag - selcted tag count "
+				+ userDTO.getTags().size());
 
 		for (Tag tag : tagService.getMatchingTags(input)) {
 			if (!isTagAlreadySelected(tag.getToken())) {
@@ -225,6 +260,12 @@ public class UserProfileController implements Serializable {
 		return isLoggedInUser() || isAdmin() ? "display:none" : "display:all";
 	}
 
+	/**
+	 * returns the display representation for tags
+	 *
+	 * @return display representation for tags
+	 * 
+	 */
 	public String getTagDisplayString() {
 		StringBuffer result = new StringBuffer();
 		for (String tag : getUserDTO().getTags()) {
@@ -239,6 +280,13 @@ public class UserProfileController implements Serializable {
 		return !isLoggedInUser();
 	}
 
+	public boolean canSendMessage() {
+		if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
+			return true;
+		}
+		return false;
+	}
+
 	public String contactButtonText() {
 		if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
 			return "Aus meinen Kontakten entfernen";
@@ -247,19 +295,40 @@ public class UserProfileController implements Serializable {
 		}
 	}
 
+	public String sendMessageButtonText() {
+		return "Nachricht senden";
+	}
+
+	public String sendMessageButtonAction() {
+		List<Community> communities = userDTO.getCommunities();
+		Optional<Community> userCommunity = communities
+				.stream()
+				.filter(c -> c.getPrivateUser() != null
+						&& c.getPrivateUser().getUserName().equals(userName)).findAny();
+
+		if (userCommunity.isPresent()) {
+			return "/protected/xperimental/AddMessage.jsf?community="
+					+ userCommunity.get().getName() + "&faces-redirect=true";
+		}
+		return "/protected/xperimental/AddMessage.jsf?faces-redirect=true";
+	}
+
 	public void contactButtonAction() {
 
 		try {
 			if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
 
-				userService.removeRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
+				userService.removeRelation(userService.getLoggedInUser(),
+						userService.getUser(userDTO.getUserName()));
 
 				// Update userDTO
 				userDTO.getContacts().remove(userService.getLoggedInUser());
 
 			} else {
-				System.out.println(userService.getLoggedInUser().getContacts().size());
-				userService.createRelation(userService.getLoggedInUser(), userService.getUser(userDTO.getUserName()));
+				System.out.println(userService.getLoggedInUser().getContacts()
+						.size());
+				userService.createRelation(userService.getLoggedInUser(),
+						userService.getUser(userDTO.getUserName()));
 
 				// Update userDTO
 				userDTO.getContacts().add(userService.getLoggedInUser());
@@ -270,16 +339,16 @@ public class UserProfileController implements Serializable {
 		}
 	}
 
-	public boolean activeVisible() {
+	public boolean isActiveFlagEnabled() {
 		return (!isLoggedInUser() && isAdmin());
 	}
 
-	public boolean loginAllowedVisible() {
+	public boolean isLoginAllowedFlagEnabled() {
 		return (!isLoggedInUser() && isAdmin());
 	}
 
-	public boolean getExternEnabled() {
-		return isModeEdit();
+	public boolean isExternFlagEnabled() {
+		return isModeEdit() || isAdmin();
 	}
 
 	public List<UserDTO> getUsersWithDepartment() {
@@ -290,19 +359,18 @@ public class UserProfileController implements Serializable {
 		for (Person p : usersWithDepartment)
 			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
 	}
-	
-	public String getContactListEntryStyle(String username, String department)
-	{
-		if(!username.equals(userSession.getUsername()))
+
+	public String getContactListEntryStyle(String username, String department) {
+		if (!username.equals(userSession.getUsername()))
 			return "font-weight: bold";
-		
+
 		Person person = null;
 		try {
 			person = userService.getUser(userSession.getUsername());
 		} catch (EntityNotFoundException e) {
 			return "font-weight: bold";
 		}
-		
+
 		if (department.equals(person.getDepartment()))
 			return "font-weight: bold; color:green";
 		else
