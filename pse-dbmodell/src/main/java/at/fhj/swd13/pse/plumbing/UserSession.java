@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
@@ -27,7 +28,7 @@ public class UserSession implements Serializable {
 	private Logger logger;
 
 	@Inject
-	private DbContext dbContext;
+	private Instance<DbContext> contextSource;
 
 	private String loggedInUser = null;
 	private boolean isAdmin = false;
@@ -39,14 +40,14 @@ public class UserSession implements Serializable {
 
 	@PreDestroy
 	protected void preDestroy() {
-		logger.info("[USERSESSION] preDestroy for " + loggedInUser );
-		
+		logger.info("[USERSESSION] preDestroy for " + loggedInUser);
+
 		if (isLoggedIn()) {
-			Person p = dbContext.getPersonDAO().getByUsername(loggedInUser);
+			Person p = contextSource.get().getPersonDAO().getByUsername(loggedInUser);
 
 			p.setCurrentSessionId(null);
 			p.setIsOnline(false);
-			
+
 			logout();
 		}
 	}
@@ -56,11 +57,11 @@ public class UserSession implements Serializable {
 	}
 
 	public void logout() {
-		logger.info("[USERSESSION] logged out " + loggedInUser );
+		logger.info("[USERSESSION] logged out " + loggedInUser);
 		loggedInUser = null;
 		isAdmin = false;
 	}
-	
+
 	public String login(final String username) {
 		this.loggedInUser = username;
 
@@ -76,7 +77,6 @@ public class UserSession implements Serializable {
 		return loggedInUser != null && isAdmin;
 	}
 
-	
 	public String getUsername() {
 		return loggedInUser == null ? "Not YOU!" : loggedInUser;
 	}

@@ -6,20 +6,21 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
+		<div>
+			<a href="#{request.contextPath}/protected/xperimental/AddMessage.jsf">Demonachricht
+				eingeben</a>
+		</div>
 
-		<h:form>
-			<h:button value="Demonachricht"
-				outcome="/protected/xperimental/AddMessage.jsf" />
-
-			<div class="ui-grid ui-grid-responsive">
-				<div class="ui-grid-row">
-					<div class="ui-grid-col-12">
-						<p:panel header="News">
-						</p:panel>
-					</div>
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-12">
+					<p:panel header="News">
+					</p:panel>
 				</div>
-				<div class="ui-grid-row">
-					<div class="ui-grid-col-7">
+			</div>
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-7">
+					<h:form>
 						<p:panel header="Activities">
 							<p:dataScroller value="#{simpleFeedController.activities}"
 								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
@@ -52,15 +53,13 @@
 								</h:panelGrid>
 							</p:dataScroller>
 						</p:panel>
-					</div>
-					<div class="ui-grid-col-5">
-						<p:panel header="Dokumentenbibliothek">
-							<ui:include src="DocumentLibrary.xhtml">
-							</ui:include>
-						</p:panel>
-					</div>
+					</h:form>
+				</div>
+				<div class="ui-grid-col-5">
+						<ui:include src="DocumentLibrary.xhtml">
+						</ui:include>
 				</div>
 			</div>
-		</h:form>
+		</div>
 	</ui:define>
 </ui:composition>

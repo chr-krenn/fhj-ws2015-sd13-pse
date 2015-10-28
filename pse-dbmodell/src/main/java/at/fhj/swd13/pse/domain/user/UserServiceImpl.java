@@ -9,7 +9,6 @@ import javax.mail.MessagingException;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.application.EmailController;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -20,6 +19,7 @@ import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
+import at.fhj.swd13.pse.plumbing.MailService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -41,12 +41,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private Logger logger;
-	
+
 	@Inject
-	private EmailController emailController;
-	
-	 @Inject
-	 private PasswordCreator passwordCreator;
+	private PasswordCreator passwordCreator;
+
+	@Inject
+	private MailService mailService;
 
 	/**
 	 * Create an instance of the user service
@@ -241,7 +241,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 					deletedTags.add(personTag);
 				}
 			}
-		
+
 			// add new tags
 			for (String token : userDTO.getTags()) {
 				boolean bExists = false;
@@ -251,7 +251,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 						break;
 					}
 				}
-				
+
 				if (!bExists) {
 					Tag tag = tagService.getTagByToken(token);
 					PersonTag personTag = new PersonTag();
@@ -267,7 +267,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 		for (PersonTag personTag : deletedTags) {
 			p.removePersonTag(personTag);
-		}		
+		}
 	}
 
 	@Override
@@ -336,30 +336,24 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	}
 
 	@Override
-	public void resetPassword(String emailAddress) throws InvalidEmailAddressException {
-		Person person;
+	public void resetPassword(final String emailAddress) throws InvalidEmailAddressException, MessagingException {
+
 		try {
-			person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
-		
-		} catch (EntityNotFoundException e1) {
-			
-			throw new InvalidEmailAddressException("No user found for given E-Mail address");
-		}
-		
-		if(person != null) {
+			Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
+
+			logger.info("[USER] found person, now sending email...");
+
 			String randomPassword = passwordCreator.createRandomPassword();
 			person.setPassword(randomPassword);
-			
-			
-			//ToDo: Changing the E-Mail sender from EMailController to MailService
-			try {
-				emailController.sendNewPassword(emailAddress, randomPassword);
-			} catch (MessagingException e) {
-				logger.error("Error while sending the E-Mail");
-			}
-		}		
-		
-	}
 
-	
+			// emailController.sendNewPassword(emailAddress, randomPassword);
+			mailService.sendMail("Ihr neues Passwort",
+					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"localhost:8088/\">pse</a>.</div>", emailAddress);
+			logger.info("[USER] email sent");
+
+		} catch (EntityNotFoundException e1) {
+			logger.error("[USER] unkown email address: " + emailAddress);
+			throw new InvalidEmailAddressException("No user found for given E-Mail address");
+		}
+	}
 }
