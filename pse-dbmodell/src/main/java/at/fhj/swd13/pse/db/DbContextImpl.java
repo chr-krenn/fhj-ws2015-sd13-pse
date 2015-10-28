@@ -16,6 +16,8 @@ import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
 import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.MessageDAOImpl;
+import at.fhj.swd13.pse.db.dao.MessageRatingDAO;
+import at.fhj.swd13.pse.db.dao.MessageRatingDAOImpl;
 import at.fhj.swd13.pse.db.dao.MessageTagDAO;
 import at.fhj.swd13.pse.db.dao.MessageTagDAOImpl;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
@@ -242,6 +244,11 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	@Override
 	public DocumentLibraryEntryDAO getDocumentLibraryDAO() {
 		return new DocumentLibraryEntryDAOImpl(this);
+	}
+
+	@Override
+	public MessageRatingDAO getMessageRatingDAO() {
+		return new MessageRatingDAOImpl(this);
 	}
 
 }
