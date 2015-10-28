@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.OrderBy;
@@ -12,6 +13,7 @@ import javax.persistence.OrderBy;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
@@ -76,4 +78,32 @@ public class SimpleFeedController {
 		}
     	
     }
+    
+    public void rateMessage() {
+    	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
+    	int id = Integer.parseInt(messageId);
+    	try {
+    		feedService.rateMessage(id, userService.getUser(userSession.getUsername()));
+    	}
+    	catch (EntityNotFoundException e) {
+    		RequestContext context = RequestContext.getCurrentInstance();
+    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+    	} catch (ConstraintViolationException e) {
+    		RequestContext context = RequestContext.getCurrentInstance();
+    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+		}
+	}
+    
+    public void removeRating() {
+    	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
+    	int id = Integer.parseInt(messageId);
+		try {
+			feedService.removeRating(id, userService.getUser(userSession.getUsername()));
+		}
+		catch (EntityNotFoundException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+		}
+	}
+
 }
