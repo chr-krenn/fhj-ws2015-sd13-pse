@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 
 import at.fhj.swd13.pse.domain.user.InvalidEmailAddressException;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -30,7 +31,9 @@ public class ResetPasswordController {
 				
 			} catch (InvalidEmailAddressException e) {
 				setStatusText("E-Mail-Adresse nicht gefunden.");
-			}			
+			} catch( MessagingException e ) {
+				setStatusText("E-Mail konnte nicht gesendet werden. (interner Fehler)");
+			}
 		}		
 	}
 	

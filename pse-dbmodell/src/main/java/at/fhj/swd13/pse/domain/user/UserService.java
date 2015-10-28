@@ -2,6 +2,8 @@ package at.fhj.swd13.pse.domain.user;
 
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
@@ -172,7 +174,7 @@ public interface UserService {
 	 * @throws InvalidEmailAddressException
 	 */
 	
-	void resetPassword(String emailAddress) throws InvalidEmailAddressException;
+	void resetPassword(String emailAddress) throws InvalidEmailAddressException, MessagingException;
 
 	
 }
