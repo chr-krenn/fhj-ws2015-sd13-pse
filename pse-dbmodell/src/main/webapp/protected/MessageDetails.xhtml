@@ -23,7 +23,41 @@
 				</p:column>
 				
 			</p:dataTable>
-						<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
+			<br/>
+			<h:commandButton action="#{messageDetailsController.rateMessageDetailedView}" 
+				value="Like" immediate="true" 
+				rendered="#{!messageDetailsController.messageDTO.like}">
+				<f:param name="messageId" value="#{messageDetailsController.messageDTO.id}" />
+			</h:commandButton>
+			<h:commandButton action="#{messageDetailsController.removeRatingDetailedView}" 
+				value="Like zurücknehmen" immediate="true"
+				rendered="#{messageDetailsController.messageDTO.like}">
+				<f:param name="messageId" value="#{messageDetailsController.messageDTO.id}" />
+			</h:commandButton>
+			<br/><br/>
+			<h:outputText value="#{messageDetailsController.messageDTO.quantityRatings} " 
+				actionListener="#{messageDetailsController.messageDTO.like}"/>
+			
+			<h:outputLink onclick="PF('dlg1').show(); return false;" 
+				title="#{messageDetailsController.showRatingPersonsList()}" 
+				rendered="#{not empty messageDetailsController.showRatingPersonsDialogBox()}">
+				<h:outputText value="User gefällt das!" />
+			</h:outputLink>
+			<h:outputText value="User gefällt das!" 
+				rendered="#{empty messageDetailsController.showRatingPersonsDialogBox()}"/>
+				<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
 		</h:form>
+		<p:dialog header="User" widgetVar="dlg1" minHeight="40">
+			<p:dataScroller value="#{messageDetailsController.showRatingPersonsDialogBox()}" var="person" 
+				chunkSize="10" mode="inline" scrollHeight="200">
+				<h:panelGrid columns="1" style="width:200px">
+					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+						<h:outputText value="#{person.lastName}"  style="font-weight: bold"/>
+						<f:param name="userName" value="#{person.userName}" />
+						<f:param name="mode" value="view" />
+					</h:outputLink>
+				</h:panelGrid>
+			</p:dataScroller>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
