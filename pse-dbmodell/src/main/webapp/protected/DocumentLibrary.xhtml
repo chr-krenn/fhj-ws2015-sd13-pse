@@ -13,7 +13,7 @@
 		listener="#{documentLibraryController.init}" />
 	<p:panel id="documentLibraryPnl" header="Dokumentenbibliothek">
 		<h:form>
-
+			<p:messages autoUpdate="true" showDetail="true"/>
 			<p:toolbar rendered="#{documentLibraryController.canEditLibrary}">
 				<f:facet name="left">
 					<p:commandButton id="uploadDocumentBtn" value="Neu"
@@ -33,21 +33,20 @@
 				<p:column headerText="Beschreibung">
 					<h:outputText value="#{entry.description}" />
 				</p:column>
-				<p:column headerText="Aktion">
-					<p:splitButton value="Anzeigen">
-						<p:menuitem value="Löschen"></p:menuitem>
-					</p:splitButton>
+				<p:column headerText="Aktion" rendered="#{documentLibraryController.canEditLibrary}">
+					<p:commandButton value="Löschen" action="#{documentLibraryController.deleteDocument(entry.id)}" ></p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
 		<p:panel id="UploadDocumentPnl"
 			rendered="#{documentLibraryController.isInNewDocumentMode}">
 			<h:form id="documentFrm">
+				<p:messages autoUpdate="true" showDetail="true"/>
 				<p:panelGrid>
 					<p:row>
 						<p:column colspan="2">
-							<p:fileUpload update="UploadDocumentPnl" mode="advanced"
-								auto="true" process="documentFrm"
+							<p:fileUpload  mode="advanced"
+								auto="true" process="@this" update="UploadDocumentPnl,fileNameTxt"
 								fileUploadListener="#{documentLibraryController.uploadFileDocument}">
 							</p:fileUpload>
 						</p:column>
@@ -57,7 +56,7 @@
 							<p:outputLabel value="Datei:" />
 						</p:column>
 						<p:column>
-							<p:outputLabel
+							<p:outputLabel id="fileNameTxt"
 								value="#{documentLibraryController.uploadedFileName}" />
 						</p:column>
 					</p:row>
@@ -67,7 +66,7 @@
 						</p:column>
 						<p:column>
 							<p:inputText
-								value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
+								value="#{documentLibraryController.newDocumentDescription}" label="Beschreibung" required="true"></p:inputText>
 						</p:column>
 					</p:row>
 					<p:row>

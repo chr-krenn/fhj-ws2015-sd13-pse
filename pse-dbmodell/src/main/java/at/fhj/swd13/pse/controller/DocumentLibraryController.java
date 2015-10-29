@@ -6,16 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import org.jboss.logging.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryEntry;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProvider;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProviderFactory;
@@ -26,101 +28,113 @@ import at.fhj.swd13.pse.domain.document.DocumentLibraryService;
 public class DocumentLibraryController {
 
 	private int communityId;
-	
-	private String newDocumentDescription; 
-	
+
+	private String newDocumentDescription;
+
 	private byte[] uploadedFileContent;
 	private String uploadedFileName;
-	
+
 	private Boolean isInNewDocumentMode = false;
-	
-	private UploadedFile uploadedFile; 
-	
-	
+
+	private UploadedFile uploadedFile;
+
 	@Inject
 	private DocumentLibraryService documentLibraryService;
 	
 	@Inject
+	private Logger logger;
+
+	@Inject
 	private DocumentLibraryRightsProviderFactory documentLibraryRightsProviderFactory;
-	
+
 	private DocumentLibraryRightsProvider documentLibraryRightsProvider;
 
 	public DocumentLibraryController() {
-		
+
 	}
-	
+
 	public int getCommunityId() {
 		return communityId;
 	}
-	
-	public void addNewDocument()
-	{
+
+	public void addNewDocument() {
 		setIsInNewDocumentMode(true);
 	}
-	
-	public void uploadFileDocument(FileUploadEvent fileUploadEvent)
-	{
+
+	public void uploadFileDocument(FileUploadEvent fileUploadEvent) {
 		setUploadedFileName(fileUploadEvent.getFile().getFileName());
 		uploadedFileContent = fileUploadEvent.getFile().getContents();
 	}
-	
-	public void saveNewDocument()
-	{
-		InputStream is = new ByteArrayInputStream(uploadedFileContent);
-		
+
+	public void saveNewDocument() {
 		try {
+
+			//Check manually whether an file has been uploaded earlier
+			//Primefaces validation is not applicable in this scenario 
+			if (uploadedFileContent == null) {
+				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Es wurde keine Datei ausgewählt."));
+				return;
+			}
+			
+			InputStream is = new ByteArrayInputStream(uploadedFileContent);
 			documentLibraryService.addEntry(getUploadedFileName(), newDocumentDescription, is, communityId);
-		} catch (ConstraintViolationException e) {
-//FIXME: need to handle failure on document generation			
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			uploadedFileContent = null;
+			setUploadedFileName(null);
+			newDocumentDescription = null;
+			setIsInNewDocumentMode(false);
+
+		} catch (Exception e) {
+			logger.error("Failed to add new document.",e);
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Fehler", "Ein Fehler ist aufgetreten, bitte wenden Sie sich an den Support."));
 		}
-		
-		uploadedFileContent = null;
-		setUploadedFileName(null);
-		newDocumentDescription = null;
-		setIsInNewDocumentMode(false);
 	}
 	
-	
-	public List<DocumentLibraryEntry> getEntries()
+	public void deleteDocument(int id)
 	{
+		addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "TO BE DONE" + new Integer(id).toString() ));
+	}
+	
+	public List<DocumentLibraryEntry> getEntries() {
 		return documentLibraryService.getEntriesForCommunity(communityId);
 	}
-	
-	public StreamedContent downloadDocument(int id)
-	{
+
+	public StreamedContent downloadDocument(int id) {
 		try {
-			DocumentLibraryEntry entry = documentLibraryService.getEntryById(id);	
-	        InputStream stream = new FileInputStream(entry.getServerPath());
-	        return new DefaultStreamedContent(stream, entry.getContentType(), entry.getName());	
+			DocumentLibraryEntry entry = documentLibraryService.getEntryById(id);
+			InputStream stream = new FileInputStream(entry.getServerPath());
+			return new DefaultStreamedContent(stream, entry.getContentType(), entry.getName());
 		} catch (FileNotFoundException e) {
-			//TODO create error message
+			// TODO create error message
 			return null;
 		}
 	}
-	
-	public boolean getCanViewLibrary()
-	{
+
+	public boolean getCanViewLibrary() {
 		return documentLibraryRightsProvider.canViewLibrary();
 	}
-	
-	public boolean getCanEditLibrary()
-	{
+
+	public boolean getCanEditLibrary() {
 		return documentLibraryRightsProvider.canEditLibrary();
 	}
-	
+
 	public void setCommunityId(int communityId) {
 		this.communityId = communityId;
 	}
-	
+
 	public void init() {
-		//If no community id has been provided, use the default community
-		if(communityId == 0)
+		// If no community id has been provided, use the default community
+		if (communityId == 0)
 			communityId = 1;
-		
+
 		documentLibraryRightsProvider = documentLibraryRightsProviderFactory.create(communityId);
 	}
+	
+	private void addFacesMessage(FacesMessage message)
+	{
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
 
 	public String getNewDocumentDescription() {
 		return newDocumentDescription;
