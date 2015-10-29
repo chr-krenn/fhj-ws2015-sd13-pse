@@ -7,6 +7,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
+import at.fhj.swd13.pse.db.entity.Person;
 
 public class MessageDTO {
 
@@ -29,6 +30,10 @@ public class MessageDTO {
 	private boolean like;
 	
 	private List<MessageRating> ratingList;
+	
+	private int quantityRatings;
+	
+	private List<Person> ratingPersonsList;
 	
 	private MessageDTO() {}
 	
@@ -163,6 +168,26 @@ public class MessageDTO {
 	
 	public void setRatingList(List<MessageRating> ratingList) {
 		this.ratingList = ratingList;
+	}
+	
+	
+	public int getQuantityRatings() {
+		return quantityRatings;
+	}
+
+
+	public void setQuantityRatings(int quantityRatings) {
+		this.quantityRatings = quantityRatings;
+	}
+
+
+	public List<Person> getRatingPersonsList() {
+		return ratingPersonsList;
+	}
+
+
+	public void setRatingPersonsList(List<Person> ratingPersonsList) {
+		this.ratingPersonsList = ratingPersonsList;
 	}
 	
 }
