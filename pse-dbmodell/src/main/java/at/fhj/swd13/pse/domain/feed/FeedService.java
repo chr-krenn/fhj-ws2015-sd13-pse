@@ -46,4 +46,13 @@ public interface FeedService {
 	 * @throws EntityNotFoundException
 	 */
 	void removeRating(int messageId, Person person) throws EntityNotFoundException;
+	
+	/**
+	 * Getting the news from database
+	 * 
+	 * @param communityId
+	 * @throws EntityNotFundException
+	 * @throws ConstraintViolationException
+	 */
+	List<Message> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
 }

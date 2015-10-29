@@ -122,5 +122,11 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		m.removeMesasgeRating(rating);
 		p.removeMesasgeRating(rating);
 		dbContext.getMessageRatingDAO().remove(rating);
+	}
+
+	@Override
+	public List<Message> loadNews(int communityId)
+			throws EntityNotFoundException, ConstraintViolationException {
+		return dbContext.getMessageDAO().loadNews(communityId);
 	}	
 }

@@ -39,4 +39,6 @@ public interface MessageDAO {
 	List<Message> loadAll();
 	
 	List<MessageDTO> loadForUser(Person user);
+
+	List<Message> loadNews(int communityId);
 }

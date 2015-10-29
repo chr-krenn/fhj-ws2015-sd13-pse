@@ -105,5 +105,17 @@ public class SimpleFeedController {
     		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
 	}
+    
+    public List<Message> getNews(int communityId) {
+    	try {
+    		List<Message> messageList = feedService.loadNews(communityId);
+    		return messageList;
+		} catch (EntityNotFoundException | ConstraintViolationException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[FEEDS] getNews failed for community " + communityId + " from " + context.toString());
+			return null;
+		}
+    	
+    }
 
 }
