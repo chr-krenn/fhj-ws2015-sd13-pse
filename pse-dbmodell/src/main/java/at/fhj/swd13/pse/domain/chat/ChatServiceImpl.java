@@ -2,6 +2,8 @@ package at.fhj.swd13.pse.domain.chat;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -18,6 +20,7 @@ import at.fhj.swd13.pse.service.ServiceBase;
  * of chats
  *
  */
+@Stateless
 public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 	/**

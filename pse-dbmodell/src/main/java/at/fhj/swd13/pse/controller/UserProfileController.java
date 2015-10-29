@@ -26,6 +26,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -55,6 +56,9 @@ public class UserProfileController implements Serializable {
 	private UserDTOBuilder userDTOBuilder;
 
 	@Inject
+	private ChatService chatService;
+
+	@Inject
 	private Logger logger;
 
 	private UserDTO userDTO;
@@ -62,7 +66,8 @@ public class UserProfileController implements Serializable {
 	private String editMode;
 	private String userName;
 
-	// TODO Eigentlich UserDTO
+	private String communityName = "";
+
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
@@ -375,5 +380,36 @@ public class UserProfileController implements Serializable {
 			return "font-weight: bold; color:green";
 		else
 			return "font-weight: bold";
+	}
+	
+	public void createCommunity() {
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message;
+		
+		try {
+			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
+			setCommunityName("");
+		} catch (EntityNotFoundException e) {
+			logger.info("[USERPROFILE] createCommunity failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Community anlegen Fehler",
+					"Community anlegen fehlgeschlagen, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			logger.info("[USERPROFILE] createCommunity failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Community anlegen Fehler", "Community anlegen fehlgeschlagen");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+	}
+
+	public String getCommunityName() {
+		return communityName;
+	}
+
+	public void setCommunityName(String communityName) {
+		this.communityName = communityName;
 	}
 }

@@ -171,7 +171,6 @@
 							type="submit" icon="ui-icon-disk">
 							<f:param name="mode" value="edit" disable="#{!(userProfileController.isModeEdit)}" />	
 						</p:commandButton>
-						
 					</p:column>			
 				</p:row>
 			</p:panelGrid>
@@ -235,6 +234,25 @@
 								<h:outputText value="#{community.name}" />
 							</p:column>
 						</p:dataTable>
+
+						<p:commandButton value="Neue Community" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
+						
+						<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
+						
+						<p:dialog header="Neue Community" widgetVar="communityDialog" resizeable="false">
+							<h:panelGrid columns="2" cellpadding="5">
+								<h:outputLabel for="communityname" value="Community" />
+								<p:inputText id="communityname" required="true" label="Name" value="#{userProfileController.communityName}"/>
+			
+								<f:facet name="footer">
+									<p:commandButton value="Beantragen" update="growl"
+										action="#{userProfileController.createCommunity()}" onclick="PF('communityDialog').hide();"/>
+									<p:commandButton value="Abbrechen" update="growl"
+										onclick="PF('communityDialog').hide();" />
+								</f:facet>
+							</h:panelGrid>
+						</p:dialog>
+						
 					</p:tab>
 				</p:tabView>
 			</p:panel>
