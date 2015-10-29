@@ -60,15 +60,8 @@ public class SimpleFeedController {
     public List<MessageDTO> getActivities() {
     	try {
     		List<MessageDTO> messageList = feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
-    		List<MessageRating> ratingList;
     		for(int i = 0; i < messageList.size(); i++) {
-    			ratingList = messageList.get(i).getRatingList();
-    			
-    			for(int j = 0; j < ratingList.size(); j++) {
-    				if(ratingList.get(j).getPerson().getUserName().equals(userSession.getUsername())) {
-    					messageList.get(i).setLike(true);
-    				}
-    			}
+    			feedService.setMessageLikes(messageList.get(i), userSession.getUsername());
     		}
     		return messageList;
 		} catch (EntityNotFoundException e) {
