@@ -364,22 +364,22 @@ public class UserProfileController implements Serializable {
 		for (Person p : usersWithDepartment)
 			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
 	}
-
-	public String getContactListEntryStyle(String username, String department) {
+	
+	public String getContactListEntryClass(String username, String department) {
 		if (!username.equals(userSession.getUsername()))
-			return "font-weight: bold";
+			return "";
 
 		Person person = null;
 		try {
 			person = userService.getUser(userSession.getUsername());
 		} catch (EntityNotFoundException e) {
-			return "font-weight: bold";
+			return "";
 		}
 
 		if (department.equals(person.getDepartment()))
-			return "font-weight: bold; color:green";
+			return "samedepartment";
 		else
-			return "font-weight: bold";
+			return "";
 	}
 	
 	public void createCommunity() {

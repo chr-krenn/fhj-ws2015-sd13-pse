@@ -208,8 +208,7 @@
 								<h:outputText value="#{userWithDepartment.firstName}" />
 							</p:column>
 							<p:column headerText="Online">
-								<h:selectBooleanCheckbox value="#{userWithDepartment.online}" disabled="True"
-								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
+								<h:selectBooleanCheckbox value="#{userWithDepartment.online}" disabled="True" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
@@ -219,19 +218,18 @@
 							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{contact.lastName}"
-										style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}"
-										/>
+										class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
 									<f:param name="userName" value="#{contact.userName}" />
 									<f:param name="mode" value="view" />
 								</h:outputLink>
 							</p:column>
 							<p:column headerText="Vorname">
 								<h:outputText value="#{contact.firstName}"
-								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
+								class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
 							</p:column>
 							<p:column headerText="Online">
 								<h:selectBooleanCheckbox value="#{contact.online}" disabled="True"
-								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
+								class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
