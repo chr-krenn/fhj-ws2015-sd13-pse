@@ -91,8 +91,10 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		try {
 			File file = new File(filename);
 
+			String mimeType = GetMimeType(filename);
+			
 			document.setName(file.getName());
-			document.setMimeType(Files.probeContentType(Paths.get(filename)));
+			document.setMimeType(mimeType);
 			document.setDescription(description);
 			document.setSize((int) file.length());
 
@@ -190,7 +192,19 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 		return Paths.get(subDirIndex.toString(), filename);
 	}
-
+	
+	private String GetMimeType(String filePath)
+	{
+		try {
+			String contentType =  Files.probeContentType(Paths.get(filePath));
+			return contentType == null ? "application/unknown" : contentType;
+			
+		} catch (IOException e) {
+			logger.warn("[DOCS] Error while detecting contentType of file: %s",filePath,e);
+			return "application/unknown";
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#buildImageUrl(java.lang.String)
 	 */
