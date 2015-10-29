@@ -242,7 +242,7 @@
 						<p:dialog header="Neue Community" widgetVar="communityDialog" resizeable="false">
 							<h:panelGrid columns="2" cellpadding="5">
 								<h:outputLabel for="communityname" value="Community" />
-								<p:inputText id="communityname" required="true" label="Name" value="#{userProfileController.communityName}"/>
+								<p:inputText id="communityname" label="Name" value="#{userProfileController.communityName}"/>
 			
 								<f:facet name="footer">
 									<p:commandButton value="Beantragen" update="growl"
