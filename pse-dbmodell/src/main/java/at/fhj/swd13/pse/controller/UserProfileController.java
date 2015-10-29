@@ -258,12 +258,13 @@ public class UserProfileController implements Serializable {
 	}
 
 	public String getTagEditStyle() {
-		return !isLoggedInUser() && !isAdmin() ? "display:none" : "display:all";
+		return (!isLoggedInUser() && !isAdmin()) || !isModeEdit() ? "display:none" : "display:all";
 	}
 
 	public String getTagDisplayStyle() {
-		return isLoggedInUser() || isAdmin() ? "display:none" : "display:all";
+		return getTagEditStyle().equals("display:none") ? "display:all" : "display:none";
 	}
+	
 
 	/**
 	 * returns the display representation for tags
