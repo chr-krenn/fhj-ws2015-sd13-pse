@@ -145,21 +145,21 @@
 						<p:outputLabel value="  Online" />
 					</p:column>			
 					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.active}" disabled="#{!(userProfileController.activeFlagEnabled)}"/>
-						<p:outputLabel value="  Aktiv"/>
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externFlagEnabled)}"/>
+						<p:outputLabel value="  Abwesend"/>
 					</p:column>			
 				</p:row>
 				<p:row>
 					<p:column>			
+					</p:column>	
+					<p:column>			
+						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.active}" disabled="#{!(userProfileController.activeFlagEnabled)}"/>
+						<p:outputLabel value="  Aktiv"/>
 					</p:column>			
 					<p:column>	
 						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.loginAllowed}" disabled="#{!(userProfileController.loginAllowedFlagEnabled)}"/>
 						<p:outputLabel value="  Login erlaubt"/>
-					</p:column>			
-					<p:column>			
-						<p:selectBooleanCheckbox value="#{userProfileController.userDTO.extern}" disabled="#{!(userProfileController.externFlagEnabled)}"/>
-						<p:outputLabel value="  Abwesend"/>
-					</p:column>			
+					</p:column>					
 				</p:row>
 				
 				<p:row style="#{userProfileController.getModeEditAdminDisplay()}">
