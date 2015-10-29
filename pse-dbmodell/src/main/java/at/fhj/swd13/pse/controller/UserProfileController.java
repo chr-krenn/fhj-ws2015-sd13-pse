@@ -93,6 +93,16 @@ public class UserProfileController implements Serializable {
 		return userDTO;
 	}
 
+	/**
+	 * returns the name of the current login user
+	 *
+	 * @return usename
+	 * 
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile file = event.getFile();
 		RequestContext context = RequestContext.getCurrentInstance();
