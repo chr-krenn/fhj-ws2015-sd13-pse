@@ -8,7 +8,18 @@
 	<ui:define name="content">
 	
 	<h:form>
-	Admin View - To be done
+		<h1>Requests</h1>
+		<p:dataTable var="requests" value="#{requestController.requests}" id="requests"
+				paginator="true" rows="10"
+               	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+               	selectionMode="single" selection="#{requestController.selectedRequest}" 
+               	rowKey="#{request.requestId}"
+			>
+			<p:ajax event="rowSelect" listener="#{requestController.onRequestSelected}" ></p:ajax>
+			    <p:column headerText="Request Name">
+			        <h:outputText value="#{request.name}" />
+			    </p:column>
+		</p:dataTable>
 	</h:form>
 	
 	
