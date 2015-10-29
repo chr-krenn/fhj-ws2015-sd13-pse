@@ -55,4 +55,20 @@ public interface FeedService {
 	 * @throws ConstraintViolationException
 	 */
 	List<Message> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
+	
+	/**
+	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message 
+	 * 
+	 * @param message
+	 * @param username
+	 */
+	void setMessageLikes(MessageDTO message, String username);
+
+	/**
+	 * Prepare String with list of liking persons for displaying it while hover "... User gefällt das."
+	 * 
+	 * @param ratingPersonsList
+	 * @return
+	 */
+	String prepareStringRatingPersonsList(List<Person> ratingPersonsList);
 }

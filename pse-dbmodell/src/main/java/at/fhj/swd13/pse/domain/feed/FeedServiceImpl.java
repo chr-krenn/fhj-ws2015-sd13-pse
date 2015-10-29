@@ -3,6 +3,7 @@
  */
 package at.fhj.swd13.pse.domain.feed;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -128,5 +129,42 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	public List<Message> loadNews(int communityId)
 			throws EntityNotFoundException, ConstraintViolationException {
 		return dbContext.getMessageDAO().loadNews(communityId);
-	}	
+	}
+	
+	@Override
+	public String prepareStringRatingPersonsList(List<Person> ratingPersonsList) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < ratingPersonsList.size(); i ++) {
+			if(i<3) {
+				sb.append(ratingPersonsList.get(i).getLastName());
+				if(i != ratingPersonsList.size() -1) {
+					sb.append(", ");
+				}
+			}
+			else {
+				sb.append(" ...");
+			}
+		}
+		sb.append(" gefällt das.");
+		return sb.toString();
+	}
+
+	@Override
+	public void setMessageLikes(MessageDTO message, String username) {
+		List<MessageRating> ratingList;
+		ratingList = message.getRatingList();
+		
+		int quantityRatings = ratingList.size();
+		List<Person> personList = new ArrayList<Person>();
+		
+		for(int j = 0; j < ratingList.size(); j++) {
+			personList.add(ratingList.get(j).getPerson());
+			if(ratingList.get(j).getPerson().getUserName().equals(username)) {
+				message.setLike(true);
+			}
+		}
+		message.setQuantityRatings(quantityRatings);
+		message.setRatingPersonsList(personList);
+	}
+
 }
