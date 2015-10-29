@@ -15,6 +15,29 @@
 			<div class="ui-grid-row">
 				<div class="ui-grid-col-12">
 					<p:panel header="News">
+					<p:dataScroller value="#{simpleFeedController.getNews(1)}"
+								var="news" chunkSize="10" mode="inline" scrollHeight="500">
+								<h:panelGrid columns="1" style="width:100%"
+									columnClasses="logo,detail">
+									<p:outputPanel>
+										<h:panelGrid columns="7" cellpadding="5">
+											<h:outputText value="Datum:" />
+											<h:outputText value="#{news.createdAt}"
+												style="font-weight: bold">
+												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+											</h:outputText>
+											<h:commandButton
+												action="#{messageDetailsController.openDetailView}"
+												value="Details" icon="ui-icon-search">
+												<f:param name="messageId" value="#{news.messageId}" />
+											</h:commandButton>
+										</h:panelGrid>
+										<h:outputText value="#{news.headline} &lt;br/&gt;"
+											escape="false" style="font-weight: bold" />
+										<h:outputText value="#{news.message}" escape="false" />
+									</p:outputPanel>
+								</h:panelGrid>
+							</p:dataScroller>
 					</p:panel>
 				</div>
 			</div>
