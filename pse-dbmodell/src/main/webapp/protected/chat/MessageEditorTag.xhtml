@@ -39,23 +39,32 @@
 			<p:row>
 				<p:column colspan="2">
 
-					<p:commandButton value="Icon hochladen" actionListener="#{messageEditorController.uploadIcon}" validateClient="false" immediate="true">
-						<p:ajax event="dialogReturn" listener="#{messageEditorController.onIconUploaded}" update="messageIcon" />
+					<p:commandButton value="Icon hochladen"
+						actionListener="#{messageEditorController.uploadIcon}"
+						validateClient="false" immediate="true">
+						<p:ajax event="dialogReturn"
+							listener="#{messageEditorController.onIconUploaded}"
+							update="messageIcon" />
 					</p:commandButton>
-				</p:column>				
-			</p:row>			
+				</p:column>
+			</p:row>
 			<p:row>
 				<p:column colspan="1">
-					<p:commandButton value="Dokument hochladen" actionListener="#{messageEditorController.uploadDocument}" validateClient="false" immediate="true">
-						<p:ajax event="dialogReturn" listener="#{messageEditorController.onDocumentUploaded}" update="documentName" />
+					<p:commandButton value="Dokument hochladen"
+						actionListener="#{messageEditorController.uploadDocument}"
+						validateClient="false" immediate="true">
+						<p:ajax event="dialogReturn"
+							listener="#{messageEditorController.onDocumentUploaded}"
+							update="documentName" />
 					</p:commandButton>
-				</p:column>			
+				</p:column>
 				<p:column>
-					<h:outputLink id="documentName" value="#{request.contextPath}#{messageEditorController.documentRef}">
+					<h:outputLink id="documentName"
+						value="#{request.contextPath}#{messageEditorController.documentRef}">
 						<h:outputText value="#{messageEditorController.documentName}" />
 					</h:outputLink>
-				</p:column>	
-			</p:row>			
+				</p:column>
+			</p:row>
 			<p:row>
 				<p:column>
 					<p:outputLabel for="targetCommunities" value="Communities" />
@@ -64,17 +73,13 @@
 					<p:autoComplete id="targetCommunities" multiple="true"
 						value="#{messageEditorController.selectedCommunities}"
 						completeMethod="#{messageEditorController.completeCommunity}"
-						converter="communityConverter"
-						var="communityDTO" 
-						itemLabel="#{communityDTO.name}"
-						itemValue="#{communityDTO}"
-						forceSelection="true"
-						minQueryLength="3"
-						required="true"						
-						>
-						<p:ajax event="itemSelect" listener="#{messageEditorController.handleSelect}" />
-						<p:ajax event="itemUnselect" listener="#{messageEditorController.handleUnselect}" />
-
+						converter="communityConverter" var="communityDTO"
+						itemLabel="#{communityDTO.name}" itemValue="#{communityDTO}"
+						forceSelection="true" minQueryLength="3" required="true">
+						<p:ajax event="itemSelect"
+							listener="#{messageEditorController.handleSelect}" />
+						<p:ajax event="itemUnselect"
+							listener="#{messageEditorController.handleUnselect}" />
 						<f:facet name="itemTip">#{communityDTO.name}</f:facet>
 
 					</p:autoComplete>
@@ -88,13 +93,22 @@
 					<p:autoComplete id="messageTags" multiple="true"
 						value="#{messageEditorController.selectedTags}"
 						completeMethod="#{messageEditorController.completeTag}"
-						forceSelection="true"
-						minQueryLength="3"
-						>
-						<p:ajax event="itemSelect" listener="#{messageEditorController.handleTagSelect}" />
-						<p:ajax event="itemUnselect" listener="#{messageEditorController.handleTagUnselect}" />
+						forceSelection="true" minQueryLength="3">
+						<p:ajax event="itemSelect"
+							listener="#{messageEditorController.handleTagSelect}" />
+						<p:ajax event="itemUnselect"
+							listener="#{messageEditorController.handleTagUnselect}" />
 
 					</p:autoComplete>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>Nachrichtengültigkeit</p:column>
+				<p:column>
+					<p:outputLabel for="dtFrom" value="Von:" />
+					<p:calendar id="dtFrom" value="#{messageEditorController.dtFrom}" pattern="yyyy/MM/dd HH:mm" />
+					<p:outputLabel for="dtUntil" value="Bis:" />
+					<p:calendar id="dtUntil" value="#{messageEditorController.dtUntil}" pattern="yyyy/MM/dd HH:mm" />
 				</p:column>
 			</p:row>
 			<p:row>

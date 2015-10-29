@@ -7,6 +7,7 @@ import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
+import at.fhj.swd13.pse.db.dao.MessageRatingDAO;
 import at.fhj.swd13.pse.db.dao.MessageTagDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.dao.TagDAO;
@@ -130,6 +131,14 @@ public interface DbContext extends AutoCloseable {
 
 	DocumentLibraryEntryDAO getDocumentLibraryDAO();
 
+	/**
+	 * Get a dao for MessageRatings
+	 * 
+	 * @return an instance of a DAO
+	 */
+	MessageRatingDAO getMessageRatingDAO();
+	
+	
 	/**
 	 * Close DbContext
 	 * if transaction has not been commited or rollback'ed, a rollback is performed

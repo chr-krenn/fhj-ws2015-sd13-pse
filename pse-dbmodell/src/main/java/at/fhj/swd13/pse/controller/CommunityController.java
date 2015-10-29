@@ -10,11 +10,10 @@ import javax.inject.Named;
 import javax.persistence.OrderBy;
 
 import org.jboss.logging.Logger;
+import org.primefaces.event.SelectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.plumbing.UserSession;
-import org.primefaces.event.SelectEvent;
 
 /**
  * 

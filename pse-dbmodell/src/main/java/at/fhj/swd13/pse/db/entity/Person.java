@@ -27,8 +27,6 @@ import javax.persistence.TemporalType;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import at.fhj.swd13.pse.domain.user.WeakPasswordException;
-
 /**
  * The persistent class for the person database table.
  * 
@@ -40,6 +38,7 @@ import at.fhj.swd13.pse.domain.user.WeakPasswordException;
 		@NamedQuery(name = "Person.findAllNullPasswords", query = "SELECT p FROM Person p WHERE p.hashedPassword IS NULL OR p.hashedPassword = '--' ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.personId = :id"),
 		@NamedQuery(name = "Person.findByUserName", query = "SELECT p FROM Person p WHERE p.userName = :uname"),
+		@NamedQuery(name = "Person.findByEmailAddress", query = "SELECT p FROM Person p WHERE p.emailAddress = :emailAddress"),
 		@NamedQuery(name = "Person.findNameLike", query = "SELECT p FROM Person p WHERE p.userName LIKE :name OR p.lastName LIKE :name OR p.emailAddress LIKE :name ORDER BY p.lastName, p.firstName"),
 		@NamedQuery(name = "Person.deleteById", query = "DELETE FROM Person p WHERE p.personId = :id") })
 public class Person implements Serializable {
@@ -270,6 +269,10 @@ public class Person implements Serializable {
 		this.firstName = firstName;
 	}
 
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
+	
 	public String getHashedPassword() {
 		return this.hashedPassword;
 	}
@@ -284,8 +287,6 @@ public class Person implements Serializable {
 	 * @param plainPassword
 	 *            the user's password in plain text
 	 * 
-	 * @throws WeakPasswordException
-	 *             when the password is not strong enough
 	 */
 	public void setPassword(String plainPassword) {
 

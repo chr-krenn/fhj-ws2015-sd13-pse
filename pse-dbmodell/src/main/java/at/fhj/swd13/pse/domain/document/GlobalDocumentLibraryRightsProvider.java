@@ -1,9 +1,5 @@
 package at.fhj.swd13.pse.domain.document;
 
-import java.lang.reflect.Constructor;
-
-import javax.inject.Inject;
-
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 public class GlobalDocumentLibraryRightsProvider implements DocumentLibraryRightsProvider {

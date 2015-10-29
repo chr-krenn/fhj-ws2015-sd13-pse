@@ -38,6 +38,21 @@ public class DbMessageTest extends DbTestBase {
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
 	}
 
+	/**
+	 * See testdata.sql & testdata_DBMessageTest.sql
+	 * Should NOT select 
+	 * 			expired messages
+	 * 			not yet valid messages
+	 * 			news
+	 * 			messages created by the user
+	 * 			comments
+	 * 			messages in private communities the user is not a member of
+	 * 			messages in public communities the user is not a member of UNLESS
+	 * 				the message is tagged with a user interest
+	 * 				the message is written by a contact of the user
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testActivityStream() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -48,6 +63,25 @@ public class DbMessageTest extends DbTestBase {
 
 			assertNotNull(activities);
 			assertEquals(6, activities.size());
+		}
+	}
+	
+	/**
+	 * See testdata.sql
+	 * No specific message exists for this user, but there are three messages without any restrictions (no community)
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testActivityStream2() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+
+			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(110));
+
+			assertNotNull(activities);
+			assertEquals(3, activities.size());
 		}
 	}
 	
@@ -97,9 +131,10 @@ public class DbMessageTest extends DbTestBase {
 			query.setParameter("person", getPerson(108));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(1,message.size());
+			assertEquals(2,message.size());
 		}
 	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindForUserAndTagsAndContactsQuery() throws Exception {
@@ -119,6 +154,18 @@ public class DbMessageTest extends DbTestBase {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			return personDAO.getById(id);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindNews() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			Query query = dbContext.createNamedQuery("Message.findNews");
+			query.setParameter("id", 2);
+			List<Message> message = query.getResultList();
+			assertNotNull(message);
+			assertEquals(2, message.size());
 		}
 	}
 	

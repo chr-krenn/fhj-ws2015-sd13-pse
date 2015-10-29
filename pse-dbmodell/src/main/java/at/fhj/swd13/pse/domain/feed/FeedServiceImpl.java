@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
@@ -19,6 +20,7 @@ import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -94,4 +96,31 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	public Message getMessageById(int messageId) throws EntityNotFoundException {
 		return dbContext.getMessageDAO().getById(messageId);
 	}
+	
+	@Override
+	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
+		Date createdDate = new Date();
+		Message m = dbContext.getMessageDAO().getById(messageId);
+		Person p = dbContext.getPersonDAO().getById(person.getPersonId());
+		MessageRating rating = new MessageRating();
+		rating.setMessage(m);
+		rating.setPerson(p);
+		rating.setCreatedAt(createdDate);
+		m.addMesasgeRating(rating);
+		p.addMesasgeRating(rating);
+		dbContext.getMessageRatingDAO().insert(rating);
+	}
+	
+	@Override
+	public void removeRating(int messageId, Person person) throws EntityNotFoundException {
+		Message m = dbContext.getMessageDAO().getById(messageId);
+		Person p = dbContext.getPersonDAO().getById(person.getPersonId());
+		Query q = dbContext.createNamedQuery("MessageRating.findRatingByPersonAndMessage");
+		q.setParameter("message", m);
+		q.setParameter("person", p);
+		MessageRating rating = (MessageRating) q.getSingleResult();
+		m.removeMesasgeRating(rating);
+		p.removeMesasgeRating(rating);
+		dbContext.getMessageRatingDAO().remove(rating);
+	}	
 }

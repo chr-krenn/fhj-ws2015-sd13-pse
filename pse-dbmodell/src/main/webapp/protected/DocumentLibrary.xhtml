@@ -7,43 +7,81 @@
 	<f:metadata>
 		<f:viewParam name="communityId"
 			value="#{documentLibraryController.communityId}" />
-		<f:event type="preRenderView"
-			listener="#{documentLibraryController.init}" />
 	</f:metadata>
-	<h:form id="documentLibraryFrm">
-		<p:toolbar rendered="#{documentLibraryController.canEditLibrary}">
-			<f:facet name="left">
 
-				<p:commandButton id="uploadDocumentBtn" value="Neu"
-					icon="ui-icon-circle-plus" type="button" />
-				<p:overlayPanel id="uploadDocumentPnl" for="uploadDocumentBtn"
-					hideEffect="fade">
-					<p:fileUpload auto="true" mode="advanced"
-						fileUploadListener="#{documentLibraryController.uploadFileDocument}">
-					</p:fileUpload>
-					<p:inputText
-						value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
-					<p:commandButton value="Speichern" id="commitUploadedDocumentBtn"
-						update="documentLibraryFrm"
-						actionListener="#{documentLibraryController.saveNewDocument}" />
-				</p:overlayPanel>
-				<p:button value="Löschen" icon="ui-icon-circle-close"
-					href="/protected/Main.jsf" />
+	<f:event type="preRenderComponent"
+		listener="#{documentLibraryController.init}" />
+	<p:panel id="documentLibraryPnl" header="Dokumentenbibliothek">
+		<h:form>
 
-			</f:facet>
-		</p:toolbar>
-		<p:dataTable var="entry" value="#{documentLibraryController.entries}"
-			rendered="#{documentLibraryController.canViewLibrary}">
-			<!--  <p:column selectionMode="single" style="width:16px;text-align:center"/>-->
-			<p:column headerText="Name">
-				<p:link value="#{entry.name}" />
-			</p:column>
-			<p:column headerText="Beschreibung">
-				<h:outputText value="#{entry.description}" />
-			</p:column>
-			<p:column headerText="Erstellt">
-				<h:outputText value="#{entry.createdAt}" />
-			</p:column>
-		</p:dataTable>
-	</h:form>
+			<p:toolbar rendered="#{documentLibraryController.canEditLibrary}">
+				<f:facet name="left">
+					<p:commandButton id="uploadDocumentBtn" value="Neu"
+						icon="ui-icon-circle-plus" process="@this"
+						update="documentLibraryPnl"
+						action="#{documentLibraryController.setIsInNewDocumentMode(true)}" />
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable var="entry" value="#{documentLibraryController.entries}"
+				rendered="#{documentLibraryController.canViewLibrary and not documentLibraryController.isInNewDocumentMode}">
+				<p:column headerText="Name">
+					<p:commandLink value="#{entry.name}" ajax="false">
+						<p:fileDownload
+							value="#{documentLibraryController.downloadDocument(entry.id)}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="Beschreibung">
+					<h:outputText value="#{entry.description}" />
+				</p:column>
+				<p:column headerText="Aktion">
+					<p:splitButton value="Anzeigen">
+						<p:menuitem value="Löschen"></p:menuitem>
+					</p:splitButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:panel id="UploadDocumentPnl"
+			rendered="#{documentLibraryController.isInNewDocumentMode}">
+			<h:form id="documentFrm">
+				<p:panelGrid>
+					<p:row>
+						<p:column colspan="2">
+							<p:fileUpload update="UploadDocumentPnl" mode="advanced"
+								auto="true" process="documentFrm"
+								fileUploadListener="#{documentLibraryController.uploadFileDocument}">
+							</p:fileUpload>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Datei:" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{documentLibraryController.uploadedFileName}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Beschreibung:" />
+						</p:column>
+						<p:column>
+							<p:inputText
+								value="#{documentLibraryController.newDocumentDescription}"></p:inputText>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="2">
+							<p:commandButton value="Speichern" id="commitUploadedDocumentBtn"
+								action="#{documentLibraryController.saveNewDocument}"
+								process="documentFrm" update="documentLibraryPnl" />
+							<p:commandButton value="Abbrechen"
+								action="#{documentLibraryController.setIsInNewDocumentMode(false)}"
+								process="@this" update="documentLibraryPnl" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+	</p:panel>
 </ui:composition>

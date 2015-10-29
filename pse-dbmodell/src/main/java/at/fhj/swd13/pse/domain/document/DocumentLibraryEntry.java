@@ -11,13 +11,20 @@ public class DocumentLibraryEntry {
 	private final String createdAt;
 	
 	private final int documentId;
-
-	public DocumentLibraryEntry(int id, String name, String description, String createdAt, int documentId) {
+	
+	private final String serverPath;
+	
+	private final String contentType;
+	
+	public DocumentLibraryEntry(int id, String name, String description, String createdAt, int documentId, String serverPath, 
+								String contentType) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.createdAt = createdAt;
 		this.documentId = documentId;
+		this.serverPath = serverPath;
+		this.contentType = contentType;
 	}
 	
 	public int getId() {
@@ -34,5 +41,17 @@ public class DocumentLibraryEntry {
 
 	public String getCreatedAt() {
 		return createdAt;
+	}
+
+	public int getDocumentId() {
+		return documentId;
+	}
+
+	public String getServerPath() {
+		return serverPath;
+	}
+
+	public String getContentType() {
+		return contentType;
 	}
 }

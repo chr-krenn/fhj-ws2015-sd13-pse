@@ -1,10 +1,12 @@
 package at.fhj.swd13.pse.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.db.entity.MessageRating;
 
 public class MessageDTO {
 
@@ -23,19 +25,25 @@ public class MessageDTO {
 	private String community;
 	
 	private Document icon;
-
+	
+	private boolean like;
+	
+	private List<MessageRating> ratingList;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
 		this();
 		this.id = m.getMessageId();
-		this.author = m.getPerson().getFirstName() + m.getPerson().getLastName();
+		this.author = m.getPerson().getFirstName() +" " + m.getPerson().getLastName();
 		this.date = m.getCreatedAt();
 		this.headline = m.getHeadline();
 		this.text = m.getMessage();
 		this.privateMessage = isPrivateMessage(m);
 		this.community = getCommunity(m);
 		this.icon = m.getIcon();
+		this.ratingList = m.getMessageRatings();
+		this.like = false;
 	}
 	
 	
@@ -136,4 +144,25 @@ public class MessageDTO {
 	public void setIcon(Document icon) {
 		this.icon = icon;
 	}
+
+	
+	public boolean isLike() {
+		return like;
+	}
+
+	
+	public void setLike(boolean like) {
+		this.like = like;
+	}
+
+	
+	public List<MessageRating> getRatingList() {
+		return ratingList;
+	}
+
+	
+	public void setRatingList(List<MessageRating> ratingList) {
+		this.ratingList = ratingList;
+	}
+	
 }

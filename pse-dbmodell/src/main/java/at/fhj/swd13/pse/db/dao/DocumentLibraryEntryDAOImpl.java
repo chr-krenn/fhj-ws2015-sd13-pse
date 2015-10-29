@@ -54,4 +54,13 @@ public class DocumentLibraryEntryDAOImpl extends DAOBase implements DocumentLibr
 		query.setParameter("community", community);
 		return (List<DocumentLibraryEntry>) query.getResultList();
 	}
+
+	@Override
+	public DocumentLibraryEntry getEntryById(int documentEntryId) {
+		Query query = dbContext.createNamedQuery("DocumentLibraryEntry.findById");
+		query.setParameter("id", documentEntryId);
+		
+		return (DocumentLibraryEntry)query.getSingleResult();
+		
+	}
 }

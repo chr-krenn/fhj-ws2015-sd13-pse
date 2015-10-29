@@ -1,7 +1,7 @@
 package at.fhj.swd13.pse.controller;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.dto.MessageDTO;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class MessageDetailsController {
 
 	@Inject

@@ -1,3 +1,4 @@
+INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','swd13pse@gmail.com','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,1,NULL,NULL);
 INSERT INTO `person` VALUES (2,'padmin','Portal','Admin','pse@edu.fh-joanneum.at','+436644711815','--','Portal-Admin',NULL,NULL,NULL,NULL,NULL,NULL,1,0,1,0,1,NULL, NULL);
 
 INSERT INTO `person` VALUES (90, 'krenn','Krenn','Christian','christian.krenn@imaginary.com','+436644711815','--','Vortragender',NULL,NULL,NULL,NULL,NULL,NULL,1,0,1,0,0,NULL, NULL);

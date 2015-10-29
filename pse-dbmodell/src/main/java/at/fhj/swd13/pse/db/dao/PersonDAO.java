@@ -140,5 +140,14 @@ public interface PersonDAO {
 	 * @param targetPerson
 	 */
 	void removeRelation(Person sourcePerson, Person targetPerson);
+	
+	
+	/**
+	 * Get the user matching a given e-mail-address 
+	 * @param emailAddress
+	 * @return
+	 * @throws EntityNotFoundException	 */
+	
+	Person getByEmailAddress(String emailAddress) throws EntityNotFoundException;
 
 }

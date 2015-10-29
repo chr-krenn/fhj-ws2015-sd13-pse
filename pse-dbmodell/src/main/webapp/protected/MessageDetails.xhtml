@@ -6,20 +6,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
-		Work in progress...
-		<h:outputText value="Error loading message" rendered="!#{messageDetailsController.messageDTO}"/>
+		<h:outputText value="Error loading message" rendered="#{messageDetailsController.messageDTO == null}"/>
 		
 		<h:form>
-			<h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail" rendered="#{messageDetailsController.messageDTO}">
-				<p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" />
-
-				<p:outputPanel>
-					<h:panelGrid columns="1" cellpadding="5">
-						<h:outputText value="#{messageDetailsController.messageDTO.headline}" style="font-weight: bold" />
-						<h:outputText value="#{messageDetailsController.messageDTO.text}" escape="false"/>
-					</h:panelGrid>
-				</p:outputPanel>
-			</h:panelGrid>
+			<p:dataTable var="message" value="#{messageDetailsController.messageDTO}" 
+				rendered="#{messageDetailsController.messageDTO ne null}">
+				
+				<p:column headerText="#{messageDetailsController.messageDTO.author}, am 
+										#{messageDetailsController.messageDTO.date}" >
+					<h:outputLabel>Nachricht an: </h:outputLabel>	
+					<h:outputText value="#{message.community}"/>
+					<br/><br/>
+					<h:outputText value="#{message.headline}" style="font-weight: bold" />
+					<br/><br/>
+					<h:outputText value="#{message.text}" escape="false"/>
+				</p:column>
+				
+			</p:dataTable>
+						<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -57,6 +58,26 @@ public class MessageEditorController {
 
 	private String headline;
 	private String richText;
+	
+	
+	/**
+	 * @return the dtFrom
+	 */
+	public Date getDtFrom() {
+		return dtFrom;
+	}
+
+	
+	/**
+	 * @param dtFrom the dtFrom to set
+	 */
+	public void setDtFrom(Date dtFrom) {
+		this.dtFrom = dtFrom;
+	}
+
+	private Date dtFrom;
+	private Date dtUntil;
+	
 	private int iconId;
 	private String iconRef;
 
@@ -64,9 +85,23 @@ public class MessageEditorController {
 	private String documentRef;
 	private String documentName;
 
+	private Community targetCommunity;
+
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
 
 	private List<String> selectedTags = new ArrayList<String>();
+
+	@PostConstruct
+	public void init() {
+		String receiverCommunity = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("community");
+		if (receiverCommunity != null) {
+			targetCommunity = chatService.getCommunity(receiverCommunity);
+			if (targetCommunity != null) {
+				selectedCommunities.add(new CommunityDTO(targetCommunity));
+			}
+		}
+	}
 
 	/**
 	 * Save the entered message to the database
@@ -90,7 +125,7 @@ public class MessageEditorController {
 				tag.setDescription(tagString);
 				try {
 					tagService.insert(tag);
-				} catch ( ConstraintViolationException x) {
+				} catch (ConstraintViolationException x) {
 					logger.error("[MSG+] error creating new tag (duplicate...)");
 				}
 			}
@@ -104,6 +139,7 @@ public class MessageEditorController {
 			communities.add(chatService.getCommunity(communityDto.getName()));
 		}
 
+		//FIXME valid from - valid until - also use MessageDTO
 		feedService.saveMessage(headline, richText, userSession.getUsername(),
 				document, icon, communities, messageTags);
 
@@ -176,11 +212,12 @@ public class MessageEditorController {
 
 		List<String> result = new ArrayList<String>();
 
-		logger.info( "[MSG+] completeTag - selcted tag count " + selectedTags.size() );
-		
+		logger.info("[MSG+] completeTag - selcted tag count "
+				+ selectedTags.size());
+
 		for (Tag tag : tagService.getMatchingTags(input)) {
-			
-			if (! isTagAlreadySelected(tag.getToken())) {
+
+			if (!isTagAlreadySelected(tag.getToken())) {
 				result.add(tag.getToken());
 			}
 		}
@@ -192,20 +229,20 @@ public class MessageEditorController {
 		return result;
 	}
 
-	private boolean isTagAlreadySelected( final String token ) {
-		
+	private boolean isTagAlreadySelected(final String token) {
+
 		final String needle = token.toLowerCase();
-		
-		for( String tag : selectedTags ) {
-		
-			if ( tag.toLowerCase().equals(needle)) {
+
+		for (String tag : selectedTags) {
+
+			if (tag.toLowerCase().equals(needle)) {
 				return true;
-			}			
+			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * called when a community is added to the chosen list
 	 * 
@@ -214,7 +251,7 @@ public class MessageEditorController {
 	 */
 	public void handleSelect(SelectEvent event) {
 
-		logger.info("[MSG+] handleSelect");
+		logger.info("[MSG+] Community handleSelect");
 	}
 
 	/**
@@ -224,8 +261,15 @@ public class MessageEditorController {
 	 *            event data
 	 */
 	public void handleUnselect(UnselectEvent event) {
-
-		logger.info("[MSG+] handleUnselect");
+		CommunityDTO removedCommunity = (CommunityDTO) event.getObject();
+		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
+		
+		// TODO Prevent unselection of preselected items
+		
+		// if (targetCommunity != null &&
+		// removedCommunity.getName().equals(targetCommunity.getName())) {
+		// selectedCommunities.add(new CommunityDTO(targetCommunity));
+		// }
 	}
 
 	/**
@@ -236,7 +280,7 @@ public class MessageEditorController {
 	 */
 	public void handleTagSelect(SelectEvent event) {
 
-		logger.info("[MSG+] handleSelect");
+		logger.info("[MSG+] Tag handleSelect");
 	}
 
 	/**
@@ -247,7 +291,7 @@ public class MessageEditorController {
 	 */
 	public void handleTagUnselect(UnselectEvent event) {
 
-		logger.info("[MSG+] handleUnselect");
+		logger.info("[MSG+] Tag handleUnselect");
 	}
 
 	/**
@@ -422,5 +466,19 @@ public class MessageEditorController {
 
 	public void setDocumentName(String documentName) {
 		this.documentName = documentName;
+	}
+	/**
+	 * @return the dtUntil
+	 */
+	public Date getDtUntil() {
+		return dtUntil;
+	}
+
+	
+	/**
+	 * @param dtUntil the dtUntil to set
+	 */
+	public void setDtUntil(Date dtUntil) {
+		this.dtUntil = dtUntil;
 	}
 }

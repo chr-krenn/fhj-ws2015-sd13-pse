@@ -7,11 +7,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.user.UserService;
 
 @SessionScoped
 public class UserSession implements Serializable {
@@ -27,7 +27,7 @@ public class UserSession implements Serializable {
 	private Logger logger;
 
 	@Inject
-	private DbContext dbContext;
+	private UserService userService;
 
 	private String loggedInUser = null;
 	private boolean isAdmin = false;
@@ -38,16 +38,15 @@ public class UserSession implements Serializable {
 	}
 
 	@PreDestroy
+	@Transactional
 	protected void preDestroy() {
-		logger.info("[USERSESSION] preDestroy for " + loggedInUser );
-		
-		if (isLoggedIn()) {
-			Person p = dbContext.getPersonDAO().getByUsername(loggedInUser);
+		logger.info("[USERSESSION] preDestroy for " + loggedInUser);
 
-			p.setCurrentSessionId(null);
-			p.setIsOnline(false);
-			
-			logout();
+		try {
+
+			userService.logoutCurrentUser();
+		} catch (Exception e) {
+			logger.error("[USERSESSION] error durin preDestroy: " + e.getMessage());
 		}
 	}
 
@@ -56,11 +55,11 @@ public class UserSession implements Serializable {
 	}
 
 	public void logout() {
-		logger.info("[USERSESSION] logged out " + loggedInUser );
+		logger.info("[USERSESSION] logged out " + loggedInUser);
 		loggedInUser = null;
 		isAdmin = false;
 	}
-	
+
 	public String login(final String username) {
 		this.loggedInUser = username;
 
@@ -76,7 +75,6 @@ public class UserSession implements Serializable {
 		return loggedInUser != null && isAdmin;
 	}
 
-	
 	public String getUsername() {
 		return loggedInUser == null ? "Not YOU!" : loggedInUser;
 	}
