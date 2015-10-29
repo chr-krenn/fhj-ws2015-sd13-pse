@@ -14,3 +14,4 @@ INSERT INTO `person` VALUES (107, 'florian.genser','Genser','Florian','florian.g
 INSERT INTO `person` VALUES (108, 'pompenig13','Pompenig','Christine','christine.pompenig@edu.fh-joanneum.at','+436509888315','--','Knecht','Team 4','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (109, 'oswaldge13','Oswald','Gerald','gerald.oswald@edu.fh-joanneum.at','+436649136104','--','Knecht','Team 2','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (110, 'almer13','Almer','Patrick','patrick.almer@edu.fh-joanneum.at','+436649136104','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
+INSERT INTO `person` VALUES (113, 'kirschma13','Manuel','Kirsch','manuel.kirsch@edu.fh-joanneum.at','+436645233566','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
