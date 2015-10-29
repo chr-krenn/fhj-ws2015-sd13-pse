@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +21,7 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
+
 /**
  * 
  * @author patrick.almer
@@ -37,33 +39,31 @@ public class CommunityController {
     private ChatService chatService;
     
     @Inject
-	private Logger logger;
+    private Logger logger;
     
-	@Inject
-	private UserSession userSession;
+    @Inject
+    private UserSession userSession;
 	
-	@Inject
-	private UserService userService;
+    @Inject
+    private UserService userService;
     
-    private String invitationOnly;
+    private transient Community selectedCommunity = null;
+	
+    private String searchFieldText = "";
+
+	private String invitationOnly;
     private String communityName;
     private String privateUser;
     private boolean isMember;
     
-	private transient Community selectedCommunity = null;
-	
-    private String searchFieldText = "";
-
-	@PostConstruct
+    @PostConstruct
     public void postConstruct() {
-    	communities = chatService.getAllCommunities();
-    	
+    	communities = chatService.getAllCommunities();	
     	communityName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityName");
     	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
     	privateUser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("privateUser");
-
-    	
     }
+
     
     public List<Community> getCommunities () {
     	return communities;
@@ -72,11 +72,11 @@ public class CommunityController {
     public String getSearchFieldText() {
 		return searchFieldText;
 	}
-
-	public void setSearchFieldText(String searchFieldText) {
+    
+    public void setSearchFieldText(String searchFieldText) {
 		this.searchFieldText = searchFieldText;
 	}
-	
+    	
 	public String search() {
 	 	communities = chatService.getAllCommunities(searchFieldText);
     	return "communities";
@@ -87,13 +87,20 @@ public class CommunityController {
 	}
 
 	public void setSelectedCommunity(Community selectedCommunity) {
-		this.selectedCommunity = selectedCommunity;
-	}
+	this.selectedCommunity = selectedCommunity;
+	}	
 	
 	public void onCommunitySelected(SelectEvent object){
-    
-    }
-
+	    try 
+	    {
+	    	FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+		} 
+	    catch (IOException e) 
+	    {
+	    	e.printStackTrace();
+		}
+	}
+	
 	public void subscribeCommunity(){
 		
 		logger.info("######## Start - subscribeCommunity ########");
@@ -186,5 +193,4 @@ public class CommunityController {
 	public void setMember(boolean isMember) {
 		this.isMember = isMember;
 	}
-	    
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+    <h:form id="communityProfile">
+	    	<h1>Communities</h1>
+	    	
+			<p:panelGrid style="width: 50%;">
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Name"/>
+					</p:column>			
+					<p:column colspan="2">			
+						 <h:outputText value="#{communityProfileController.communityName}" />
+					</p:column>			
+				</p:row>
+			</p:panelGrid>
+	</h:form>
+
+	</ui:define>
+</ui:composition>
