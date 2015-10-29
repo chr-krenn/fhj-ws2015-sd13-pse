@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
@@ -109,5 +110,7 @@ public interface ChatService {
 	List <Community> getAllCommunities(String searchfieldText);
 
 	String resolveReceipientsMail( final Message message );
+	
+	CommunityMember createCommunityMember(final Person creator, final Community community);
 	
 }

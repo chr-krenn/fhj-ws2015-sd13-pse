@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.OrderBy;
@@ -13,7 +14,11 @@ import org.jboss.logging.Logger;
 import org.primefaces.event.SelectEvent;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
+import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**
  * 
@@ -34,6 +39,17 @@ public class CommunityController {
     @Inject
 	private Logger logger;
     
+	@Inject
+	private UserSession userSession;
+	
+	@Inject
+	private UserService userService;
+    
+    private String invitationOnly;
+    private String communityName;
+    private String privateUser;
+    private boolean isMember;
+    
 	private transient Community selectedCommunity = null;
 	
     private String searchFieldText = "";
@@ -41,6 +57,12 @@ public class CommunityController {
 	@PostConstruct
     public void postConstruct() {
     	communities = chatService.getAllCommunities();
+    	
+    	communityName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityName");
+    	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
+    	privateUser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("privateUser");
+
+    	
     }
     
     public List<Community> getCommunities () {
@@ -71,5 +93,66 @@ public class CommunityController {
 	public void onCommunitySelected(SelectEvent object){
     
     }
+
+	public void subscribeCommunity(){
+		
+		logger.info("######## Start - subscribeCommunity ########");
+		
+		if( !isinvitationOnly() ) // public Community
+		{
+			logger.info("#### Public Community ####");
+			
+			Community com = null;
+			Person currentUser = null;
+			
+			try 
+			{	
+				com = chatService.getCommunity(communityName);
+				currentUser = userService.getUser(userSession.getUsername());
+				
+				logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
+				logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+				
+				//addCommunityMember
+				CommunityMember member = chatService.createCommunityMember(currentUser, com);
+				
+				logger.info("  currentUser: " + member.getCommunityMemberId() );
+				
+			} catch (Exception e) {
+				logger.error("ERROR-MESSAGE: " + e.getMessage());
+			}
+			
+			logger.info("#### Done - subscribeCommunity ####");
+			
+		}else // private Community
+		{
+			logger.info("TODO -- Private Communities");
+		}
+		
+		logger.info("######## DONE - subscribeCommunity ########");
+		
+	}
+	
+	private boolean isinvitationOnly() {
+		return invitationOnly != null && invitationOnly.equals("true");
+	}
+	
+	public boolean isMemberOfCommunity()
+	{
+		isMember = false;
+		Person currentUser = null;
+		try 
+		{
+			currentUser = userService.getUser(userSession.getUsername());
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			
+			//TODO
+			
+			
+		} catch (Exception e) {
+			logger.error("ERROR-MESSAGE: " + e.getMessage());
+		}
+		return isMember;
+	}
 	    
 }
