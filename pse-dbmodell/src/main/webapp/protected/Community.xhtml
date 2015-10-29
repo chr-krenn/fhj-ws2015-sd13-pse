@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+    <h:form id="communitySearch">
+	     <h:form id="communitySearch">
+	    	<h1>Communities</h1>
+	    	
+			<p:dataTable var="community" value="#{communityController.communities}" id="communities"
+				paginator="true" rows="10"
+               	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+               	selectionMode="single" selection="#{communityController.selectedCommunity}" 
+               	rowKey="#{community.communityId}">
+			
+			    <p:column headerText="Community Name">
+			        <h:outputText value="#{community.name}" />
+			    </p:column>
+			</p:dataTable>
+		</h:form>	
+	</h:form>
+
+	</ui:define>
+</ui:composition>
