@@ -48,7 +48,9 @@ public class UserDTO {
 	
 	private List<Person> contacts;
 
-	private List<Community> communities;
+	private List<Community> confirmedCommunities;
+
+	private List<Community> createdCommunities;
 
 	private List<String> tags;
 
@@ -74,7 +76,8 @@ public class UserDTO {
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
-		this.setCommunities(person.getConfirmedCommunities());
+		this.setConfirmedCommunities(person.getConfirmedCommunities());
+		this.setCreatedCommunities(person.getCreatedCommunities());
 		
 		tags = new ArrayList<String>();
 		for (PersonTag personTag : person.getPersonTags()) {
@@ -323,12 +326,20 @@ public class UserDTO {
 		this.contacts = contacts;
 	}
 
-	public List<Community> getCommunities() {
-		return communities;
+	public List<Community> getConfirmedCommunities() {
+		return confirmedCommunities;
 	}
 
-	public void setCommunities(List<Community> communities) {
-		this.communities = communities;
+	public void setConfirmedCommunities(List<Community> confirmedCommunities) {
+		this.confirmedCommunities = confirmedCommunities;
+	}
+
+	public List<Community> getCreatedCommunities() {
+		return createdCommunities;
+	}
+
+	public void setCreatedCommunities(List<Community> createdCommunities) {
+		this.createdCommunities = createdCommunities;
 	}
 
 	public List<String> getTags() {
