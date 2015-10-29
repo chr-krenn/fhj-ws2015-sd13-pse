@@ -207,6 +207,10 @@
 							<p:column headerText="Vorname">
 								<h:outputText value="#{userWithDepartment.firstName}" />
 							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{userWithDepartment.online}" disabled="True"
+								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
+							</p:column>
 						</p:dataTable>
 					</p:tab>
 					<p:tab title="Kontakte">
@@ -223,6 +227,10 @@
 							</p:column>
 							<p:column headerText="Vorname">
 								<h:outputText value="#{contact.firstName}"
+								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
+							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{contact.online}" disabled="True"
 								style="#{userProfileController.getContactListEntryStyle(userProfileController.userDTO.userName, contact.department)}" />
 							</p:column>
 						</p:dataTable>
