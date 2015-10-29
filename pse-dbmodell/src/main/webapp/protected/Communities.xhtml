@@ -28,7 +28,7 @@
 			    </p:column>
 			    <p:column headerText="Action">
 			     	<ui:fragment rendered="#{community.invitationOnly == false}">
-						<p:commandLink actionListener="#{communityController.subscribeCommunity}">	
+						<p:commandLink update="communities" actionListener="#{communityController.subscribeCommunity}">	
 			     			<p:commandButton value='addCommunity' id='addCommunity'/>
 			     			<f:param name="communityName" value="#{community.name}" />
 			     			<f:param name="invitationOnly" value="#{community.invitationOnly}" />
@@ -45,10 +45,9 @@
 			     	</ui:fragment>				
 			    </p:column>
 			    <p:column headerText="isMember">
-						<h:outputText value="TODO" />
+			    	<h:outputText value="#{communityController.isMemberOfCommunity(community.name)}" />
 			    </p:column>
 			</p:dataTable>
 		</h:form>
-
 	</ui:define>
 </ui:composition>

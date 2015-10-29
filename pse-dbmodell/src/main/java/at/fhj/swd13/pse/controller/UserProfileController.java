@@ -399,7 +399,7 @@ public class UserProfileController implements Serializable {
 		FacesMessage message;
 		
 		try {
-			Community community = chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
+			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
 			setCommunityName("");
 			getPerson();
 		} catch (EntityNotFoundException e) {

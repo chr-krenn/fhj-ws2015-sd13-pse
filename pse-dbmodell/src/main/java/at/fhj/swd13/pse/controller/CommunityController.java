@@ -125,6 +125,7 @@ public class CommunityController {
 				
 				logger.info("  currentUser: " + member.getCommunityMemberId() );
 				
+				
 			} catch (Exception e) {
 				logger.error("ERROR-MESSAGE: " + e.getMessage());
 			}
@@ -144,21 +145,29 @@ public class CommunityController {
 		return invitationOnly != null && invitationOnly.equals("true");
 	}
 	
-	public boolean isMemberOfCommunity()
+	public String isMemberOfCommunity(String communityName)
 	{
 		isMember = false;
 		Person currentUser = null;
+		Community com = null;
 		try 
 		{
 			currentUser = userService.getUser(userSession.getUsername());
 			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
 			
-			//TODO
+			com = chatService.getCommunity(communityName);
+			logger.info("  community: " + com.getCommunityId() + " - " + com.getName() );
 			
+			isMember = chatService.isPersonMemberOfCommunity(currentUser, com);
 			
 		} catch (Exception e) {
 			logger.error("ERROR-MESSAGE: " + e.getMessage());
 		}
-		return isMember;
+
+		if(isMember){
+			return "true";
+		}
+
+		return "false";
 	}
 }

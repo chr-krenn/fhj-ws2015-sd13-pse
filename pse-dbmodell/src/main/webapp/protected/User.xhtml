@@ -246,7 +246,7 @@
 									rendered="#{!membership.community.privateUser.userName.equals(userProfileController.userName)}"/>
 							</p:column>
 							<f:facet name="footer">
-								<p:commandButton value="Neue Community" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
+								<p:commandButton value="Neue Community beantragen" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
 							</f:facet>
 						</p:dataTable>
 					</p:tab>
@@ -262,8 +262,7 @@
 					<f:facet name="footer">
 						<p:commandButton value="Beantragen" update="growl :userForm"
 							action="#{userProfileController.createCommunity()}" onclick="PF('communityDialog').hide();"/>
-						<p:commandButton value="Abbrechen" update="growl"
-							onclick="PF('communityDialog').hide();" />
+						<p:commandButton value="Abbrechen" onclick="PF('communityDialog').hide();" />
 					</f:facet>
 				</h:panelGrid>
 			</h:form>

@@ -154,6 +154,23 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		  return null;
 	}
 	
+	public boolean isPersonMemberOfCommunity( final Person person, final Community community ){
+	
+		try 
+		{
+			Person p = dbContext.getPersonDAO().getById( person.getPersonId() );
+			Community c = dbContext.getCommunityDAO().get( community.getCommunityId() );
+			
+			return c.isMember(p);
+			
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return false;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
