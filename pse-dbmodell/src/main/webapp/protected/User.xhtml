@@ -176,96 +176,97 @@
 					</p:column>			
 				</p:row>
 			</p:panelGrid>
+
+			<p:panel id="addtocontact" cache="false">
+				<p:commandButton id="contactButton"
+					value="#{userProfileController.contactButtonText()}" type="submit"
+					icon="ui-icon-home"
+					actionListener="#{userProfileController.contactButtonAction()}"
+					rendered="#{userProfileController.addToContactVisible()}"
+					update="addtocontact,contacts,sendmessage" />
+			</p:panel>
+			<p:panel id="sendmessage" cache="false">
+				<p:commandButton id="sendMessageButton"
+					value="#{userProfileController.sendMessageButtonText()}" type="submit"
+					icon="ui-icon-mail-closed"
+					action="#{userProfileController.sendMessageButtonAction()}"
+					rendered="#{userProfileController.canSendMessage()}" />
+			</p:panel>
+	
+			<p:panel id="contacts">
+				<p:tabView>
+					<p:tab title="Abteilung">
+						<p:dataTable var="userWithDepartment"
+							value="#{userProfileController.usersWithDepartment}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{userWithDepartment.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{userWithDepartment.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{userWithDepartment.firstName}" />
+							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{userWithDepartment.online}" disabled="True" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Kontakte">
+						<p:dataTable var="contact"
+							value="#{userProfileController.userDTO.contacts}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{contact.lastName}"
+										class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+									<f:param name="userName" value="#{contact.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{contact.firstName}"
+								class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{contact.online}" disabled="True"
+								class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Communities" id="communities">
+						<p:dataTable var="membership" id="membershipList"
+							value="#{userProfileController.userDTO.communityMemberships}">
+							<p:column headerText="Name">
+								<h:outputText value="#{membership.community.name}" />
+							</p:column>
+							<p:column headerText="Bestätigt">
+								<h:selectBooleanCheckbox value="#{membership.confirmer != null}" disabled="True" 
+									rendered="#{!membership.community.privateUser.userName.equals(userProfileController.userName)}"/>
+							</p:column>
+							<f:facet name="footer">
+								<p:commandButton value="Neue Community" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
+							</f:facet>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</p:panel>
 		</h:form>
-
-		<p:panel id="addtocontact" cache="false">
-			<p:commandButton id="contactButton"
-				value="#{userProfileController.contactButtonText()}" type="submit"
-				icon="ui-icon-home"
-				actionListener="#{userProfileController.contactButtonAction()}"
-				rendered="#{userProfileController.addToContactVisible()}"
-				update="addtocontact,contacts,sendmessage" />
-		</p:panel>
-		<p:panel id="sendmessage" cache="false">
-			<p:commandButton id="sendMessageButton"
-				value="#{userProfileController.sendMessageButtonText()}" type="submit"
-				icon="ui-icon-mail-closed"
-				action="#{userProfileController.sendMessageButtonAction()}"
-				rendered="#{userProfileController.canSendMessage()}" />
-		</p:panel>
-
-		<p:panel id="contacts">
-			<p:tabView>
-				<p:tab title="Abteilung">
-					<p:dataTable var="userWithDepartment"
-						value="#{userProfileController.usersWithDepartment}">
-						<p:column headerText="Nachname">
-							<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{userWithDepartment.lastName}"
-									style="font-weight: bold" />
-								<f:param name="userName" value="#{userWithDepartment.userName}" />
-								<f:param name="mode" value="view" />
-							</h:outputLink>
-						</p:column>
-						<p:column headerText="Vorname">
-							<h:outputText value="#{userWithDepartment.firstName}" />
-						</p:column>
-						<p:column headerText="Online">
-							<h:selectBooleanCheckbox value="#{userWithDepartment.online}" disabled="True" />
-						</p:column>
-					</p:dataTable>
-				</p:tab>
-				<p:tab title="Kontakte">
-					<p:dataTable var="contact"
-						value="#{userProfileController.userDTO.contacts}">
-						<p:column headerText="Nachname">
-							<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-								<h:outputText value="#{contact.lastName}"
-									class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
-								<f:param name="userName" value="#{contact.userName}" />
-								<f:param name="mode" value="view" />
-							</h:outputLink>
-						</p:column>
-						<p:column headerText="Vorname">
-							<h:outputText value="#{contact.firstName}"
-							class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
-						</p:column>
-						<p:column headerText="Online">
-							<h:selectBooleanCheckbox value="#{contact.online}" disabled="True"
-							class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
-						</p:column>
-					</p:dataTable>
-				</p:tab>
-				<p:tab title="Communities" id="communityTab">
-					<p:dataTable var="membership" id="membershipList"
-						value="#{userProfileController.userDTO.communityMemberships}">
-						<p:column headerText="Name">
-							<h:outputText value="#{membership.community.name}" />
-						</p:column>
-						<p:column headerText="Bestätigt">
-							<h:selectBooleanCheckbox value="#{membership.confirmer != null}" disabled="True" 
-								rendered="#{!membership.community.privateUser.userName.equals(userProfileController.userName)}"/>
-						</p:column>
-					</p:dataTable>
-					<p:dialog header="Neue Community" widgetVar="communityDialog" resizeable="false">
-						<h:form id="communityDialogForm">
-						<h:panelGrid columns="2" cellpadding="5">
-								<h:outputLabel for="communityname" value="Community" />
-								<p:inputText id="communityname" label="Name" required="true" value="#{userProfileController.communityName}"/>
-				
-								<f:facet name="footer">
-									<p:commandButton value="Beantragen" update="growl"
-										action="#{userProfileController.createCommunity()}" onclick="PF('communityDialog').hide();"/>
-									<p:commandButton value="Abbrechen" update="growl"
-										onclick="PF('communityDialog').hide();" />
-								</f:facet>
-						</h:panelGrid>
-						</h:form>
-					</p:dialog>
-
-					<p:commandButton value="Neue Community" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
-				</p:tab>
-			</p:tabView>
-		</p:panel>
+		<p:dialog header="Neue Community" widgetVar="communityDialog" resizeable="false">
+			<h:form id="communityDialogForm">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="communityname" value="Community" />
+					<p:inputText id="communityname" label="Name" required="true" value="#{userProfileController.communityName}"/>
+	
+					<f:facet name="footer">
+						<p:commandButton value="Beantragen" update="growl :userForm"
+							action="#{userProfileController.createCommunity()}" onclick="PF('communityDialog').hide();"/>
+						<p:commandButton value="Abbrechen" update="growl"
+							onclick="PF('communityDialog').hide();" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

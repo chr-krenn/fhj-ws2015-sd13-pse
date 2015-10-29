@@ -72,12 +72,15 @@ public class UserProfileController implements Serializable {
 
 	@PostConstruct
 	public void setup() {
+		userName = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("userName");
+		editMode = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("mode");
+		getPerson();
+	}
+	
+	private void getPerson() {
 		try {
-			userName = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("userName");
-			editMode = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("mode");
-
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
 			setUsersWithDepartment(userService.getUsersWithDepartment(person
@@ -341,8 +344,6 @@ public class UserProfileController implements Serializable {
 				userDTO.getContacts().remove(userService.getLoggedInUser());
 
 			} else {
-				System.out.println(userService.getLoggedInUser().getContacts()
-						.size());
 				userService.createRelation(userService.getLoggedInUser(),
 						userService.getUser(userDTO.getUserName()));
 
@@ -398,8 +399,9 @@ public class UserProfileController implements Serializable {
 		FacesMessage message;
 		
 		try {
-			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
+			Community community = chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
 			setCommunityName("");
+			getPerson();
 		} catch (EntityNotFoundException e) {
 			logger.info("[USERPROFILE] createCommunity failed for "
 					+ userDTO.getFullname() + " from " + context.toString());
