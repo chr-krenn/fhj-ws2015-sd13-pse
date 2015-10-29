@@ -112,6 +112,6 @@ public interface ChatService {
 	String resolveReceipientsMail( final Message message );
 	
 	CommunityMember createCommunityMember(final Person creator, final Community community);
-	boolean isPersonMemberOfCommunity( final Person person, final Community community );
+	String isPersonMemberOfCommunity( final Person person, final Community community );
 	
 }

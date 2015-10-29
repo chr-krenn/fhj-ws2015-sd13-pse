@@ -108,16 +108,26 @@ public class CommunityController {
 			try 
 			{	
 				com = chatService.getCommunity(communityName);
-				currentUser = userService.getUser(userSession.getUsername());
-				
 				logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
+				
+				currentUser = userService.getUser(userSession.getUsername());
 				logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
 				
 				//addCommunityMember
 				CommunityMember member = chatService.createCommunityMember(currentUser, com);
-				
 				logger.info("  currentUser: " + member.getCommunityMemberId() );
 				
+				if(member != null)
+				{
+					String result = isMemberOfCommunity(com.getName());
+					if(result == "Yes")
+					{
+						setMember(true);
+					}else
+					{
+						setMember(false);
+					}
+				}
 				
 			} catch (Exception e) {
 				logger.error("ERROR-MESSAGE: " + e.getMessage());
@@ -140,9 +150,10 @@ public class CommunityController {
 	
 	public String isMemberOfCommunity(String communityName)
 	{
-		isMember = false;
+		setMember(false);
 		Person currentUser = null;
 		Community com = null;
+		
 		try 
 		{
 			currentUser = userService.getUser(userSession.getUsername());
@@ -151,17 +162,29 @@ public class CommunityController {
 			com = chatService.getCommunity(communityName);
 			logger.info("  community: " + com.getCommunityId() + " - " + com.getName() );
 			
-			isMember = chatService.isPersonMemberOfCommunity(currentUser, com);
+			return chatService.isPersonMemberOfCommunity(currentUser, com);
 			
 		} catch (Exception e) {
 			logger.error("ERROR-MESSAGE: " + e.getMessage());
 		}
 
-		if(isMember){
-			return "true";
-		}
+		return "No";
+	}
 
-		return "false";
+	public Boolean isButtonDisabled(String communityName)
+	{
+		String result = isMemberOfCommunity(communityName);
+		
+		return (result == "Yes");
+		
+	}
+	
+	public boolean isMember() {
+		return isMember;
+	}
+
+	public void setMember(boolean isMember) {
+		this.isMember = isMember;
 	}
 	    
 }
