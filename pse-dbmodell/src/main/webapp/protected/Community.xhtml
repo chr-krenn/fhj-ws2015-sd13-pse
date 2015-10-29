@@ -6,21 +6,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
-    <h:form id="communitySearch">
-	     <h:form id="communitySearch">
+    <h:form id="communityProfile">
 	    	<h1>Communities</h1>
 	    	
-			<p:dataTable var="community" value="#{communityController.communities}" id="communities"
-				paginator="true" rows="10"
-               	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-               	selectionMode="single" selection="#{communityController.selectedCommunity}" 
-               	rowKey="#{community.communityId}">
-			
-			    <p:column headerText="Community Name">
-			        <h:outputText value="#{community.name}" />
-			    </p:column>
-			</p:dataTable>
-		</h:form>	
+			<p:panelGrid style="width: 50%;">
+				<p:row>
+					<p:column>			
+						<p:outputLabel value="Name"/>
+					</p:column>			
+					<p:column colspan="2">			
+						 <h:outputText value="#{communityProfileController.communityName}" />
+					</p:column>			
+				</p:row>
+			</p:panelGrid>
 	</h:form>
 
 	</ui:define>
