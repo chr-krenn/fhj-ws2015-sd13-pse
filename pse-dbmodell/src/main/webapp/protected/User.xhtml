@@ -234,10 +234,13 @@
 						</p:dataTable>
 					</p:tab>
 					<p:tab title="Communities">
-						<p:dataTable var="community"
-							value="#{userProfileController.userDTO.confirmedCommunities}">
+						<p:dataTable var="membership"
+							value="#{userProfileController.userDTO.communityMemberships}">
 							<p:column headerText="Name">
-								<h:outputText value="#{community.name}" />
+								<h:outputText value="#{membership.community.name}" />
+							</p:column>
+							<p:column headerText="Bestätigt">
+								<h:selectBooleanCheckbox value="#{membership.confirmer != null}" disabled="True"/>
 							</p:column>
 						</p:dataTable>
 

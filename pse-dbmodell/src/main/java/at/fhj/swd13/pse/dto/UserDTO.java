@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 
@@ -48,9 +49,9 @@ public class UserDTO {
 	
 	private List<Person> contacts;
 
-	private List<Community> confirmedCommunities;
+	private List<Community> communities;
 
-	private List<Community> createdCommunities;
+	private List<CommunityMember> communityMemberships;
 
 	private List<String> tags;
 
@@ -76,8 +77,8 @@ public class UserDTO {
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
-		this.setConfirmedCommunities(person.getConfirmedCommunities());
-		this.setCreatedCommunities(person.getCreatedCommunities());
+		this.setCommunities(person.getConfirmedCommunities());
+		this.setCommunityMemberships(person.getMemberships());
 		
 		tags = new ArrayList<String>();
 		for (PersonTag personTag : person.getPersonTags()) {
@@ -326,20 +327,20 @@ public class UserDTO {
 		this.contacts = contacts;
 	}
 
-	public List<Community> getConfirmedCommunities() {
-		return confirmedCommunities;
+	public List<CommunityMember> getCommunityMemberships() {
+		return communityMemberships;
 	}
 
-	public void setConfirmedCommunities(List<Community> confirmedCommunities) {
-		this.confirmedCommunities = confirmedCommunities;
+	public void setCommunityMemberships(List<CommunityMember> communityMemberships) {
+		this.communityMemberships = communityMemberships;
 	}
 
-	public List<Community> getCreatedCommunities() {
-		return createdCommunities;
+	public List<Community> getCommunities() {
+		return communities;
 	}
 
-	public void setCreatedCommunities(List<Community> createdCommunities) {
-		this.createdCommunities = createdCommunities;
+	public void setCommunities(List<Community> communities) {
+		this.communities = communities;
 	}
 
 	public List<String> getTags() {

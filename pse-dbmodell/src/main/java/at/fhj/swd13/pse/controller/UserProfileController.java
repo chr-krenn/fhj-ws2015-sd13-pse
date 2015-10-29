@@ -306,7 +306,7 @@ public class UserProfileController implements Serializable {
 	}
 
 	public String sendMessageButtonAction() {
-		List<Community> communities = userDTO.getConfirmedCommunities();
+		List<Community> communities = userDTO.getCommunities();
 		Optional<Community> userCommunity = communities
 				.stream()
 				.filter(c -> c.getPrivateUser() != null
