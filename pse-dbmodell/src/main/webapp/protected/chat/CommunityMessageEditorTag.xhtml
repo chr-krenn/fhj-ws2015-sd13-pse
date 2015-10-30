@@ -67,11 +67,10 @@
 			</p:row>
 			<p:row>
 				<p:column>
-					<p:outputLabel for="targetCommunities" value="Communities" />
+					<p:outputLabel for="targetCommunities" value="Community" />
 				</p:column>
 				<p:column>
-					
-					<p:autoComplete id="targetCommunities" multiple="false"
+					<p:autoComplete id="targetCommunities" multiple="true"
 						value="#{messageEditorController.selectedCommunities}"
 						completeMethod="#{messageEditorController.completeCommunity}"
 						converter="communityConverter" var="communityDTO"

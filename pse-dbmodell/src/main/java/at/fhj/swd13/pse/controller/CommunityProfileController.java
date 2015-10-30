@@ -27,34 +27,24 @@ public class CommunityProfileController implements Serializable {
 	@Inject
 	private ChatService chatService;
 
-	private String communityId;
-	private String communityName;
-
+	private int communityId;
+	private String communityIdString;
+	private Community community;
+	
 	@PostConstruct
 	public void setup() {
-		communityId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+		//communityId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+		communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 		getCommunity();
 	}
 	
-	private void getCommunity() {
-			//Community community = chatService.getCommunity(communityId);
-			communityName = communityId;//community.getName();
-
+	private Community getCommunity() {
+		communityId = Integer.parseInt(communityIdString);
+		return community = chatService.getCommunity(communityId);
 	}
 	
-	public String getCommunityId() {
-		return communityId;
-	}
+	public  String getSelectedCommunityName(){
+		return community.getName();	
 
-	public void setCommunityId(String communityId) {
-		this.communityId = communityId;
-	}
-
-	public String getCommunityName() {
-		return communityName;
-	}
-
-	public void setCommunityName(String communityName) {
-		this.communityName = communityName;
 	}
 }
