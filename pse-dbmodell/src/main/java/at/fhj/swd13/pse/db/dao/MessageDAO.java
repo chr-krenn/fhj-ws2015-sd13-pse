@@ -6,7 +6,6 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.dto.MessageDTO;
 
 public interface MessageDAO {
 	/**
@@ -38,7 +37,7 @@ public interface MessageDAO {
 	
 	List<Message> loadAll();
 	
-	List<MessageDTO> loadForUser(Person user);
+	List<Message> loadForUser(Person user);
 
 	List<Message> loadNews(int communityId);
 }

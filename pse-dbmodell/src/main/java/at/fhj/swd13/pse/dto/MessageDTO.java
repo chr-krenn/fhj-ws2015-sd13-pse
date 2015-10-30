@@ -24,7 +24,9 @@ public class MessageDTO {
 	
 	private String community;
 	
-	private Document icon;
+	private Document image;
+	
+	private String imageRef;
 	
 	private boolean like;
 	
@@ -45,11 +47,10 @@ public class MessageDTO {
 		this.text = m.getMessage();
 		this.privateMessage = isPrivateMessage(m);
 		this.community = getCommunity(m);
-		this.icon = m.getIcon();
+		this.image = m.getIcon();
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
 	}
-	
 	
 	public int getId() {
 		return id;
@@ -139,14 +140,21 @@ public class MessageDTO {
 		this.community = community;
 	}
 
-	
-	public Document getIcon() {
-		return icon;
+	public Document getImage() {
+		return image;
+	}
+
+	public void setImage(Document image) {
+		this.image = image;
+	}
+
+	public String getImageRef() {
+		return imageRef;
 	}
 
 	
-	public void setIcon(Document icon) {
-		this.icon = icon;
+	public void setImageRef(String imageRef) {
+		this.imageRef = imageRef;
 	}
 
 	

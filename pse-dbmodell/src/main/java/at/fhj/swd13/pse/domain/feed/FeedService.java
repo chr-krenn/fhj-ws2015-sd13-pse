@@ -20,7 +20,7 @@ import at.fhj.swd13.pse.dto.MessageDTO;
  */
 public interface FeedService {
 
-	List<Message> loadFeed();
+	List<MessageDTO> loadFeed();
 	
 	List<MessageDTO> loadFeedForUser(Person user);
 	
@@ -54,7 +54,7 @@ public interface FeedService {
 	 * @throws EntityNotFundException
 	 * @throws ConstraintViolationException
 	 */
-	List<Message> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
+	List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
 	
 	/**
 	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message 
@@ -63,5 +63,13 @@ public interface FeedService {
 	 * @param username
 	 */
 	void setMessageLikes(MessageDTO message, String username);
+	
+	/**
+	 * The image ref is not available in the message itself and must therefore be
+	 * set separately after creating the messageDTO based on the message
+	 * 
+	 * @param messageDTO
+	 */
+	void setImageRef(MessageDTO messageDTO);
 	
 }

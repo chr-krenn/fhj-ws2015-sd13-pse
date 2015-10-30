@@ -24,6 +24,7 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.dto.UserDTO;
@@ -38,6 +39,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Inject
 	private UserService userService;
+	
+	@Inject
+	private DocumentService documentService;
 
 	@Inject
 	private Logger logger;
@@ -50,13 +54,13 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<Message> loadFeed() {
-		return dbContext.getMessageDAO().loadAll();
+	public List<MessageDTO> loadFeed() {
+		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadAll());
 	}
 
 	@Override
 	public List<MessageDTO> loadFeedForUser(Person user) {
-		return dbContext.getMessageDAO().loadForUser(user);
+		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadForUser(user));
 	}
 
 	@Override
@@ -96,7 +100,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public Message getMessageById(int messageId) throws EntityNotFoundException {
-		return dbContext.getMessageDAO().getById(messageId);
+		Message byId = dbContext.getMessageDAO().getById(messageId);
+		
+		return byId;
 	}
 	
 	@Override
@@ -127,9 +133,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<Message> loadNews(int communityId)
+	public List<MessageDTO> loadNews(int communityId)
 			throws EntityNotFoundException, ConstraintViolationException {
-		return dbContext.getMessageDAO().loadNews(communityId);
+		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadNews(communityId));
 	}
 
 	@Override
@@ -147,5 +153,30 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		}
 		message.setQuantityRatings(quantityRatings);
 		message.setRatingPersonsList(personList);
+	}
+
+	/**
+	 * Creates messageDTOs for the messages and sets the imageRef for each
+	 *  
+	 * @param messages
+	 * 					list of messages
+	 * @return
+	 * 			list of messageDTOs
+	 */
+	private List<MessageDTO> getMessageDTOsWithImageRefs(List<Message> messages) {
+		List<MessageDTO> result = new ArrayList<MessageDTO>();
+		for(Message m: messages) {
+			MessageDTO mDTO = new MessageDTO(m);
+			setImageRef(mDTO);
+			result.add(mDTO);
+		}
+		return result;
+	}
+	
+	@Override
+	public void setImageRef(MessageDTO messageDTO) {
+		if(messageDTO.getImage() != null) {
+			messageDTO.setImageRef(documentService.buildServiceUrl(messageDTO.getImage().getDocumentId()));
+		}
 	}
 }

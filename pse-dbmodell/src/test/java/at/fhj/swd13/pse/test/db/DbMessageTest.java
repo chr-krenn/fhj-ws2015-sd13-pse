@@ -17,7 +17,6 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
-import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
@@ -59,7 +58,7 @@ public class DbMessageTest extends DbTestBase {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
-			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(108));
+			List<Message> activities = messageDAO.loadForUser(getPerson(108));
 
 			assertNotNull(activities);
 			assertEquals(6, activities.size());
@@ -78,7 +77,7 @@ public class DbMessageTest extends DbTestBase {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
-			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(110));
+			List<Message> activities = messageDAO.loadForUser(getPerson(110));
 
 			assertNotNull(activities);
 			assertEquals(3, activities.size());

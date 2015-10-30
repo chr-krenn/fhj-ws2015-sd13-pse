@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.controller;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -42,6 +44,7 @@ public class MessageDetailsController {
 		try {
 			Message message = feedService.getMessageById(id);
 			messageDTO = new MessageDTO(message);
+			feedService.setImageRef(messageDTO);
 			feedService.setMessageLikes(messageDTO, userSession.getUsername());
 		} catch (EntityNotFoundException e) {
 			logger.info("[MESSAGEDETAILS] message with id " + messageId + " not found");
@@ -87,7 +90,14 @@ public class MessageDetailsController {
 			feedService.removeRating(getMessageDTO().getId(), p);
 			getMessageDTO().setLike(false);
 			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()-1);
-			getMessageDTO().getRatingPersonsList().remove(p);
+			List<UserDTO> ratingPersonsList = getMessageDTO().getRatingPersonsList();
+
+			for(int i = 0; i < ratingPersonsList.size(); i++) {
+				if(ratingPersonsList.get(i).getUserName().contentEquals(p.getUserName())) {
+					ratingPersonsList.remove(i);
+					break;
+				}
+			}
 		}
 		catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();

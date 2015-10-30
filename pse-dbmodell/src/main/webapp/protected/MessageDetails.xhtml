@@ -6,64 +6,91 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
-		<h:outputText value="Error loading message" rendered="#{messageDetailsController.messageDTO == null}"/>
-		
+		<h:outputText value="Error loading message"
+			rendered="#{messageDetailsController.messageDTO == null}" />
+
 		<h:form>
-			<p:dataTable var="message" value="#{messageDetailsController.messageDTO}" 
-				rendered="#{messageDetailsController.messageDTO ne null}">
-				
-				<p:column>
-					<f:facet name="header">
-		                <h:outputText value="#{messageDetailsController.messageDTO.author}, am " /> 
-						<h:outputText value="#{messageDetailsController.messageDTO.date}">
-							<f:convertDateTime pattern="dd.MM.yyyy" />
-						</h:outputText>
-						<h:outputText value=" um " />
-						<h:outputText value="#{messageDetailsController.messageDTO.date}">
-							<f:convertDateTime pattern="HH:mm" />
-						</h:outputText>
-		            </f:facet>
-					<h:outputLabel value="#{message.privateMessage ? 'Private Nachricht an: ' : 'Community: '}" />	
-					<h:outputText value="#{message.community}"/>
-					<br/><br/>
-					<h:outputText value="#{message.headline}" style="font-weight: bold" />
-					<br/><br/>
-					<h:outputText value="#{message.text}" escape="false"/>
-				</p:column>
-				
-			</p:dataTable>
-			<br/>
-			<h:commandButton action="#{messageDetailsController.rateMessageDetailedView}" 
-				value="Like" immediate="true" 
-				rendered="#{!messageDetailsController.messageDTO.like}">
-				<f:param name="messageId" value="#{messageDetailsController.messageDTO.id}" />
-			</h:commandButton>
-			<h:commandButton action="#{messageDetailsController.removeRatingDetailedView}" 
-				value="Like zurücknehmen" immediate="true"
-				rendered="#{messageDetailsController.messageDTO.like}">
-				<f:param name="messageId" value="#{messageDetailsController.messageDTO.id}" />
-			</h:commandButton>
-			<br/><br/>
-			<h:outputText value="#{messageDetailsController.messageDTO.quantityRatings} " 
-				/>
-			
-			<h:outputLink id="fadePersons" onclick="PF('dlg1').show(); return false;"
-				rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
-				<h:outputText value="User gefällt das!" />
-			</h:outputLink>
-			<p:tooltip id="toolTipFade" for="fadePersons" value="#{messageDetailsController.messageDTO.ratingPersonsList}">
-				<f:converter converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter"/>
-			</p:tooltip>
-			<h:outputText value="User gefällt das!" 
-				rendered="#{empty messageDetailsController.messageDTO.ratingPersonsList}"/>
-				<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
+			<p:panel rendered="#{messageDetailsController.messageDTO ne null}">
+				<f:facet name="header">
+					<h:outputText
+						value="#{messageDetailsController.messageDTO.author}, am " />
+					<h:outputText value="#{messageDetailsController.messageDTO.date}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</h:outputText>
+					<h:outputText value=" um " />
+					<h:outputText value="#{messageDetailsController.messageDTO.date}">
+						<f:convertDateTime pattern="HH:mm" />
+					</h:outputText>
+				</f:facet>
+				<h:panelGrid cellpadding="5">
+					<p:row>
+						<p:column colspan="2">
+							<h:outputLabel
+								value="#{messageDetailsController.messageDTO.privateMessage ? 'Private Nachricht an: ' : 'Community: '}" />
+							<h:outputText
+								value="#{messageDetailsController.messageDTO.community}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column rowspan="2">
+							<p:graphicImage id="messageIcon" styleClass="userimage"
+								value="#{messageDetailsController.messageDTO.imageRef}"
+								cache="false"
+								rendered="#{messageDetailsController.messageDTO.imageRef ne null}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<h:outputText
+							value="#{messageDetailsController.messageDTO.headline}"
+							style="font-weight: bold" />
+					</p:row>
+					<p:row>
+						<h:outputText value="#{messageDetailsController.messageDTO.text}"
+							escape="false" />
+					</p:row>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:row>
+				<h:commandButton
+					action="#{messageDetailsController.rateMessageDetailedView}"
+					value="Like" immediate="true"
+					rendered="#{!messageDetailsController.messageDTO.like}">
+					<f:param name="messageId"
+						value="#{messageDetailsController.messageDTO.id}" />
+				</h:commandButton>
+				<h:commandButton
+					action="#{messageDetailsController.removeRatingDetailedView}"
+					value="Like zurücknehmen" immediate="true"
+					rendered="#{messageDetailsController.messageDTO.like}">
+					<f:param name="messageId"
+						value="#{messageDetailsController.messageDTO.id}" />
+				</h:commandButton>
+			</p:row>
+			<p:row>
+				<h:outputText
+					value="#{messageDetailsController.messageDTO.quantityRatings} " />
+				<h:outputLink id="fadePersons"
+					onclick="PF('dlg1').show(); return false;"
+					rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
+					<h:outputText value="User gefällt das!" />
+				</h:outputLink>
+				<p:tooltip id="toolTipFade" for="fadePersons"
+					value="#{messageDetailsController.messageDTO.ratingPersonsList}">
+					<f:converter
+						converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter" />
+				</p:tooltip>
+				<h:outputText value="User gefällt das!"
+					rendered="#{empty messageDetailsController.messageDTO.ratingPersonsList}" />
+			</p:row>
 		</h:form>
 		<p:dialog header="User" widgetVar="dlg1" minHeight="40">
-			<p:dataScroller value="#{messageDetailsController.messageDTO.ratingPersonsList}" var="person" 
-				chunkSize="10" mode="inline" scrollHeight="200">
+			<p:dataScroller
+				value="#{messageDetailsController.messageDTO.ratingPersonsList}"
+				var="person" chunkSize="10" mode="inline" scrollHeight="200">
 				<h:panelGrid columns="1" style="width:200px">
-					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-						<h:outputText value="#{person.lastName}"  style="font-weight: bold"/>
+					<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+						<h:outputText value="#{person.lastName}" style="font-weight: bold" />
 						<f:param name="userName" value="#{person.userName}" />
 						<f:param name="mode" value="view" />
 					</h:outputLink>

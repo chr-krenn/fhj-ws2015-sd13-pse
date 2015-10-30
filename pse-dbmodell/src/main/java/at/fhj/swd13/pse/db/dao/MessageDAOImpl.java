@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.db.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -11,7 +10,6 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.dto.MessageDTO;
 
 public class MessageDAOImpl extends DAOBase implements MessageDAO {
 
@@ -48,21 +46,16 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Message> loadAll() {
-
 		Query query = dbContext.createNamedQuery("Message.findAllOrderedByNewest");
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MessageDTO> loadForUser(Person user) {
+	public List<Message> loadForUser(Person user) {
 		Query query = dbContext.createNamedQuery("Message.findForUserAndTagsAndContacts");
 		query.setParameter("person", user);
-		List<MessageDTO> result = new ArrayList<MessageDTO>();
-		for(Message m: (List<Message>)query.getResultList()) {
-			result.add(new MessageDTO(m));
-		}
-		return result;
+		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -72,6 +65,4 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 		query.setParameter("id", communityId);
 		return query.getResultList();
 	}
-
-
 }

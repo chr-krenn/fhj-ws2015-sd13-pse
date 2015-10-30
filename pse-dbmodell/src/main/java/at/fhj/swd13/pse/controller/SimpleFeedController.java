@@ -15,7 +15,6 @@ import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
-import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -32,7 +31,7 @@ public class SimpleFeedController {
     @Produces
     @Named
     @OrderBy("createdAt ASC")
-	private List<Message> messages;
+	private List<MessageDTO> messages;
     
     @Inject
     private FeedService feedService;
@@ -52,7 +51,7 @@ public class SimpleFeedController {
     	messages = feedService.loadFeed();
     }
     
-    public List<Message> getMessages () {
+    public List<MessageDTO> getMessages () {
     	return messages;
     }
     
@@ -108,9 +107,9 @@ public class SimpleFeedController {
 		return "/protected/Main.jsf";
 	}
     
-    public List<Message> getNews(int communityId) {
+    public List<MessageDTO> getNews(int communityId) {
     	try {
-    		List<Message> messageList = feedService.loadNews(communityId);
+    		List<MessageDTO> messageList = feedService.loadNews(communityId);
     		return messageList;
 		} catch (EntityNotFoundException | ConstraintViolationException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
