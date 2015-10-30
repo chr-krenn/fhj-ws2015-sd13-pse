@@ -56,7 +56,7 @@ public class MessageDetailsController {
 	 * Adds "like" from actual message for the person currently logged-in
 	 * 
 	 */
-	public void rateMessageDetailedView() {
+	public String rateMessageDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
 			feedService.rateMessage(getMessageDTO().getId(), p);
@@ -71,13 +71,15 @@ public class MessageDetailsController {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[MESSAGEDETAILS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
+		
+		return "/protected/MessageDetails.jsf";
 	}
 
 	/**
 	 * Removes the "like" from actual message for the person currently logged-in
 	 * 
 	 */
-	 public void removeRatingDetailedView() {
+	 public String removeRatingDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
 			feedService.removeRating(getMessageDTO().getId(), p);
@@ -89,6 +91,8 @@ public class MessageDetailsController {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
+		
+		return "/protected/MessageDetails.jsf";
 	}
 
 }
