@@ -38,11 +38,13 @@
 			<h:outputText value="#{messageDetailsController.messageDTO.quantityRatings} " 
 				actionListener="#{messageDetailsController.messageDTO.like}"/>
 			
-			<h:outputLink onclick="PF('dlg1').show(); return false;" 
-				title="#{messageDetailsController.showRatingPersonsList()}" 
+			<h:outputLink id="fadePersons" onclick="PF('dlg1').show(); return false;"
 				rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
 				<h:outputText value="User gefällt das!" />
 			</h:outputLink>
+			<p:tooltip id="toolTipFade" for="fadePersons" value="#{messageDetailsController.messageDTO.ratingPersonsList}">
+				<f:converter converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter"/>
+			</p:tooltip>
 			<h:outputText value="User gefällt das!" 
 				rendered="#{empty messageDetailsController.messageDTO.ratingPersonsList}"/>
 				<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
