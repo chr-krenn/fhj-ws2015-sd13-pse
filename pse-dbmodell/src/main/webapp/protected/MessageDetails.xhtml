@@ -40,15 +40,15 @@
 			
 			<h:outputLink onclick="PF('dlg1').show(); return false;" 
 				title="#{messageDetailsController.showRatingPersonsList()}" 
-				rendered="#{not empty messageDetailsController.showRatingPersonsDialogBox()}">
+				rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
 				<h:outputText value="User gefällt das!" />
 			</h:outputLink>
 			<h:outputText value="User gefällt das!" 
-				rendered="#{empty messageDetailsController.showRatingPersonsDialogBox()}"/>
+				rendered="#{empty messageDetailsController.messageDTO.ratingPersonsList}"/>
 				<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
 		</h:form>
 		<p:dialog header="User" widgetVar="dlg1" minHeight="40">
-			<p:dataScroller value="#{messageDetailsController.showRatingPersonsDialogBox()}" var="person" 
+			<p:dataScroller value="#{messageDetailsController.messageDTO.ratingPersonsList}" var="person" 
 				chunkSize="10" mode="inline" scrollHeight="200">
 				<h:panelGrid columns="1" style="width:200px">
 					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">

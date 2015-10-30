@@ -71,6 +71,10 @@ public class SimpleFeedController {
     	
     }
     
+    /**
+     * Adds "like" for clicked message in activity stream for the currently logged-in person
+     * 
+     */
     public void rateMessage() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	int id = Integer.parseInt(messageId);
@@ -86,6 +90,10 @@ public class SimpleFeedController {
 		}
 	}
     
+    /**
+     * Removes "like" for clicked message in activity stream for the currently logged-in person
+     * 
+     */
     public void removeRating() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	int id = Integer.parseInt(messageId);

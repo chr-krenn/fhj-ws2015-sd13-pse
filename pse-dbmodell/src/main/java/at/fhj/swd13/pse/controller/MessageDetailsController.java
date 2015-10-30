@@ -54,6 +54,10 @@ public class MessageDetailsController {
 		return messageDTO;
 	}
 	
+	/**
+	 * Adds "like" from actual message for the person currently logged-in
+	 * 
+	 */
 	public void rateMessageDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
@@ -71,6 +75,10 @@ public class MessageDetailsController {
 		}
 	}
 
+	/**
+	 * Removes the "like" from actual message for the person currently logged-in
+	 * 
+	 */
 	 public void removeRatingDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
@@ -84,15 +92,15 @@ public class MessageDetailsController {
 			logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
 	}
-	 
+	
+	/**
+	 * Returns String with Lastnames of Users who like the specific message
+	 * 
+	 * @return String with lastnames
+	 */
 	public String showRatingPersonsList() {
 		List<Person> ratingPersonsList = getMessageDTO().getRatingPersonsList();
 		return feedService.prepareStringRatingPersonsList(ratingPersonsList);
 	}
 
-	public List<Person> showRatingPersonsDialogBox() {
-		List<Person> ratingPersonsList = getMessageDTO().getRatingPersonsList();
-		return ratingPersonsList;
-	}
-	
 }
