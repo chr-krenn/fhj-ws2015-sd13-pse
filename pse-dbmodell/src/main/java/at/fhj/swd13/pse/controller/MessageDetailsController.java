@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.controller;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -91,16 +89,6 @@ public class MessageDetailsController {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
-	}
-	
-	/**
-	 * Returns String with Lastnames of Users who like the specific message
-	 * 
-	 * @return String with lastnames
-	 */
-	public String showRatingPersonsList() {
-		List<Person> ratingPersonsList = getMessageDTO().getRatingPersonsList();
-		return feedService.prepareStringRatingPersonsList(ratingPersonsList);
 	}
 
 }

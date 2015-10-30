@@ -130,24 +130,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			throws EntityNotFoundException, ConstraintViolationException {
 		return dbContext.getMessageDAO().loadNews(communityId);
 	}
-	
-	@Override
-	public String prepareStringRatingPersonsList(List<Person> ratingPersonsList) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < ratingPersonsList.size(); i ++) {
-			if(i<3) {
-				sb.append(ratingPersonsList.get(i).getLastName());
-				if(i != ratingPersonsList.size() -1) {
-					sb.append(", ");
-				}
-			}
-			else {
-				sb.append(" ...");
-			}
-		}
-		sb.append(" gefällt das.");
-		return sb.toString();
-	}
 
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {

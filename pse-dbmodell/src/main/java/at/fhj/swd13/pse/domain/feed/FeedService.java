@@ -63,12 +63,5 @@ public interface FeedService {
 	 * @param username
 	 */
 	void setMessageLikes(MessageDTO message, String username);
-
-	/**
-	 * Prepare String with list of liking persons for displaying it while hover "... User gefällt das."
-	 * 
-	 * @param ratingPersonsList
-	 * @return
-	 */
-	String prepareStringRatingPersonsList(List<Person> ratingPersonsList);
+	
 }

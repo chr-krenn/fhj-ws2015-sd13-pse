@@ -81,10 +81,13 @@
 											<h:outputText value="#{activity.quantityRatings} " 
 												actionListener="#{activity.like}"/>
 											
-											<p:commandLink oncomplete="PF('dlg1').show();" update="dial" 
+											<p:commandLink id="fadePersons" oncomplete="PF('dlg1').show();" update="dial"
 												rendered="#{not empty activity.ratingPersonsList}">
 												<h:outputText value="User gefällt das!" />
 											</p:commandLink>
+											<p:tooltip id="toolTipFade" for="fadePersons" value="#{activity.ratingPersonsList}">
+												<f:converter converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter"/>
+											</p:tooltip>
 											<h:outputText value="User gefällt das!" 
 												rendered="#{empty activity.ratingPersonsList}"/>
 											<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
