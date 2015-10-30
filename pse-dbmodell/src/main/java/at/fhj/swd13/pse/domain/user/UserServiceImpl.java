@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
@@ -337,6 +339,10 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Override
 	public void resetPassword(final String emailAddress) throws InvalidEmailAddressException, MessagingException {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest rq = (HttpServletRequest)context.getExternalContext().getRequest();
+		int port = rq.getServerPort();
 
 		try {
 			Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
@@ -348,7 +354,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
-					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"localhost:8088/\">pse</a>.</div>", emailAddress);
+					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"localhost:"+port+"/\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
 
 		} catch (EntityNotFoundException e1) {
