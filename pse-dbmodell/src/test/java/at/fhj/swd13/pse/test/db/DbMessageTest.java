@@ -161,7 +161,7 @@ public class DbMessageTest extends DbTestBase {
 	public void testFindNews() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			Query query = dbContext.createNamedQuery("Message.findNews");
-			query.setParameter("id", 2);
+			query.setParameter("id", 1);
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
 			assertEquals(2, message.size());

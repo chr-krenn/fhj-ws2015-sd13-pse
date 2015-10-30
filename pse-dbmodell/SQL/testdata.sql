@@ -40,7 +40,7 @@ insert into message
 	
 insert into message_community
 	(messages_message_id, communities_community_id)
-	values((select message_id from message where message = "News entry" limit 1), 2);
+	values((select message_id from message where message = "News entry" limit 1), 1);
 ----------------------------------------------
 
 ----------------------------------------------	
@@ -166,7 +166,7 @@ insert into message
 	
 insert into message_community
 	(messages_message_id, communities_community_id)
-	values((select message_id from message where message = "Second news entry" limit 1), 2);
+	values((select message_id from message where message = "Second news entry" limit 1), 1);
 
 insert into message_tag_message
 	(messageTags_message_tag_id, messages_message_id)
