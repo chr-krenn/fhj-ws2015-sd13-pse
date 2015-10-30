@@ -57,7 +57,7 @@ public class CommunityController {
     
     private int communityId;
 	private String invitationOnly;
-    private String communityName;
+    private String communityIdString;
     private String privateUser;
     private boolean isMember;
     
@@ -65,7 +65,7 @@ public class CommunityController {
     public void postConstruct() {
     	communities = chatService.getAllCommunities();	
     	
-    	communityName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityName");
+    	communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityId");
     	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
     	privateUser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("privateUser");
     }
@@ -111,40 +111,48 @@ public class CommunityController {
 		
 		logger.info("######## Start - subscribeCommunity ########");
 		
-		if( !isinvitationOnly() ) // public Community
-		{
-			logger.info("#### Public Community ####");
+		Community com = null;
+		Person currentUser = null;
+		communityId = Integer.parseInt(communityIdString);
+		
+		try 
+		{	
+			com = chatService.getCommunity(communityId);
+			logger.debug("  community: " + com.getCommunityId() + " - " +com.getName() );
 			
-			Community com = null;
-			Person currentUser = null;
-			communityId = Integer.parseInt(communityName);
-			try 
-			{	
-				com = chatService.getCommunity(communityId);
-				logger.debug("  community: " + com.getCommunityId() + " - " +com.getName() );
+			currentUser = userService.getUser(userSession.getUsername());
+			logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			
+			if( !isinvitationOnly() ) // public Community
+			{
+				logger.info("#### Public Community ####");
+	
+					//addCommunityMember
+					CommunityMember member = chatService.createCommunityMember(currentUser, com);
+					logger.debug("  currentUser: " + member.getCommunityMemberId() );
+					
+					if(member != null)
+					{
+						setMember( isMemberOfCommunity( com.getCommunityId() ) );
+					}
+	
+				logger.info("#### Done - Public Community ####");
 				
-				currentUser = userService.getUser(userSession.getUsername());
-				logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			}else // private Community
+			{
+				logger.info("#### Private Community ####");
 				
-				//addCommunityMember
-				CommunityMember member = chatService.createCommunityMember(currentUser, com);
-				logger.debug("  currentUser: " + member.getCommunityMemberId() );
+				logger.info("private user: " + privateUser);
 				
-				if(member != null)
-				{
-					setMember( isMemberOfCommunity( com.getCommunityId() ) );
-				}
 				
-			} catch (Exception e) {
-				logger.error("ERROR-MESSAGE: " + e.getMessage());
+				logger.info("#### Done - Private Community ####");
+				
 			}
 			
-			logger.info("#### Done - subscribeCommunity ####");
-			
-		}else // private Community
-		{
-			logger.info("TODO -- Private Communities");
+		} catch (Exception e) {
+			logger.error("ERROR-MESSAGE: " + e.getMessage());
 		}
+		
 		
 		logger.info("######## DONE - subscribeCommunity ########");
 		

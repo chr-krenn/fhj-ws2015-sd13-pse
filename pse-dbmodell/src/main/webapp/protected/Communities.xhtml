@@ -35,15 +35,14 @@
 			     	<ui:fragment rendered="#{community.invitationOnly == false}">
 						<p:commandLink update="communities" actionListener="#{communityController.subscribeCommunity}">	
 			     			<p:commandButton value="add_Community" id="addCommunity" disabled="#{communityController.isMemberOfCommunity(community.communityId)}" />
-			     			<f:param name="communityName" value="#{community.communityId}" />
+			     			<f:param name="communityId" value="#{community.communityId}" />
 			     			<f:param name="invitationOnly" value="#{community.invitationOnly}" />
-			     			<f:param name="privateUser" value="#{community.privateUser}" />
 			     		</p:commandLink>
 			     	</ui:fragment>
 					<ui:fragment rendered="#{community.invitationOnly == true}">
 						<p:commandLink actionListener="#{communityController.subscribeCommunity}">	
 			     			<p:commandButton value="ask_Commuity" id="askCommunity" disabled="#{communityController.isMemberOfCommunity(community.communityId)}" />
-			     			<f:param name="communityName" value="#{community.communityId}" />
+			     			<f:param name="communityId" value="#{community.communityId}" />
 			     			<f:param name="invitationOnly" value="#{community.invitationOnly}" />
 			     			<f:param name="privateUser" value="#{community.privateUser}" />
 			     		</p:commandLink>
