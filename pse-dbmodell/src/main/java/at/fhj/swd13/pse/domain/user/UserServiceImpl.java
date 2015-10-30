@@ -343,6 +343,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest rq = (HttpServletRequest)context.getExternalContext().getRequest();
 		int port = rq.getServerPort();
+		String serverName = rq.getServerName();
 
 		try {
 			Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
@@ -354,7 +355,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
-					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"localhost:"+port+"/\">pse</a>.</div>", emailAddress);
+					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
 
 		} catch (EntityNotFoundException e1) {
