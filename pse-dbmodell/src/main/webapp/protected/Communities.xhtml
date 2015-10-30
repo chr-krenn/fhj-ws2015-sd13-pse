@@ -25,10 +25,10 @@
 			    </p:column>
 			    <p:column headerText="isPrivate">
 			    	<ui:fragment rendered="#{community.invitationOnly == false}">
-			    		<h:outputText value="No" />
+			    		<h:outputText value="#{communityController.getAnswerno()}" />
 			    	</ui:fragment>
 			    	<ui:fragment rendered="#{community.invitationOnly == true}">
-			        	<h:outputText value="Yes" />
+			        	<h:outputText value="#{communityController.getAnsweryes()}" />
 			        </ui:fragment>
 			    </p:column>
 			    <p:column headerText="Action">

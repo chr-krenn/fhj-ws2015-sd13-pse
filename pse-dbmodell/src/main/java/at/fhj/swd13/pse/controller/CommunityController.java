@@ -20,6 +20,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
+import javassist.bytecode.ConstantAttribute;
 
 
 /**
@@ -51,8 +52,8 @@ public class CommunityController {
 	
     private String searchFieldText = "";
 
-    private String answerYes = "Yes";
-    private String answerNo = "No";
+    public static final String answerYes = "Yes";
+    public static final String answerNo = "No";
     
     private int communityId;
 	private String invitationOnly;
@@ -199,5 +200,15 @@ public class CommunityController {
 
 	public void setMember(boolean isMember) {
 		this.isMember = isMember;
+	}
+
+
+	public static String getAnsweryes() {
+		return answerYes;
+	}
+
+
+	public static String getAnswerno() {
+		return answerNo;
 	}
 }
