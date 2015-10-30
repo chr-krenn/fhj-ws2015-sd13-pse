@@ -12,9 +12,18 @@
 			<p:dataTable var="message" value="#{messageDetailsController.messageDTO}" 
 				rendered="#{messageDetailsController.messageDTO ne null}">
 				
-				<p:column headerText="#{messageDetailsController.messageDTO.author}, am 
-										#{messageDetailsController.messageDTO.date}" >
-					<h:outputLabel>Nachricht an: </h:outputLabel>	
+				<p:column>
+					<f:facet name="header">
+		                <h:outputText value="#{messageDetailsController.messageDTO.author}, am " /> 
+						<h:outputText value="#{messageDetailsController.messageDTO.date}">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+						<h:outputText value=" um " />
+						<h:outputText value="#{messageDetailsController.messageDTO.date}">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+		            </f:facet>
+					<h:outputLabel value="#{message.privateMessage ? 'Private Nachricht an: ' : 'Community: '}" />	
 					<h:outputText value="#{message.community}"/>
 					<br/><br/>
 					<h:outputText value="#{message.headline}" style="font-weight: bold" />
@@ -36,7 +45,7 @@
 			</h:commandButton>
 			<br/><br/>
 			<h:outputText value="#{messageDetailsController.messageDTO.quantityRatings} " 
-				actionListener="#{messageDetailsController.messageDTO.like}"/>
+				/>
 			
 			<h:outputLink id="fadePersons" onclick="PF('dlg1').show(); return false;"
 				rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
