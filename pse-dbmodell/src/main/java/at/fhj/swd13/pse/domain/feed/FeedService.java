@@ -72,4 +72,21 @@ public interface FeedService {
 	 */
 	void setImageRef(MessageDTO messageDTO);
 	
+	/**
+	 * Returns all comments for a message
+	 * 
+	 * @param messageId
+	 * @return
+	 * 			list of messageDTOs
+	 * @throws EntityNotFoundException
+	 */
+	List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException;
+	
+	/**
+	 * Sets the comments in the messageDTO
+	 * 
+	 * @param messageDTO
+	 */
+	void setComments(MessageDTO messageDTO) throws EntityNotFoundException;
+	
 }

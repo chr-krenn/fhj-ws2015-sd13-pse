@@ -147,15 +147,6 @@ public class DbMessageTest extends DbTestBase {
 		
 	}
 
-	private Person getPerson(int id) throws Exception {
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			return personDAO.getById(id);
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindNews() throws Exception {
@@ -165,6 +156,27 @@ public class DbMessageTest extends DbTestBase {
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
 			assertEquals(2, message.size());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindComments() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			Query query = dbContext.createNamedQuery("Message.findComments");
+			query.setParameter("message", dbContext.getMessageDAO().getById(1));
+			List<Message> message = query.getResultList();
+			assertNotNull(message);
+			assertEquals(3, message.size());
+		}
+	}
+	
+	private Person getPerson(int id) throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			PersonDAO personDAO = dbContext.getPersonDAO();
+
+			return personDAO.getById(id);
 		}
 	}
 	

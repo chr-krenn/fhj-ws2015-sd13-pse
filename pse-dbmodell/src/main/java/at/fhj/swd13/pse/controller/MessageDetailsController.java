@@ -46,6 +46,7 @@ public class MessageDetailsController {
 			messageDTO = new MessageDTO(message);
 			feedService.setImageRef(messageDTO);
 			feedService.setMessageLikes(messageDTO, userSession.getUsername());
+			feedService.setComments(messageDTO);
 		} catch (EntityNotFoundException e) {
 			logger.info("[MESSAGEDETAILS] message with id " + messageId + " not found");
 		}

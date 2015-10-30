@@ -67,7 +67,8 @@ import org.jsoup.Jsoup;
 						"p.personTargetRelations tr WHERE sr.targetPerson = :person or tr.sourcePerson = :person)) " +
 						"AND c.systemInternal = false AND c.invitationOnly = false)) " +
 				"ORDER BY m.createdAt DESC"),
-		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
+		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id"),
+		@NamedQuery(name="Message.findComments", query = "SELECT m FROM Message m where m.messageBean = :message")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 

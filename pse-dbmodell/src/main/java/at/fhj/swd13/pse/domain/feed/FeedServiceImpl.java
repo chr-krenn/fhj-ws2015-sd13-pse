@@ -39,15 +39,14 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Inject
 	private UserService userService;
-	
+
 	@Inject
 	private DocumentService documentService;
 
 	@Inject
 	private Logger logger;
-	
-	public FeedServiceImpl() {
-	}
+
+	public FeedServiceImpl() {}
 
 	public FeedServiceImpl(DbContext dbContext) {
 		super(dbContext);
@@ -55,17 +54,17 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public List<MessageDTO> loadFeed() {
-		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadAll());
+		return getMessageDTOs(dbContext.getMessageDAO().loadAll());
 	}
 
 	@Override
 	public List<MessageDTO> loadFeedForUser(Person user) {
-		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadForUser(user));
+		return getMessageDTOs(dbContext.getMessageDAO().loadForUser(user));
 	}
 
 	@Override
-	public void saveMessage(String headline, String text, String username,
-			Document document, Document icon, List<Community> communities, List<MessageTag> messageTags) {
+	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
+			List<MessageTag> messageTags) {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
@@ -79,32 +78,32 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		message.setValidFrom(createdDate);		
+		message.setValidFrom(createdDate);
 
 		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
 		message.setDeliverySystem(deliverySystemDAO.getPseService());
-		
+
 		message.setAttachment(document);
 		message.setIcon(icon);
 
 		try {
 
 			dbContext.getMessageDAO().insert(message);
-			message.setMessageTags(messageTags);		
+			message.setMessageTags(messageTags);
 			message.setCommunities(communities);
-			
+
 		} catch (ConstraintViolationException e) {
-			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + message.getHeadline() );
+			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + message.getHeadline());
 		}
 	}
 
 	@Override
 	public Message getMessageById(int messageId) throws EntityNotFoundException {
 		Message byId = dbContext.getMessageDAO().getById(messageId);
-		
+
 		return byId;
 	}
-	
+
 	@Override
 	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
 		Date createdDate = new Date();
@@ -118,7 +117,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		p.addMesasgeRating(rating);
 		dbContext.getMessageRatingDAO().insert(rating);
 	}
-	
+
 	@Override
 	public void removeRating(int messageId, Person person) throws EntityNotFoundException {
 		Message m = dbContext.getMessageDAO().getById(messageId);
@@ -133,21 +132,20 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId)
-			throws EntityNotFoundException, ConstraintViolationException {
-		return getMessageDTOsWithImageRefs(dbContext.getMessageDAO().loadNews(communityId));
+	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException {
+		return getMessageDTOs(dbContext.getMessageDAO().loadNews(communityId));
 	}
 
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {
 		List<MessageRating> ratingList = message.getRatingList();
-		
+
 		int quantityRatings = ratingList.size();
 		List<UserDTO> personList = new ArrayList<UserDTO>();
-		
-		for(int j = 0; j < quantityRatings; j++) {
+
+		for (int j = 0; j < quantityRatings; j++) {
 			personList.add(new UserDTO(ratingList.get(j).getPerson()));
-			if(ratingList.get(j).getPerson().getUserName().equals(username)) {
+			if (ratingList.get(j).getPerson().getUserName().equals(username)) {
 				message.setLike(true);
 			}
 		}
@@ -155,28 +153,55 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		message.setRatingPersonsList(personList);
 	}
 
+	@Override
+	public List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException {
+		return getMessageDTOs(dbContext.getMessageDAO().loadComments(getMessageById(messageId)));
+	}
+
+	private List<MessageDTO> getMessageDTOs(List<Message> messages) {
+		return getMessageDTOs(messages, true, true);
+	}
+
 	/**
-	 * Creates messageDTOs for the messages and sets the imageRef for each
-	 *  
+	 * Creates messageDTOs for the messages
+	 * Optionally sets the ImageRef
+	 * and load the comments for each message
+	 * 
 	 * @param messages
-	 * 					list of messages
+	 * @param loadImageRefs
+	 * @param loadComments
 	 * @return
-	 * 			list of messageDTOs
 	 */
-	private List<MessageDTO> getMessageDTOsWithImageRefs(List<Message> messages) {
+	private List<MessageDTO> getMessageDTOs(List<Message> messages, boolean loadImageRefs, boolean loadComments) {
 		List<MessageDTO> result = new ArrayList<MessageDTO>();
-		for(Message m: messages) {
+		for (Message m : messages) {
 			MessageDTO mDTO = new MessageDTO(m);
-			setImageRef(mDTO);
+			if (loadImageRefs) {
+				setImageRef(mDTO);
+			}
+			if (loadComments) {
+				try {
+					setComments(mDTO);
+				} catch (EntityNotFoundException e) {
+					logger.warn("[FEED] Could not load Comments for message with ID " +
+							"[" + mDTO.getId() + "] because entity was not found");
+				}
+			}
 			result.add(mDTO);
 		}
 		return result;
 	}
-	
+
 	@Override
 	public void setImageRef(MessageDTO messageDTO) {
-		if(messageDTO.getImage() != null) {
+		if (messageDTO.getImage() != null) {
 			messageDTO.setImageRef(documentService.buildServiceUrl(messageDTO.getImage().getDocumentId()));
 		}
+	}
+
+	@Override
+	public void setComments(MessageDTO messageDTO) throws EntityNotFoundException {
+		messageDTO.setComments(loadComments(messageDTO.getId()));
+
 	}
 }

@@ -89,7 +89,7 @@
 												<h:outputText value="#{activity.text}" escape="false" />
 											</h:panelGrid>
 										</h:panelGrid>
-										<h:panelGrid columns="4" style="margin-top: 10px">
+										<h:panelGrid columns="5" style="margin-top: 10px;">
 											<h:commandButton action="#{simpleFeedController.rateMessage}"
 												value="Like" immediate="true" rendered="#{!activity.like}"
 												styleClass="likebutton">
@@ -114,7 +114,7 @@
 											</p:tooltip>
 											<h:outputText value="User gefällt das!"
 												rendered="#{empty activity.ratingPersonsList}" />
-
+											<h:outputText value="#{activity.numberOfComments} Kommentare" style="margin-left:40px" />
 											<p:dialog id="dial" header="User" widgetVar="dlg1"
 												minHeight="40" dynamic="true">
 												<p:dataScroller id="ratingScroller"

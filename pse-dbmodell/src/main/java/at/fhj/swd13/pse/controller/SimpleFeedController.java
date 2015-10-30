@@ -48,7 +48,7 @@ public class SimpleFeedController {
     @PostConstruct
     public void postConstruct() {
     	
-    	messages = feedService.loadFeed();
+//    	messages = feedService.loadFeed();
     }
     
     public List<MessageDTO> getMessages () {
@@ -60,6 +60,7 @@ public class SimpleFeedController {
     		List<MessageDTO> messageList = feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
     		for(int i = 0; i < messageList.size(); i++) {
     			feedService.setMessageLikes(messageList.get(i), userSession.getUsername());
+    			feedService.setComments(messageList.get(i));
     		}
     		return messageList;
 		} catch (EntityNotFoundException e) {

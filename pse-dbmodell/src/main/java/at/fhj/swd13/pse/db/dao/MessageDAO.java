@@ -40,4 +40,6 @@ public interface MessageDAO {
 	List<Message> loadForUser(Person user);
 
 	List<Message> loadNews(int communityId);
+	
+	List<Message> loadComments(Message message);
 }

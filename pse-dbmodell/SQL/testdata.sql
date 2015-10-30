@@ -8,11 +8,20 @@ insert into message
 ----------------------------------------------
 
 ----------------------------------------------
---Required for DBMessageTest: comment on other message
+--Required for DBMessageTest: comment on message
 --should NOT be selected in testActivityStream()
+--should be counted in testGetNumberOfComments()
 insert into message 
-	(created_by, message, delivered_by, commented_on_message_id) 
-	values (103, "Comment on Test message", 1, 1);
+	(created_by, message, commented_on_message_id, delivered_by) 
+	values (105, "Comment 1", 1, 1);
+
+insert into message 
+	(created_by, message, commented_on_message_id, delivered_by) 
+	values (106, "Comment 2", 1, 1);
+
+insert into message 
+	(created_by, message, commented_on_message_id, delivered_by) 
+	values (105, "Comment 3", 1, 1);
 ----------------------------------------------
 
 ----------------------------------------------

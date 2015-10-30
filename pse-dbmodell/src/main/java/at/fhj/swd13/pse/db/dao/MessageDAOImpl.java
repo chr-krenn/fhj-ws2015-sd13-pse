@@ -65,4 +65,12 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 		query.setParameter("id", communityId);
 		return query.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Message> loadComments(Message message) {
+		Query query = dbContext.createNamedQuery("Message.findComments");
+		query.setParameter("message", message);
+		return query.getResultList();
+	}
 }

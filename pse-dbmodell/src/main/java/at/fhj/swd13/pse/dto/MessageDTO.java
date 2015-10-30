@@ -36,6 +36,10 @@ public class MessageDTO {
 	
 	private List<UserDTO> ratingPersonsList;
 	
+	private Integer numberOfComments;
+	
+	private List<MessageDTO> comments;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
@@ -195,6 +199,27 @@ public class MessageDTO {
 
 	public void setRatingPersonsList(List<UserDTO> ratingPersonsList) {
 		this.ratingPersonsList = ratingPersonsList;
+	}
+
+	
+	public Integer getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	
+	public void setNumberOfComments(Integer numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
+	
+	public List<MessageDTO> getComments() {
+		return comments;
+	}
+
+	
+	public void setComments(List<MessageDTO> comments) {
+		this.comments = comments;
+		setNumberOfComments(comments.size());
 	}
 	
 }
