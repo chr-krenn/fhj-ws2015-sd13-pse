@@ -50,7 +50,7 @@
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
 									<p:outputPanel>
-										<h:panelGrid columns="7" cellpadding="5">
+										<h:panelGrid columns="6" cellpadding="5">
 											<h:outputLabel
 												value="#{activity.privateMessage ? 'Privat' : 
 												activity.community}"
@@ -68,15 +68,41 @@
 												value="Details" icon="ui-icon-search">
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
+										</h:panelGrid>
+										<h:panelGrid columns="6" cellpadding="5">
 											<h:commandButton action="#{simpleFeedController.rateMessage}" value="Like" immediate="true" 
 												rendered="#{!activity.like}">
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
-
 											<h:commandButton action="#{simpleFeedController.removeRating}" value="Like zurücknehmen" immediate="true"
 												rendered="#{activity.like}">
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
+											<h:outputText value="#{activity.quantityRatings} " 
+												actionListener="#{activity.like}"/>
+											
+											<p:commandLink oncomplete="PF('dlg1').show();" update="dial" 
+												rendered="#{not empty activity.ratingPersonsList}">
+												<h:outputText value="User gefällt das!" />
+											</p:commandLink>
+											<h:outputText value="User gefällt das!" 
+												rendered="#{empty activity.ratingPersonsList}"/>
+											<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
+												
+											<p:dialog id="dial" header="#{activity.author}" widgetVar="dlg1" minHeight="40" dynamic="true">
+											
+												<p:dataScroller id="ratingScroller" value="#{activity.ratingPersonsList}" var="person" 
+													chunkSize="10" mode="inline" scrollHeight="200" dynamic="true">
+													
+													<h:panelGrid columns="1" style="width:200px">
+														<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+															<h:outputText value="#{person.lastName}"  style="font-weight: bold"/>
+															<f:param name="userName" value="#{person.userName}" />
+															<f:param name="mode" value="view" />
+														</h:outputLink>
+													</h:panelGrid>
+												</p:dataScroller>
+											</p:dialog>
 										</h:panelGrid>
 										<h:outputText value="#{activity.headline} &lt;br/&gt;"
 											escape="false" style="font-weight: bold" />
