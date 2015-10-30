@@ -24,20 +24,10 @@
 				</f:facet>
 				<h:panelGrid cellpadding="5">
 					<p:row>
-						<p:column colspan="2">
-							<h:outputLabel
-								value="#{messageDetailsController.messageDTO.privateMessage ? 'Private Nachricht an: ' : 'Community: '}" />
-							<h:outputText
-								value="#{messageDetailsController.messageDTO.community}" />
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column rowspan="2">
-							<p:graphicImage id="messageIcon" styleClass="userimage"
-								value="#{messageDetailsController.messageDTO.imageRef}"
-								cache="false"
-								rendered="#{messageDetailsController.messageDTO.imageRef ne null}" />
-						</p:column>
+						<h:outputLabel
+							value="#{messageDetailsController.messageDTO.privateMessage ? 'Private Nachricht an: ' : 'Community: '}" />
+						<h:outputText
+							value="#{messageDetailsController.messageDTO.community}" />
 					</p:row>
 					<p:row>
 						<h:outputText
@@ -48,26 +38,28 @@
 						<h:outputText value="#{messageDetailsController.messageDTO.text}"
 							escape="false" />
 					</p:row>
+					<p:row>
+						<p:graphicImage id="messageIcon" styleClass="userimage"
+							value="#{messageDetailsController.messageDTO.imageRef}"
+							cache="false"
+							rendered="#{messageDetailsController.messageDTO.imageRef ne null}" />
+					</p:row>
 				</h:panelGrid>
-			</p:panel>
-
-			<p:row>
-				<h:commandButton
+				<f:facet name="footer">
+					<h:commandButton
 					action="#{messageDetailsController.rateMessageDetailedView}"
-					value="Like" immediate="true"
+					value="Like" immediate="true" styleClass="likebutton"
 					rendered="#{!messageDetailsController.messageDTO.like}">
 					<f:param name="messageId"
 						value="#{messageDetailsController.messageDTO.id}" />
 				</h:commandButton>
 				<h:commandButton
 					action="#{messageDetailsController.removeRatingDetailedView}"
-					value="Like zurücknehmen" immediate="true"
+					value="Like zurücknehmen" immediate="true" styleClass="likebutton"
 					rendered="#{messageDetailsController.messageDTO.like}">
 					<f:param name="messageId"
 						value="#{messageDetailsController.messageDTO.id}" />
 				</h:commandButton>
-			</p:row>
-			<p:row>
 				<h:outputText
 					value="#{messageDetailsController.messageDTO.quantityRatings} " />
 				<h:outputLink id="fadePersons"
@@ -82,7 +74,8 @@
 				</p:tooltip>
 				<h:outputText value="User gefällt das!"
 					rendered="#{empty messageDetailsController.messageDTO.ratingPersonsList}" />
-			</p:row>
+				</f:facet>
+			</p:panel>
 		</h:form>
 		<p:dialog header="User" widgetVar="dlg1" minHeight="40">
 			<p:dataScroller
@@ -90,7 +83,7 @@
 				var="person" chunkSize="10" mode="inline" scrollHeight="200">
 				<h:panelGrid columns="1" style="width:200px">
 					<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-						<h:outputText value="#{person.lastName}" style="font-weight: bold" />
+						<h:outputText value="#{person.fullName}" style="font-weight: bold" />
 						<f:param name="userName" value="#{person.userName}" />
 						<f:param name="mode" value="view" />
 					</h:outputLink>
