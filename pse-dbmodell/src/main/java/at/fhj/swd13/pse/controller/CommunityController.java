@@ -51,6 +51,10 @@ public class CommunityController {
 	
     private String searchFieldText = "";
 
+    private String answerYes = "Yes";
+    private String answerNo = "No";
+    
+    private int communityId;
 	private String invitationOnly;
     private String communityName;
     private String privateUser;
@@ -59,6 +63,7 @@ public class CommunityController {
     @PostConstruct
     public void postConstruct() {
     	communities = chatService.getAllCommunities();	
+    	
     	communityName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityName");
     	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
     	privateUser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("privateUser");
@@ -111,29 +116,22 @@ public class CommunityController {
 			
 			Community com = null;
 			Person currentUser = null;
-			
+			communityId = Integer.parseInt(communityName);
 			try 
 			{	
-				com = chatService.getCommunity(communityName);
-				logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
+				com = chatService.getCommunity(communityId);
+				logger.debug("  community: " + com.getCommunityId() + " - " +com.getName() );
 				
 				currentUser = userService.getUser(userSession.getUsername());
-				logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+				logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
 				
 				//addCommunityMember
 				CommunityMember member = chatService.createCommunityMember(currentUser, com);
-				logger.info("  currentUser: " + member.getCommunityMemberId() );
+				logger.debug("  currentUser: " + member.getCommunityMemberId() );
 				
 				if(member != null)
 				{
-					String result = isMemberOfCommunity(com.getName());
-					if(result == "Yes")
-					{
-						setMember(true);
-					}else
-					{
-						setMember(false);
-					}
+					setMember( isMemberOfCommunity( com.getCommunityId() ) );
 				}
 				
 			} catch (Exception e) {
@@ -155,7 +153,7 @@ public class CommunityController {
 		return invitationOnly != null && invitationOnly.equals("true");
 	}
 	
-	public String isMemberOfCommunity(String communityName)
+	public Boolean isMemberOfCommunity(int comId)
 	{
 		setMember(false);
 		Person currentUser = null;
@@ -164,25 +162,34 @@ public class CommunityController {
 		try 
 		{
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
 			
-			com = chatService.getCommunity(communityName);
-			logger.info("  community: " + com.getCommunityId() + " - " + com.getName() );
+			com = chatService.getCommunity(comId);
+			logger.debug("  community: " + com.getCommunityId() + " - " + com.getName() );
 			
-			return chatService.isPersonMemberOfCommunity(currentUser, com);
+			setMember( chatService.isPersonMemberOfCommunity(currentUser, com) );
+			logger.debug("isMember: " + isMember());
 			
 		} catch (Exception e) {
-			logger.error("ERROR-MESSAGE: " + e.getMessage());
+			logger.error("ERROR-MESSAGE: " + e.getMessage() );
 		}
 
-		return "No";
+		return isMember();
 	}
 
-	public Boolean isButtonDisabled(String communityName)
+	public String isMemberToString(int communityId)
 	{
-		String result = isMemberOfCommunity(communityName);
+		setMember( isMemberOfCommunity( communityId ) );
 		
-		return (result == "Yes");
+		if(isMember())
+		{
+			return answerYes;
+		}
+		else
+		{
+			return answerNo;
+		}
+		
 		
 	}
 	
