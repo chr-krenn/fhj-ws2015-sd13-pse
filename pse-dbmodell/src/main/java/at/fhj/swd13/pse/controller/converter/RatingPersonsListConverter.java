@@ -33,8 +33,9 @@ public class RatingPersonsListConverter implements Converter {
 					sb.append(", ");
 				}
 			}
-			else {
+			else if(i==3){
 				sb.append(" ...");
+				break;
 			}
 		}
 		sb.append(" gefällt das.");
