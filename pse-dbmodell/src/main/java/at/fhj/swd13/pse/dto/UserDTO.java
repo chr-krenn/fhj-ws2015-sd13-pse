@@ -16,6 +16,8 @@ public class UserDTO {
 	private String lastName;
 
 	private String firstName;
+	
+	private String fullName;
 
 	private String emailAddress;
 
@@ -63,6 +65,7 @@ public class UserDTO {
 		this.userName = person.getUserName();
 		this.lastName = person.getLastName();
 		this.firstName = person.getFirstName();
+		this.fullName = getFirstName() +" " +getLastName();
 		this.emailAddress = person.getEmailAddress();
 		this.dateOfBirth = person.getDateOfBirth();
 		this.dateOfEntry = person.getDateOfEntry();
@@ -141,6 +144,14 @@ public class UserDTO {
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	/**

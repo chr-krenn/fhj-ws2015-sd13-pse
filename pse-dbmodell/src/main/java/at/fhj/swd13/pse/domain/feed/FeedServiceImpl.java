@@ -26,6 +26,7 @@ import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
+import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
@@ -133,14 +134,13 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {
-		List<MessageRating> ratingList;
-		ratingList = message.getRatingList();
+		List<MessageRating> ratingList = message.getRatingList();
 		
 		int quantityRatings = ratingList.size();
-		List<Person> personList = new ArrayList<Person>();
+		List<UserDTO> personList = new ArrayList<UserDTO>();
 		
-		for(int j = 0; j < ratingList.size(); j++) {
-			personList.add(ratingList.get(j).getPerson());
+		for(int j = 0; j < quantityRatings; j++) {
+			personList.add(new UserDTO(ratingList.get(j).getPerson()));
 			if(ratingList.get(j).getPerson().getUserName().equals(username)) {
 				message.setLike(true);
 			}
@@ -148,5 +148,4 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		message.setQuantityRatings(quantityRatings);
 		message.setRatingPersonsList(personList);
 	}
-
 }

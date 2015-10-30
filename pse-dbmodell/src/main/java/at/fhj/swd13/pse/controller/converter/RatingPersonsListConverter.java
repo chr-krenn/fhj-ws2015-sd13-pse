@@ -7,7 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.UserDTO;
 
 @FacesConverter("at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter")
 public class RatingPersonsListConverter implements Converter {
@@ -24,11 +24,11 @@ public class RatingPersonsListConverter implements Converter {
 		}
 		
 		@SuppressWarnings("unchecked")
-		List<Person> ratingPersonsList = (List<Person>) list;
+		List<UserDTO> ratingPersonsList = (List<UserDTO>) list;
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < ratingPersonsList.size(); i ++) {
 			if(i<3) {
-				sb.append(ratingPersonsList.get(i).getLastName());
+				sb.append(ratingPersonsList.get(i).getFullName());
 				if(i != ratingPersonsList.size() -1) {
 					sb.append(", ");
 				}

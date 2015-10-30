@@ -15,6 +15,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
+import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
@@ -59,10 +60,11 @@ public class MessageDetailsController {
 	public String rateMessageDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
+			UserDTO userDTO = new UserDTO(p);
 			feedService.rateMessage(getMessageDTO().getId(), p);
 			getMessageDTO().setLike(true);
 			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()+1);
-			getMessageDTO().getRatingPersonsList().add(p);
+			getMessageDTO().getRatingPersonsList().add(userDTO);
 		}
 		catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();

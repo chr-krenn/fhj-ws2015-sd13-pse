@@ -50,11 +50,12 @@
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
 									<p:outputPanel>
-										<h:panelGrid columns="6" cellpadding="5">
+										<h:panelGrid columns="7" cellpadding="5">
+											<h:outputText value="Community:" rendered="#{!activity.privateMessage}"/>
 											<h:outputLabel
 												value="#{activity.privateMessage ? 'Privat' : 
 												activity.community}"
-												style="font-weight: bold; font-style: italic" />
+												style="font-weight: bold;" />
 											<h:outputText value="Autor:" />
 											<h:outputText value="#{activity.author}"
 												style="font-weight: bold" />
@@ -69,18 +70,21 @@
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
 										</h:panelGrid>
-										<h:panelGrid columns="6" cellpadding="5">
+										<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
+										<h:panelGrid cellpadding="5">
+											<h:outputText value="#{activity.headline}" style="font-weight: bold" />
+											<h:outputText value="#{activity.text}" escape="false" />
+										</h:panelGrid>
+										<h:panelGrid columns="4" style="margin-top: 10px" >
 											<h:commandButton action="#{simpleFeedController.rateMessage}" value="Like" immediate="true" 
-												rendered="#{!activity.like}">
+												rendered="#{!activity.like}" styleClass="likebutton">
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
 											<h:commandButton action="#{simpleFeedController.removeRating}" value="Like zurücknehmen" immediate="true"
-												rendered="#{activity.like}">
+												rendered="#{activity.like}" styleClass="likebutton">
 												<f:param name="messageId" value="#{activity.id}" />
 											</h:commandButton>
-											<h:outputText value="#{activity.quantityRatings} " 
-												actionListener="#{activity.like}"/>
-											
+											<h:outputText value="#{activity.quantityRatings} " />
 											<p:commandLink id="fadePersons" oncomplete="PF('dlg1').show();" update="dial"
 												rendered="#{not empty activity.ratingPersonsList}">
 												<h:outputText value="User gefällt das!" />
@@ -90,16 +94,14 @@
 											</p:tooltip>
 											<h:outputText value="User gefällt das!" 
 												rendered="#{empty activity.ratingPersonsList}"/>
-											<!-- <p:graphicImage value="#{messageDetailsController.messageDTO.icon}" cache="false" /> -->
-												
-											<p:dialog id="dial" header="User" widgetVar="dlg1" minHeight="40" dynamic="true">
 											
+											<p:dialog id="dial" header="User" widgetVar="dlg1" minHeight="40" dynamic="true">
 												<p:dataScroller id="ratingScroller" value="#{activity.ratingPersonsList}" var="person" 
 													chunkSize="10" mode="inline" scrollHeight="200" dynamic="true">
 													
 													<h:panelGrid columns="1" style="width:200px">
 														<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-															<h:outputText value="#{person.lastName}"  style="font-weight: bold"/>
+															<h:outputText value="#{person.fullName}"  style="font-weight: bold"/>
 															<f:param name="userName" value="#{person.userName}" />
 															<f:param name="mode" value="view" />
 														</h:outputLink>
@@ -107,9 +109,6 @@
 												</p:dataScroller>
 											</p:dialog>
 										</h:panelGrid>
-										<h:outputText value="#{activity.headline} &lt;br/&gt;"
-											escape="false" style="font-weight: bold" />
-										<h:outputText value="#{activity.text}" escape="false" />
 									</p:outputPanel>
 								</h:panelGrid>
 							</p:dataScroller>
