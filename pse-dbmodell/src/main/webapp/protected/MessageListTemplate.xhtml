@@ -5,83 +5,80 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="messageList">
-		<h:form>
-			<h:panelGrid columns="1" style="width:100%">
-				<p:outputPanel>
-					<h:panelGrid columns="7" cellpadding="5">
-						<h:outputText value="Community:"
-							rendered="#{!message.privateMessage and !message.isComment}" />
-						<h:outputLabel
-							value="#{message.privateMessage ? 'Privat' : 
-													message.community}"
-							style="font-weight: bold;" rendered="#{!message.isComment}" />
-						<h:outputText value="Autor:" />
-						<h:outputText value="#{message.author}" style="font-weight: bold" />
-						<h:outputText value="Datum:" />
-						<h:outputText value="#{message.date}" style="font-weight: bold">
-							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-						</h:outputText>
-						<h:commandButton
-							action="#{messageDetailsController.openDetailView}"
-							value="Details" icon="ui-icon-search" >
-							<f:param name="messageId" value="#{message.id}" />
-						</h:commandButton>
+		<h:panelGrid columns="1" style="width:100%">
+			<p:outputPanel>
+				<h:panelGrid columns="7" cellpadding="5">
+					<h:outputText value="Community:"
+						rendered="#{!message.privateMessage and !message.isComment}" />
+					<h:outputLabel
+						value="#{message.privateMessage ? 'Privat' : 
+												message.community}"
+						style="font-weight: bold;" rendered="#{!message.isComment}" />
+					<h:outputText value="Autor:" />
+					<h:outputText value="#{message.author}" style="font-weight: bold" />
+					<h:outputText value="Datum:" />
+					<h:outputText value="#{message.date}" style="font-weight: bold">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+					<h:commandButton
+						action="#{messageDetailsController.openDetailView}"
+						value="Details" icon="ui-icon-search" >
+						<f:param name="messageId" value="#{message.id}" />
+					</h:commandButton>
+				</h:panelGrid>
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:graphicImage id="messageIcon" styleClass="userimage"
+						value="#{message.imageRef}" cache="false"
+						rendered="#{message.imageRef ne null}" />
+					<h:panelGrid>
+						<h:outputText value="#{message.headline}"
+							style="font-weight: bold" />
+						<h:outputText value="#{message.text}" escape="false" />
 					</h:panelGrid>
-					<h:panelGrid columns="2" cellpadding="5">
-						<p:graphicImage id="messageIcon" styleClass="userimage"
-							value="#{message.imageRef}" cache="false"
-							rendered="#{message.imageRef ne null}" />
-						<h:panelGrid>
-							<h:outputText value="#{message.headline}"
-								style="font-weight: bold" />
-							<h:outputText value="#{message.text}" escape="false" />
-						</h:panelGrid>
-					</h:panelGrid>
-					<h:panelGrid columns="5" style="margin-top: 10px;">
-						<h:commandButton action="#{simpleFeedController.rateMessage}"
-							value="Like" immediate="true" rendered="#{!message.like}"
-							styleClass="likebutton">
-							<f:param name="messageId" value="#{message.id}" />
-						</h:commandButton>
-						<h:commandButton action="#{simpleFeedController.removeRating}"
-							value="Like zurücknehmen" immediate="true"
-							rendered="#{message.like}" styleClass="likebutton">
-							<f:param name="messageId" value="#{message.id}" />
-						</h:commandButton>
-						<h:outputText value="#{message.quantityRatings} " />
-						<p:commandLink id="fadePersons" oncomplete="PF('dlgComm').show();"
-							update="dialComments" rendered="#{not empty message.ratingPersonsList}">
-							<h:outputText value="User gefällt das!" />
-						</p:commandLink>
-						<p:tooltip id="toolTipFade" for="fadePersons"
-							value="#{message.ratingPersonsList}">
-							<f:converter
-								converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter" />
-						</p:tooltip>
-						<h:outputText value="User gefällt das!"
-							rendered="#{empty message.ratingPersonsList}" />
-						<h:outputText value="#{message.numberOfComments} Kommentare"
-							style="margin-left:40px" />
-						
-					</h:panelGrid>
-				</p:outputPanel>
-			</h:panelGrid>
-			<p:dialog id="dialComments" header="User" widgetVar="dlgComm" minHeight="40"
-				dynamic="true">
-				<p:dataScroller id="ratingScroller"
-					value="#{message.ratingPersonsList}" var="person" chunkSize="10"
-					mode="inline" scrollHeight="200" dynamic="true">
+				</h:panelGrid>
+				<h:panelGrid columns="5" style="margin-top: 10px;">
+					<h:commandButton action="#{simpleFeedController.rateMessage}"
+						value="Like" immediate="true" rendered="#{!message.like}"
+						styleClass="likebutton">
+						<f:param name="messageId" value="#{message.id}" />
+					</h:commandButton>
+					<h:commandButton action="#{simpleFeedController.removeRating}"
+						value="Like zurücknehmen" immediate="true"
+						rendered="#{message.like}" styleClass="likebutton">
+						<f:param name="messageId" value="#{message.id}" />
+					</h:commandButton>
+					<h:outputText value="#{message.quantityRatings} " />
+					<p:commandLink id="fadePersons" oncomplete="PF('dlg1').show();"
+						update="dial" rendered="#{not empty message.ratingPersonsList}">
+						<h:outputText value="User gefällt das!" />
+					</p:commandLink>
+					<p:tooltip id="toolTipFade" for="fadePersons"
+						value="#{message.ratingPersonsList}">
+						<f:converter
+							converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter" />
+					</p:tooltip>
+					<h:outputText value="User gefällt das!"
+						rendered="#{empty message.ratingPersonsList}" />
+					<h:outputText value="#{message.numberOfComments} Kommentare"
+						style="margin-left:40px" />
+					<p:dialog id="dial" header="User" widgetVar="dlg1" minHeight="40"
+						dynamic="true">
+						<p:dataScroller id="ratingScroller"
+							value="#{message.ratingPersonsList}" var="person" chunkSize="10"
+							mode="inline" scrollHeight="200" dynamic="true">
 
-					<h:panelGrid columns="1" style="width:200px">
-						<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-							<h:outputText value="#{person.fullName}"
-								style="font-weight: bold" />
-							<f:param name="userName" value="#{person.userName}" />
-							<f:param name="mode" value="view" />
-						</h:outputLink>
-					</h:panelGrid>
-				</p:dataScroller>
-			</p:dialog>
-		</h:form>
+							<h:panelGrid columns="1" style="width:200px">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{person.fullName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{person.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</h:panelGrid>
+						</p:dataScroller>
+					</p:dialog>
+				</h:panelGrid>
+			</p:outputPanel>
+		</h:panelGrid>
 	</ui:define>
 </ui:composition>

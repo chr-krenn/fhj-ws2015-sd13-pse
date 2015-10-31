@@ -80,8 +80,7 @@ public class SimpleFeedController {
      */
     public void rateMessage() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
-    	try{
-    		int id = Integer.parseInt(messageId);
+    	int id = Integer.parseInt(messageId);
     		try {
     	    	for(int i = 0; i < messageList.size(); i++) {
     	    		if(messageList.get(i).getId() == id) {
@@ -101,12 +100,6 @@ public class SimpleFeedController {
         		RequestContext context = RequestContext.getCurrentInstance();
         		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
     		}
-    	}
-    	catch(NumberFormatException e) {
-    		RequestContext context = RequestContext.getCurrentInstance();
-    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-    	}
-    	
 	}
     
     /**
@@ -115,7 +108,7 @@ public class SimpleFeedController {
      */
     public void removeRating() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
-    	try {
+    	
 	    	int id = Integer.parseInt(messageId);
 			try {
 				for(int j = 0; j < messageList.size(); j++) {
@@ -133,11 +126,6 @@ public class SimpleFeedController {
 				RequestContext context = RequestContext.getCurrentInstance();
 	    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 			}
-    	}
-    	catch(NumberFormatException e) {
-    		RequestContext context = RequestContext.getCurrentInstance();
-    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-    	}
 	}
     
     public List<MessageDTO> getNews(int communityId) {
