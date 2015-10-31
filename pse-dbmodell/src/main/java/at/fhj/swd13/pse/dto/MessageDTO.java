@@ -40,6 +40,8 @@ public class MessageDTO {
 	
 	private List<MessageDTO> comments;
 	
+	private boolean isComment;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
@@ -54,6 +56,7 @@ public class MessageDTO {
 		this.image = m.getIcon();
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
+		this.setIsComment(m.getMessageBean() != null);
 	}
 	
 	public int getId() {
@@ -220,6 +223,14 @@ public class MessageDTO {
 	public void setComments(List<MessageDTO> comments) {
 		this.comments = comments;
 		setNumberOfComments(comments.size());
+	}
+
+	public boolean getIsComment() {
+		return isComment;
+	}
+
+	public void setIsComment(boolean isComment) {
+		this.isComment = isComment;
 	}
 	
 }

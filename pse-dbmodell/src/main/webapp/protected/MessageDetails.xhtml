@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/templates/default.xhtml">
+	template="/protected/MessageListTemplate.xhtml">
 	<ui:define name="content">
 		<h:outputText value="Error loading message"
 			rendered="#{messageDetailsController.messageDTO == null}" />
@@ -91,5 +91,13 @@
 				</h:panelGrid>
 			</p:dataScroller>
 		</p:dialog>
+
+		<p:panel header="Comments">
+			<p:dataScroller
+				value="#{messageDetailsController.messageDTO.comments}"
+				var="message" chunkSize="10" mode="inline" scrollHeight="400">
+				<ui:insert name="messageList" />
+			</p:dataScroller>
+		</p:panel>
 	</ui:define>
 </ui:composition>
