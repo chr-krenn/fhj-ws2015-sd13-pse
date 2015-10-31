@@ -84,8 +84,9 @@ public class MessageEditorController {
 	private int documentId;
 	private String documentRef;
 	private String documentName;
+	private String pageFromWhere ;
 
-	private Community targetCommunity;
+	private Community targetCommunity = null;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
 
@@ -153,10 +154,19 @@ public class MessageEditorController {
 				.getExternalContext();
 		FacesContext context = FacesContext.getCurrentInstance();
 		try {
+			if (targetCommunity == null){
 			String url = extContext.encodeActionURL(context.getApplication()
 					.getViewHandler()
 					.getActionURL(context, "/protected/Main.jsf"));
 			extContext.redirect(url);
+			}
+			else
+			{
+				String url = extContext.encodeActionURL(context.getApplication()
+						.getViewHandler()
+						.getActionURL(context, "/protected/Community.jsf?id= " + targetCommunity.getCommunityId()));
+				extContext.redirect(url);
+			}
 		} catch (IOException e) {
 			logger.error("[MSG+] error redirecting after logout: "
 					+ e.getMessage());
