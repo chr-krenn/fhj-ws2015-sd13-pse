@@ -12,7 +12,7 @@
 		<p:panelGrid>
 
 			<p:row>
-				<p:column colspan="2">Neue Nachricht eingeben</p:column>
+				<p:column colspan="2">Neue Nachricht eingeben für <h:outputText value="#{messageEditorController.getCommunityName()}" /> Community</p:column>
 			</p:row>
 			<p:row>
 				<p:column></p:column>
@@ -63,26 +63,6 @@
 						value="#{request.contextPath}#{messageEditorController.documentRef}">
 						<h:outputText value="#{messageEditorController.documentName}" />
 					</h:outputLink>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column>
-					<p:outputLabel for="targetCommunities" value="Community" />
-				</p:column>
-				<p:column>
-					<p:autoComplete id="targetCommunities" multiple="true"
-						value="#{messageEditorController.selectedCommunities}"
-						completeMethod="#{messageEditorController.completeCommunity}"
-						converter="communityConverter" var="communityDTO"
-						itemLabel="#{communityDTO.name}" itemValue="#{communityDTO}"
-						forceSelection="true" minQueryLength="3" required="true">
-						<p:ajax event="itemSelect"
-							listener="#{messageEditorController.handleSelect}" />
-						<p:ajax event="itemUnselect"
-							listener="#{messageEditorController.handleUnselect}" />
-						<f:facet name="itemTip">#{communityDTO.name}</f:facet>
-
-					</p:autoComplete>
 				</p:column>
 			</p:row>
 			<p:row>

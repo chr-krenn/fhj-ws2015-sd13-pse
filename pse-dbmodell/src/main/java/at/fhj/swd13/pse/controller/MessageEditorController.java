@@ -104,6 +104,13 @@ public class MessageEditorController {
 	}
 
 	/**
+	 * Returns the community name
+	 */
+	public String getCommunityName(){
+		return targetCommunity.getName();
+	}
+		
+	/**
 	 * Save the entered message to the database
 	 */
 	public void save() {
@@ -113,7 +120,6 @@ public class MessageEditorController {
 		Document icon = documentService.get(iconId);
 		List<Community> communities = new ArrayList<Community>();
 		List<MessageTag> messageTags = new ArrayList<MessageTag>();
-
 		Tag tag;
 		MessageTag messageTag;
 

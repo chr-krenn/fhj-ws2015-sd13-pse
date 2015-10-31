@@ -75,7 +75,7 @@ public class SimpleFeedController {
      * Adds "like" for clicked message in activity stream for the currently logged-in person
      * 
      */
-    public String rateMessage() {
+    public void rateMessage() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	int id = Integer.parseInt(messageId);
     	try {
@@ -88,14 +88,13 @@ public class SimpleFeedController {
     		RequestContext context = RequestContext.getCurrentInstance();
     		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
-    	return "/protected/Main.jsf";
 	}
     
     /**
      * Removes "like" for clicked message in activity stream for the currently logged-in person
      * 
      */
-    public String removeRating() {
+    public void removeRating() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	int id = Integer.parseInt(messageId);
 		try {
@@ -105,7 +104,6 @@ public class SimpleFeedController {
 			RequestContext context = RequestContext.getCurrentInstance();
     		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
-		return "/protected/Main.jsf";
 	}
     
     public List<MessageDTO> getNews(int communityId) {
@@ -119,6 +117,7 @@ public class SimpleFeedController {
 		}
     	
     }
+    
     public List<MessageDTO> getCommunityAcitivities(int communityId) {
     	try {
     		List<MessageDTO> messageList = feedService.loadNews(communityId);

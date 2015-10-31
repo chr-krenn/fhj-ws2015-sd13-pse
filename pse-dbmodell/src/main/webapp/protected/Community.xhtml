@@ -7,26 +7,17 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
     <h:form id="communityProfile">
-	    	<h1>Communities</h1>
-	    	
-			<p:panelGrid style="width: 50%;">
-				<p:row>
-					<p:column>			
-						<p:outputLabel value="Community Name"/>
-					</p:column>			
-					<p:column colspan="2">			
-						 <h:outputText value="#{communityProfileController.getSelectedCommunityName()}" />
-					</p:column>			
-				</p:row>
-			</p:panelGrid>
+	    	<h1>Community <h:outputText value="#{communityProfileController.getSelectedCommunityName()}" /> </h1>
 	</h:form>
 		<div>
-			<a href="#{request.contextPath}/protected/xperimental/AddCommunityMessage.jsf">Commmunity Beitrag erstellen</a>
-			</div>
-				<div class="ui-grid ui-grid-responsive">
-					<div class="ui-grid-row">
-						<div class="ui-grid-col-7">
-							<h:form>
+				<p:commandLink actionListener="#{communityProfileController.onCreateNewActivitie}">	
+			     	<p:commandButton value="Community Beitrag erstellen" id="createCommunityMessage" />
+			    </p:commandLink>
+		</div>
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-7">
+					<h:form>
 						<p:panel header="Activities">
 							<p:dataScroller value="#{simpleFeedController.getCommunityAcitivities(communityProfileController.getCommunityId())}"
 								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
@@ -112,7 +103,6 @@
 					</h:form>
 				</div>
 			</div>
-			
 		</div>
 	</ui:define>
 </ui:composition>
