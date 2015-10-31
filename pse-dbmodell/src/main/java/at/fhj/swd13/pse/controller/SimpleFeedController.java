@@ -119,5 +119,20 @@ public class SimpleFeedController {
 		}
     	
     }
+    public List<MessageDTO> getCommunityAcitivities(int communityId) {
+    	try {
+    		List<MessageDTO> messageList = feedService.loadNews(communityId);
+    		for(int i = 0; i < messageList.size(); i++) {
+    			feedService.setMessageLikes(messageList.get(i), userSession.getUsername());
+    			feedService.setComments(messageList.get(i));
+    		}
+    		return messageList;
+		} catch (EntityNotFoundException | ConstraintViolationException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[FEEDS] getNews failed for community " + communityId + " from " + context.toString());
+			return null;
+		}
+    	
+    }
 
 }

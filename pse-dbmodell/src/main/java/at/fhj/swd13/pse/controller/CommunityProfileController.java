@@ -45,6 +45,9 @@ public class CommunityProfileController implements Serializable {
 	
 	public  String getSelectedCommunityName(){
 		return community.getName();	
-
+	}
+	
+	public int getCommunityId(){
+		return communityId;
 	}
 }
