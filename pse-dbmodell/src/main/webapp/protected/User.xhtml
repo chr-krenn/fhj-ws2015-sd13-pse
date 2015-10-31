@@ -9,20 +9,9 @@
 		<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
 	
 		<h:form id="userForm">
-			<p:graphicImage id="userimage" styleClass="userimage"
-				value="#{userProfileController.userDTO.imageRef}" cache="false" />
-
-			<h:panelGroup id="fileUploadGroup"
-				style="#{userProfileController.modeEditAdminDisplay}">
-				<p:fileUpload
-					fileUploadListener="#{userProfileController.handleFileUpload}"
-					dragDropSupport="true" update="messages,userimage"
-					sizeLimit="10000000"
-					allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
-			</h:panelGroup>
 			<p:growl id="messages" showDetail="true" />
 
-			<p:panelGrid style="width: 50%;">
+			<p:panelGrid style="width: 100%;">
 				<p:row>
 					<p:column>			
 						<p:outputLabel value="Vorname"/>
@@ -31,6 +20,21 @@
 						<p:inputMask id="firstName" styleClass="forminput"
 							value="#{userProfileController.userDTO.firstName}"
 							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+					<p:column rowspan="10">
+						<p:graphicImage id="userimage" styleClass="userimage"
+							value="#{userProfileController.userDTO.imageRef}" cache="false" />
+			
+						<h:panelGroup id="fileUploadGroup"
+							style="#{userProfileController.modeEditAdminDisplay}">
+							<p:fileUpload
+								fileUploadListener="#{userProfileController.handleFileUpload}"
+								dragDropSupport="false" update="messages,userimage"
+								sizeLimit="10000000" multiple="false" fileLimit="1"
+								fileLimitMessage="Es kann nur ein Benutzerbild geladen werden!"
+								label="Bild auswählen" uploadLabel="Hochladen" cancelLabel="Abbrechen"
+								allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
+						</h:panelGroup>
 					</p:column>			
 				</p:row>
 				<p:row>
