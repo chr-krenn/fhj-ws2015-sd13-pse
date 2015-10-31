@@ -64,7 +64,7 @@
 					<h:outputText
 						value="#{messageDetailsController.messageDTO.quantityRatings} " />
 					<h:outputLink id="fadePersons"
-						onclick="PF('dlg1').show(); return false;"
+						onclick="PF('dlgMain').show(); return false;"
 						rendered="#{not empty messageDetailsController.messageDTO.ratingPersonsList}">
 						<h:outputText value="User gefällt das!" />
 					</h:outputLink>
@@ -78,7 +78,7 @@
 				</f:facet>
 			</p:panel>
 		</h:form>
-		<p:dialog header="User" widgetVar="dlg1" minHeight="40">
+		<p:dialog header="User" widgetVar="dlgMain" minHeight="40">
 			<p:dataScroller
 				value="#{messageDetailsController.messageDTO.ratingPersonsList}"
 				var="person" chunkSize="10" mode="inline" scrollHeight="200">
