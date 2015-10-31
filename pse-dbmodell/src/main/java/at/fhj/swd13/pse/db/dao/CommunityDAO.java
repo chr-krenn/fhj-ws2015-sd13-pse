@@ -87,4 +87,11 @@ public interface CommunityDAO {
 	 * @return list of communities
 	 */
 	List<Community> getAllCommunities(String searchFieldText);
+	
+	/**
+	 * Get the private community for a person
+	 * @param person
+	 * @return private community
+	 */
+	Community getPrivateCommunity(Person person);
 }

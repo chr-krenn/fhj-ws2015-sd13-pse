@@ -137,4 +137,10 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		return (List<Community>)q.getResultList();
 	}
 	
+	@Override
+	public Community getPrivateCommunity(Person person) {
+		final Query q = dbContext.createNamedQuery("Community.findPrivateForUser");
+		q.setParameter("person", person);
+		return (Community) q.getSingleResult();
+	}
 }
