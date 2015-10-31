@@ -90,8 +90,20 @@ public interface FeedService {
 	 */
 	void setComments(MessageDTO messageDTO) throws EntityNotFoundException;
 
+	/**
+	 * Update DTO object after rating for correctly render xhtml
+	 * 
+	 * @param messageDTO
+	 * @param userDTO
+	 */
 	void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO);
 
+	/**
+	 * Update DTO object after removing rate for correctly render xhtml
+	 * 
+	 * @param messageDTO
+	 * @param userDTO
+	 */
 	void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO);
 	
 }
