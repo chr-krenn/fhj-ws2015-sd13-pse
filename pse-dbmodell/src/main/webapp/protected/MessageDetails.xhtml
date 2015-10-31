@@ -92,7 +92,14 @@
 			</p:dataScroller>
 		</p:dialog>
 
-		<p:panel header="Comments">
+		<p:panel>
+			<f:facet name="header">
+				<h:outputText value="Kommentare (" />
+				<h:outputText value="#{messageDetailsController.messageDTO.numberOfComments}"/>
+				<h:outputText value=")" />
+			</f:facet>
+			<a href="#{request.contextPath}/protected/xperimental/AddMessage.jsf">Neuer Kommentar</a>
+			<br/><br/>
 			<p:dataScroller
 				value="#{messageDetailsController.messageDTO.comments}"
 				var="message" chunkSize="10" mode="inline" scrollHeight="400">
