@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -99,7 +100,15 @@ public class CommunityController {
 	public void onCommunitySelected(SelectEvent object){
 	    try 
 	    {
-	    	FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+	    	if(isMemberOfCommunity(selectedCommunity.getCommunityId()))
+	    	{
+	    		FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+	    	}
+	    	else
+	    	{
+	    		error();
+	    		logger.info("User " + userSession.getUsername() + " is not a member of the community " + selectedCommunity.getName());
+	    	}
 		} 
 	    catch (IOException e) 
 	    {
@@ -135,11 +144,13 @@ public class CommunityController {
 					{
 						setMember( isMemberOfCommunity( com.getCommunityId() ) );
 					}
-	
+				
+				info("You are now a member of the community '" + com.getName() + "'");
 				logger.info("#### Done - Public Community ####");
 				
 			}else // private Community
 			{
+				info("Your request has been sent to the administrator!");
 				logger.info("#### Private Community ####");
 				
 				logger.info("private user: " + privateUser);
@@ -202,6 +213,14 @@ public class CommunityController {
 		
 	}
 	
+	public void error() {
+		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry!", "You are not a member of this community!"));
+	}
+	
+	public void info(String text) {
+		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", text));
+	}
+	 
 	public boolean isMember() {
 		return isMember;
 	}
