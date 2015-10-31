@@ -66,9 +66,7 @@ public class MessageDetailsController {
 			Person p = userService.getUser(userSession.getUsername());
 			UserDTO userDTO = new UserDTO(p);
 			feedService.rateMessage(getMessageDTO().getId(), p);
-			getMessageDTO().setLike(true);
-			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()+1);
-			getMessageDTO().getRatingPersonsList().add(userDTO);
+			feedService.updateDTOafterRating(getMessageDTO(), userDTO);
 		}
 		catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
@@ -88,17 +86,9 @@ public class MessageDetailsController {
 	 public String removeRatingDetailedView() {
 		try {
 			Person p = userService.getUser(userSession.getUsername());
+			UserDTO userDTO = new UserDTO(p);
 			feedService.removeRating(getMessageDTO().getId(), p);
-			getMessageDTO().setLike(false);
-			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()-1);
-			List<UserDTO> ratingPersonsList = getMessageDTO().getRatingPersonsList();
-
-			for(int i = 0; i < ratingPersonsList.size(); i++) {
-				if(ratingPersonsList.get(i).getUserName().contentEquals(p.getUserName())) {
-					ratingPersonsList.remove(i);
-					break;
-				}
-			}
+			feedService.updateDTOAfterRemove(getMessageDTO(), userDTO);
 		}
 		catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();

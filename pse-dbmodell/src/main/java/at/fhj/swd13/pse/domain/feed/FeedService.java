@@ -13,6 +13,7 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.dto.MessageDTO;
+import at.fhj.swd13.pse.dto.UserDTO;
 
 /**
  * @author florian.genser
@@ -88,5 +89,9 @@ public interface FeedService {
 	 * @param messageDTO
 	 */
 	void setComments(MessageDTO messageDTO) throws EntityNotFoundException;
+
+	void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO);
+
+	void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO);
 	
 }

@@ -204,4 +204,24 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		messageDTO.setComments(loadComments(messageDTO.getId()));
 
 	}
+
+	@Override
+	public void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO) {
+		messageDTO.getRatingPersonsList().add(userDTO);
+		messageDTO.setLike(true);
+		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+	}
+
+	@Override
+	public void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO) {
+		List<UserDTO> ratingPersonsList = messageDTO.getRatingPersonsList();
+		for(int i = 0; i < ratingPersonsList.size(); i++) {
+			if(ratingPersonsList.get(i).getUserName() == userDTO.getUserName()) {
+				ratingPersonsList.remove(i);
+				break;
+			}
+		}
+		messageDTO.setLike(false);
+		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+	}
 }
