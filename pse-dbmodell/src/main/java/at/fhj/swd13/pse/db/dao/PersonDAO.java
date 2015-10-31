@@ -74,7 +74,7 @@ public interface PersonDAO {
 	 * Load all persons sorted by last_name, first_name
 	 * and provide paging
 	 * 
-	 * @param startRow the row at which to start
+	 * @param startRow the row at which to start (0 is the first row)
 	 * @param maxRows the max number of rows to return
 	 * 
 	 * @return a list of persons within the page-window,
