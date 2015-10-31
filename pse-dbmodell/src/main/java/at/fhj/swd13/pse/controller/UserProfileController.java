@@ -463,4 +463,14 @@ public class UserProfileController implements Serializable {
 	public void setCommunityName(String communityName) {
 		this.communityName = communityName;
 	}
+	
+	/**
+	 * returns true if the current login user is allowed to change news
+	 *
+	 * @return true / false
+	 * 
+	 */
+	public boolean getCanEditNews() {
+		return isAdmin();
+	}
 }
