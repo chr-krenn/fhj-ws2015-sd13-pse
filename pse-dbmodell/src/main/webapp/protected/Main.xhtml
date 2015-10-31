@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/templates/default.xhtml">
+	template="/protected/MessageListTemplate.xhtml">
 	<ui:define name="content">
 		<div>
 			<a href="#{request.contextPath}/protected/xperimental/AddMessage.jsf">Nachricht
@@ -53,89 +53,8 @@
 					<h:form>
 						<p:panel header="Activities">
 							<p:dataScroller value="#{simpleFeedController.activities}"
-								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
-								<h:panelGrid columns="1" style="width:100%"
-									columnClasses="logo,detail">
-									<p:outputPanel>
-										<h:panelGrid columns="7" cellpadding="5">
-											<h:outputText value="Community:"
-												rendered="#{!activity.privateMessage}" />
-											<h:outputLabel
-												value="#{activity.privateMessage ? 'Privat' : 
-												activity.community}"
-												style="font-weight: bold;" />
-											<h:outputText value="Autor:" />
-											<h:outputText value="#{activity.author}"
-												style="font-weight: bold" />
-											<h:outputText value="Datum:" />
-											<h:outputText value="#{activity.date}"
-												style="font-weight: bold">
-												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-											</h:outputText>
-											<h:commandButton
-												action="#{messageDetailsController.openDetailView}"
-												value="Details" icon="ui-icon-search">
-												<f:param name="messageId" value="#{activity.id}" />
-											</h:commandButton>
-										</h:panelGrid>
-										<h:panelGrid columns="2" cellpadding="5">
-											<p:graphicImage id="messageIcon" styleClass="userimage"
-											value="#{activity.imageRef}"
-											cache="false"
-											rendered="#{activity.imageRef ne null}" />
-											<h:panelGrid>
-												<h:outputText value="#{activity.headline}"
-													style="font-weight: bold" />
-												<h:outputText value="#{activity.text}" escape="false" />
-											</h:panelGrid>
-										</h:panelGrid>
-										<h:panelGrid columns="5" style="margin-top: 10px;">
-											<h:commandButton action="#{simpleFeedController.rateMessage}"
-												value="Like" immediate="true" rendered="#{!activity.like}"
-												styleClass="likebutton">
-												<f:param name="messageId" value="#{activity.id}" />
-											</h:commandButton>
-											<h:commandButton
-												action="#{simpleFeedController.removeRating}"
-												value="Like zurücknehmen" immediate="true"
-												rendered="#{activity.like}" styleClass="likebutton">
-												<f:param name="messageId" value="#{activity.id}" />
-											</h:commandButton>
-											<h:outputText value="#{activity.quantityRatings} " />
-											<p:commandLink id="fadePersons"
-												oncomplete="PF('dlg1').show();" update="dial"
-												rendered="#{not empty activity.ratingPersonsList}">
-												<h:outputText value="User gefällt das!" />
-											</p:commandLink>
-											<p:tooltip id="toolTipFade" for="fadePersons"
-												value="#{activity.ratingPersonsList}">
-												<f:converter
-													converterId="at.fhj.swd13.pse.controller.converter.RatingPersonsListConverter" />
-											</p:tooltip>
-											<h:outputText value="User gefällt das!"
-												rendered="#{empty activity.ratingPersonsList}" />
-											<h:outputText value="#{activity.numberOfComments} Kommentare" style="margin-left:40px" />
-											<p:dialog id="dial" header="User" widgetVar="dlg1"
-												minHeight="40" dynamic="true">
-												<p:dataScroller id="ratingScroller"
-													value="#{activity.ratingPersonsList}" var="person"
-													chunkSize="10" mode="inline" scrollHeight="200"
-													dynamic="true">
-
-													<h:panelGrid columns="1" style="width:200px">
-														<h:outputLink
-															value="#{request.contextPath}/protected/User.jsf">
-															<h:outputText value="#{person.fullName}"
-																style="font-weight: bold" />
-															<f:param name="userName" value="#{person.userName}" />
-															<f:param name="mode" value="view" />
-														</h:outputLink>
-													</h:panelGrid>
-												</p:dataScroller>
-											</p:dialog>
-										</h:panelGrid>
-									</p:outputPanel>
-								</h:panelGrid>
+								var="message" chunkSize="10" mode="inline" scrollHeight="500">
+								<ui:insert name="messageList" />
 							</p:dataScroller>
 						</p:panel>
 					</h:form>
