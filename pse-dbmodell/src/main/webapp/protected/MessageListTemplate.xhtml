@@ -49,8 +49,8 @@
 							<f:param name="messageId" value="#{message.id}" />
 						</h:commandButton>
 						<h:outputText value="#{message.quantityRatings} " />
-						<p:commandLink id="fadePersons" oncomplete="PF('dlg1').show();"
-							update="dial" rendered="#{not empty message.ratingPersonsList}">
+						<p:commandLink id="fadePersons" oncomplete="PF('dlgComm').show();"
+							update="dialComments" rendered="#{not empty message.ratingPersonsList}">
 							<h:outputText value="User gefällt das!" />
 						</p:commandLink>
 						<p:tooltip id="toolTipFade" for="fadePersons"
@@ -62,25 +62,26 @@
 							rendered="#{empty message.ratingPersonsList}" />
 						<h:outputText value="#{message.numberOfComments} Kommentare"
 							style="margin-left:40px" />
-						<p:dialog id="dial" header="User" widgetVar="dlg1" minHeight="40"
-							dynamic="true">
-							<p:dataScroller id="ratingScroller"
-								value="#{message.ratingPersonsList}" var="person" chunkSize="10"
-								mode="inline" scrollHeight="200" dynamic="true">
-	
-								<h:panelGrid columns="1" style="width:200px">
-									<h:outputLink value="#{request.contextPath}/protected/User.jsf">
-										<h:outputText value="#{person.fullName}"
-											style="font-weight: bold" />
-										<f:param name="userName" value="#{person.userName}" />
-										<f:param name="mode" value="view" />
-									</h:outputLink>
-								</h:panelGrid>
-							</p:dataScroller>
-						</p:dialog>
+						
 					</h:panelGrid>
 				</p:outputPanel>
 			</h:panelGrid>
+			<p:dialog id="dialComments" header="User" widgetVar="dlgComm" minHeight="40"
+				dynamic="true">
+				<p:dataScroller id="ratingScroller"
+					value="#{message.ratingPersonsList}" var="person" chunkSize="10"
+					mode="inline" scrollHeight="200" dynamic="true">
+
+					<h:panelGrid columns="1" style="width:200px">
+						<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+							<h:outputText value="#{person.fullName}"
+								style="font-weight: bold" />
+							<f:param name="userName" value="#{person.userName}" />
+							<f:param name="mode" value="view" />
+						</h:outputLink>
+					</h:panelGrid>
+				</p:dataScroller>
+			</p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

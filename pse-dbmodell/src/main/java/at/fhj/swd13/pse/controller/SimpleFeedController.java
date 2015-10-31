@@ -80,26 +80,33 @@ public class SimpleFeedController {
      */
     public void rateMessage() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
-    	int id = Integer.parseInt(messageId);
-    	try {
-	    	for(int i = 0; i < messageList.size(); i++) {
-	    		if(messageList.get(i).getId() == id) {
-	    			Person p = userService.getUser(userSession.getUsername());
-	    			MessageDTO messageDTO = messageList.get(i);
-	    			UserDTO userDTO = new UserDTO(p);
-	    			feedService.rateMessage(id, p);
-	    			feedService.updateDTOafterRating(messageDTO, userDTO);
-	    			break;
-	    		}
-	    	}
+    	try{
+    		int id = Integer.parseInt(messageId);
+    		try {
+    	    	for(int i = 0; i < messageList.size(); i++) {
+    	    		if(messageList.get(i).getId() == id) {
+    	    			Person p = userService.getUser(userSession.getUsername());
+    	    			MessageDTO messageDTO = messageList.get(i);
+    	    			UserDTO userDTO = new UserDTO(p);
+    	    			feedService.rateMessage(id, p);
+    	    			feedService.updateDTOafterRating(messageDTO, userDTO);
+    	    			break;
+    	    		}
+    	    	}
+        	}
+        	catch (EntityNotFoundException e) {
+        		RequestContext context = RequestContext.getCurrentInstance();
+        		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+        	} catch (ConstraintViolationException e) {
+        		RequestContext context = RequestContext.getCurrentInstance();
+        		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+    		}
     	}
-    	catch (EntityNotFoundException e) {
+    	catch(NumberFormatException e) {
     		RequestContext context = RequestContext.getCurrentInstance();
     		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-    	} catch (ConstraintViolationException e) {
-    		RequestContext context = RequestContext.getCurrentInstance();
-    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-		}
+    	}
+    	
 	}
     
     /**
@@ -108,23 +115,29 @@ public class SimpleFeedController {
      */
     public void removeRating() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
-    	int id = Integer.parseInt(messageId);
-		try {
-			for(int j = 0; j < messageList.size(); j++) {
-				if(messageList.get(j).getId() == id) {
-					Person p = userService.getUser(userSession.getUsername());
-					MessageDTO messageDTO = messageList.get(j);
-					UserDTO userDTO = new UserDTO(p);
-					feedService.removeRating(id, p);
-					feedService.updateDTOAfterRemove(messageDTO, userDTO);
-					break;
+    	try {
+	    	int id = Integer.parseInt(messageId);
+			try {
+				for(int j = 0; j < messageList.size(); j++) {
+					if(messageList.get(j).getId() == id) {
+						Person p = userService.getUser(userSession.getUsername());
+						MessageDTO messageDTO = messageList.get(j);
+						UserDTO userDTO = new UserDTO(p);
+						feedService.removeRating(id, p);
+						feedService.updateDTOAfterRemove(messageDTO, userDTO);
+						break;
+					}
 				}
 			}
-		}
-		catch (EntityNotFoundException e) {
-			RequestContext context = RequestContext.getCurrentInstance();
+			catch (EntityNotFoundException e) {
+				RequestContext context = RequestContext.getCurrentInstance();
+	    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+			}
+    	}
+    	catch(NumberFormatException e) {
+    		RequestContext context = RequestContext.getCurrentInstance();
     		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-		}
+    	}
 	}
     
     public List<MessageDTO> getNews(int communityId) {
