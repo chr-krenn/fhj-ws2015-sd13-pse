@@ -216,8 +216,8 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	public void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO) {
 		List<UserDTO> ratingPersonsList = messageDTO.getRatingPersonsList();
 		for(int i = 0; i < ratingPersonsList.size(); i++) {
-			if(ratingPersonsList.get(i).getUserName() == userDTO.getUserName()) {
-				ratingPersonsList.remove(i);
+			if(ratingPersonsList.get(i).getUserName().contentEquals(userDTO.getUserName())) {
+				messageDTO.getRatingPersonsList().remove(i);
 				break;
 			}
 		}
