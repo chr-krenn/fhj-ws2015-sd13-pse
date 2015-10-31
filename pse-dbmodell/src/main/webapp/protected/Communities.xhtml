@@ -7,6 +7,8 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
     <h:form id="communitySearch">
+
+		    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 	    	<h1>Communities</h1>
 	    	<p:inputText value="#{communityController.searchFieldText}"/>
 			<p:commandLink id="ajax" update="communities" actionListener="#{communityController.search}">
@@ -19,11 +21,11 @@
                	selectionMode="single" selection="#{communityController.selectedCommunity}" 
                	rowKey="#{community.communityId}"
 			>
-			<p:ajax event="rowSelect" listener="#{communityController.onCommunitySelected}" onclick="PF('dlg1').show();"></p:ajax>
-			    <p:column headerText="Community Name">
+			<p:ajax event="rowSelect" listener="#{communityController.onCommunitySelected}" ></p:ajax>
+			    <p:column headerText="Community name">
 			        <h:outputText value="#{community.name}" />
 			    </p:column>
-			    <p:column headerText="is private">
+			    <p:column headerText="is private" onclick="PF('dlg1').show();">
 			    	<ui:fragment rendered="#{community.invitationOnly == false}">
 			    		<h:outputText value="#{communityController.getAnswerno()}" />
 			    	</ui:fragment>
@@ -31,7 +33,7 @@
 			        	<h:outputText value="#{communityController.getAnsweryes()}" />
 			        </ui:fragment>
 			    </p:column>
-			    <p:column headerText="Action">
+			    <p:column headerText="action">
 			     	<ui:fragment rendered="#{community.invitationOnly == false}">
 						<p:commandLink update="communities" actionListener="#{communityController.subscribeCommunity}">	
 			     			<p:commandButton value="Add community" id="addCommunity" disabled="#{communityController.isMemberOfCommunity(community.communityId)}" />
@@ -51,11 +53,7 @@
 			    <p:column headerText="is member">
 			    	<h:outputText value="#{communityController.isMemberToString(community.communityId)}" />
 			    </p:column>
-			    <p:dialog header="Basic Dialog" widgetVar="dlg1" minHeight="40">
-    <h:outputText value="Resistance to PrimeFaces is futile!" />
-</p:dialog>
 			</p:dataTable>
-			
 		</h:form>
 	</ui:define>
 </ui:composition>
