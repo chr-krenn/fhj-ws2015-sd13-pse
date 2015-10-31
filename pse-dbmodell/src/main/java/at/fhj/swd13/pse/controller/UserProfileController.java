@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import org.primefaces.model.UploadedFile;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -206,7 +208,7 @@ public class UserProfileController implements Serializable {
 	 * @return true if the current page is opened in login mode
 	 * 
 	 */
-	private boolean isModeEdit() {
+	public boolean isModeEdit() {
 		return editMode != null && editMode.equals("edit");
 	}
 
@@ -416,6 +418,21 @@ public class UserProfileController implements Serializable {
 					"Community anlegen Fehler", "Community anlegen fehlgeschlagen");
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
+	}
+	
+	public List<CommunityMember> getCommunityMemberships() {
+		List<CommunityMember> communityMemberships = getUserDTO().getCommunityMemberships();
+		Iterator<CommunityMember> membershipIterator = communityMemberships.iterator();
+		
+		while (membershipIterator.hasNext()) {
+			CommunityMember membership = membershipIterator.next();
+			if (membership.getCommunity().getPrivateUser() != null && 
+				membership.getCommunity().getPrivateUser().getPersonId() == userDTO.getId()) {
+				membershipIterator.remove();	
+			}
+		}
+		
+		return communityMemberships;
 	}
 
 	public String getCommunityName() {

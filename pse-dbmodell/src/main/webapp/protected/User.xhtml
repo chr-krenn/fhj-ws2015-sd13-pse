@@ -171,7 +171,7 @@
 						<p:commandButton value="Speichern"
 							action="#{userProfileController.updateProfile}" update="messages"
 							type="submit" icon="ui-icon-disk">
-							<f:param name="mode" value="edit" disable="#{!(userProfileController.isModeEdit)}" />	
+							<f:param name="mode" value="edit" disable="#{!(userProfileController.modeEdit)}" />	
 						</p:commandButton>
 					</p:column>			
 				</p:row>
@@ -180,7 +180,7 @@
 			<p:panel id="addtocontact" cache="false">
 				<p:commandButton id="contactButton"
 					value="#{userProfileController.contactButtonText()}" type="submit"
-					icon="ui-icon-home"
+					icon="ui-icon-contact"
 					actionListener="#{userProfileController.contactButtonAction()}"
 					rendered="#{userProfileController.addToContactVisible()}"
 					update="addtocontact,contacts,sendmessage" />
@@ -237,16 +237,19 @@
 					</p:tab>
 					<p:tab title="Communities" id="communities">
 						<p:dataTable var="membership" id="membershipList"
-							value="#{userProfileController.userDTO.communityMemberships}">
+							value="#{userProfileController.communityMemberships}">
 							<p:column headerText="Name">
-								<h:outputText value="#{membership.community.name}" />
+								<h:outputLink value="#{request.contextPath}/protected/Community.jsf">
+									<h:outputText value="#{membership.community.name}" />
+									<f:param name="id" value="#{membership.community.communityId}" />
+								</h:outputLink>
 							</p:column>
 							<p:column headerText="Bestätigt">
-								<h:selectBooleanCheckbox value="#{membership.confirmer != null}" disabled="True" 
+								<h:selectBooleanCheckbox value="#{membership.community.confirmedBy != null}" disabled="True" 
 									rendered="#{!membership.community.privateUser.userName.equals(userProfileController.userName)}"/>
 							</p:column>
 							<f:facet name="footer">
-								<p:commandButton value="Neue Community beantragen" onclick="PF('communityDialog').show()" icon="ui-icon-disk"/>
+								<p:commandButton value="Neue Community beantragen" onclick="PF('communityDialog').show()" rendered="#{userProfileController.modeEdit}"/>
 							</f:facet>
 						</p:dataTable>
 					</p:tab>

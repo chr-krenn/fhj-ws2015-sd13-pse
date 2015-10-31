@@ -11,6 +11,8 @@ import at.fhj.swd13.pse.db.entity.PersonTag;
 
 public class UserDTO {
 
+	private int id;
+
 	private String userName;
 
 	private String lastName;
@@ -57,25 +59,22 @@ public class UserDTO {
 
 	private List<String> tags;
 
-	
-	public UserDTO() {
-	}
-
 	public UserDTO(Person person) {
-		this.userName = person.getUserName();
-		this.lastName = person.getLastName();
-		this.firstName = person.getFirstName();
-		this.fullName = getFirstName() +" " +getLastName();
-		this.emailAddress = person.getEmailAddress();
-		this.dateOfBirth = person.getDateOfBirth();
-		this.dateOfEntry = person.getDateOfEntry();
-		this.phoneNumberMobile = person.getPhoneNumberMobile();
-		this.department = person.getDepartment();
-		this.locationBuilding = person.getLocationBuilding();
-		this.locationRoomNumber = person.getLocationRoomNumber();
-		this.locationFloor = person.getLocationFloor();
-		this.job = person.getJobPosition();
-		this.online = person.isOnline();
+		this.setId(person.getPersonId());
+		this.setUserName(person.getUserName());
+		this.setLastName(person.getLastName());
+		this.setFirstName(person.getFirstName());
+		this.setFullName(getFirstName() + " " + getLastName());
+		this.setEmailAddress(person.getEmailAddress());
+		this.setDateOfBirth(person.getDateOfBirth());
+		this.setDateOfEntry(person.getDateOfEntry());
+		this.setPhoneNumberMobile(person.getPhoneNumberMobile());
+		this.setDepartment(person.getDepartment());
+		this.setLocationBuilding(person.getLocationBuilding());
+		this.setLocationRoomNumber(person.getLocationRoomNumber());
+		this.setLocationFloor(person.getLocationFloor());
+		this.setJob(person.getJobPosition());
+		this.setOnline(person.isOnline());
 		this.setExtern(person.isExtern());
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
@@ -95,7 +94,23 @@ public class UserDTO {
 
 	/**
 	 * 
-	 * @return
+	 * @return the user id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param user id
+	 *            the user id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @return the user fullname
 	 */
 	public String getFullname() {
 		return lastName + ", " + firstName;
