@@ -352,9 +352,21 @@ public class UserProfileController implements Serializable {
 				// Update userDTO
 				userDTO.getContacts().add(userService.getLoggedInUser());
 			}
-
 		} catch (EntityNotFoundException e) {
-
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler",
+					"Kontakt konnte nicht hinzugefügt werden, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler", "Kontakt konnte nicht hinzugefügt werden");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
 
@@ -396,6 +408,9 @@ public class UserProfileController implements Serializable {
 			return "";
 	}
 	
+	/**
+	 * creates  a new Community for the user logged in
+	 */	
 	public void createCommunity() {
 		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage message;
@@ -420,6 +435,12 @@ public class UserProfileController implements Serializable {
 		}
 	}
 	
+	/**
+	 * returns a List of community where the current user is member of
+	 *
+	 * @return the Community List
+	 * 
+	 */	
 	public List<CommunityMember> getCommunityMemberships() {
 		List<CommunityMember> communityMemberships = getUserDTO().getCommunityMemberships();
 		Iterator<CommunityMember> membershipIterator = communityMemberships.iterator();
