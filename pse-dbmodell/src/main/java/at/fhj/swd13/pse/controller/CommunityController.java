@@ -99,7 +99,14 @@ public class CommunityController {
 	public void onCommunitySelected(SelectEvent object){
 	    try 
 	    {
-	    	FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+	    	if(isMemberOfCommunity(selectedCommunity.getCommunityId()))
+	    	{
+	    		FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+	    	}
+	    	else
+	    	{
+	    		logger.info("User " + userSession.getUsername() + " is not a member of the community " + selectedCommunity.getName());
+	    	}
 		} 
 	    catch (IOException e) 
 	    {
