@@ -114,4 +114,12 @@ public interface ChatService {
 	CommunityMember createCommunityMember(final Person creator, final Community community);
 	Boolean isPersonMemberOfCommunity( final Person person, final Community community );
 	
+	/**
+	 * Get the privat community for a person
+	 * 
+	 * @param person
+	 *          
+	 * @return the number of created communities
+	 */
+	Community getPrivateCommunity(Person person);
 }

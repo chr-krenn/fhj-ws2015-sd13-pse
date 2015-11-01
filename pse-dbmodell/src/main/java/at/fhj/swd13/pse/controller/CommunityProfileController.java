@@ -20,7 +20,8 @@ import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
-@javax.faces.bean.SessionScoped
+@ViewScoped
+//@javax.faces.bean.SessionScoped
 public class CommunityProfileController implements Serializable {
 
 	private static final long serialVersionUID = -984282742840189477L;
@@ -61,6 +62,5 @@ public class CommunityProfileController implements Serializable {
 	    {
 	    	e.printStackTrace();
 		}
-	}
-	
+	}	
 }

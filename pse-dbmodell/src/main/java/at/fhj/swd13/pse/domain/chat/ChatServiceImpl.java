@@ -198,8 +198,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 */
 	public List<Community> getPossibleTargetCommunities(final String username, final String needle) {
 
-		// TODO: filter those that the user is allowed to post to
-		return dbContext.getCommunityDAO().getMatchingCommunities(needle);
+		return dbContext.getCommunityDAO().getMatchingCommunities(username, needle);
 	}
 
 	/**
@@ -306,5 +305,17 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		} 
 
 		return builder.toString();
+	}
+	
+	/**
+	 * Get the privat community for a person
+	 * 
+	 * @param person
+	 *          
+	 * @return the number of created communities
+	 */
+	@Override
+	public Community getPrivateCommunity(Person person) {
+		return dbContext.getCommunityDAO().getPrivateCommunity(person);
 	}
 }

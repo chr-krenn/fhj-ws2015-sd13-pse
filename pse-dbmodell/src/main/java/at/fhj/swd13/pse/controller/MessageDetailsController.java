@@ -47,6 +47,12 @@ public class MessageDetailsController {
 			feedService.setImageRef(messageDTO);
 			feedService.setMessageLikes(messageDTO, userSession.getUsername());
 			feedService.setComments(messageDTO);
+			
+			if(messageDTO.getComments().size()>0) {
+				fillUpComments(messageDTO);
+				
+			}
+			
 		} catch (EntityNotFoundException e) {
 			logger.info("[MESSAGEDETAILS] message with id " + messageId + " not found");
 		}
@@ -61,14 +67,21 @@ public class MessageDetailsController {
 	 * Adds "like" from actual message for the person currently logged-in
 	 * 
 	 */
-	public String rateMessageDetailedView() {
+	public void rateMessageDetailedView() {
+		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");		
+	    int id = Integer.parseInt(messageId);
 		try {
 			Person p = userService.getUser(userSession.getUsername());
 			UserDTO userDTO = new UserDTO(p);
-			feedService.rateMessage(getMessageDTO().getId(), p);
-			getMessageDTO().setLike(true);
-			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()+1);
-			getMessageDTO().getRatingPersonsList().add(userDTO);
+			if(getMessageDTO().getId() == id) {
+				feedService.rateMessage(getMessageDTO().getId(), p);
+				feedService.updateDTOafterRating(getMessageDTO(), userDTO);
+			}
+			else {
+				if(getMessageDTO().getComments().size() > 0) {
+					commentsRatingRecursive(getMessageDTO(), id, p, userDTO);
+				}
+			}
 		}
 		catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
@@ -77,26 +90,27 @@ public class MessageDetailsController {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[MESSAGEDETAILS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
-		
-		return "/protected/MessageDetails.jsf";
+
 	}
 
 	/**
 	 * Removes the "like" from actual message for the person currently logged-in
 	 * 
 	 */
-	 public String removeRatingDetailedView() {
+	 public void removeRatingDetailedView() {
+		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");		
+		int id = Integer.parseInt(messageId);
+			 
 		try {
 			Person p = userService.getUser(userSession.getUsername());
-			feedService.removeRating(getMessageDTO().getId(), p);
-			getMessageDTO().setLike(false);
-			getMessageDTO().setQuantityRatings(messageDTO.getQuantityRatings()-1);
-			List<UserDTO> ratingPersonsList = getMessageDTO().getRatingPersonsList();
-
-			for(int i = 0; i < ratingPersonsList.size(); i++) {
-				if(ratingPersonsList.get(i).getUserName().contentEquals(p.getUserName())) {
-					ratingPersonsList.remove(i);
-					break;
+			UserDTO userDTO = new UserDTO(p);
+			if(getMessageDTO().getId() == id) {
+				feedService.removeRating(getMessageDTO().getId(), p);
+				feedService.updateDTOAfterRemove(getMessageDTO(), userDTO);
+			}
+			else {
+				if(getMessageDTO().getComments().size() > 0) {
+					commentsRemovingRecursive(getMessageDTO(), id, p, userDTO);
 				}
 			}
 		}
@@ -105,7 +119,42 @@ public class MessageDetailsController {
 			logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 		}
 		
-		return "/protected/MessageDetails.jsf";
+	}
+
+	 private void fillUpComments(MessageDTO messageDTO) {
+		for(int i = 0;i < messageDTO.getComments().size(); i++) {
+			feedService.setMessageLikes(messageDTO.getComments().get(i), userSession.getUsername());
+			if(messageDTO.getComments().get(i).getComments().size() > 0) {
+				fillUpComments(messageDTO.getComments().get(i));
+			}
+		}
+	}
+	private void commentsRatingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException, ConstraintViolationException {
+		for(int l = 0; l < message.getComments().size(); l++) {
+			if(message.getComments().get(l).getId() == id) {
+    			feedService.rateMessage(id, p);
+    			feedService.updateDTOafterRating(message.getComments().get(l), userDTO);
+    			message.getComments().get(l).setLike(true);
+			} else {
+				if(message.getComments().get(l).getComments().size() > 0) {
+					commentsRatingRecursive(message.getComments().get(l), id, p, userDTO);
+				}
+			}
+		}
+	}
+	
+	private void commentsRemovingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException {
+		for(int l = 0; l < message.getComments().size(); l++) {
+			if(message.getComments().get(l).getId() == id) {
+				feedService.removeRating(id, p);
+				feedService.updateDTOAfterRemove(message.getComments().get(l), userDTO);
+				message.getComments().get(l).setLike(false);
+			} else {
+				if(message.getComments().get(l).getComments().size() > 0) {
+					commentsRemovingRecursive(message.getComments().get(l), id, p, userDTO);
+				}
+			}
+		}
 	}
 
 }

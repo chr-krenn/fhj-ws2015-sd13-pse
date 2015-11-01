@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ import org.primefaces.model.UploadedFile;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -206,7 +208,7 @@ public class UserProfileController implements Serializable {
 	 * @return true if the current page is opened in login mode
 	 * 
 	 */
-	private boolean isModeEdit() {
+	public boolean isModeEdit() {
 		return editMode != null && editMode.equals("edit");
 	}
 
@@ -350,9 +352,21 @@ public class UserProfileController implements Serializable {
 				// Update userDTO
 				userDTO.getContacts().add(userService.getLoggedInUser());
 			}
-
 		} catch (EntityNotFoundException e) {
-
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler",
+					"Kontakt konnte nicht hinzugefügt werden, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler", "Kontakt konnte nicht hinzugefügt werden");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
 
@@ -394,6 +408,9 @@ public class UserProfileController implements Serializable {
 			return "";
 	}
 	
+	/**
+	 * creates  a new Community for the user logged in
+	 */	
 	public void createCommunity() {
 		RequestContext context = RequestContext.getCurrentInstance();
 		FacesMessage message;
@@ -417,6 +434,27 @@ public class UserProfileController implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
+	
+	/**
+	 * returns a List of community where the current user is member of
+	 *
+	 * @return the Community List
+	 * 
+	 */	
+	public List<CommunityMember> getCommunityMemberships() {
+		List<CommunityMember> communityMemberships = getUserDTO().getCommunityMemberships();
+		Iterator<CommunityMember> membershipIterator = communityMemberships.iterator();
+		
+		while (membershipIterator.hasNext()) {
+			CommunityMember membership = membershipIterator.next();
+			if (membership.getCommunity().getPrivateUser() != null && 
+				membership.getCommunity().getPrivateUser().getPersonId() == userDTO.getId()) {
+				membershipIterator.remove();	
+			}
+		}
+		
+		return communityMemberships;
+	}
 
 	public String getCommunityName() {
 		return communityName;
@@ -424,5 +462,15 @@ public class UserProfileController implements Serializable {
 
 	public void setCommunityName(String communityName) {
 		this.communityName = communityName;
+	}
+	
+	/**
+	 * returns true if the current login user is allowed to change news
+	 *
+	 * @return true / false
+	 * 
+	 */
+	public boolean getCanEditNews() {
+		return userSession.canEditNews();
 	}
 }

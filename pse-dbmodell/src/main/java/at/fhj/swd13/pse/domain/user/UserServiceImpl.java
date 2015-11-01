@@ -14,11 +14,13 @@ import org.jboss.logging.Logger;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.MailService;
@@ -40,6 +42,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private TagService tagService;
+
+	@Inject
+	private ChatService chatService;
 
 	@Inject
 	private Logger logger;
@@ -79,6 +84,11 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			p.setIsOnline(true);
 			p.setCurrentSessionId(userSession.login(username));
 			userSession.setAdmin(p.isAdmin());
+			
+			//get private community
+			Community community = chatService.getPrivateCommunity(p);
+			if (community != null)
+				userSession.setPrivateCommunityId(community.getCommunityId());
 			return p;
 		}
 
@@ -161,6 +171,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		passwordStrengthValidator.validate(newPlainPassword);
 
 		p.setPassword(newPlainPassword);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#setChatService(at.fhj.swd13.pse.domain.chat.ChatService)
+	 */
+	@Override
+	public void setChatService(ChatService chatService) {
+
+		this.chatService = chatService;
 	}
 
 	/*

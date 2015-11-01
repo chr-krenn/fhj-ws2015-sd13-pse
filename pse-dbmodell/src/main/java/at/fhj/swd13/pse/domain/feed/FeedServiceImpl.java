@@ -64,21 +64,19 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
-			List<MessageTag> messageTags) {
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
 
-		try {
-			message.setPerson(userService.getUser(username));
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-		}
+		message.setValidFrom(validFrom == null ? new Date() : validFrom);
+		message.setExpiresOn(validUntil);
+
+		message.setPerson(userService.getUser(username));
 
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		message.setValidFrom(createdDate);
 
 		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
 		message.setDeliverySystem(deliverySystemDAO.getPseService());
@@ -102,6 +100,12 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		Message byId = dbContext.getMessageDAO().getById(messageId);
 
 		return byId;
+	}
+
+	@Override
+	public MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException {
+		MessageDTO messageDto = new MessageDTO(dbContext.getMessageDAO().getById(messageId));
+		return messageDto;
 	}
 
 	@Override
@@ -183,8 +187,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 				try {
 					setComments(mDTO);
 				} catch (EntityNotFoundException e) {
-					logger.warn("[FEED] Could not load Comments for message with ID " +
-							"[" + mDTO.getId() + "] because entity was not found");
+					logger.warn("[FEED] Could not load Comments for message with ID " + "[" + mDTO.getId() + "] because entity was not found");
 				}
 			}
 			result.add(mDTO);
@@ -204,4 +207,30 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		messageDTO.setComments(loadComments(messageDTO.getId()));
 
 	}
+
+	@Override
+	public void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO) {
+		messageDTO.getRatingPersonsList().add(userDTO);
+		messageDTO.setLike(true);
+		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+	}
+
+	@Override
+	public void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO) {
+		List<UserDTO> ratingPersonsList = messageDTO.getRatingPersonsList();
+		for (int i = 0; i < ratingPersonsList.size(); i++) {
+			if (ratingPersonsList.get(i).getUserName().contentEquals(userDTO.getUserName())) {
+				messageDTO.getRatingPersonsList().remove(i);
+				break;
+			}
+		}
+		messageDTO.setLike(false);
+		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+	}
+
+	@Override
+	public void removeMessage(int messageId) {
+		dbContext.getMessageDAO().remove(messageId);
+	}
+
 }
