@@ -64,24 +64,20 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
-			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) {
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
 
-		message.setValidFrom( validFrom == null ? new Date() : validFrom );
-		message.setExpiresOn( validUntil );
-		
-		try {
-			message.setPerson(userService.getUser(username));
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-		}
+		message.setValidFrom(validFrom == null ? new Date() : validFrom);
+		message.setExpiresOn(validUntil);
+
+		message.setPerson(userService.getUser(username));
 
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		
+
 		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
 		message.setDeliverySystem(deliverySystemDAO.getPseService());
 
@@ -111,7 +107,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		MessageDTO messageDto = new MessageDTO(dbContext.getMessageDAO().getById(messageId));
 		return messageDto;
 	}
-	
+
 	@Override
 	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
 		Date createdDate = new Date();
@@ -237,5 +233,4 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		dbContext.getMessageDAO().remove(messageId);
 	}
 
-	
 }

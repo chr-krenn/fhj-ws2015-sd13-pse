@@ -18,6 +18,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -158,12 +159,12 @@ public class MessageEditorController {
 			communities.add(chatService.getCommunity(communityDto.getName()));
 		}
 
-		// FIXME valid from - valid until - also use MessageDTO
-		feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
-
-		ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-		FacesContext context = FacesContext.getCurrentInstance();
 		try {
+			feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
+
+			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+			FacesContext context = FacesContext.getCurrentInstance();
+
 			if (targetCommunity == null) {
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
@@ -177,6 +178,8 @@ public class MessageEditorController {
 				extContext.redirect(url);
 			}
 		} catch (IOException e) {
+			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
+		} catch (EntityNotFoundException e) {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
 		}
 	}
@@ -203,7 +206,7 @@ public class MessageEditorController {
 
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
-		for (Community community : chatService.getPossibleTargetCommunities( userSession.getUsername(), input)) {
+		for (Community community : chatService.getPossibleTargetCommunities(userSession.getUsername(), input)) {
 			CommunityDTO communityDTO = new CommunityDTO(community);
 
 			if (!isCommunityAlreadySelected(communityDTO.getToken())) {

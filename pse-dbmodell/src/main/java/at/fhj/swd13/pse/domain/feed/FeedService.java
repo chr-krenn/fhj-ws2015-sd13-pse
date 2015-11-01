@@ -23,13 +23,14 @@ import at.fhj.swd13.pse.dto.UserDTO;
 public interface FeedService {
 
 	List<MessageDTO> loadFeed();
-	
+
 	List<MessageDTO> loadFeedForUser(Person user);
-	
-	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags, Date validFrom, Date validUntil);
-	
+
+	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags,
+			Date validFrom, Date validUntil) throws EntityNotFoundException;
+
 	Message getMessageById(int messageId) throws EntityNotFoundException;
-	
+
 	MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException;
 
 	/**
@@ -50,7 +51,7 @@ public interface FeedService {
 	 * @throws EntityNotFoundException
 	 */
 	void removeRating(int messageId, Person person) throws EntityNotFoundException;
-	
+
 	/**
 	 * Getting the news from database
 	 * 
@@ -59,15 +60,15 @@ public interface FeedService {
 	 * @throws ConstraintViolationException
 	 */
 	List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
-	
+
 	/**
-	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message 
+	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message
 	 * 
 	 * @param message
 	 * @param username
 	 */
 	void setMessageLikes(MessageDTO message, String username);
-	
+
 	/**
 	 * The image ref is not available in the message itself and must therefore be
 	 * set separately after creating the messageDTO based on the message
@@ -75,17 +76,17 @@ public interface FeedService {
 	 * @param messageDTO
 	 */
 	void setImageRef(MessageDTO messageDTO);
-	
+
 	/**
 	 * Returns all comments for a message
 	 * 
 	 * @param messageId
 	 * @return
-	 * 			list of messageDTOs
+	 * 		list of messageDTOs
 	 * @throws EntityNotFoundException
 	 */
 	List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException;
-	
+
 	/**
 	 * Sets the comments in the messageDTO
 	 * 
@@ -108,7 +109,7 @@ public interface FeedService {
 	 * @param userDTO
 	 */
 	void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO);
-	
+
 	/**
 	 * Deletes a message from the database
 	 * 
