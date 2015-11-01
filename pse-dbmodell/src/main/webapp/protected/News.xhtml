@@ -6,20 +6,20 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:panel id="newsPanel" header="News">
+		<p:toolbar rendered="#{userProfileController.canEditNews}">
+			<f:facet name="left">
+				<p:commandButton id="addNewsBtn" value="Neu"
+					icon="ui-icon-circle-plus"
+					action="#{communityProfileController.onCreateNewActivitie}" >
+					<f:param name="id" value="1" />
+				</p:commandButton>
+			</f:facet>
+		</p:toolbar>
 		<p:dataScroller value="#{simpleFeedController.getNews(1)}"
 			var="news" chunkSize="10" mode="inline" scrollHeight="400">
 			<h:panelGrid columns="1" style="width:100%"
 				columnClasses="logo,detail">
 				<p:outputPanel>
-					<p:toolbar rendered="#{userProfileController.canEditNews}">
-						<f:facet name="left">
-							<p:commandButton id="addNewsBtn" value="Neu"
-								icon="ui-icon-circle-plus"
-								action="#{communityProfileController.onCreateNewActivitie}" >
-								<f:param name="id" value="1" />
-							</p:commandButton>
-						</f:facet>
-					</p:toolbar>
 					<h:panelGrid columns="7" cellpadding="5">
 						<h:outputText value="Datum:" />
 						<h:outputText value="#{news.date}"
