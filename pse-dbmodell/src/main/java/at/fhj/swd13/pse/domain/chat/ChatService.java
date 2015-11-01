@@ -114,6 +114,9 @@ public interface ChatService {
 	CommunityMember createCommunityMember(final Person creator, final Community community);
 	Boolean isPersonMemberOfCommunity( final Person person, final Community community );
 	
+	List<CommunityMember> getCommunityMembersList( final Community community );
+	
+	CommunityMember getCommunityMember( final Community community, final Person person );
 	/**
 	 * Get the privat community for a person
 	 * 

@@ -9,6 +9,7 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 
@@ -171,6 +172,40 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		return (List<Community>) q.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CommunityMember> getCommunityMembers(Community com) {
+
+		final Query q = dbContext.createNamedQuery("CommunityMember.findMembersByCommunity");
+		q.setParameter("community", com);
+		return (List<CommunityMember>)q.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p) {
+			try 
+			{
+				final Query q = dbContext.createNamedQuery("CommunityMember.findByCommunityAndPerson");
+				q.setParameter("community", com);
+				q.setParameter("person", p);
+				
+				List<CommunityMember> memberList = q.getResultList();
+				
+				if(memberList.size() == 1)
+				{
+					return memberList.get(0);
+				}
+				
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println("#### CommunityMember ERROR:" +  e.getMessage());
+			}	
+
+		return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllAccessibleCommunities(String searchFieldText) {

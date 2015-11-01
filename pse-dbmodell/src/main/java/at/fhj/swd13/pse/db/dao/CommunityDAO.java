@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
 
 public interface CommunityDAO {
@@ -111,6 +112,8 @@ public interface CommunityDAO {
 	 */
 	List<Community> getAllCommunities();
 
+	List<CommunityMember> getCommunityMembers(Community com);
+	CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p);
 	/**
 	 * Get a list of all communities with a search string
 	 * 

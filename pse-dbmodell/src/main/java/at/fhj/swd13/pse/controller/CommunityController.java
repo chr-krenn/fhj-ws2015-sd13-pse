@@ -21,7 +21,6 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
-import javassist.bytecode.ConstantAttribute;
 
 
 /**
@@ -59,7 +58,6 @@ public class CommunityController {
     private int communityId;
 	private String invitationOnly;
     private String communityIdString;
-    private String privateUser;
     private boolean isMember;
     
     @PostConstruct
@@ -68,7 +66,6 @@ public class CommunityController {
     	
     	communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityId");
     	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
-    	privateUser = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("privateUser");
     }
 
     
@@ -127,33 +124,50 @@ public class CommunityController {
 		try 
 		{	
 			com = chatService.getCommunity(communityId);
-			logger.debug("  community: " + com.getCommunityId() + " - " +com.getName() );
+			logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
 			
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
-			
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+
+			//addCommunityMember
+			CommunityMember member = chatService.createCommunityMember(currentUser, com);
+			logger.debug("  CommunityMemberId : " + member.getCommunityMemberId() );
+
 			if( !isinvitationOnly() ) // public Community
 			{
 				logger.info("#### Public Community ####");
-	
-					//addCommunityMember
-					CommunityMember member = chatService.createCommunityMember(currentUser, com);
-					logger.debug("  currentUser: " + member.getCommunityMemberId() );
-					
-					if(member != null)
-					{
-						setMember( isMemberOfCommunity( com.getCommunityId() ) );
-					}
+			
+				if(member != null)
+				{
+					setMember( isMemberOfCommunity( com.getCommunityId() ) );
+				}
 				
 				info("You are now a member of the community '" + com.getName() + "'");
+
 				logger.info("#### Done - Public Community ####");
 				
 			}else // private Community
 			{
-				info("Your request has been sent to the administrator!");
 				logger.info("#### Private Community ####");
 				
-				logger.info("private user: " + privateUser);
+				List<CommunityMember> memberList = chatService.getCommunityMembersList(com);
+				
+				logger.debug("  memberListSize: <" + memberList.size() + ">" );
+				
+				for( CommunityMember m : memberList )
+				{
+					if( m.getIsAdministrator() )
+					{
+						logger.debug("  adminMemberLastname: " + m.getMember().getLastName() );
+						info("Your request has been sent to the administrator: " + m.getMember().getFirstName() + " " + m.getMember().getLastName() );
+						
+						break;
+					}else
+					{
+						info("Your request has been sent to the administrator");
+					}
+					
+				}
 				
 				
 				logger.info("#### Done - Private Community ####");
@@ -178,7 +192,6 @@ public class CommunityController {
 		setMember(false);
 		Person currentUser = null;
 		Community com = null;
-		
 		try 
 		{
 			currentUser = userService.getUser(userSession.getUsername());
@@ -187,20 +200,50 @@ public class CommunityController {
 			com = chatService.getCommunity(comId);
 			logger.debug("  community: " + com.getCommunityId() + " - " + com.getName() );
 			
-			setMember( chatService.isPersonMemberOfCommunity(currentUser, com) );
-			logger.debug("isMember: " + isMember());
+			
+			if(!com.getInvitationOnly()) //Public community
+			{
+				setMember( chatService.isPersonMemberOfCommunity(currentUser, com) );
+			}
+			else
+			{
+				//Private community
+				
+				try 
+				{
+					CommunityMember m = chatService.getCommunityMember(com, currentUser);
+				
+					if(m.getConfirmer() != null)
+					{
+						setMember( chatService.isPersonMemberOfCommunity(currentUser, com) );
+					}
+					else
+					{
+						setMember(false);
+					}
+
+				
+				} catch (NullPointerException e) {
+					// communityMember is Null
+					setMember(false);
+				}
+				
+								
+			}
 			
 		} catch (Exception e) {
-			logger.error("ERROR-MESSAGE: " + e.getMessage() );
+			logger.debug(" Error_Message: " + e.getMessage());
 		}
-
+		
+		logger.info("## isMemberOfCommunity <" + isMember() + ">; community: <" + com.getName() + ">; person <"+ currentUser.getLastName() + "> ##");
+		
 		return isMember();
+		
 	}
 
-	public String isMemberToString(int communityId)
+	public String isMemberToString()
 	{
-		setMember( isMemberOfCommunity( communityId ) );
-		
+		logger.debug("## isMemberToString - isMember <" + isMember() + ">");
 		if(isMember())
 		{
 			return answerYes;
@@ -210,7 +253,50 @@ public class CommunityController {
 			return answerNo;
 		}
 		
+	}
+
+	public Boolean disableAskCommunity(int comId)
+	{
+		boolean disable = false;
+		setMember(isMemberOfCommunity(comId));
 		
+		if(isMember())
+		{
+			disable = true; //disable button askCommunity
+		}
+		else
+		{
+			Person currentUser = null;
+			Community com = null;
+			try 
+			{
+				currentUser = userService.getUser(userSession.getUsername());
+				logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+				
+				com = chatService.getCommunity(comId);
+				logger.debug("  community: " + com.getCommunityId() + " - " + com.getName() );
+					
+				try 
+				{
+					CommunityMember m = chatService.getCommunityMember(com, currentUser);
+					
+					if(m.getConfirmer() == null)
+						disable = true; // enable button askCommunity because it was pressed one time.
+					
+				} catch (NullPointerException e) {
+					// communityMember does not exists means the button askCommunity was never pressed.
+					disable = false;
+				}
+				
+			} catch (Exception e) {
+				logger.debug(" Error_Message: " + e.getMessage());
+			}
+		}
+		
+		logger.info("## disableAskCommunity - disable <"+ disable + ">");
+		
+		return disable;
+			
 	}
 	
 	public void error() {
