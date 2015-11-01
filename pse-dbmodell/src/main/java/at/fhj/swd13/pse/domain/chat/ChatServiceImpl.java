@@ -277,16 +277,16 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	@Override
-	public List<Community> getAllCommunities() {
+	public List<Community> getAllAccessibleCommunities() {
 
-		return dbContext.getCommunityDAO().getAllCommunities();
+		return dbContext.getCommunityDAO().getAllAccessibleCommunities();
 
 	}
 
 	@Override
-	public List<Community> getAllCommunities(String searchfieldText) {
+	public List<Community> getAllAccessibleCommunities(String searchfieldText) {
 
-		return dbContext.getCommunityDAO().getAllCommunities(searchfieldText);
+		return dbContext.getCommunityDAO().getAllAccessibleCommunities(searchfieldText);
 	}
 
 	public String resolveReceipientsMail(final Message message) {

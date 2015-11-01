@@ -87,4 +87,19 @@ public interface CommunityDAO {
 	 * @return list of communities
 	 */
 	List<Community> getAllCommunities(String searchFieldText);
+	
+	/**
+	 * Get a list of all accessible communities
+	 * @return list of communities
+	 */
+	List<Community> getAllAccessibleCommunities();
+	
+	/**
+	 * Get a list of all accessible communities with a search string
+	 * @param searchFieldText
+	 * @return list of communities
+	 */
+	List<Community> getAllAccessibleCommunities(String searchFieldText);
+	
+	
 }

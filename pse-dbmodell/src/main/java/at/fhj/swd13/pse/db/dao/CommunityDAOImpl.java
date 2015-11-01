@@ -137,4 +137,22 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		return (List<Community>)q.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Community> getAllAccessibleCommunities() {
+
+		final Query q = dbContext.createNamedQuery("Community.findAllAccessible");
+
+		return (List<Community>)q.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Community> getAllAccessibleCommunities(String searchFieldText) {
+
+		final Query q = dbContext.createNamedQuery("Community.findMatchingAccessible");
+		q.setParameter("needle", searchFieldText+"%");
+		return (List<Community>)q.getResultList();
+	}
+	
 }
