@@ -64,11 +64,14 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
-			List<MessageTag> messageTags) {
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) {
 		Message message = new Message();
 		message.setHeadline(headline);
 		message.setMessage(text);
 
+		message.setValidFrom( validFrom == null ? new Date() : validFrom );
+		message.setExpiresOn( validUntil );
+		
 		try {
 			message.setPerson(userService.getUser(username));
 		} catch (EntityNotFoundException e) {
@@ -78,8 +81,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		Date createdDate = new Date();
 
 		message.setCreatedAt(createdDate);
-		message.setValidFrom(createdDate);
-
+		
 		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
 		message.setDeliverySystem(deliverySystemDAO.getPseService());
 
@@ -183,8 +185,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 				try {
 					setComments(mDTO);
 				} catch (EntityNotFoundException e) {
-					logger.warn("[FEED] Could not load Comments for message with ID " +
-							"[" + mDTO.getId() + "] because entity was not found");
+					logger.warn("[FEED] Could not load Comments for message with ID " + "[" + mDTO.getId() + "] because entity was not found");
 				}
 			}
 			result.add(mDTO);
@@ -215,8 +216,8 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO) {
 		List<UserDTO> ratingPersonsList = messageDTO.getRatingPersonsList();
-		for(int i = 0; i < ratingPersonsList.size(); i++) {
-			if(ratingPersonsList.get(i).getUserName().contentEquals(userDTO.getUserName())) {
+		for (int i = 0; i < ratingPersonsList.size(); i++) {
+			if (ratingPersonsList.get(i).getUserName().contentEquals(userDTO.getUserName())) {
 				messageDTO.getRatingPersonsList().remove(i);
 				break;
 			}

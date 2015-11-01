@@ -12,6 +12,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import org.hibernate.validator.spi.valuehandling.ValidatedValueUnwrapper;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -148,7 +149,7 @@ public class MessageEditorController {
 
 		//FIXME valid from - valid until - also use MessageDTO
 		feedService.saveMessage(headline, richText, userSession.getUsername(),
-				document, icon, communities, messageTags);
+				document, icon, communities, messageTags, dtFrom, dtUntil );
 
 		ExternalContext extContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
