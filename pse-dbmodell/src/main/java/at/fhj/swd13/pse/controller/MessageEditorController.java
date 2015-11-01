@@ -12,14 +12,12 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import org.hibernate.validator.spi.valuehandling.ValidatedValueUnwrapper;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -29,12 +27,13 @@ import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
-import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
- * Test data 
- *INSERT INTO `community` VALUES (4,'\0','\0','Dunkelgrau','2015-10-16 20:00:45',100,NULL,100),(5,'\0','\0','Dunkelblau','2015-10-16 20:00:56',100,NULL,100),(6,'\0','\0','Dunkelbunt','2015-10-16 20:01:02',100,NULL,100),(7,'\0','\0','Gelb','2015-10-16 20:01:10',100,NULL,100),(8,'\0','\0','Rot','2015-10-16 20:01:14',100,NULL,100); 
+ * Test data
+ * INSERT INTO `community` VALUES (4,'\0','\0','Dunkelgrau','2015-10-16 20:00:45',100,NULL,100),(5,'\0','\0','Dunkelblau','2015-10-16
+ * 20:00:56',100,NULL,100),(6,'\0','\0','Dunkelbunt','2015-10-16 20:01:02',100,NULL,100),(7,'\0','\0','Gelb','2015-10-16
+ * 20:01:10',100,NULL,100),(8,'\0','\0','Rot','2015-10-16 20:01:14',100,NULL,100);
  */
 
 @ManagedBean
@@ -61,8 +60,7 @@ public class MessageEditorController {
 
 	private String headline;
 	private String richText;
-	
-	
+
 	/**
 	 * @return the dtFrom
 	 */
@@ -70,9 +68,9 @@ public class MessageEditorController {
 		return dtFrom;
 	}
 
-	
 	/**
-	 * @param dtFrom the dtFrom to set
+	 * @param dtFrom
+	 *            the dtFrom to set
 	 */
 	public void setDtFrom(Date dtFrom) {
 		this.dtFrom = dtFrom;
@@ -80,16 +78,16 @@ public class MessageEditorController {
 
 	private Date dtFrom;
 	private Date dtUntil;
-	
+
 	private int iconId;
 	private String iconRef;
 
 	private int documentId;
 	private String documentRef;
 	private String documentName;
-	private String pageFromWhere ;
+
 	private boolean communityLocked;
-	
+
 	private Community targetCommunity = null;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
@@ -98,35 +96,33 @@ public class MessageEditorController {
 
 	@PostConstruct
 	public void init() {
-		String receiverCommunity = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("community");
+		String receiverCommunity = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("community");
 		if (receiverCommunity != null) {
 			targetCommunity = chatService.getCommunity(receiverCommunity);
 			if (targetCommunity != null) {
 				selectedCommunities.add(new CommunityDTO(targetCommunity));
 			}
 		}
-		
-		String lockCommunityString = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("lockCommunity");
-		
+
+		String lockCommunityString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("lockCommunity");
+
 		communityLocked = false;
-		if(lockCommunityString != null){
-			communityLocked = Boolean.parseBoolean(lockCommunityString);  
+		if (lockCommunityString != null) {
+			communityLocked = Boolean.parseBoolean(lockCommunityString);
 		}
 	}
 
 	/**
 	 * Returns the community name
 	 */
-	public String getCommunityName(){
-		if(targetCommunity == null){
+	public String getCommunityName() {
+		if (targetCommunity == null) {
 			return "";
 		}
-		
+
 		return targetCommunity.getName();
 	}
-		
+
 	/**
 	 * Save the entered message to the database
 	 */
@@ -162,48 +158,38 @@ public class MessageEditorController {
 			communities.add(chatService.getCommunity(communityDto.getName()));
 		}
 
-		//FIXME valid from - valid until - also use MessageDTO
-		feedService.saveMessage(headline, richText, userSession.getUsername(),
-				document, icon, communities, messageTags, dtFrom, dtUntil );
+		// FIXME valid from - valid until - also use MessageDTO
+		feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
 
-		ExternalContext extContext = FacesContext.getCurrentInstance()
-				.getExternalContext();
+		ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 		FacesContext context = FacesContext.getCurrentInstance();
 		try {
-			if (targetCommunity == null){
-			String url = extContext.encodeActionURL(context.getApplication()
-					.getViewHandler()
-					.getActionURL(context, "/protected/Main.jsf"));
-			extContext.redirect(url);
-			}//FIXME find better solution
-			else if(targetCommunity.getCommunityId() == 1){
-				String url = extContext.encodeActionURL(context.getApplication()
-						.getViewHandler()
-						.getActionURL(context, "/protected/Main.jsf"));
+			if (targetCommunity == null) {
+				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
-			}
-			else
-			{
-				String url = extContext.encodeActionURL(context.getApplication()
-						.getViewHandler()
-						.getActionURL(context, "/protected/Community.jsf?id= " + targetCommunity.getCommunityId()));
+			}// FIXME find better solution
+			else if (targetCommunity.getCommunityId() == 1) {
+				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
+				extContext.redirect(url);
+			} else {
+				String url = extContext.encodeActionURL(
+						context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf?id= " + targetCommunity.getCommunityId()));
 				extContext.redirect(url);
 			}
 		} catch (IOException e) {
-			logger.error("[MSG+] error redirecting after logout: "
-					+ e.getMessage());
+			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
 		}
 	}
 
 	/**
 	 * Removes a message from the database
 	 */
-	public void removeMessage(){
+	public void removeMessage() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
 		int id = Integer.parseInt(messageId);
 		feedService.removeMessage(id);
 	}
-	
+
 	/**
 	 * Return a list of matching communities based on the input
 	 * 
@@ -217,8 +203,7 @@ public class MessageEditorController {
 
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
-		for (Community community : chatService.getPossibleTargetCommunities(
-				"des wird no ignoriert", input)) {
+		for (Community community : chatService.getPossibleTargetCommunities("des wird no ignoriert", input)) {
 			CommunityDTO communityDTO = new CommunityDTO(community);
 
 			if (!isCommunityAlreadySelected(communityDTO.getToken())) {
@@ -226,8 +211,7 @@ public class MessageEditorController {
 			}
 		}
 
-		logger.info("[MSG+] matching and not already selected communities found: "
-				+ result.size());
+		logger.info("[MSG+] matching and not already selected communities found: " + result.size());
 
 		return result;
 	}
@@ -259,8 +243,7 @@ public class MessageEditorController {
 
 		List<String> result = new ArrayList<String>();
 
-		logger.info("[MSG+] completeTag - selcted tag count "
-				+ selectedTags.size());
+		logger.info("[MSG+] completeTag - selcted tag count " + selectedTags.size());
 
 		for (Tag tag : tagService.getMatchingTags(input)) {
 
@@ -310,9 +293,9 @@ public class MessageEditorController {
 	public void handleUnselect(UnselectEvent event) {
 		CommunityDTO removedCommunity = (CommunityDTO) event.getObject();
 		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
-		
+
 		// TODO Prevent unselection of preselected items
-		
+
 		// if (targetCommunity != null &&
 		// removedCommunity.getName().equals(targetCommunity.getName())) {
 		// selectedCommunities.add(new CommunityDTO(targetCommunity));
@@ -359,8 +342,7 @@ public class MessageEditorController {
 	 */
 	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
 
-		logger.info("[MSG+] set selected communities with an itemcount of "
-				+ selectedCommunities.size());
+		logger.info("[MSG+] set selected communities with an itemcount of " + selectedCommunities.size());
 
 		this.selectedCommunities = selectedCommunities;
 	}
@@ -372,8 +354,7 @@ public class MessageEditorController {
 	public void setSelectedTags(List<String> selectedTags) {
 
 		if (selectedTags != null) {
-			logger.info("[MSG+] set selected tags with an itemcount of "
-					+ selectedTags.size());
+			logger.info("[MSG+] set selected tags with an itemcount of " + selectedTags.size());
 
 			this.selectedTags = selectedTags;
 		} else {
@@ -388,8 +369,7 @@ public class MessageEditorController {
 
 		logger.info("[MSG+] uploading icon");
 
-		RequestContext.getCurrentInstance()
-				.openDialog("/protected/ImageUpload");
+		RequestContext.getCurrentInstance().openDialog("/protected/ImageUpload");
 	}
 
 	public void onIconUploaded(SelectEvent element) {
@@ -413,8 +393,7 @@ public class MessageEditorController {
 
 		logger.info("[MSG+] uploading document");
 
-		RequestContext.getCurrentInstance().openDialog(
-				"/protected/DocumentUpload");
+		RequestContext.getCurrentInstance().openDialog("/protected/DocumentUpload");
 	}
 
 	public void onDocumentUploaded(SelectEvent element) {
@@ -478,8 +457,7 @@ public class MessageEditorController {
 	public String getIconRef() {
 
 		if (iconRef == null) {
-			return documentService
-					.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
+			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.MESSAGE_ICON);
 		}
 
 		return iconRef;
@@ -495,8 +473,7 @@ public class MessageEditorController {
 
 	public String getDocumentRef() {
 		if (documentRef == null) {
-			return documentService
-					.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);
+			return documentService.getDefaultDocumentRef(DocumentService.DocumentCategory.USER_IMAGE);
 		}
 
 		logger.info("[MSG+] documentRef: " + documentRef);
@@ -514,6 +491,7 @@ public class MessageEditorController {
 	public void setDocumentName(String documentName) {
 		this.documentName = documentName;
 	}
+
 	/**
 	 * @return the dtUntil
 	 */
@@ -521,15 +499,15 @@ public class MessageEditorController {
 		return dtUntil;
 	}
 
-	
 	/**
-	 * @param dtUntil the dtUntil to set
+	 * @param dtUntil
+	 *            the dtUntil to set
 	 */
 	public void setDtUntil(Date dtUntil) {
 		this.dtUntil = dtUntil;
 	}
-	
-	public boolean isCommunityLocked(){
+
+	public boolean isCommunityLocked() {
 		return communityLocked;
 	}
 }
