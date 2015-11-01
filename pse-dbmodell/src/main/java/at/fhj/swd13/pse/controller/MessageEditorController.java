@@ -165,9 +165,13 @@ public class MessageEditorController {
 			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 			FacesContext context = FacesContext.getCurrentInstance();
 
-			if (targetCommunity == null || targetCommunity.getSystemInternal() || targetCommunity.isPrivateChannel()) {
+			if (targetCommunity == null || targetCommunity.getSystemInternal()) {
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
+			} else if (targetCommunity.isPrivateChannel()) {
+				String url = extContext.encodeActionURL(
+						context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
+				extContext.redirect(url+"?userName="+targetCommunity.getPrivateUser().getUserName() +"&mode=view");
 			} else {
 				String url = extContext.encodeActionURL(
 						context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf"));
