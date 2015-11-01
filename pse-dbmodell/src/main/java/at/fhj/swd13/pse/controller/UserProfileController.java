@@ -471,6 +471,6 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */
 	public boolean getCanEditNews() {
-		return isAdmin();
+		return userSession.canEditNews();
 	}
 }

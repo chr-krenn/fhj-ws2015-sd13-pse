@@ -87,4 +87,8 @@ public class UserSession implements Serializable {
 	public int getPrivateCommunityId() {
 		return privateCommunityId;
 	}
+	
+	public boolean canEditNews(){
+		return isAdmin();
+	}
 }
