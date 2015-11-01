@@ -121,6 +121,15 @@ public class MessageDetailsController {
 		
 	}
 
+	 public void reloadMessage() {
+		 try {
+			feedService.setComments(messageDTO);
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	 }
+	 
 	 private void fillUpComments(MessageDTO messageDTO) {
 		for(int i = 0;i < messageDTO.getComments().size(); i++) {
 			feedService.setMessageLikes(messageDTO.getComments().get(i), userSession.getUsername());
@@ -156,5 +165,4 @@ public class MessageDetailsController {
 			}
 		}
 	}
-
 }
