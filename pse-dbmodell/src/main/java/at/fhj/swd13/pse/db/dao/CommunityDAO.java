@@ -47,6 +47,18 @@ public interface CommunityDAO {
 	List<Community> getMatchingCommunities(final String needle);
 
 	/**
+	 * get all communities that the given user is allowed to post into 
+	 * and that start with needle
+	 * 
+	 * @param needle
+	 *            string the communities must start with
+	 * @param userName
+	 * 			username for whom to return the communities
+	 * @return a list of matching communities or an empty list
+	 */
+	List<Community> getMatchingCommunities(final String userName, final String needle);
+
+	/**
 	 * Remove a community from the persistent storage by its id
 	 * 
 	 * @param communityId
@@ -71,9 +83,10 @@ public interface CommunityDAO {
 	/**
 	 * Get a list of all communities
 	 * @param person
+	 * @param includePrivateCommunity
 	 * @return list of communities of the person
 	 */
-	List<Community> getCommunities(final Person person);
+	List<Community> getCommunities(final Person person, final boolean includePrivateCommunity );
 	
 	/**
 	 * Get a list of all communities

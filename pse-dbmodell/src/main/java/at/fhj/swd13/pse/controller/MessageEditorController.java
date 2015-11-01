@@ -203,7 +203,7 @@ public class MessageEditorController {
 
 		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
 
-		for (Community community : chatService.getPossibleTargetCommunities("des wird no ignoriert", input)) {
+		for (Community community : chatService.getPossibleTargetCommunities( userSession.getUsername(), input)) {
 			CommunityDTO communityDTO = new CommunityDTO(community);
 
 			if (!isCommunityAlreadySelected(communityDTO.getToken())) {

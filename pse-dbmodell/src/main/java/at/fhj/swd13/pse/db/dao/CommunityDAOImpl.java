@@ -65,6 +65,16 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		
 		return q.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Community> getMatchingCommunities( final String username, final String needle )	{
+	
+		final Query q = dbContext.createNamedQuery("Community.findMatchingByMemberButOwn" );
+		q.setParameter("uname", username);
+		q.setParameter("needle", needle + "%");
+		
+		return q.getResultList();
+	}
 	
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getUnconfirmedCommunites()
@@ -113,8 +123,8 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Community> getCommunities(final Person person) {
-		final Query q = dbContext.createNamedQuery("Community.findCommunitiesByMember");
+	public List<Community> getCommunities(final Person person, final boolean includePrivateCommunity ) {
+		final Query q = dbContext.createNamedQuery( includePrivateCommunity ? "Community.findCommunitiesByMember" : "Community.findCommunitiesByMemberButOwn" );
 		q.setParameter("person", person);
 		return (List<Community>)q.getResultList();
 	}
