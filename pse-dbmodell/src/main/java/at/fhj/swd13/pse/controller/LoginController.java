@@ -197,4 +197,11 @@ public class LoginController {
 			return false;
 		}
 	}
+	
+	/**
+	 * @return the Id of the private community of the logged in user
+	 */
+	public int getPrivateCommunityId() {
+		return userSession.getPrivateCommunityId();
+	}	
 }

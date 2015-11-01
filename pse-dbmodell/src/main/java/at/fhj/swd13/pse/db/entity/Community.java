@@ -138,8 +138,9 @@ public class Community implements Serializable {
 		return this.privateUser;
 	}
 
-	public void setPrivateUser(Person person1) {
-		this.privateUser = person1;
+	public void setPrivateUser(Person person) {
+		this.privateUser = person;
+		person.setPrivateCommunity(this);
 	}
 
 	public boolean isPrivateChannel() {

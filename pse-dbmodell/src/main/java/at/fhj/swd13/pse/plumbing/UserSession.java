@@ -31,6 +31,7 @@ public class UserSession implements Serializable {
 
 	private String loggedInUser = null;
 	private boolean isAdmin = false;
+	private int privateCommunityId;
 
 	@PostConstruct
 	protected void init() {
@@ -77,5 +78,13 @@ public class UserSession implements Serializable {
 
 	public String getUsername() {
 		return loggedInUser == null ? "Not YOU!" : loggedInUser;
+	}
+
+	public void setPrivateCommunityId(int privateCommunityId) {
+		this.privateCommunityId = privateCommunityId;
+	}
+
+	public int getPrivateCommunityId() {
+		return privateCommunityId;
 	}
 }

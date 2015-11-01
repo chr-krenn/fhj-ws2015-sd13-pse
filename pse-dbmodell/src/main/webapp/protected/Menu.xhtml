@@ -29,6 +29,14 @@
 							</h:link>
 						</p:menuitem>
 						<p:menuitem>
+							<h:link outcome="/protected/Community.jsf"
+								styleClass="ui-menuitem-link ui-corner-all">
+								<f:param name="id" value="#{loginController.privateCommunityId}" />
+								<span class="ui-menuitem-icon ui-icon ui-icon-notice"></span>
+								<span class="ui-menuitem-text">Private Nachrichten</span>
+							</h:link>
+						</p:menuitem>
+						<p:menuitem>
 							<h:link outcome="/protected/UserPasswordChange.jsf"
 								styleClass="ui-menuitem-link ui-corner-all">
 								<span class="ui-menuitem-icon ui-icon ui-icon-key"></span>
