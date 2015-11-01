@@ -1,4 +1,4 @@
-INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','swd13pse@gmail.com','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,1,NULL,NULL);
+﻿INSERT INTO `person` VALUES (1,'pse_system','Bulletin Board System User','JBOSS','swd13pse@gmail.com','+436644711815','--','system-root',NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,1,NULL,NULL);
 INSERT INTO `person` VALUES (2,'padmin','Portal','Admin','pse@edu.fh-joanneum.at','+436644711815','--','Portal-Admin',NULL,NULL,NULL,NULL,NULL,NULL,1,0,1,0,1,NULL, NULL);
 
 INSERT INTO `person` VALUES (90, 'krenn','Krenn','Christian','christian.krenn@imaginary.com','+436644711815','--','Vortragender',NULL,NULL,NULL,NULL,NULL,NULL,1,0,1,0,0,NULL, NULL);
@@ -16,3 +16,4 @@ INSERT INTO `person` VALUES (108, 'pompenig13','Pompenig','Christine','christine
 INSERT INTO `person` VALUES (109, 'oswaldge13','Oswald','Gerald','gerald.oswald@edu.fh-joanneum.at','+436649136104','--','Knecht','Team 2','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (110, 'almer13','Almer','Patrick','patrick.almer@edu.fh-joanneum.at','+436649136104','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (113, 'kirschma13','Manuel','Kirsch','manuel.kirsch@edu.fh-joanneum.at','+436645233566','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
+INSERT INTO `person` VALUES (114, 'schmidtr13','Schmidt','Roman','roman.schmidt@edu.fh-joanneum.at','+436766036791','--','Knecht','Team 2','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
