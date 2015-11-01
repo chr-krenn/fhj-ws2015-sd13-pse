@@ -47,6 +47,33 @@ public interface CommunityDAO {
 	List<Community> getMatchingCommunities(final String needle);
 
 	/**
+	 * get all communities that the given user is allowed to post into
+	 * and that start with needle
+	 * 
+	 * @param needle
+	 *            string the communities must start with
+	 * @param userName
+	 *            username for whom to return the communities
+	 * @return a list of matching communities or an empty list
+	 */
+	List<Community> getMatchingCommunities(final String userName, final String needle);
+
+	/**
+	 * Get a list of all accessible communities
+	 * 
+	 * @return list of communities
+	 */
+	List<Community> getAllAccessibleCommunities();
+
+	/**
+	 * Get a list of all accessible communities with a search string
+	 * 
+	 * @param searchFieldText
+	 * @return list of communities
+	 */
+	List<Community> getAllAccessibleCommunities(String searchFieldText);
+
+	/**
 	 * Remove a community from the persistent storage by its id
 	 * 
 	 * @param communityId
@@ -67,39 +94,36 @@ public interface CommunityDAO {
 	 * @return a list of all currently unconfirmed communities or an empty list
 	 */
 	List<Community> getUnconfirmedCommunites();
-	
+
 	/**
 	 * Get a list of all communities
+	 * 
 	 * @param person
+	 * @param includePrivateCommunity
 	 * @return list of communities of the person
 	 */
-	List<Community> getCommunities(final Person person);
-	
+	List<Community> getCommunities(final Person person, final boolean includePrivateCommunity);
+
 	/**
 	 * Get a list of all communities
+	 * 
 	 * @return list of communities
 	 */
 	List<Community> getAllCommunities();
-	
+
 	/**
 	 * Get a list of all communities with a search string
+	 * 
 	 * @param searchFieldText
 	 * @return list of communities
 	 */
 	List<Community> getAllCommunities(String searchFieldText);
-	
+
 	/**
-	 * Get a list of all accessible communities
-	 * @return list of communities
+	 * Get the private community for a person
+	 * 
+	 * @param person
+	 * @return private community
 	 */
-	List<Community> getAllAccessibleCommunities();
-	
-	/**
-	 * Get a list of all accessible communities with a search string
-	 * @param searchFieldText
-	 * @return list of communities
-	 */
-	List<Community> getAllAccessibleCommunities(String searchFieldText);
-	
-	
+	Community getPrivateCommunity(Person person);
 }

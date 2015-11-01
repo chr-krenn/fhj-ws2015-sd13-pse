@@ -14,7 +14,6 @@ import at.fhj.swd13.pse.db.entity.Person;
 
 public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
-	
 	@Inject
 	public CommunityDAOImpl(DbContext dbContext) {
 
@@ -29,7 +28,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * Community)
 	 */
 	@Override
-	public void insert(Community community) throws ConstraintViolationException{
+	public void insert(Community community) throws ConstraintViolationException {
 
 		dbContext.persist(community);
 	}
@@ -41,40 +40,57 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 		return fetchSingle(q);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#get(int)
 	 */
 	public Community get(final int communityId) {
-		
+
 		final Query q = dbContext.createNamedQuery("Community.findById");
 		q.setParameter("id", communityId);
-		
+
 		return fetchSingle(q);
-		
+
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getMatchingCommunities(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Community> getMatchingCommunities( final String needle )	{
-	
-		final Query q = dbContext.createNamedQuery("Community.findMatching" );
+	public List<Community> getMatchingCommunities(final String needle) {
+
+		final Query q = dbContext.createNamedQuery("Community.findMatching");
 		q.setParameter("needle", needle + "%");
-		
+
 		return q.getResultList();
 	}
-	
-	/* (non-Javadoc)
+
+	@SuppressWarnings("unchecked")
+	public List<Community> getMatchingCommunities(final String username, final String needle) {
+
+		final Query q = dbContext.createNamedQuery("Community.findMatchingByMemberButOwn");
+		q.setParameter("uname", username);
+		q.setParameter("needle", needle + "%");
+
+		return q.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getUnconfirmedCommunites()
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Community> getUnconfirmedCommunites() {
-		
-		return (List<Community>)dbContext.createNamedQuery("Community.findUnconfirmed").getResultList();		
+
+		return (List<Community>) dbContext.createNamedQuery("Community.findUnconfirmed").getResultList();
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -110,49 +126,57 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 		dbContext.remove(community);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Community> getCommunities(final Person person) {
-		final Query q = dbContext.createNamedQuery("Community.findCommunitiesByMember");
+	public List<Community> getCommunities(final Person person, final boolean includePrivateCommunity) {
+		final Query q = dbContext.createNamedQuery(includePrivateCommunity ? "Community.findCommunitiesByMember" : "Community.findCommunitiesByMemberButOwn");
 		q.setParameter("person", person);
-		return (List<Community>)q.getResultList();
+		return (List<Community>) q.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllCommunities() {
 
 		final Query q = dbContext.createNamedQuery("Community.findAll");
 
-		return (List<Community>)q.getResultList();
+		return (List<Community>) q.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllCommunities(String searchFieldText) {
 
 		final Query q = dbContext.createNamedQuery("Community.findMatching");
-		q.setParameter("needle", searchFieldText+"%");
-		return (List<Community>)q.getResultList();
+		q.setParameter("needle", searchFieldText + "%");
+		return (List<Community>) q.getResultList();
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Community getPrivateCommunity(Person person) {
+		final Query q = dbContext.createNamedQuery("Community.findPrivateForUser");
+		q.setParameter("person", person);
+		List<Community> privateCommunity = q.getResultList();
+		return privateCommunity.size() > 0 ? privateCommunity.get(0) : null;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllAccessibleCommunities() {
 
 		final Query q = dbContext.createNamedQuery("Community.findAllAccessible");
 
-		return (List<Community>)q.getResultList();
+		return (List<Community>) q.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Community> getAllAccessibleCommunities(String searchFieldText) {
 
 		final Query q = dbContext.createNamedQuery("Community.findMatchingAccessible");
-		q.setParameter("needle", searchFieldText+"%");
-		return (List<Community>)q.getResultList();
+		q.setParameter("needle", searchFieldText + "%");
+		return (List<Community>) q.getResultList();
 	}
-	
 }
