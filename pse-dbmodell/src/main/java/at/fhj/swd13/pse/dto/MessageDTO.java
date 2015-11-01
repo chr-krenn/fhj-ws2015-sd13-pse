@@ -9,7 +9,7 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 
 public class MessageDTO {
-	
+
 	private int id;
 	
 	private String author;
@@ -44,7 +44,7 @@ public class MessageDTO {
 	
 	private Date validFrom;
 	
-	private Date expiresOn;
+	private Date validUntil;
 	
 	private MessageDTO() {}
 	
@@ -62,7 +62,7 @@ public class MessageDTO {
 		this.like = false;
 		this.setIsComment(m.getMessageBean() != null);
 		this.validFrom = m.getValidFrom();
-		this.expiresOn = m.getExpiresOn();
+		this.validUntil = m.getExpiresOn();
 	}
 	
 	public int getId() {
@@ -238,21 +238,52 @@ public class MessageDTO {
 	public void setIsComment(boolean isComment) {
 		this.isComment = isComment;
 	}
+
 	
+	/**
+	 * @return the validFrom
+	 */
 	public Date getValidFrom() {
 		return validFrom;
 	}
 
+	
+	/**
+	 * @param validFrom the validFrom to set
+	 */
 	public void setValidFrom(Date validFrom) {
 		this.validFrom = validFrom;
 	}
 
-	public Date getExpiresOn() {
-		return expiresOn;
+	
+	/**
+	 * @return the validUntil
+	 */
+	public Date getValidUntil() {
+		return validUntil;
 	}
 
-	public void setExpiresOn(Date expiresOn) {
-		this.expiresOn = expiresOn;
+	
+	/**
+	 * @param validUntil the validUntil to set
+	 */
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	
+	public boolean isShowable() {
+		final Date now = new Date();
+		
+		return ( null == validFrom || validFrom.before( now ) )
+				&& ( null == validUntil || validUntil.after( now ) );
+	}
+	
+	/**
+	 * @param isComment the isComment to set
+	 */
+	public void setComment(boolean isComment) {
+		this.isComment = isComment;
 	}
 	
 }

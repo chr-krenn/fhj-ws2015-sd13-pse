@@ -3,6 +3,7 @@
  */
 package at.fhj.swd13.pse.domain.feed;
 
+import java.util.Date;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
@@ -25,7 +26,7 @@ public interface FeedService {
 	
 	List<MessageDTO> loadFeedForUser(Person user);
 	
-	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags);
+	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags, Date validFrom, Date validUntil);
 	
 	Message getMessageById(int messageId) throws EntityNotFoundException;
 	
