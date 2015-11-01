@@ -176,6 +176,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#setChatService(at.fhj.swd13.pse.domain.chat.ChatService)
+	 */
+	@Override
+	public void setChatService(ChatService chatService) {
+
+		this.chatService = chatService;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#getUser(java.lang.String)
 	 */
 	@Override
