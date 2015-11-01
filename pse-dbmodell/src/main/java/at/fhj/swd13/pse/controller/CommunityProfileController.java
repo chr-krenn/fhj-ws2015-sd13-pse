@@ -62,6 +62,5 @@ public class CommunityProfileController implements Serializable {
 	    {
 	    	e.printStackTrace();
 		}
-	}
-	
+	}	
 }

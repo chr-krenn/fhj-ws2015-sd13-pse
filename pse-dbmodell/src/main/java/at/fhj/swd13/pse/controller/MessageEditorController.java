@@ -174,6 +174,15 @@ public class MessageEditorController {
 	}
 
 	/**
+	 * Removes a message from the database
+	 */
+	public void removeMessage(){
+		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
+		int id = Integer.parseInt(messageId);
+		feedService.removeMessage(id);
+	}
+	
+	/**
 	 * Return a list of matching communities based on the input
 	 * 
 	 * @param input

@@ -224,4 +224,9 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		messageDTO.setLike(false);
 		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
 	}
+
+	@Override
+	public void removeMessage(int messageId) {
+		dbContext.getMessageDAO().remove(messageId);
+	}
 }

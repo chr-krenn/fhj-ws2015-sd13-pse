@@ -5,12 +5,21 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel header="News">
+	<p:panel id="newsPanel" header="News">
 		<p:dataScroller value="#{simpleFeedController.getNews(1)}"
 			var="news" chunkSize="10" mode="inline" scrollHeight="400">
 			<h:panelGrid columns="1" style="width:100%"
 				columnClasses="logo,detail">
 				<p:outputPanel>
+					<p:toolbar rendered="#{userProfileController.canEditNews}">
+						<f:facet name="left">
+							<p:commandButton id="addNewsBtn" value="Neu"
+								icon="ui-icon-circle-plus"
+								action="#{communityProfileController.onCreateNewActivitie}" >
+								<f:param name="id" value="1" />
+							</p:commandButton>
+						</f:facet>
+					</p:toolbar>
 					<h:panelGrid columns="7" cellpadding="5">
 						<h:outputText value="Datum:" />
 						<h:outputText value="#{news.date}"
@@ -36,6 +45,10 @@
 					<h:panelGrid >
 						<p:commandButton rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
 							action="#{messageDetailsController.openDetailView}">
+							<f:param name="messageId" value="#{news.id}" />
+						</p:commandButton>
+						<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"
+							process="@this" update="newsPanel"	action="#{messageEditorController.removeMessage}">
 							<f:param name="messageId" value="#{news.id}" />
 						</p:commandButton>
 					</h:panelGrid>

@@ -106,4 +106,10 @@ public interface FeedService {
 	 */
 	void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO);
 	
+	/**
+	 * Deletes a message from the database
+	 * 
+	 * @param messageId
+	 */
+	void removeMessage(int messageId);
 }
