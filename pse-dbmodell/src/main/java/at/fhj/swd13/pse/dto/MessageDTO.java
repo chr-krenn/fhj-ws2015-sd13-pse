@@ -42,6 +42,10 @@ public class MessageDTO {
 	
 	private boolean isComment;
 	
+	private Date validFrom;
+	
+	private Date validUntil;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
@@ -57,6 +61,8 @@ public class MessageDTO {
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
 		this.setIsComment(m.getMessageBean() != null);
+		this.validFrom = m.getValidFrom();
+		this.validUntil = m.getExpiresOn();
 	}
 	
 	public int getId() {
@@ -230,6 +236,53 @@ public class MessageDTO {
 	}
 
 	public void setIsComment(boolean isComment) {
+		this.isComment = isComment;
+	}
+
+	
+	/**
+	 * @return the validFrom
+	 */
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	
+	/**
+	 * @param validFrom the validFrom to set
+	 */
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	
+	/**
+	 * @return the validUntil
+	 */
+	public Date getValidUntil() {
+		return validUntil;
+	}
+
+	
+	/**
+	 * @param validUntil the validUntil to set
+	 */
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	
+	public boolean isShowable() {
+		final Date now = new Date();
+		
+		return ( null == validFrom || validFrom.before( now ) )
+				&& ( null == validUntil || validUntil.after( now ) );
+	}
+	
+	/**
+	 * @param isComment the isComment to set
+	 */
+	public void setComment(boolean isComment) {
 		this.isComment = isComment;
 	}
 	
