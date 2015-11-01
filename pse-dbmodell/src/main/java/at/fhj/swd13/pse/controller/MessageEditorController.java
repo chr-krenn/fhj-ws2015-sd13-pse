@@ -19,6 +19,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -28,6 +29,7 @@ import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
@@ -86,7 +88,8 @@ public class MessageEditorController {
 	private String documentRef;
 	private String documentName;
 	private String pageFromWhere ;
-
+	private boolean communityLocked;
+	
 	private Community targetCommunity = null;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
@@ -103,12 +106,24 @@ public class MessageEditorController {
 				selectedCommunities.add(new CommunityDTO(targetCommunity));
 			}
 		}
+		
+		String lockCommunityString = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("lockCommunity");
+		
+		communityLocked = false;
+		if(lockCommunityString != null){
+			communityLocked = Boolean.parseBoolean(lockCommunityString);  
+		}
 	}
 
 	/**
 	 * Returns the community name
 	 */
 	public String getCommunityName(){
+		if(targetCommunity == null){
+			return "";
+		}
+		
 		return targetCommunity.getName();
 	}
 		
@@ -160,6 +175,12 @@ public class MessageEditorController {
 					.getViewHandler()
 					.getActionURL(context, "/protected/Main.jsf"));
 			extContext.redirect(url);
+			}//FIXME find better solution
+			else if(targetCommunity.getCommunityId() == 1){
+				String url = extContext.encodeActionURL(context.getApplication()
+						.getViewHandler()
+						.getActionURL(context, "/protected/Main.jsf"));
+				extContext.redirect(url);
 			}
 			else
 			{
@@ -506,5 +527,9 @@ public class MessageEditorController {
 	 */
 	public void setDtUntil(Date dtUntil) {
 		this.dtUntil = dtUntil;
+	}
+	
+	public boolean isCommunityLocked(){
+		return communityLocked;
 	}
 }

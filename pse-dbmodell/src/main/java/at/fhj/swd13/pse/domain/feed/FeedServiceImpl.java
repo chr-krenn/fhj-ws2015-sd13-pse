@@ -107,6 +107,12 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
+	public MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException {
+		MessageDTO messageDto = new MessageDTO(dbContext.getMessageDAO().getById(messageId));
+		return messageDto;
+	}
+	
+	@Override
 	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
 		Date createdDate = new Date();
 		Message m = dbContext.getMessageDAO().getById(messageId);
@@ -230,4 +236,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	public void removeMessage(int messageId) {
 		dbContext.getMessageDAO().remove(messageId);
 	}
+
+	
 }

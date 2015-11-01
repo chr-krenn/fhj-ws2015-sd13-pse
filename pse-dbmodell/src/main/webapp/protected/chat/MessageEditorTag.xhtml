@@ -12,7 +12,7 @@
 		<p:panelGrid>
 
 			<p:row>
-				<p:column colspan="2">Neue Nachricht eingeben</p:column>
+				<p:column colspan="2">Neue Nachricht eingeben für Community <h:outputText value="#{messageEditorController.getCommunityName()}" /></p:column>
 			</p:row>
 			<p:row>
 				<p:column></p:column>
@@ -65,7 +65,7 @@
 					</h:outputLink>
 				</p:column>
 			</p:row>
-			<p:row>
+			<p:row rendered = "#{!(messageEditorController.communityLocked)}">
 				<p:column>
 					<p:outputLabel for="targetCommunities" value="Communities" />
 				</p:column>

@@ -8,11 +8,12 @@
 	<p:panel id="newsPanel" header="News">
 		<p:toolbar rendered="#{userProfileController.canEditNews}">
 			<f:facet name="left">
-				<p:commandButton id="addNewsBtn" value="Neu"
+			
+			 	<p:button id="addNewsBtn" value="Neu"
 					icon="ui-icon-circle-plus"
-					action="#{communityProfileController.onCreateNewActivitie}" >
-					<f:param name="id" value="1" />
-				</p:commandButton>
+					href="/protected/xperimental/AddMessage.jsf?community=Portal-News&amp;lockCommunity=true" >
+				</p:button>
+
 			</f:facet>
 		</p:toolbar>
 		<p:dataScroller value="#{simpleFeedController.getNews(1)}"
@@ -43,14 +44,20 @@
 						</h:panelGrid>
 					</h:panelGrid>
 					<h:panelGrid >
-						<p:commandButton rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
-							action="#{messageDetailsController.openDetailView}">
-							<f:param name="messageId" value="#{news.id}" />
-						</p:commandButton>
-						<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"
-							process="@this" update="newsPanel"	action="#{messageEditorController.removeMessage}">
-							<f:param name="messageId" value="#{news.id}" />
-						</p:commandButton>
+						<p:row>
+							<p:column>
+								<p:commandButton rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
+									action="#{messageDetailsController.openDetailView}">
+									<f:param name="messageId" value="#{news.id}" />
+								</p:commandButton>
+							</p:column>
+							<p:column>
+								<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"
+									process="@this" update="newsPanel"	action="#{messageEditorController.removeMessage}">
+									<f:param name="messageId" value="#{news.id}" />
+								</p:commandButton>
+							</p:column>
+						</p:row>
 					</h:panelGrid>
 				</p:outputPanel>
 			</h:panelGrid>
