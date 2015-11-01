@@ -165,17 +165,13 @@ public class MessageEditorController {
 			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 			FacesContext context = FacesContext.getCurrentInstance();
 
-			if (targetCommunity == null) {
-				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
-				extContext.redirect(url);
-			}// FIXME find better solution
-			else if (targetCommunity.getCommunityId() == 1) {
+			if (targetCommunity == null || targetCommunity.getSystemInternal() || targetCommunity.isPrivateChannel()) {
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
 			} else {
 				String url = extContext.encodeActionURL(
-						context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf?id= " + targetCommunity.getCommunityId()));
-				extContext.redirect(url);
+						context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf"));
+				extContext.redirect(url+"?id="+targetCommunity.getCommunityId());
 			}
 		} catch (IOException e) {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
