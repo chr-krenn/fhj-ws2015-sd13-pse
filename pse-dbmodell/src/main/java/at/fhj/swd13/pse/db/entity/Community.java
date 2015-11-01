@@ -27,9 +27,11 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "community")
 @NamedQueries({ @NamedQuery(name = "Community.findAll", query = "SELECT c FROM Community c"),
+		@NamedQuery(name = "Community.findAllAccessible", query = "SELECT c FROM Community c WHERE c.systemInternal = false AND c.privateUser is NULL"),
 		@NamedQuery(name = "Community.findById", query = "SELECT c FROM Community c WHERE c.communityId = :id"),
 		@NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
 		@NamedQuery(name = "Community.findMatching", query = "SELECT c FROM Community c WHERE c.name LIKE :needle"),
+		@NamedQuery(name = "Community.findMatchingAccessible", query = "SELECT c FROM Community c WHERE c.name LIKE :needle AND c.systemInternal = false AND c.privateUser is NULL"),
 		@NamedQuery(name = "Community.findUnconfirmed", query = "SELECT c FROM Community c WHERE c.confirmedBy IS NULL"),
 		@NamedQuery(name = "Community.findPrivateForUser", query = "SELECT c FROM Community c WHERE c.privateUser = :person"),
 		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"),

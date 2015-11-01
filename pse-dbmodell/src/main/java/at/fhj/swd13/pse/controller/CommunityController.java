@@ -64,7 +64,7 @@ public class CommunityController {
     
     @PostConstruct
     public void postConstruct() {
-    	communities = chatService.getAllCommunities();	
+    	communities = chatService.getAllAccessibleCommunities();	
     	
     	communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityId");
     	invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
@@ -85,7 +85,7 @@ public class CommunityController {
 	}
     	
 	public String search() {
-	 	communities = chatService.getAllCommunities(searchFieldText);
+	 	communities = chatService.getAllAccessibleCommunities(searchFieldText);
     	return "communities";
     }
 	

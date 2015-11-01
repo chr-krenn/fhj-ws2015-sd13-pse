@@ -105,9 +105,9 @@ public interface ChatService {
 	 */
 	int createAllPrivateCommunities();
 	
-	List<Community> getAllCommunities();
+	List<Community> getAllAccessibleCommunities();
 	
-	List <Community> getAllCommunities(String searchfieldText);
+	List <Community> getAllAccessibleCommunities(String searchfieldText);
 
 	String resolveReceipientsMail( final Message message );
 	
