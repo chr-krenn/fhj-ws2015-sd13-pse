@@ -98,7 +98,15 @@
 				<h:outputText value="#{messageDetailsController.messageDTO.numberOfComments}"/>
 				<h:outputText value=")" />
 			</f:facet>
-			<a href="#{request.contextPath}/protected/xperimental/AddMessage.jsf">Neuer Kommentar</a>
+			<p:fieldset id="commentArea" legend="Neuer Kommentar" toggleable="true" collapsed="#{!messageCommentController.showPanel}">
+				<p:panelGrid columns="1">
+					<p:inputText id="commentHeadline" maxlength="64" value="#{messageCommentController.headline}"/>
+					<p:inputTextarea id="commentText" rows="5" cols="40" maxlength="1024" value="#{messageCommentController.text}"/>
+					<p:commandButton id="addComment" value="Kommentar absenden" actionListener="#{messageCommentController.addComment}" >
+						<f:param name="parentMessageId" value="#{messageDetailsController.messageDTO.id}" />
+					</p:commandButton>
+				</p:panelGrid>
+			</p:fieldset>						
 			<br/><br/>
 			<p:dataScroller
 				value="#{messageDetailsController.messageDTO.comments}"

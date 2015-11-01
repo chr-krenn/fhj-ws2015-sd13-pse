@@ -109,7 +109,7 @@ public class Message implements Serializable {
 	private Message messageBean;
 
 	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "messageBean")
+	@OneToMany(mappedBy = "messageBean", cascade=CascadeType.PERSIST)
 	private List<Message> messages;
 
 	// bi-directional many-to-one association to DeliverySystem

@@ -125,4 +125,15 @@ public interface ChatService {
 	 * @return the number of created communities
 	 */
 	Community getPrivateCommunity(Person person);
+	
+	/**
+	 * Add a comment to a message
+	 * 
+	 * @param username user who comments
+	 * 
+	 * @param commentedMessageId message id that is commented
+	 * 
+	 * @param comment text of the comment itself
+	 */
+	boolean addComment( final String username, final int commentedMessageId, final String headline, final String comment );
 }

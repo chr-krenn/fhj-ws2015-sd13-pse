@@ -1,8 +1,12 @@
 package at.fhj.swd13.pse.domain.chat;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+
+import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
@@ -22,6 +26,9 @@ import at.fhj.swd13.pse.service.ServiceBase;
  */
 @Stateless
 public class ChatServiceImpl extends ServiceBase implements ChatService {
+
+	@Inject
+	private Logger logger;
 
 	/**
 	 * Create an instance of the chat service
@@ -131,59 +138,56 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		}
 	}
 
-	
-	public CommunityMember createCommunityMember( final Person person, final Community community ) {
-		  
-		  try 
-		  {
-			  Person p = dbContext.getPersonDAO().getById( person.getPersonId() );
-			  Community c = dbContext.getCommunityDAO().get( community.getCommunityId() );
-		   
-			  CommunityMember member = c.addMember( p, false );
-			  
-			  dbContext.persist(member);
-			  
-			  return member;
+	public CommunityMember createCommunityMember(final Person person, final Community community) {
 
-		  } catch (EntityNotFoundException e) {
-			  e.printStackTrace();
-		  } catch (ConstraintViolationException e) {
-			  e.printStackTrace();
-		  }
-		  
-		  return null;
+		try {
+			Person p = dbContext.getPersonDAO().getById(person.getPersonId());
+			Community c = dbContext.getCommunityDAO().get(community.getCommunityId());
+
+			CommunityMember member = c.addMember(p, false);
+
+			dbContext.persist(member);
+
+			return member;
+
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+		} catch (ConstraintViolationException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
-	
-	public Boolean isPersonMemberOfCommunity( final Person person, final Community community ){
-		
+
+	public Boolean isPersonMemberOfCommunity(final Person person, final Community community) {
+
 		Boolean isMemberOfCommunity = false;
-		try 
-		{
-			Person p = dbContext.getPersonDAO().getById( person.getPersonId() );
-			Community c = dbContext.getCommunityDAO().get( community.getCommunityId() );
-			
+		try {
+			Person p = dbContext.getPersonDAO().getById(person.getPersonId());
+			Community c = dbContext.getCommunityDAO().get(community.getCommunityId());
+
 			isMemberOfCommunity = c.isMember(p);
-			
+
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		return isMemberOfCommunity;
 	}
-	
-	public List<CommunityMember> getCommunityMembersList( final Community community ) {
-		  
+
+	public List<CommunityMember> getCommunityMembersList(final Community community) {
+
 		List<CommunityMember> memberList = dbContext.getCommunityDAO().getCommunityMembers(community);
 
 		return memberList;
 	}
-	
-	public CommunityMember getCommunityMember( final Community community, final Person person ) {
-		  
+
+	public CommunityMember getCommunityMember(final Community community, final Person person) {
+
 		return dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(community, person);
 
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -309,26 +313,63 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 			for (Community community : message.getCommunities()) {
 				if (community.isPrivateChannel()) {
-					if ( builder.length() > 0 ) {
+					if (builder.length() > 0) {
 						builder.append(",");
 					}
-					builder.append( community.getPrivateUser().getEmailAddress());
+					builder.append(community.getPrivateUser().getEmailAddress());
 				}
 			}
-		} 
+		}
 
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Get the privat community for a person
 	 * 
 	 * @param person
-	 *          
+	 * 
 	 * @return the number of created communities
 	 */
 	@Override
 	public Community getPrivateCommunity(Person person) {
 		return dbContext.getCommunityDAO().getPrivateCommunity(person);
 	}
+
+	@Override
+	public boolean addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
+
+		final Person author = dbContext.getPersonDAO().getByUsername(username);
+
+		if (author != null) {
+
+			try {
+				final Message commentedMessage = dbContext.getMessageDAO().getById(commentedMessageId);
+
+				Message message = new Message();
+
+				message.setCreatedAt(new Date());
+				message.setHeadline(headline);
+				message.setMessage(comment);
+				message.setPerson(author);
+				message.setValidFrom( new Date() );
+
+				message.setDeliverySystem( dbContext.getDeliverySystemDAO().getPseService());
+				
+				commentedMessage.addMessage(message);
+
+				return true;
+
+			} catch (EntityNotFoundException e) {
+				logger.error("[CHAT] message that is commented upon is not found");
+			}
+
+		} else {
+			logger.error("[CHAT] commenting person not foud: " + username );
+		}
+			
+
+		return false;
+	}
+
 }
