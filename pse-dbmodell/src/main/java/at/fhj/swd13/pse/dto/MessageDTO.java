@@ -9,7 +9,7 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 
 public class MessageDTO {
-
+	
 	private int id;
 	
 	private String author;
@@ -42,6 +42,10 @@ public class MessageDTO {
 	
 	private boolean isComment;
 	
+	private Date validFrom;
+	
+	private Date expiresOn;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
@@ -57,6 +61,8 @@ public class MessageDTO {
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
 		this.setIsComment(m.getMessageBean() != null);
+		this.validFrom = m.getValidFrom();
+		this.expiresOn = m.getExpiresOn();
 	}
 	
 	public int getId() {
@@ -231,6 +237,22 @@ public class MessageDTO {
 
 	public void setIsComment(boolean isComment) {
 		this.isComment = isComment;
+	}
+	
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public Date getExpiresOn() {
+		return expiresOn;
+	}
+
+	public void setExpiresOn(Date expiresOn) {
+		this.expiresOn = expiresOn;
 	}
 	
 }

@@ -28,6 +28,8 @@ public interface FeedService {
 	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags);
 	
 	Message getMessageById(int messageId) throws EntityNotFoundException;
+	
+	MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException;
 
 	/**
 	 * Insert a "like" to a message by a specific person into database
