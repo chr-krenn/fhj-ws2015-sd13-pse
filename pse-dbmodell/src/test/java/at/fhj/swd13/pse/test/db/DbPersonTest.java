@@ -32,7 +32,7 @@ public class DbPersonTest extends DbTestBase {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			Person p = personDAO.getById(1); // 1 is the system internal user
-											 // that should always exist
+												// that should always exist
 
 			assertEquals(p.getUserName(), "pse_system");
 
@@ -94,7 +94,8 @@ public class DbPersonTest extends DbTestBase {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			Person p = personDAO.getByUsername("gnurmifgjp�sh l hlfdyghlfd glkdfghv y");
+			Person p = personDAO
+					.getByUsername("gnurmifgjp�sh l hlfdyghlfd glkdfghv y");
 
 			assertEquals(p, null);
 
@@ -123,8 +124,7 @@ public class DbPersonTest extends DbTestBase {
 			e.printStackTrace();
 			fail("Exception " + e.getMessage());
 
-		}
-		finally {
+		} finally {
 
 			if (p.getPersonId() != 0) {
 				try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -181,9 +181,11 @@ public class DbPersonTest extends DbTestBase {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
-			Person p1 = new Person("etester", "Tester", "Ehrenfried", "12345678");
+			Person p1 = new Person("etester", "Tester", "Ehrenfried",
+					"12345678");
 
-			Person p2 = new Person("etester", "Tester", "Ehrenfried", "12345678");
+			Person p2 = new Person("etester", "Tester", "Ehrenfried",
+					"12345678");
 
 			personDAO.insert(p1);
 			personDAO.insert(p2);
@@ -217,8 +219,7 @@ public class DbPersonTest extends DbTestBase {
 			personDAO.remove(p);
 		}
 	}
-	
-	
+
 	@Test
 	public void getByEmailAddress() {
 
@@ -235,13 +236,14 @@ public class DbPersonTest extends DbTestBase {
 			fail("Exception " + e.getMessage());
 		}
 	}
-	
+
 	@Test(expected = EntityNotFoundException.class)
 	public void getUserByInvalidEMailAddress() throws Exception {
 		DbContext dbContext = contextProvider.getDbContext();
-		
+
 		PersonDAO personDAO = dbContext.getPersonDAO();
 		Person p = personDAO.getByEmailAddress("xx@yy.at");
+		assertEquals(p, new Person("", "", "", ""));
 	}
-	
+
 }

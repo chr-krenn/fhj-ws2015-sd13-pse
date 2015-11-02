@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -22,6 +23,7 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
+import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
@@ -31,12 +33,6 @@ import at.fhj.swd13.pse.dto.CommunityDTO;
 import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
-/*
- * Test data
- * INSERT INTO `community` VALUES (4,'\0','\0','Dunkelgrau','2015-10-16 20:00:45',100,NULL,100),(5,'\0','\0','Dunkelblau','2015-10-16
- * 20:00:56',100,NULL,100),(6,'\0','\0','Dunkelbunt','2015-10-16 20:01:02',100,NULL,100),(7,'\0','\0','Gelb','2015-10-16
- * 20:01:10',100,NULL,100),(8,'\0','\0','Rot','2015-10-16 20:01:14',100,NULL,100);
- */
 
 @ManagedBean
 @ViewScoped
@@ -62,21 +58,6 @@ public class MessageEditorController {
 
 	private String headline;
 	private String richText;
-
-	/**
-	 * @return the dtFrom
-	 */
-	public Date getDtFrom() {
-		return dtFrom;
-	}
-
-	/**
-	 * @param dtFrom
-	 *            the dtFrom to set
-	 */
-	public void setDtFrom(Date dtFrom) {
-		this.dtFrom = dtFrom;
-	}
 
 	private Date dtFrom;
 	private Date dtUntil;
@@ -129,9 +110,23 @@ public class MessageEditorController {
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
+			//TODO possibility that getCommunity returns more than one community
 			loadCommunity(messageDto.getCommunity());
 			
-			//TODO load all fields (icon, document, tags)
+			Document icon = messageDto.getImage();
+			if(icon != null){
+				iconId = icon.getDocumentId();
+				iconRef = documentService.buildServiceUrl(iconId);
+			}
+			
+			Document document = messageDto.getAttachement();
+			if(document != null){
+				documentId = document.getDocumentId();
+				documentRef = documentService.buildServiceUrl(documentId);
+				documentName = document.getName();
+			}
+			
+			//TODO load tags
 			
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -191,6 +186,10 @@ public class MessageEditorController {
 			communities.add(chatService.getCommunity(communityDto.getName()));
 		}
 
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExternalContext extContext = context.getExternalContext();
+		extContext.getFlash().setKeepMessages(true);
+		
 		try {
 			//if message id exists update the existing message
 			if(this.messageId > 0){
@@ -198,26 +197,32 @@ public class MessageEditorController {
 			}else{
 				feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
 			}
-			
-			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-			FacesContext context = FacesContext.getCurrentInstance();
 
 			if (targetCommunity == null || targetCommunity.getSystemInternal()) {
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + targetCommunity.getName() + 
+						" gepostet."));
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
 			} else if (targetCommunity.isPrivateChannel()) {
-				String url = extContext.encodeActionURL(
-						context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
-				extContext.redirect(url+"?userName="+targetCommunity.getPrivateUser().getUserName() +"&mode=view");
+				Person receiver = targetCommunity.getPrivateUser();
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht an " + receiver.getUserName() + 
+						" wurde erfolgreich gesendet."));
+				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
+				extContext.redirect(url+"?userName=" + receiver.getUserName() + "&mode=view");
 			} else {
-				String url = extContext.encodeActionURL(
-						context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf"));
-				extContext.redirect(url+"?id="+targetCommunity.getCommunityId());
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + targetCommunity.getName() + 
+						" gepostet."));
+				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Community.jsf"));
+				extContext.redirect(url + "?id=" + targetCommunity.getCommunityId());
 			}
 		} catch (IOException e) {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nachricht konnte nicht gesendet werden", 
+					"Fehler beim Senden der Nachricht! Bitte versuchen Sie es erneut."));
 		} catch (EntityNotFoundException e) {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nachricht konnte nicht gesendet werden", 
+					"Fehler beim Senden der Nachricht! Bitte versuchen Sie es erneut."));
 		}
 	}
 
@@ -549,5 +554,20 @@ public class MessageEditorController {
 
 	public boolean isCommunityLocked() {
 		return communityLocked;
+	}
+	
+	/**
+	 * @return the dtFrom
+	 */
+	public Date getDtFrom() {
+		return dtFrom;
+	}
+
+	/**
+	 * @param dtFrom
+	 *            the dtFrom to set
+	 */
+	public void setDtFrom(Date dtFrom) {
+		this.dtFrom = dtFrom;
 	}
 }

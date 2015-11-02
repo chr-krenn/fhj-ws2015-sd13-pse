@@ -48,6 +48,8 @@ public class MessageDTO {
 	
 	private List<String> tags;
 	
+	private Document attachement;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
@@ -60,6 +62,7 @@ public class MessageDTO {
 		this.privateMessage = isPrivateMessage(m);
 		this.community = getCommunity(m);
 		this.image = m.getIcon();
+		this.attachement = m.getAttachment();
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
 		this.setIsComment(m.getMessageBean() != null);
@@ -286,6 +289,22 @@ public class MessageDTO {
 	 */
 	public void setComment(boolean isComment) {
 		this.isComment = isComment;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
+	
+	public Document getAttachement() {
+		return attachement;
+	}
+
+	public void setAttachement(Document attachement) {
+		this.attachement = attachement;
 	}
 	
 }
