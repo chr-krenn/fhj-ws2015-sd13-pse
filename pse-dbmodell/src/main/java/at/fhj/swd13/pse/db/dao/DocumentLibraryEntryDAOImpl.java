@@ -25,7 +25,8 @@ public class DocumentLibraryEntryDAOImpl extends DAOBase implements DocumentLibr
 		dbContext.persist(entry);
 	}
 
-	private DocumentLibraryEntry GetById(int id) throws EntityNotFoundException {
+	@Override
+	public DocumentLibraryEntry getById(int id) throws EntityNotFoundException {
 		try {
 			
 			Query query = dbContext.createNamedQuery("DocumentLibraryEntry.findById");
@@ -40,7 +41,7 @@ public class DocumentLibraryEntryDAOImpl extends DAOBase implements DocumentLibr
 	@Override
 	public void remove(int documentLibraryEntryId) throws EntityNotFoundException {
 
-		DocumentLibraryEntry entry = GetById(documentLibraryEntryId);
+		DocumentLibraryEntry entry = getById(documentLibraryEntryId);
 		dbContext.remove(entry);
 	}
 
@@ -53,14 +54,5 @@ public class DocumentLibraryEntryDAOImpl extends DAOBase implements DocumentLibr
 		Query query = dbContext.createNamedQuery("DocumentLibraryEntry.getAllForCommunity");
 		query.setParameter("community", community);
 		return (List<DocumentLibraryEntry>) query.getResultList();
-	}
-
-	@Override
-	public DocumentLibraryEntry getEntryById(int documentEntryId) {
-		Query query = dbContext.createNamedQuery("DocumentLibraryEntry.findById");
-		query.setParameter("id", documentEntryId);
-		
-		return (DocumentLibraryEntry)query.getSingleResult();
-		
 	}
 }

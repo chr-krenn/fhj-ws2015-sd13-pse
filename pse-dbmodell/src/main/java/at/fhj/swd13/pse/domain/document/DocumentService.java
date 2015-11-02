@@ -94,4 +94,14 @@ public interface DocumentService {
 	 * 
 	 */
 	void removeDocument(final int documentId);
+	
+	/**
+	 * Provides a file stream of the file which represented by a document reference through documentId
+	 * 
+	 * @param documentId
+	 * 
+	 */
+	InputStream getStreamForDocument(final int documentId) throws DocumentNotFoundException;
+	
+	
 }

@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.domain.document;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -255,6 +257,16 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			
 			Files.createDirectories( documentSubPath );
 			logger.info("[DOCS] checked document folder " + documentSubPath );
+		}
+	}
+
+	@Override
+	public InputStream getStreamForDocument(int documentId) throws DocumentNotFoundException {
+		try {
+			Document document = get(documentId);
+			return new FileInputStream(getServerPath(document));
+		} catch (FileNotFoundException e) {
+			throw new DocumentNotFoundException("", e);
 		}
 	}
 

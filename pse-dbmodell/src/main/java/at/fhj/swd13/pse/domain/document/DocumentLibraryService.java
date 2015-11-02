@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 
 public interface DocumentLibraryService {
 
@@ -12,8 +11,7 @@ public interface DocumentLibraryService {
 	
 	void addEntry(String fileName, String descrition, InputStream content, int communityId) throws ConstraintViolationException; 
 	
-	void deleteEntry(int documentLibraryEntryId) throws EntityNotFoundException;
+	void deleteEntry(int documentLibraryEntryId) throws DocumentNotFoundException;
 	
-	DocumentLibraryEntry getEntryById(int documentLibraryEntryId);
-	
+	DocumentLibraryEntry getEntryById(int documentLibraryEntryId) throws DocumentNotFoundException;
 }
