@@ -53,8 +53,7 @@ public class MessageDetailsController {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
 		int id = Integer.parseInt(messageId);
 		try {
-			Message message = feedService.getMessageById(id);
-			messageDTO = new MessageDTO(message);
+			messageDTO = feedService.getMessageDTOById(id);
 			feedService.setImageRef(messageDTO);
 			feedService.setMessageLikes(messageDTO, userSession.getUsername());
 			feedService.setComments(messageDTO);
