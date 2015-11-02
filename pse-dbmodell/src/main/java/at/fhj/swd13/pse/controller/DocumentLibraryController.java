@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
@@ -142,8 +143,10 @@ public class DocumentLibraryController {
 	}
 
 	public void init() {
-		// If no community id has been provided, use the default community
-		if (communityId == 0)
+		Map<String, String> parameterMap = (Map<String, String>)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		if(parameterMap.containsKey("id"))
+			communityId = Integer.parseInt(parameterMap.get("id"));
+		else
 			communityId = 1;
 
 		documentLibraryRightsProvider = documentLibraryRightsProviderFactory.create(communityId);
