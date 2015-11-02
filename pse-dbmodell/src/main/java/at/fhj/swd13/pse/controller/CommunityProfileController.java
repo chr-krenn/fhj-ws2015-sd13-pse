@@ -3,10 +3,8 @@ package at.fhj.swd13.pse.controller;
 import java.io.IOException;
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -14,7 +12,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class CommunityProfileController implements Serializable {
 
 	private static final long serialVersionUID = -984282742840189477L;
@@ -26,15 +24,14 @@ public class CommunityProfileController implements Serializable {
 	private String communityIdString;
 	private Community community;
 	
-	@PostConstruct
-	public void setup() {
-		communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-		getCommunity();
-	}
-	
 	private Community getCommunity() {
 		communityId = Integer.parseInt(communityIdString);
 		return community = chatService.getCommunity(communityId);
+	}
+	
+	public void setParameter(){
+		communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+		getCommunity();
 	}
 	
 	public  String getSelectedCommunityName(){

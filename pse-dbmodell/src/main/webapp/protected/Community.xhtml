@@ -5,13 +5,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
-	<ui:define name="content">
-    <h:form id="communityProfile">
+	<ui:define name="content" >
+		<f:metadata>				
+    		<f:event type="preRenderView" listener="#{communityProfileController.setParameter()}" />
+		</f:metadata>
+    	<h:form id="communityProfile">
 	    	<h1>Community <h:outputText value="#{communityProfileController.getSelectedCommunityName()}" /> </h1>
-	</h:form>
+		</h:form>
 		<div>
-				<p:commandLink actionListener="#{communityProfileController.onCreateNewActivity}">	
+				<p:commandLink actionListener="#{communityProfileController.onCreateNewActivity}">
+					
 			     	<p:commandButton value="Community Beitrag erstellen" id="createCommunityMessage" />
+			     	<f:param name="id" value="#{communityProfileController.getCommunityId()}" />
 			    </p:commandLink>
 		</div>
 		<div class="ui-grid ui-grid-responsive">
@@ -19,7 +24,7 @@
 				<div class="ui-grid-col-7">
 					<h:form>
 						<p:panel header="Activities">
-							<p:dataScroller value="#{simpleFeedController.getCommunityAcitivities(communityProfileController.getCommunityId())}"
+							<p:dataScroller  value="#{simpleFeedController.getCommunityAcitivities(communityProfileController.getCommunityId())}"
 								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
 								<h:panelGrid columns="1" style="width:100%"
 									columnClasses="logo,detail">
@@ -57,12 +62,14 @@
 												value="Like" immediate="true" rendered="#{!activity.like}"
 												styleClass="likebutton">
 												<f:param name="messageId" value="#{activity.id}" />
+												<f:param name="id" value="#{communityProfileController.getCommunityId()}" />
 											</h:commandButton>
 											<h:commandButton
 												action="#{simpleFeedController.removeRating}"
 												value="Like zurücknehmen" immediate="true"
 												rendered="#{activity.like}" styleClass="likebutton">
 												<f:param name="messageId" value="#{activity.id}" />
+												<f:param name="id" value="#{communityProfileController.getCommunityId()}" />
 											</h:commandButton>
 											<h:outputText value="#{activity.quantityRatings} " />
 											<p:commandLink id="fadePersons"
