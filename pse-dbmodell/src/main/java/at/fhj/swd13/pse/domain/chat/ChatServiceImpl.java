@@ -217,6 +217,18 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
+	
+	@Override
+	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+
+				dbContext.remove(c);
+		} else {
+			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -106,7 +106,33 @@ public class RequestController {
 		
     	requests = chatService.getUnconfirmedCommunities();	
 
-    	info("Community Request Approved!");
+    	info("Community Antrag angenommen!");
+	}
+	
+	public void declineCommunity(){
+		
+		Community com = null;
+		Person currentUser = null;
+		communityId = Integer.parseInt(communityIdString);
+		
+		try 
+		{	
+			com = chatService.getCommunity(communityId);
+			logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
+			
+			currentUser = userService.getUser(userSession.getUsername());
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+
+			chatService.declineCommunity(currentUser, com);
+			logger.info(" Community Declined: " +com.getCommunityId() +" by: "+currentUser.getPersonId() );
+			
+		} catch (Exception e) {
+			logger.error("ERROR: " + e.getMessage());
+		}
+		
+    	requests = chatService.getUnconfirmedCommunities();	
+
+    	info("Community Antrag abgelehnt!");
 	}
 
 	public void error() {
