@@ -72,9 +72,9 @@ public class MessageDTO {
 		this.validUntil = m.getExpiresOn();
 		
 		tags = new ArrayList<String>();
-		for(MessageTag tag : m.getMessageTags()){
+		/*for(MessageTag tag : m.getMessageTags()){
 			tags.add(tag.getTag().getToken());
-		}
+		}*/
 	}
 	
 	public int getId() {
