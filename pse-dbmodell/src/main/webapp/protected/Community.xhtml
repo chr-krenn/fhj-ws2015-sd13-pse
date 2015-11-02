@@ -36,6 +36,7 @@
 												action="#{messageDetailsController.openDetailView}"
 												value="Details" icon="ui-icon-search">
 												<f:param name="messageId" value="#{activity.id}" />
+												<f:param name="id" value="#{communityProfileController.getCommunityId()}" />
 											</h:commandButton>
 										</h:panelGrid>
 									<p:outputPanel>
