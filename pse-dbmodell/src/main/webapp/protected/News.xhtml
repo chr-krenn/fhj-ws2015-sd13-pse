@@ -46,10 +46,9 @@
 					<h:panelGrid >
 						<p:row>
 							<p:column>
-								<p:commandButton rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
-									action="#{messageDetailsController.openDetailView}">
-									<f:param name="messageId" value="#{news.id}" />
-								</p:commandButton>
+								<p:button rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
+									href="/protected/xperimental/AddMessage.jsf?messageId=#{news.id}">
+								</p:button>
 							</p:column>
 							<p:column>
 								<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"

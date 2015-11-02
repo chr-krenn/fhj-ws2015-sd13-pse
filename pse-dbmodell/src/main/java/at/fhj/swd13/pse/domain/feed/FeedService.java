@@ -29,6 +29,9 @@ public interface FeedService {
 	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags,
 			Date validFrom, Date validUntil) throws EntityNotFoundException;
 
+	void updateMessage(int messageId, String headline, String text, Document document, Document icon,
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException;
+	
 	Message getMessageById(int messageId) throws EntityNotFoundException;
 
 	MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException;

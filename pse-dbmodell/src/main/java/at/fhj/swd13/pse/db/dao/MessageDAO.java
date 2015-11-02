@@ -17,6 +17,14 @@ public interface MessageDAO {
 	void insert(Message message) throws ConstraintViolationException;
 
 	/**
+	 * Updates the given message into the persistent store
+	 * 
+	 * @param message
+	 *            the message to persist
+	 */
+	void update(Message message) throws ConstraintViolationException;
+	
+	/**
 	 * Get a message by its id
 	 * 
 	 * @param messageId
