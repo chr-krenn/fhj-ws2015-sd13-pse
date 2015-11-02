@@ -135,5 +135,5 @@ public interface ChatService {
 	 * 
 	 * @param comment text of the comment itself
 	 */
-	boolean addComment( final String username, final int commentedMessageId, final String headline, final String comment );
+	Message addComment( final String username, final int commentedMessageId, final String headline, final String comment );
 }

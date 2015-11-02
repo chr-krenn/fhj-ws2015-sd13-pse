@@ -101,21 +101,21 @@
 			</f:facet>
 			<p:fragment autoUpdate="true">
 				<p:growl id="commentGrowl" />
-				<p:fieldset id="commentArea" legend="Neuer Kommentar" toggleable="true" collapsed="#{messageCommentController.showPanel}" widgetVar="subArea">
+				<p:fieldset id="commentArea" legend="Neuer Kommentar" toggleable="true" collapsed="#{messageDetailsController.showPanel}" widgetVar="subArea">
 					<p:panelGrid columns="1">
-						<p:inputText id="commentHeadline" maxlength="64" value="#{messageCommentController.headline}" />
-						<p:inputTextarea id="commentText" rows="5" cols="40" maxlength="1024" value="#{messageCommentController.text}"/>
-						<p:commandButton id="addComment" value="Kommentar absenden" actionListener="#{messageCommentController.addComment}" resetValues="true" 
-										update="commentArea, commentHeadline, commentText, commentGrowl, commentList" oncomplete="#{messageDetailsController.reloadMessage()}">
+						<p:inputText id="commentHeadline" maxlength="64" value="#{messageDetailsController.headline}" />
+						<p:inputTextarea id="commentText" rows="5" cols="40" maxlength="1024" value="#{messageDetailsController.text}"/>
+						<h:commandButton id="addComment" value="Kommentar absenden" actionListener="#{messageDetailsController.addComment}" resetValues="true" 
+										update="commentArea, commentHeadline, commentText, commentGrowl, commentList">
 							<f:param name="parentMessageId" value="#{messageDetailsController.messageDTO.id}" />
-						</p:commandButton>
+						</h:commandButton>
 					</p:panelGrid>
 				</p:fieldset>					
 			</p:fragment>	
 			<br/><br/>
 			<p:dataScroller id="commentList"
 				value="#{messageDetailsController.messageDTO.comments}"
-				var="message" chunkSize="10" mode="inline" scrollHeight="400" autoUpdate="true">
+				var="message" chunkSize="10" mode="inline" scrollHeight="400">
 				<h:panelGrid columns="1" style="width:100%">
 					<p:outputPanel>
 						<ui:insert name="messageList" />

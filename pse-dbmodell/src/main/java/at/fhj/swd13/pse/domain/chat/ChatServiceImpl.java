@@ -337,7 +337,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	@Override
-	public boolean addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
+	public Message addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
 
 		final Person author = dbContext.getPersonDAO().getByUsername(username);
 
@@ -353,12 +353,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				message.setMessage(comment);
 				message.setPerson(author);
 				message.setValidFrom( new Date() );
-
+				message.setCommunities(getAllAccessibleCommunities());
 				message.setDeliverySystem( dbContext.getDeliverySystemDAO().getPseService());
 				
-				commentedMessage.addMessage(message);
-
-				return true;
+				return commentedMessage.addMessage(message);
 
 			} catch (EntityNotFoundException e) {
 				logger.error("[CHAT] message that is commented upon is not found");
@@ -367,9 +365,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		} else {
 			logger.error("[CHAT] commenting person not foud: " + username );
 		}
-			
-
-		return false;
+		return null;
 	}
 
 }

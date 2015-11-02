@@ -163,18 +163,25 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {
 		List<MessageRating> ratingList = message.getRatingList();
-
-		int quantityRatings = ratingList.size();
 		List<UserDTO> personList = new ArrayList<UserDTO>();
-
-		for (int j = 0; j < quantityRatings; j++) {
-			personList.add(new UserDTO(ratingList.get(j).getPerson()));
-			if (ratingList.get(j).getPerson().getUserName().equals(username)) {
-				message.setLike(true);
-			}
+		
+		if(ratingList == null) {
+			ratingList = new ArrayList<MessageRating>();
+			message.setQuantityRatings(0);
+			message.setRatingPersonsList(personList);
 		}
-		message.setQuantityRatings(quantityRatings);
-		message.setRatingPersonsList(personList);
+		else {
+			int quantityRatings = ratingList.size();
+			
+			for (int j = 0; j < quantityRatings; j++) {
+				personList.add(new UserDTO(ratingList.get(j).getPerson()));
+				if (ratingList.get(j).getPerson().getUserName().equals(username)) {
+					message.setLike(true);
+				}
+			}
+			message.setQuantityRatings(quantityRatings);
+			message.setRatingPersonsList(personList);
+		}
 	}
 
 	@Override
