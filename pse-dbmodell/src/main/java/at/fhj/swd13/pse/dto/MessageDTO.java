@@ -46,6 +46,8 @@ public class MessageDTO {
 	
 	private Date validUntil;
 	
+	private List<String> tags;
+	
 	private MessageDTO() {}
 	
 	public MessageDTO(Message m) {
