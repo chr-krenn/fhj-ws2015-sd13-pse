@@ -203,5 +203,14 @@ public class LoginController {
 	 */
 	public int getPrivateCommunityId() {
 		return userSession.getPrivateCommunityId();
-	}	
+	}
+	
+	/**
+	 * Navigate from Username Button to correct UserProfile
+	 * @return
+	 */
+	public String navigateToOwnProfile() {
+		FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("userForm");
+		return "/protected/User.jsf?userName" + userSession.getUsername() + "&mode=view";
+	}
 }
