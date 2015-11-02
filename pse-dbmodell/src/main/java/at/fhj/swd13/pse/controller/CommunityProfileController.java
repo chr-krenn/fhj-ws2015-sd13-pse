@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -14,7 +15,6 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 
 @ManagedBean
 @ViewScoped
-//@javax.faces.bean.SessionScoped
 public class CommunityProfileController implements Serializable {
 
 	private static final long serialVersionUID = -984282742840189477L;
@@ -28,7 +28,6 @@ public class CommunityProfileController implements Serializable {
 	
 	@PostConstruct
 	public void setup() {
-		//communityId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 		communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 		getCommunity();
 	}
