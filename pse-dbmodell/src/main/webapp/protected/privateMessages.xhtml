@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+    <h:form id="communityProfile">
+	    	
+	    	<h1>Private Messages für <h:outputText value="#{userProfileController.getUserName()}" /> </h1>
+	    	
+	</h:form>
+		<div class="ui-grid ui-grid-responsive">
+			<div class="ui-grid-row">
+				<div class="ui-grid-col-7">
+					<h:form>
+						<p:panel header="Messages">
+							<p:dataScroller value="#{simpleFeedController.getNews(communityProfileController.getCommunityId())}"
+								var="activity" chunkSize="10" mode="inline" scrollHeight="500">
+								<h:panelGrid columns="1" style="width:100%"
+									columnClasses="logo,detail">
+									<h:panelGrid columns="7" cellpadding="5">
+											<h:outputText value="Autor:" />
+											<h:outputText value="#{activity.author}"
+												style="font-weight: bold" />
+											<h:outputText value="Datum:" />
+											<h:outputText value="#{activity.date}"
+												style="font-weight: bold">
+												<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+											</h:outputText>
+										</h:panelGrid>
+									<p:outputPanel>
+									
+										<h:panelGrid columns="2" cellpadding="5">
+											<p:graphicImage id="messageIcon" styleClass="userimage"
+											value="#{activity.imageRef}"
+											cache="false"
+											rendered="#{activity.imageRef ne null}" />
+											<h:panelGrid>
+												<h:outputText value="#{activity.headline}"
+													style="font-weight: bold" />
+												<h:outputText value="#{activity.text}" escape="false" />
+											</h:panelGrid>
+										</h:panelGrid>
+									</p:outputPanel>
+								</h:panelGrid>
+							</p:dataScroller>
+						</p:panel>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
