@@ -110,12 +110,26 @@ public class MessageEditorController {
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
+			//TODO possibility that getCommunity returns more than one community
 			loadCommunity(messageDto.getCommunity());
 			
-			//TODO load all fields (icon, document, tags)
+			Document icon = messageDto.getImage();
+			if(icon != null){
+				iconId = icon.getDocumentId();
+				iconRef = documentService.buildServiceUrl(iconId);
+			}
+			
+			Document document = messageDto.getAttachement();
+			if(document != null){
+				documentId = document.getDocumentId();
+				documentRef = documentService.buildServiceUrl(documentId);
+				documentName = document.getName();
+			}
+			
+			//TODO load tags
 			
 		} catch (EntityNotFoundException e) {
-			logger.error("[MSG+] Could not load message: " + e.getMessage());
+			// TODO Auto-generated catch block
 		}
 	}
 	
