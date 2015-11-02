@@ -63,7 +63,10 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 
 	@Override
 	public void deleteEntry(int documentLibraryEntryId) throws EntityNotFoundException {
-		documentLibraryEntryDAO.remove(documentLibraryEntryId);
+		
+		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry = documentLibraryEntryDAO.getEntryById(documentLibraryEntryId);
+		
+		documentService.removeDocument(entry.getDocument().getDocumentId());
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -18,6 +19,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryEntry;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProvider;
 import at.fhj.swd13.pse.domain.document.DocumentLibraryRightsProviderFactory;
@@ -75,7 +77,7 @@ public class DocumentLibraryController {
 				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Es wurde keine Datei ausgewählt."));
 				return;
 			}
-			
+
 			InputStream is = new ByteArrayInputStream(uploadedFileContent);
 			documentLibraryService.addEntry(getUploadedFileName(), newDocumentDescription, is, communityId);
 
@@ -85,14 +87,23 @@ public class DocumentLibraryController {
 			setIsInNewDocumentMode(false);
 
 		} catch (Exception e) {
-			logger.error("Failed to add new document.",e);
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Fehler", "Ein Fehler ist aufgetreten, bitte wenden Sie sich an den Support."));
+			logger.error("[DocumentLibrary] Failed to add new document.",e);
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", getStringResource("UnknownErrorMessage")));
 		}
 	}
 	
 	public void deleteDocument(int id)
 	{
-		addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "TO BE DONE" + new Integer(id).toString() ));
+		try {
+			documentLibraryService.deleteEntry(id);
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", getStringResource("DeletedDocumentEntrySuccessfully")));
+		} catch (EntityNotFoundException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", String.format(getStringResource("DocumentLibraryEntryNotFound"), id)));
+		} catch(Exception ex)
+		{
+			logger.error(String.format("[DocumentLibrary] Failed to delete document with id %s.", id),ex);
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", getStringResource("UnknownErrorMessage")));
+		}
 	}
 	
 	public List<DocumentLibraryEntry> getEntries() {
@@ -135,7 +146,14 @@ public class DocumentLibraryController {
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 	
-
+	private String getStringResource(String key)
+	{
+		FacesContext context = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = context.getApplication().getResourceBundle(context, "Resources");
+		
+        return bundle.getString(key);
+	}
+	
 	public String getNewDocumentDescription() {
 		return newDocumentDescription;
 	}
