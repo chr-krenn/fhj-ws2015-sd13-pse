@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
+import at.fhj.swd13.pse.db.entity.MessageTag;
 
 public class MessageDTO {
 
@@ -68,6 +70,11 @@ public class MessageDTO {
 		this.setIsComment(m.getMessageBean() != null);
 		this.validFrom = m.getValidFrom();
 		this.validUntil = m.getExpiresOn();
+		
+		tags = new ArrayList<String>();
+		/*for(MessageTag tag : m.getMessageTags()){
+			tags.add(tag.getTag().getToken());
+		}*/
 	}
 	
 	public int getId() {

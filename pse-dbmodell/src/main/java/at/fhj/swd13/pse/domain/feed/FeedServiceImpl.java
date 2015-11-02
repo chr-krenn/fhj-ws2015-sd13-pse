@@ -46,6 +46,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Inject
 	private Logger logger;
 
+	
 	public FeedServiceImpl() {}
 
 	public FeedServiceImpl(DbContext dbContext) {
@@ -100,19 +101,46 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException{
 		Message m = dbContext.getMessageDAO().getById(messageId);
 		
+		//TODO delete old documents when changed
+				/*
+		int oldIconToDelete = 0;
+		int oldDocumentToDelete = 0;
+		
+		if(m.getIcon().getDocumentId() != icon.getDocumentId()){
+			oldIconToDelete = m.getIcon().getDocumentId();
+		}
+		
+		if(m.getAttachment().getDocumentId() != document.getDocumentId()){
+			oldDocumentToDelete = m.getAttachment().getDocumentId();
+		}*/
+		
 		m.setHeadline(headline);
 		m.setMessage(text);
 		m.setIcon(icon);
 		m.setAttachment(document);
-		m.setMessageTags(messageTags);	
+		//TODO update message tags
+		//m.setMessageTags(messageTags);	
 		m.setValidFrom(validFrom);
 		m.setExpiresOn(validUntil);
+
 		
 		try {
 			dbContext.getMessageDAO().update(m);
+			
+			//TODO delete old documents
+			/*if(deleteOldIcon){
+				dbContext.getDocumentDAO().remove(oldIconIdToDelete);
+				//documentService.removeDocument(oldIconToDelete);
+			}
+			if(oldDocumentToDelete > 0){
+				dbContext.getDocumentDAO().remove(oldDocumentToDelete);
+				//documentService.removeDocument(oldDocumentToDelete);
+			}*/
+			
 		} catch (ConstraintViolationException e) {
 			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + m.getHeadline());
 		}
+		
 	}
 	
 	@Override
@@ -163,18 +191,25 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {
 		List<MessageRating> ratingList = message.getRatingList();
-
-		int quantityRatings = ratingList.size();
 		List<UserDTO> personList = new ArrayList<UserDTO>();
-
-		for (int j = 0; j < quantityRatings; j++) {
-			personList.add(new UserDTO(ratingList.get(j).getPerson()));
-			if (ratingList.get(j).getPerson().getUserName().equals(username)) {
-				message.setLike(true);
-			}
+		
+		if(ratingList == null) {
+			ratingList = new ArrayList<MessageRating>();
+			message.setQuantityRatings(0);
+			message.setRatingPersonsList(personList);
 		}
-		message.setQuantityRatings(quantityRatings);
-		message.setRatingPersonsList(personList);
+		else {
+			int quantityRatings = ratingList.size();
+			
+			for (int j = 0; j < quantityRatings; j++) {
+				personList.add(new UserDTO(ratingList.get(j).getPerson()));
+				if (ratingList.get(j).getPerson().getUserName().equals(username)) {
+					message.setLike(true);
+				}
+			}
+			message.setQuantityRatings(quantityRatings);
+			message.setRatingPersonsList(personList);
+		}
 	}
 
 	@Override

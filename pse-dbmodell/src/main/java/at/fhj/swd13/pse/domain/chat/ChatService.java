@@ -82,6 +82,8 @@ public interface ChatService {
 	 */
 	void confirmCommunity(final Person adminPerson, Community unconfirmed);
 
+	void declineCommunity(final Person adminPerson, Community unconfirmed);
+
 	/**
 	 * Get a list of communities that his user can post to and that match the
 	 * given needle (name starts with)
@@ -135,5 +137,5 @@ public interface ChatService {
 	 * 
 	 * @param comment text of the comment itself
 	 */
-	boolean addComment( final String username, final int commentedMessageId, final String headline, final String comment );
+	Message addComment( final String username, final int commentedMessageId, final String headline, final String comment );
 }

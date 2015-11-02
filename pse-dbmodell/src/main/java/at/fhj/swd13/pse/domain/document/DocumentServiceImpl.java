@@ -149,6 +149,11 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		throw new NotImplementedException("must implement!!!");
 	}
 	
+	@Override
+	public void removeDocument(int documentId) {
+		dbContext.getDocumentDAO().remove(documentId);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -252,4 +257,6 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			logger.info("[DOCS] checked document folder " + documentSubPath );
 		}
 	}
+
+	
 }

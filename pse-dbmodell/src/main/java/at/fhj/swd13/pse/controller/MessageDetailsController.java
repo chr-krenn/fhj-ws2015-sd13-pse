@@ -1,5 +1,8 @@
 package at.fhj.swd13.pse.controller;
 
+import java.util.ArrayList;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -12,6 +15,7 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -33,7 +37,16 @@ public class MessageDetailsController {
 	
 	@Inject
 	private Logger logger;
+	
+	@Inject
+	private ChatService chatService;
 
+	private String text;
+
+	private String headline;
+
+	private boolean showPanel = true;
+	
 	private MessageDTO messageDTO;
 
 	public String openDetailView() {
@@ -68,6 +81,7 @@ public class MessageDetailsController {
 	public void rateMessageDetailedView() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");		
 	    int id = Integer.parseInt(messageId);
+	    
 		try {
 			Person p = userService.getUser(userSession.getUsername());
 			UserDTO userDTO = new UserDTO(p);
@@ -143,8 +157,10 @@ public class MessageDetailsController {
     			feedService.updateDTOafterRating(message.getComments().get(l), userDTO);
     			message.getComments().get(l).setLike(true);
 			} else {
-				if(message.getComments().get(l).getComments().size() > 0) {
+				if(message.getComments().get(l).getComments() != null) {
+					if(message.getComments().get(l).getComments().size() > 0) {
 					commentsRatingRecursive(message.getComments().get(l), id, p, userDTO);
+					}
 				}
 			}
 		}
@@ -162,5 +178,81 @@ public class MessageDetailsController {
 				}
 			}
 		}
+	}
+	
+public void addComment() {	
+		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
+		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
+		
+		Message message = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
+		MessageDTO newMessageDTO = new MessageDTO(message);
+		
+		try {
+			feedService.setImageRef(newMessageDTO);
+			feedService.setMessageLikes(newMessageDTO, userSession.getUsername());
+			feedService.setComments(newMessageDTO);
+		
+			if(messageDTO.getComments().size()>0) {
+				fillUpComments(messageDTO);
+			}
+			
+			getMessageDTO().getComments().add(newMessageDTO);
+			getMessageDTO().setNumberOfComments(getMessageDTO().getComments().size());
+			
+			headline = "";
+			text = "";
+			
+			showPanel = true;
+
+			FacesContext context = FacesContext.getCurrentInstance();        
+	        context.addMessage(null, new FacesMessage("Successful",  "Kommentar wurde gespeichert") );
+		} catch (EntityNotFoundException e) {
+			logger.info("[MESSAGEDETAILS] addComment failed for " + userSession.getUsername());
+		}
+	}
+
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * @param text
+	 *            the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	/**
+	 * @return the showPanel
+	 */
+	public boolean isShowPanel() {
+		return showPanel;
+	}
+
+	/**
+	 * @param showPanel
+	 *            the showPanel to set
+	 */
+	public void setShowPanel(boolean showPanel) {
+		this.showPanel = showPanel;
+	}
+
+	/**
+	 * @return the headline
+	 */
+	public String getHeadline() {
+		return headline;
+	}
+
+	/**
+	 * @param headline
+	 *            the headline to set
+	 */
+	public void setHeadline(String headline) {
+		this.headline = headline;
 	}
 }

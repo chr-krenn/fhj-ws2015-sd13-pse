@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.mail.MessagingException;
 import javax.persistence.OrderBy;
 
 import org.jboss.logging.Logger;
@@ -19,6 +20,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
+import at.fhj.swd13.pse.plumbing.MailService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**
@@ -37,6 +39,10 @@ public class RequestController {
     @Inject
     private ChatService chatService;
     
+
+	@Inject
+	private MailService mailService;
+	
     @Inject
     private Logger logger;
     
@@ -106,7 +112,50 @@ public class RequestController {
 		
     	requests = chatService.getUnconfirmedCommunities();	
 
-    	info("Community Request Approved!");
+    	try {
+			mailService.sendMail("Community Antrag "+com.getName()+" Freigegeben",
+					"Die Community " + com.getName() + " ist jetzt freigegeben!", com.getCreatedBy().getEmailAddress());
+			logger.info("Email sent");
+
+    	} catch (MessagingException e) {
+			logger.error("ERROR: " + e.getMessage());
+		}
+		
+    	info("Community Antrag angenommen!");
+	}
+	
+	public void declineCommunity(){
+		
+		Community com = null;
+		Person currentUser = null;
+		communityId = Integer.parseInt(communityIdString);
+		
+		try 
+		{	
+			com = chatService.getCommunity(communityId);
+			logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
+			
+			currentUser = userService.getUser(userSession.getUsername());
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+
+			chatService.declineCommunity(currentUser, com);
+			logger.info(" Community Declined: " +com.getCommunityId() +" by: "+currentUser.getPersonId() );
+			
+		} catch (Exception e) {
+			logger.error("ERROR: " + e.getMessage());
+		}
+		
+    	requests = chatService.getUnconfirmedCommunities();	
+
+    	try {
+			mailService.sendMail("Community Antrag "+com.getName()+" Abgelehnt",
+					"Die Community " + com.getName() + " wurde nicht freigegeben!", com.getCreatedBy().getEmailAddress());
+			logger.info("Email sent");
+
+    	} catch (MessagingException e) {
+			logger.error("ERROR: " + e.getMessage());
+		}
+    	info("Community Antrag abgelehnt!");
 	}
 
 	public void error() {

@@ -217,6 +217,18 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
+	
+	@Override
+	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+
+				dbContext.remove(c);
+		} else {
+			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -349,7 +361,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	@Override
-	public boolean addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
+	public Message addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
 
 		final Person author = dbContext.getPersonDAO().getByUsername(username);
 
@@ -364,13 +376,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				message.setHeadline(headline);
 				message.setMessage(comment);
 				message.setPerson(author);
-				message.setValidFrom(new Date());
-
-				message.setDeliverySystem(dbContext.getDeliverySystemDAO().getPseService());
-
-				commentedMessage.addMessage(message);
-
-				return true;
+				message.setValidFrom( new Date() );
+				message.setCommunities(getAllAccessibleCommunities());
+				message.setDeliverySystem( dbContext.getDeliverySystemDAO().getPseService());
+				
+				return commentedMessage.addMessage(message);
 
 			} catch (EntityNotFoundException e) {
 				logger.error("[CHAT] message that is commented upon is not found");
@@ -379,8 +389,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		} else {
 			logger.error("[CHAT] commenting person not foud: " + username);
 		}
+		return null;
 
-		return false;
 	}
 
 }
