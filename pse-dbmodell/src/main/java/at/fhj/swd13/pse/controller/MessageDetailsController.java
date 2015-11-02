@@ -75,6 +75,37 @@ public class MessageDetailsController {
 	}
 	
 	/**
+	 * Adds a new Comment to a specific message and updates the messageDTO for correct xhtml render
+	 * 
+	 */
+	public void addComment() {	
+		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
+		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
+		
+		Message message = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
+		MessageDTO newMessageDTO = new MessageDTO(message);
+		
+		try {
+			feedService.setImageRef(newMessageDTO);
+			feedService.setMessageLikes(newMessageDTO, userSession.getUsername());
+			feedService.setComments(newMessageDTO);
+			
+			getMessageDTO().getComments().add(newMessageDTO);
+			getMessageDTO().setNumberOfComments(getMessageDTO().getComments().size());
+			
+			headline = "";
+			text = "";
+			
+			showPanel = true;
+
+			FacesContext context = FacesContext.getCurrentInstance();        
+	        context.addMessage(null, new FacesMessage("Successful",  "Kommentar wurde gespeichert") );
+		} catch (EntityNotFoundException e) {
+			logger.info("[MESSAGEDETAILS] addComment failed for " + userSession.getUsername());
+		}
+	}	
+	
+	/**
 	 * Adds "like" from actual message for the person currently logged-in
 	 * 
 	 */
@@ -133,7 +164,11 @@ public class MessageDetailsController {
 		
 	}
 	 
-	 private void fillUpComments(MessageDTO messageDTO) {
+	/*
+	* Helper for recursively fill up the comments of a messageDTO with like-info
+	*/
+	 
+	private void fillUpComments(MessageDTO messageDTO) {
 		for(int i = 0;i < messageDTO.getComments().size(); i++) {
 			feedService.setMessageLikes(messageDTO.getComments().get(i), userSession.getUsername());
 			if(messageDTO.getComments().get(i).getComments().size() > 0) {
@@ -141,6 +176,10 @@ public class MessageDetailsController {
 			}
 		}
 	}
+	 
+	/*
+	 * Helper for recursively check where the right message (id) is to add the new "like"-info (p and UserDTO) 
+	 */
 	private void commentsRatingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException, ConstraintViolationException {
 		for(int l = 0; l < message.getComments().size(); l++) {
 			if(message.getComments().get(l).getId() == id) {
@@ -157,6 +196,9 @@ public class MessageDetailsController {
 		}
 	}
 	
+	/*
+	 * Helper for recursively check where the right message (id) is to remove the "like"-info (p and UserDTO)
+	 */
 	private void commentsRemovingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException {
 		for(int l = 0; l < message.getComments().size(); l++) {
 			if(message.getComments().get(l).getId() == id) {
@@ -171,33 +213,6 @@ public class MessageDetailsController {
 		}
 	}
 	
-public void addComment() {	
-		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
-		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
-		
-		Message message = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
-		MessageDTO newMessageDTO = new MessageDTO(message);
-		
-		try {
-			feedService.setImageRef(newMessageDTO);
-			feedService.setMessageLikes(newMessageDTO, userSession.getUsername());
-			feedService.setComments(newMessageDTO);
-			
-			getMessageDTO().getComments().add(newMessageDTO);
-			getMessageDTO().setNumberOfComments(getMessageDTO().getComments().size());
-			
-			headline = "";
-			text = "";
-			
-			showPanel = true;
-
-			FacesContext context = FacesContext.getCurrentInstance();        
-	        context.addMessage(null, new FacesMessage("Successful",  "Kommentar wurde gespeichert") );
-		} catch (EntityNotFoundException e) {
-			logger.info("[MESSAGEDETAILS] addComment failed for " + userSession.getUsername());
-		}
-	}
-
 	/**
 	 * @return the text
 	 */
