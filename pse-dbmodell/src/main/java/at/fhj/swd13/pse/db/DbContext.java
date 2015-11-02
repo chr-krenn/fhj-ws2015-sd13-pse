@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
@@ -137,7 +138,14 @@ public interface DbContext extends AutoCloseable {
 	 * @return an instance of a DAO
 	 */
 	MessageRatingDAO getMessageRatingDAO();
+
 	
+	/**
+	 * Get a dao for the deliverysystems
+	 * 
+	 * @return an instance of the delivery system dao
+	 */
+	DeliverySystemDAO getDeliverySystemDAO();
 	
 	/**
 	 * Close DbContext

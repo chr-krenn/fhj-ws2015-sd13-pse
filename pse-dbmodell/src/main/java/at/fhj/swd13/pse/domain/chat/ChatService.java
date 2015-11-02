@@ -4,6 +4,7 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
@@ -104,10 +105,35 @@ public interface ChatService {
 	 */
 	int createAllPrivateCommunities();
 	
-	List<Community> getAllCommunities();
+	List<Community> getAllAccessibleCommunities();
 	
-	List <Community> getAllCommunities(String searchfieldText);
+	List <Community> getAllAccessibleCommunities(String searchfieldText);
 
 	String resolveReceipientsMail( final Message message );
 	
+	CommunityMember createCommunityMember(final Person creator, final Community community);
+	Boolean isPersonMemberOfCommunity( final Person person, final Community community );
+	
+	List<CommunityMember> getCommunityMembersList( final Community community );
+	
+	CommunityMember getCommunityMember( final Community community, final Person person );
+	/**
+	 * Get the privat community for a person
+	 * 
+	 * @param person
+	 *          
+	 * @return the number of created communities
+	 */
+	Community getPrivateCommunity(Person person);
+	
+	/**
+	 * Add a comment to a message
+	 * 
+	 * @param username user who comments
+	 * 
+	 * @param commentedMessageId message id that is commented
+	 * 
+	 * @param comment text of the comment itself
+	 */
+	boolean addComment( final String username, final int commentedMessageId, final String headline, final String comment );
 }

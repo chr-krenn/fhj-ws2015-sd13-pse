@@ -6,7 +6,6 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.dto.MessageDTO;
 
 public interface MessageDAO {
 	/**
@@ -17,6 +16,14 @@ public interface MessageDAO {
 	 */
 	void insert(Message message) throws ConstraintViolationException;
 
+	/**
+	 * Updates the given message into the persistent store
+	 * 
+	 * @param message
+	 *            the message to persist
+	 */
+	void update(Message message) throws ConstraintViolationException;
+	
 	/**
 	 * Get a message by its id
 	 * 
@@ -38,5 +45,9 @@ public interface MessageDAO {
 	
 	List<Message> loadAll();
 	
-	List<MessageDTO> loadForUser(Person user);
+	List<Message> loadForUser(Person user);
+
+	List<Message> loadNews(int communityId);
+	
+	List<Message> loadComments(Message message);
 }

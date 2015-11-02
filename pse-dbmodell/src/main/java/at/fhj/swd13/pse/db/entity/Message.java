@@ -37,7 +37,7 @@ import org.jsoup.Jsoup;
 		@NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.messageId = :id"),
 		@NamedQuery(name = "Message.findNews", query = "SELECT m FROM Message m JOIN m.communities c WHERE " +
 			    "(m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
-			    "AND (m.validFrom < CURRENT_TIMESTAMP) AND c.communityId = :id"),
+			    "AND (m.validFrom < CURRENT_TIMESTAMP) AND c.communityId = :id ORDER BY m.validFrom DESC"),
 		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
@@ -67,7 +67,8 @@ import org.jsoup.Jsoup;
 						"p.personTargetRelations tr WHERE sr.targetPerson = :person or tr.sourcePerson = :person)) " +
 						"AND c.systemInternal = false AND c.invitationOnly = false)) " +
 				"ORDER BY m.createdAt DESC"),
-		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id")})
+		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id"),
+		@NamedQuery(name="Message.findComments", query = "SELECT m FROM Message m where m.messageBean = :message")})
 public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -108,7 +109,7 @@ public class Message implements Serializable {
 	private Message messageBean;
 
 	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "messageBean")
+	@OneToMany(mappedBy = "messageBean", cascade=CascadeType.PERSIST)
 	private List<Message> messages;
 
 	// bi-directional many-to-one association to DeliverySystem

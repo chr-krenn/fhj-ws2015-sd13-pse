@@ -12,6 +12,8 @@ import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.CommunityDAOImpl;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
+import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentDAO;
 import at.fhj.swd13.pse.db.dao.DocumentDAOImpl;
 import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
@@ -142,5 +144,8 @@ public class DbContextJtaImpl implements DbContext {
 		return new MessageRatingDAOImpl(this);
 	}
 
-	
+	@Override
+	public DeliverySystemDAO getDeliverySystemDAO() {
+		return new DeliverySystemDAOImpl(this);
+	}	
 }

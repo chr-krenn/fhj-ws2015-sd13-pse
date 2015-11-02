@@ -27,7 +27,7 @@ public class DbPersonPagingTest extends DbTestBase {
 
 			PersonDAO personDao = dbContext.getPersonDAO();
 
-			for (int i = 1; i < NUMBER_OF_USERS; ++i) {
+			for (int i = 1; i <= NUMBER_OF_USERS; ++i) {
 
 				String username = USER_NAME_PREFIX + String.format("%04d", i);
 
@@ -65,7 +65,7 @@ public class DbPersonPagingTest extends DbTestBase {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			List<Person> persons = dbContext.getPersonDAO().getAllPersons(1, 25);
+			List<Person> persons = dbContext.getPersonDAO().getAllPersons(0, 25);
 
 			assertEquals(25, persons.size());
 
@@ -85,7 +85,7 @@ public class DbPersonPagingTest extends DbTestBase {
 
 			for (int i = 0; i < NUMBER_OF_USERS / pageSize; ++i) {
 
-				List<Person> persons = personDao.getAllPersons(pageSize * i + 1, pageSize);
+				List<Person> persons = personDao.getAllPersons(pageSize * i, pageSize);
 
 				assertEquals(pageSize, persons.size());
 			}

@@ -167,7 +167,7 @@ public class Person implements Serializable {
 	private List<CommunityMember> confirmedMemberships;
 
 	// bi-directional many-to-one association to CommunityMember
-	@OneToMany(mappedBy = "member")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "member")
 	private List<CommunityMember> memberships;
 
 	// bi-directional many-to-one association to MesasgeRating

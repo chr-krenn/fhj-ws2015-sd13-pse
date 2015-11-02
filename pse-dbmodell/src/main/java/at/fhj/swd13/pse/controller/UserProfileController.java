@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +24,11 @@ import org.primefaces.model.UploadedFile;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -55,6 +58,9 @@ public class UserProfileController implements Serializable {
 	private UserDTOBuilder userDTOBuilder;
 
 	@Inject
+	private ChatService chatService;
+
+	@Inject
 	private Logger logger;
 
 	private UserDTO userDTO;
@@ -62,17 +68,21 @@ public class UserProfileController implements Serializable {
 	private String editMode;
 	private String userName;
 
-	// TODO Eigentlich UserDTO
+	private String communityName = "";
+
 	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
 
 	@PostConstruct
 	public void setup() {
+		userName = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("userName");
+		editMode = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("mode");
+		getPerson();
+	}
+	
+	private void getPerson() {
 		try {
-			userName = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("userName");
-			editMode = FacesContext.getCurrentInstance().getExternalContext()
-					.getRequestParameterMap().get("mode");
-
 			Person person = userService.getUser(userName);
 			userDTO = userDTOBuilder.createFrom(person);
 			setUsersWithDepartment(userService.getUsersWithDepartment(person
@@ -88,6 +98,16 @@ public class UserProfileController implements Serializable {
 		return userDTO;
 	}
 
+	/**
+	 * returns the name of the current login user
+	 *
+	 * @return usename
+	 * 
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile file = event.getFile();
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -188,7 +208,7 @@ public class UserProfileController implements Serializable {
 	 * @return true if the current page is opened in login mode
 	 * 
 	 */
-	private boolean isModeEdit() {
+	public boolean isModeEdit() {
 		return editMode != null && editMode.equals("edit");
 	}
 
@@ -253,12 +273,13 @@ public class UserProfileController implements Serializable {
 	}
 
 	public String getTagEditStyle() {
-		return !isLoggedInUser() && !isAdmin() ? "display:none" : "display:all";
+		return (!isLoggedInUser() && !isAdmin()) || !isModeEdit() ? "display:none" : "display:all";
 	}
 
 	public String getTagDisplayStyle() {
-		return isLoggedInUser() || isAdmin() ? "display:none" : "display:all";
+		return getTagEditStyle().equals("display:none") ? "display:all" : "display:none";
 	}
+	
 
 	/**
 	 * returns the display representation for tags
@@ -325,17 +346,27 @@ public class UserProfileController implements Serializable {
 				userDTO.getContacts().remove(userService.getLoggedInUser());
 
 			} else {
-				System.out.println(userService.getLoggedInUser().getContacts()
-						.size());
 				userService.createRelation(userService.getLoggedInUser(),
 						userService.getUser(userDTO.getUserName()));
 
 				// Update userDTO
 				userDTO.getContacts().add(userService.getLoggedInUser());
 			}
-
 		} catch (EntityNotFoundException e) {
-
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler",
+					"Kontakt konnte nicht hinzugefügt werden, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			RequestContext context = RequestContext.getCurrentInstance();
+			logger.info("[USERPROFILE] contactButtonAction failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Kontakt hinzufügen Fehler", "Kontakt konnte nicht hinzugefügt werden");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
 
@@ -359,21 +390,87 @@ public class UserProfileController implements Serializable {
 		for (Person p : usersWithDepartment)
 			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
 	}
-
-	public String getContactListEntryStyle(String username, String department) {
+	
+	public String getContactListEntryClass(String username, String department) {
 		if (!username.equals(userSession.getUsername()))
-			return "font-weight: bold";
+			return "";
 
 		Person person = null;
 		try {
 			person = userService.getUser(userSession.getUsername());
 		} catch (EntityNotFoundException e) {
-			return "font-weight: bold";
+			return "";
 		}
 
 		if (department.equals(person.getDepartment()))
-			return "font-weight: bold; color:green";
+			return "samedepartment";
 		else
-			return "font-weight: bold";
+			return "";
+	}
+	
+	/**
+	 * creates  a new Community for the user logged in
+	 */	
+	public void createCommunity() {
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message;
+		
+		try {
+			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
+			setCommunityName("");
+			getPerson();
+		} catch (EntityNotFoundException e) {
+			logger.info("[USERPROFILE] createCommunity failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Community anlegen Fehler",
+					"Community anlegen fehlgeschlagen, ungültiger Username");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (RuntimeException e) {
+			logger.info("[USERPROFILE] createCommunity failed for "
+					+ userDTO.getFullname() + " from " + context.toString());
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN,
+					"Community anlegen Fehler", "Community anlegen fehlgeschlagen");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		}
+	}
+	
+	/**
+	 * returns a List of community where the current user is member of
+	 *
+	 * @return the Community List
+	 * 
+	 */	
+	public List<CommunityMember> getCommunityMemberships() {
+		List<CommunityMember> communityMemberships = getUserDTO().getCommunityMemberships();
+		Iterator<CommunityMember> membershipIterator = communityMemberships.iterator();
+		
+		while (membershipIterator.hasNext()) {
+			CommunityMember membership = membershipIterator.next();
+			if (membership.getCommunity().getPrivateUser() != null && 
+				membership.getCommunity().getPrivateUser().getPersonId() == userDTO.getId()) {
+				membershipIterator.remove();	
+			}
+		}
+		
+		return communityMemberships;
+	}
+
+	public String getCommunityName() {
+		return communityName;
+	}
+
+	public void setCommunityName(String communityName) {
+		this.communityName = communityName;
+	}
+	
+	/**
+	 * returns true if the current login user is allowed to change news
+	 *
+	 * @return true / false
+	 * 
+	 */
+	public boolean getCanEditNews() {
+		return userSession.canEditNews();
 	}
 }

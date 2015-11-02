@@ -24,7 +24,7 @@ public class DbPersonFindLikeTest extends DbTestBase {
 	@BeforeClass
 	public static void setup() throws Exception {
 
-		DbTestBase.prepare();
+		DbTestBase.prepareDbOnly();
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 

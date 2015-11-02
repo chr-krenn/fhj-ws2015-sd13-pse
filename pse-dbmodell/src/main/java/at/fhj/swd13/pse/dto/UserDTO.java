@@ -5,16 +5,21 @@ import java.util.Date;
 import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 
 public class UserDTO {
+
+	private int id;
 
 	private String userName;
 
 	private String lastName;
 
 	private String firstName;
+	
+	private String fullName;
 
 	private String emailAddress;
 
@@ -50,31 +55,32 @@ public class UserDTO {
 
 	private List<Community> communities;
 
+	private List<CommunityMember> communityMemberships;
+
 	private List<String> tags;
 
-	
-	public UserDTO() {
-	}
-
 	public UserDTO(Person person) {
-		this.userName = person.getUserName();
-		this.lastName = person.getLastName();
-		this.firstName = person.getFirstName();
-		this.emailAddress = person.getEmailAddress();
-		this.dateOfBirth = person.getDateOfBirth();
-		this.dateOfEntry = person.getDateOfEntry();
-		this.phoneNumberMobile = person.getPhoneNumberMobile();
-		this.department = person.getDepartment();
-		this.locationBuilding = person.getLocationBuilding();
-		this.locationRoomNumber = person.getLocationRoomNumber();
-		this.locationFloor = person.getLocationFloor();
-		this.job = person.getJobPosition();
-		this.online = person.isOnline();
+		this.setId(person.getPersonId());
+		this.setUserName(person.getUserName());
+		this.setLastName(person.getLastName());
+		this.setFirstName(person.getFirstName());
+		this.setFullName(getFirstName() + " " + getLastName());
+		this.setEmailAddress(person.getEmailAddress());
+		this.setDateOfBirth(person.getDateOfBirth());
+		this.setDateOfEntry(person.getDateOfEntry());
+		this.setPhoneNumberMobile(person.getPhoneNumberMobile());
+		this.setDepartment(person.getDepartment());
+		this.setLocationBuilding(person.getLocationBuilding());
+		this.setLocationRoomNumber(person.getLocationRoomNumber());
+		this.setLocationFloor(person.getLocationFloor());
+		this.setJob(person.getJobPosition());
+		this.setOnline(person.isOnline());
 		this.setExtern(person.isExtern());
 		this.setActive(person.isActive());
 		this.setLoginAllowed(person.isLoginAllowed());
 		this.setContacts(new ArrayList<Person>(person.getContacts()));
 		this.setCommunities(person.getConfirmedCommunities());
+		this.setCommunityMemberships(person.getMemberships());
 		
 		tags = new ArrayList<String>();
 		for (PersonTag personTag : person.getPersonTags()) {
@@ -88,7 +94,23 @@ public class UserDTO {
 
 	/**
 	 * 
-	 * @return
+	 * @return the user id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param user id
+	 *            the user id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @return the user fullname
 	 */
 	public String getFullname() {
 		return lastName + ", " + firstName;
@@ -137,6 +159,14 @@ public class UserDTO {
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	/**
@@ -321,6 +351,14 @@ public class UserDTO {
 
 	public void setContacts(List<Person> contacts) {
 		this.contacts = contacts;
+	}
+
+	public List<CommunityMember> getCommunityMemberships() {
+		return communityMemberships;
+	}
+
+	public void setCommunityMemberships(List<CommunityMember> communityMemberships) {
+		this.communityMemberships = communityMemberships;
 	}
 
 	public List<Community> getCommunities() {

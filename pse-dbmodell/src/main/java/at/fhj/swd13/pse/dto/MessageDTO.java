@@ -24,11 +24,29 @@ public class MessageDTO {
 	
 	private String community;
 	
-	private Document icon;
+	private Document image;
+	
+	private String imageRef;
 	
 	private boolean like;
 	
 	private List<MessageRating> ratingList;
+	
+	private int quantityRatings;
+	
+	private List<UserDTO> ratingPersonsList;
+	
+	private Integer numberOfComments;
+	
+	private List<MessageDTO> comments;
+	
+	private boolean isComment;
+	
+	private Date validFrom;
+	
+	private Date validUntil;
+	
+	private List<String> tags;
 	
 	private MessageDTO() {}
 	
@@ -41,11 +59,13 @@ public class MessageDTO {
 		this.text = m.getMessage();
 		this.privateMessage = isPrivateMessage(m);
 		this.community = getCommunity(m);
-		this.icon = m.getIcon();
+		this.image = m.getIcon();
 		this.ratingList = m.getMessageRatings();
 		this.like = false;
+		this.setIsComment(m.getMessageBean() != null);
+		this.validFrom = m.getValidFrom();
+		this.validUntil = m.getExpiresOn();
 	}
-	
 	
 	public int getId() {
 		return id;
@@ -135,14 +155,21 @@ public class MessageDTO {
 		this.community = community;
 	}
 
-	
-	public Document getIcon() {
-		return icon;
+	public Document getImage() {
+		return image;
+	}
+
+	public void setImage(Document image) {
+		this.image = image;
+	}
+
+	public String getImageRef() {
+		return imageRef;
 	}
 
 	
-	public void setIcon(Document icon) {
-		this.icon = icon;
+	public void setImageRef(String imageRef) {
+		this.imageRef = imageRef;
 	}
 
 	
@@ -163,6 +190,102 @@ public class MessageDTO {
 	
 	public void setRatingList(List<MessageRating> ratingList) {
 		this.ratingList = ratingList;
+	}
+	
+	
+	public int getQuantityRatings() {
+		return quantityRatings;
+	}
+
+
+	public void setQuantityRatings(int quantityRatings) {
+		this.quantityRatings = quantityRatings;
+	}
+
+
+	public List<UserDTO> getRatingPersonsList() {
+		return ratingPersonsList;
+	}
+
+
+	public void setRatingPersonsList(List<UserDTO> ratingPersonsList) {
+		this.ratingPersonsList = ratingPersonsList;
+	}
+
+	
+	public Integer getNumberOfComments() {
+		return numberOfComments;
+	}
+
+	
+	public void setNumberOfComments(Integer numberOfComments) {
+		this.numberOfComments = numberOfComments;
+	}
+
+	
+	public List<MessageDTO> getComments() {
+		return comments;
+	}
+
+	
+	public void setComments(List<MessageDTO> comments) {
+		this.comments = comments;
+		setNumberOfComments(comments.size());
+	}
+
+	public boolean getIsComment() {
+		return isComment;
+	}
+
+	public void setIsComment(boolean isComment) {
+		this.isComment = isComment;
+	}
+
+	
+	/**
+	 * @return the validFrom
+	 */
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	
+	/**
+	 * @param validFrom the validFrom to set
+	 */
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	
+	/**
+	 * @return the validUntil
+	 */
+	public Date getValidUntil() {
+		return validUntil;
+	}
+
+	
+	/**
+	 * @param validUntil the validUntil to set
+	 */
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
+	}
+
+	
+	public boolean isShowable() {
+		final Date now = new Date();
+		
+		return ( null == validFrom || validFrom.before( now ) )
+				&& ( null == validUntil || validUntil.after( now ) );
+	}
+	
+	/**
+	 * @param isComment the isComment to set
+	 */
+	public void setComment(boolean isComment) {
+		this.isComment = isComment;
 	}
 	
 }

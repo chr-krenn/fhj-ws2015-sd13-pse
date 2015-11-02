@@ -17,7 +17,6 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
-import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
@@ -59,7 +58,7 @@ public class DbMessageTest extends DbTestBase {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
-			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(108));
+			List<Message> activities = messageDAO.loadForUser(getPerson(108));
 
 			assertNotNull(activities);
 			assertEquals(6, activities.size());
@@ -78,7 +77,7 @@ public class DbMessageTest extends DbTestBase {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
-			List<MessageDTO> activities = messageDAO.loadForUser(getPerson(110));
+			List<Message> activities = messageDAO.loadForUser(getPerson(110));
 
 			assertNotNull(activities);
 			assertEquals(3, activities.size());
@@ -148,24 +147,36 @@ public class DbMessageTest extends DbTestBase {
 		
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindNews() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			Query query = dbContext.createNamedQuery("Message.findNews");
+			query.setParameter("id", 1);
+			List<Message> message = query.getResultList();
+			assertNotNull(message);
+			assertEquals(2, message.size());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindComments() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			Query query = dbContext.createNamedQuery("Message.findComments");
+			query.setParameter("message", dbContext.getMessageDAO().getById(1));
+			List<Message> message = query.getResultList();
+			assertNotNull(message);
+			assertEquals(3, message.size());
+		}
+	}
+	
 	private Person getPerson(int id) throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			PersonDAO personDAO = dbContext.getPersonDAO();
 
 			return personDAO.getById(id);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testFindNews() throws Exception {
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-			Query query = dbContext.createNamedQuery("Message.findNews");
-			query.setParameter("id", 2);
-			List<Message> message = query.getResultList();
-			assertNotNull(message);
-			assertEquals(2, message.size());
 		}
 	}
 	

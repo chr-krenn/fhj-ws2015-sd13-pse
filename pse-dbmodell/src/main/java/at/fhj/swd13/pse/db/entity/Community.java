@@ -27,13 +27,21 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "community")
 @NamedQueries({ @NamedQuery(name = "Community.findAll", query = "SELECT c FROM Community c"),
+		@NamedQuery(name = "Community.findAllAccessible", query = "SELECT c FROM Community c WHERE c.systemInternal = false AND c.privateUser is NULL"),
 		@NamedQuery(name = "Community.findById", query = "SELECT c FROM Community c WHERE c.communityId = :id"),
 		@NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
 		@NamedQuery(name = "Community.findMatching", query = "SELECT c FROM Community c WHERE c.name LIKE :needle"),
+		@NamedQuery(name = "Community.findMatchingAccessible", query = "SELECT c FROM Community c WHERE c.name LIKE :needle AND c.systemInternal = false AND c.privateUser is NULL"),
 		@NamedQuery(name = "Community.findUnconfirmed", query = "SELECT c FROM Community c WHERE c.confirmedBy IS NULL"),
-		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"), 
-		@NamedQuery(name="Community.findCommunitiesByMember", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person") })
+		@NamedQuery(name = "Community.findPrivateForUser", query = "SELECT c FROM Community c WHERE c.privateUser = :person"),
+		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"),
+		@NamedQuery(name = "Community.findCommunitiesByMember", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person"),
+		@NamedQuery(name = "Community.findCommunitiesByMemberButOwn", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person AND c.privateUser <> :person AND c.name LIKE :needle"),
+		@NamedQuery(name = "Community.findMatchingByMemberButOwn", query = "SELECT c FROM Community c JOIN c.communityMembers m " +
+				" WHERE ( m.member.userName = :uname  AND c.privateUser.userName <> :uname AND c.name LIKE :needle ) OR ( c.privateUser IS NOT NULL AND c.privateUser.userName <> :uname AND c.name LIKE :needle)") })
+
 public class Community implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	public static final String PRIVATE_PREFIX = "@";
@@ -137,15 +145,16 @@ public class Community implements Serializable {
 		return this.privateUser;
 	}
 
-	public void setPrivateUser(Person person1) {
-		this.privateUser = person1;
+	public void setPrivateUser(Person person) {
+		this.privateUser = person;
+		person.setPrivateCommunity(this);
 	}
 
 	public boolean isPrivateChannel() {
-		
-		return privateUser != null; 
+
+		return privateUser != null;
 	}
-	
+
 	public boolean isConfirmed() {
 
 		return confirmedBy != null;

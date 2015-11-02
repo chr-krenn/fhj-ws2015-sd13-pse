@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.dto.UserDTO;
 
 public interface UserService {
@@ -176,5 +177,13 @@ public interface UserService {
 	
 	void resetPassword(String emailAddress) throws InvalidEmailAddressException, MessagingException;
 
-	
+	/**
+	 * Set a new instance of the chat service
+	 * 
+	 * @param chatService
+	 *            new instance of the ChatService
+	 * 
+	 * 
+	 */
+	void setChatService(ChatService chatService);
 }

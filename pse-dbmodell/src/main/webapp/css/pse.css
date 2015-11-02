@@ -11,3 +11,16 @@
 	height: 100%;
 	overflow: auto;
 }
+
+.samedepartment {
+	color: #5cb85c;
+}
+
+.likebutton {
+	margin-right: 10px;
+}
+
+.detailView-message{
+	margin-left: 10px;
+	
+}

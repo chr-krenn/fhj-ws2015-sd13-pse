@@ -4,19 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
+import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.MailService;
@@ -38,6 +42,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private TagService tagService;
+
+	@Inject
+	private ChatService chatService;
 
 	@Inject
 	private Logger logger;
@@ -77,6 +84,11 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			p.setIsOnline(true);
 			p.setCurrentSessionId(userSession.login(username));
 			userSession.setAdmin(p.isAdmin());
+			
+			//get private community
+			Community community = chatService.getPrivateCommunity(p);
+			if (community != null)
+				userSession.setPrivateCommunityId(community.getCommunityId());
 			return p;
 		}
 
@@ -159,6 +171,17 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		passwordStrengthValidator.validate(newPlainPassword);
 
 		p.setPassword(newPlainPassword);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhj.swd13.pse.domain.user.UserService#setChatService(at.fhj.swd13.pse.domain.chat.ChatService)
+	 */
+	@Override
+	public void setChatService(ChatService chatService) {
+
+		this.chatService = chatService;
 	}
 
 	/*
@@ -337,6 +360,11 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Override
 	public void resetPassword(final String emailAddress) throws InvalidEmailAddressException, MessagingException {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest rq = (HttpServletRequest)context.getExternalContext().getRequest();
+		int port = rq.getServerPort();
+		String serverName = rq.getServerName();
 
 		try {
 			Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
@@ -348,7 +376,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
-					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"localhost:8088/\">pse</a>.</div>", emailAddress);
+					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
 
 		} catch (EntityNotFoundException e1) {

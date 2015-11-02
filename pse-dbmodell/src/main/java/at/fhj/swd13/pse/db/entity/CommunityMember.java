@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,7 +22,9 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "community_member")
-@NamedQuery(name = "CommunityMember.findAll", query = "SELECT c FROM CommunityMember c")
+@NamedQueries({ @NamedQuery(name = "CommunityMember.findAll", query = "SELECT c FROM CommunityMember c"),
+				@NamedQuery(name = "CommunityMember.findMembersByCommunity", query = "SELECT m FROM CommunityMember m WHERE m.community = :community"),
+				@NamedQuery(name = "CommunityMember.findByCommunityAndPerson", query = "SELECT m FROM CommunityMember m WHERE m.community = :community AND m.member = :person")})
 public class CommunityMember implements Serializable {
 	private static final long serialVersionUID = 1L;
 
