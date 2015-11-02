@@ -195,14 +195,38 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * at.fhj.swd13.pse.service.ChatService#confirmCommunity(at.fhj.swd13.pse.db
 	 * .entity.Person, at.fhj.swd13.pse.db.entity.Community)
 	 */
+
+	@Override
 	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
 
 		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+			try {
 
-			adminPerson.addConfirmedCommunities(unconfirmed);
+				adminPerson.addConfirmedCommunities(unconfirmed);
 
+				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+
+				c.setConfirmedBy(adminPerson);
+
+				dbContext.persist(c);
+
+			} catch (ConstraintViolationException e) {
+				e.printStackTrace();
+			}
 		} else {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
+		}
+	}
+	
+	@Override
+	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+
+				dbContext.remove(c);
+		} else {
+			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
 
@@ -363,9 +387,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			}
 
 		} else {
-			logger.error("[CHAT] commenting person not foud: " + username );
+			logger.error("[CHAT] commenting person not foud: " + username);
 		}
 		return null;
+
 	}
 
 }

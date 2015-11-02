@@ -6,11 +6,31 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="content">
-	
-	<h:form>
-	Admin View - To be done
-	</h:form>
-	
-	
+    <h:form id="communitySearch">
+
+		    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+	    	<h1>Community Anträge</h1>
+			<p:dataTable var="community" value="#{requestController.requests}" id="requests"
+				paginator="true" rows="10"
+               	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+               	selectionMode="single" selection="#{requestController.selectedRequest}" 
+               	rowKey="#{community.communityId}"
+			>
+			<p:ajax event="rowSelect" listener="#{requestController.onCommunitySelected}" ></p:ajax>
+			    <p:column headerText="Community Name">
+			        <h:outputText value="#{community.name}" />
+			    </p:column>
+			    <p:column headerText="Actions">
+					<p:commandLink update="requests" actionListener="#{requestController.approveCommunity}">	
+			    		<p:commandButton value="Annehmen" id="approveCommunity" disabled="false" />
+			   			<f:param name="communityId" value="#{community.communityId}" />
+		     		</p:commandLink>
+		     		<p:commandLink update="requests" actionListener="#{requestController.declineCommunity}">	
+			    		<p:commandButton value="Ablehnen" id="declineCommunity" disabled="false" />
+			   			<f:param name="communityId" value="#{community.communityId}" />
+		     		</p:commandLink>			
+			    </p:column>
+			</p:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>
