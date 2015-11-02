@@ -53,7 +53,7 @@ public class CommunityProfileController implements Serializable {
 		return communityId;
 	}
 	
-	public void onCreateNewActivitie(){
+	public void onCreateNewActivity(){
 	    try 
 	    {
 	    	FacesContext.getCurrentInstance().getExternalContext().redirect("xperimental/AddCommunityMessage.jsf?community=" + community.getName());
