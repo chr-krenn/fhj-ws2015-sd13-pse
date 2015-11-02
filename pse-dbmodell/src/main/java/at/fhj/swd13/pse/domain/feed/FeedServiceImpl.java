@@ -96,6 +96,26 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
+	public void updateMessage(int messageId, String headline, String text, Document document, Document icon,
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException{
+		Message m = dbContext.getMessageDAO().getById(messageId);
+		
+		m.setHeadline(headline);
+		m.setMessage(text);
+		m.setIcon(icon);
+		m.setAttachment(document);
+		m.setMessageTags(messageTags);	
+		m.setValidFrom(validFrom);
+		m.setExpiresOn(validUntil);
+		
+		try {
+			dbContext.getMessageDAO().update(m);
+		} catch (ConstraintViolationException e) {
+			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + m.getHeadline());
+		}
+	}
+	
+	@Override
 	public Message getMessageById(int messageId) throws EntityNotFoundException {
 		Message byId = dbContext.getMessageDAO().getById(messageId);
 

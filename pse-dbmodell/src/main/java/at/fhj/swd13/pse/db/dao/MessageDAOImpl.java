@@ -23,6 +23,11 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 	}
 
 	@Override
+	public void update(Message message) throws ConstraintViolationException {
+		dbContext.persist(message);
+	}
+	
+	@Override
 	public Message getById(int messageId) throws EntityNotFoundException {
 		final Query q = dbContext.createNamedQuery("Message.findById");
 		q.setParameter("id", messageId);
@@ -73,4 +78,6 @@ public class MessageDAOImpl extends DAOBase implements MessageDAO {
 		query.setParameter("message", message);
 		return query.getResultList();
 	}
+
+	
 }

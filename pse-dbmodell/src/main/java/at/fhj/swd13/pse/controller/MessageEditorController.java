@@ -28,6 +28,7 @@ import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /*
@@ -88,7 +89,8 @@ public class MessageEditorController {
 	private String documentName;
 
 	private boolean communityLocked;
-
+	private int messageId;
+	
 	private Community targetCommunity = null;
 
 	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
@@ -99,20 +101,50 @@ public class MessageEditorController {
 	public void init() {
 		String receiverCommunity = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("community");
 		if (receiverCommunity != null) {
-			targetCommunity = chatService.getCommunity(receiverCommunity);
-			if (targetCommunity != null) {
-				selectedCommunities.add(new CommunityDTO(targetCommunity));
-			}
+			loadCommunity(receiverCommunity);
 		}
 
+		//community cannot be changed
 		String lockCommunityString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("lockCommunity");
-
 		communityLocked = false;
 		if (lockCommunityString != null) {
 			communityLocked = Boolean.parseBoolean(lockCommunityString);
 		}
+		
+		String messageIdString = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("messageId");		
+		if(messageIdString != null){
+			loadMessage(Integer.parseInt(messageIdString)); 
+		}
 	}
 
+	private void loadMessage(int messageId){
+		try {
+			this.messageId = messageId;
+			MessageDTO messageDto = feedService.getMessageDTOById(messageId);
+			
+			headline = messageDto.getHeadline();
+			richText = messageDto.getText();
+			
+			dtFrom = messageDto.getValidFrom();
+			dtUntil = messageDto.getValidUntil();
+			
+			loadCommunity(messageDto.getCommunity());
+			
+			//TODO load all fields (icon, document, tags)
+			
+		} catch (EntityNotFoundException e) {
+			// TODO Auto-generated catch block
+		}
+	}
+	
+	private void loadCommunity(String communityName){
+		targetCommunity = chatService.getCommunity(communityName);
+		if (targetCommunity != null) {
+			selectedCommunities.add(new CommunityDTO(targetCommunity));
+		}
+	}
+	
 	/**
 	 * Returns the community name
 	 */
@@ -160,8 +192,13 @@ public class MessageEditorController {
 		}
 
 		try {
-			feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
-
+			//if message id exists update the existing message
+			if(this.messageId > 0){
+				feedService.updateMessage(messageId, headline, richText, document, icon, messageTags, dtFrom, dtUntil);
+			}else{
+				feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
+			}
+			
 			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
 			FacesContext context = FacesContext.getCurrentInstance();
 
