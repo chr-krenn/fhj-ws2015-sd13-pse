@@ -105,7 +105,8 @@
 					<p:panelGrid columns="1">
 						<p:inputText id="commentHeadline" maxlength="64" value="#{messageCommentController.headline}" />
 						<p:inputTextarea id="commentText" rows="5" cols="40" maxlength="1024" value="#{messageCommentController.text}"/>
-						<p:commandButton id="addComment" value="Kommentar absenden" actionListener="#{messageCommentController.addComment}" resetValues="true" update="commentArea, commentHeadline, commentText, commentGrowl" oncomplete="#{messageDetailsController.reloadMessage()}">
+						<p:commandButton id="addComment" value="Kommentar absenden" actionListener="#{messageCommentController.addComment}" resetValues="true" 
+										update="commentArea, commentHeadline, commentText, commentGrowl, commentList" oncomplete="#{messageDetailsController.reloadMessage()}">
 							<f:param name="parentMessageId" value="#{messageDetailsController.messageDTO.id}" />
 						</p:commandButton>
 					</p:panelGrid>
