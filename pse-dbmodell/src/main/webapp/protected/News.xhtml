@@ -27,11 +27,10 @@
 							style="font-weight: bold">
 							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 						</h:outputText>
-						<h:commandButton
-							action="#{messageDetailsController.openDetailView}"
-							value="Details" icon="ui-icon-search">
-							<f:param name="messageId" value="#{news.id}" />
-						</h:commandButton>
+						<p:commandButton id="detailsNewsBtn" value="Details" 
+							action="#{messageDetailsController.openDetailView}">
+ 						<f:param name="messageId" value="#{news.id}" />
+						</p:commandButton>
 					</h:panelGrid>
 					<h:panelGrid columns="2" cellpadding="5">
 						<p:graphicImage id="newsIcon" styleClass="userimage"
