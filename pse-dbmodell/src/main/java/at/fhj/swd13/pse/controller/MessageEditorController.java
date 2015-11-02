@@ -570,4 +570,11 @@ public class MessageEditorController {
 	public void setDtFrom(Date dtFrom) {
 		this.dtFrom = dtFrom;
 	}
+	
+	public boolean isNewMessage(){
+		if(messageId > 0){
+			return false;
+		}
+		return true;
+	}
 }
