@@ -150,7 +150,7 @@ public class SimpleFeedController {
     		return messageList;
 		} catch (EntityNotFoundException | ConstraintViolationException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info("[FEEDS] getNews failed for community " + communityId + " from " + context.toString());
+			logger.info("[FEEDS] getCommunityAcitivities failed for community " + communityId + " from " + context.toString());
 			return null;
 		}
     	
