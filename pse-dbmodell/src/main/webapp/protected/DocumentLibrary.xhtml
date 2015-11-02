@@ -4,10 +4,6 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
-	<f:metadata>
-		<f:viewParam name="communityId"
-			value="#{documentLibraryController.communityId}" />
-	</f:metadata>
 
 	<f:event type="preRenderComponent"
 		listener="#{documentLibraryController.init}" />
