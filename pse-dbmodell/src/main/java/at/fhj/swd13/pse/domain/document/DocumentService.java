@@ -86,4 +86,12 @@ public interface DocumentService {
 	 * if not, try to create them
 	 */
 	void assertDocumentFolders() throws IOException;
+	
+	/**
+	 * Removes a document from the database
+	 * 
+	 * @param documentId
+	 * 
+	 */
+	void removeDocument(final int documentId);
 }

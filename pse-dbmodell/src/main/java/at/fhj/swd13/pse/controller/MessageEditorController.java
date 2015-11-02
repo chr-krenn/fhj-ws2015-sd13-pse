@@ -126,7 +126,7 @@ public class MessageEditorController {
 				documentName = document.getName();
 			}
 			
-			//TODO load tags
+			selectedTags = messageDto.getTags();
 			
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
