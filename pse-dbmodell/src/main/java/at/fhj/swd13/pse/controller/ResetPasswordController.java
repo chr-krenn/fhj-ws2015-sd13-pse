@@ -2,10 +2,8 @@ package at.fhj.swd13.pse.controller;
 
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 
 import at.fhj.swd13.pse.domain.user.InvalidEmailAddressException;
 import at.fhj.swd13.pse.domain.user.UserService;

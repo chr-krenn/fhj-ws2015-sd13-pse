@@ -287,5 +287,13 @@ public class MessageDTO {
 	public void setComment(boolean isComment) {
 		this.isComment = isComment;
 	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
 	
 }

@@ -4,20 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import org.jboss.logging.Logger;
-import org.primefaces.event.SelectEvent;
-
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @ViewScoped
