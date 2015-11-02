@@ -101,10 +101,7 @@ public class MessageEditorController {
 	public void init() {
 		String receiverCommunity = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("community");
 		if (receiverCommunity != null) {
-			targetCommunity = chatService.getCommunity(receiverCommunity);
-			if (targetCommunity != null) {
-				selectedCommunities.add(new CommunityDTO(targetCommunity));
-			}
+			loadCommunity(receiverCommunity);
 		}
 
 		//community cannot be changed
@@ -132,14 +129,19 @@ public class MessageEditorController {
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
-			targetCommunity = chatService.getCommunity(messageDto.getCommunity());
-			if (targetCommunity != null) {
-				selectedCommunities.add(new CommunityDTO(targetCommunity));
-			}
+			loadCommunity(messageDto.getCommunity());
 			
+			//TODO load all fields (icon, document, tags)
 			
 		} catch (EntityNotFoundException e) {
 			// TODO Auto-generated catch block
+		}
+	}
+	
+	private void loadCommunity(String communityName){
+		targetCommunity = chatService.getCommunity(communityName);
+		if (targetCommunity != null) {
+			selectedCommunities.add(new CommunityDTO(targetCommunity));
 		}
 	}
 	
