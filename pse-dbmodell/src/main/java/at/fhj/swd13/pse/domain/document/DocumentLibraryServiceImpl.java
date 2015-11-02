@@ -62,14 +62,25 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 	}
 
 	@Override
-	public void deleteEntry(int documentLibraryEntryId) throws EntityNotFoundException {
-		documentLibraryEntryDAO.remove(documentLibraryEntryId);
+	public void deleteEntry(int documentLibraryEntryId) throws DocumentNotFoundException {
+		
+		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry;
+		try {
+			entry = documentLibraryEntryDAO.getById(documentLibraryEntryId);
+		} catch (EntityNotFoundException e) {
+			throw new DocumentNotFoundException("",e);
+		}
+		documentService.removeDocument(entry.getDocument().getDocumentId());
 	}
 
 	@Override
-	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) {
-		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry = documentLibraryEntryDAO.getEntryById(documentLibraryEntryId);
-		return convert(entry);
-		
+	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) throws DocumentNotFoundException {
+		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry;
+		try {
+			entry = documentLibraryEntryDAO.getById(documentLibraryEntryId);
+			return convert(entry);
+		} catch (EntityNotFoundException e) {
+			throw new DocumentNotFoundException("",e);
+		}
 	}
 }

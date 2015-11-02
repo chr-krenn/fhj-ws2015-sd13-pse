@@ -14,5 +14,5 @@ public interface DocumentLibraryEntryDAO {
 	
 	List<DocumentLibraryEntry> getAllForCommunity(int communityId); 
 	
-	DocumentLibraryEntry getEntryById(int documentEntryId);
+	DocumentLibraryEntry getById(int documentEntryId)  throws EntityNotFoundException;
 }

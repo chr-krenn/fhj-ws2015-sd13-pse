@@ -191,10 +191,6 @@ public void addComment() {
 			feedService.setImageRef(newMessageDTO);
 			feedService.setMessageLikes(newMessageDTO, userSession.getUsername());
 			feedService.setComments(newMessageDTO);
-		
-			if(messageDTO.getComments().size()>0) {
-				fillUpComments(messageDTO);
-			}
 			
 			getMessageDTO().getComments().add(newMessageDTO);
 			getMessageDTO().setNumberOfComments(getMessageDTO().getComments().size());

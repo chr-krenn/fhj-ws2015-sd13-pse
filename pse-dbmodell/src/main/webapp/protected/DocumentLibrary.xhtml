@@ -34,7 +34,8 @@
 					<h:outputText value="#{entry.description}" />
 				</p:column>
 				<p:column headerText="Aktion" rendered="#{documentLibraryController.canEditLibrary}">
-					<p:commandButton value="Löschen" action="#{documentLibraryController.deleteDocument(entry.id)}" ></p:commandButton>
+					<p:commandButton value="Löschen" action="#{documentLibraryController.deleteDocument(entry.id)}"
+								     update="documentLibraryPnl"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:form>
