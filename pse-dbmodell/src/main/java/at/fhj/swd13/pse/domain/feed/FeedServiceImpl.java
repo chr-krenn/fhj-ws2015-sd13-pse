@@ -101,19 +101,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException{
 		Message m = dbContext.getMessageDAO().getById(messageId);
 		
-		//TODO delete old documents when changed
-				/*
-		int oldIconToDelete = 0;
-		int oldDocumentToDelete = 0;
-		
-		if(m.getIcon().getDocumentId() != icon.getDocumentId()){
-			oldIconToDelete = m.getIcon().getDocumentId();
-		}
-		
-		if(m.getAttachment().getDocumentId() != document.getDocumentId()){
-			oldDocumentToDelete = m.getAttachment().getDocumentId();
-		}*/
-		
 		m.setHeadline(headline);
 		m.setMessage(text);
 		m.setIcon(icon);
@@ -123,19 +110,8 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 		m.setValidFrom(validFrom);
 		m.setExpiresOn(validUntil);
 
-		
 		try {
 			dbContext.getMessageDAO().update(m);
-			
-			//TODO delete old documents
-			/*if(deleteOldIcon){
-				dbContext.getDocumentDAO().remove(oldIconIdToDelete);
-				//documentService.removeDocument(oldIconToDelete);
-			}
-			if(oldDocumentToDelete > 0){
-				dbContext.getDocumentDAO().remove(oldDocumentToDelete);
-				//documentService.removeDocument(oldDocumentToDelete);
-			}*/
 			
 		} catch (ConstraintViolationException e) {
 			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + m.getHeadline());
