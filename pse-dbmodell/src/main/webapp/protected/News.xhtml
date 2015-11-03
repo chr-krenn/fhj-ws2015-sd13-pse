@@ -51,7 +51,7 @@
 							</p:column>
 							<p:column>
 								<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"
-									process="@this" update="newsPanel"	action="#{messageEditorController.removeMessage}">
+									update="newsPanel"	action="#{messageEditorController.removeMessage}">
 									<f:param name="messageId" value="#{news.id}" />
 								</p:commandButton>
 							</p:column>

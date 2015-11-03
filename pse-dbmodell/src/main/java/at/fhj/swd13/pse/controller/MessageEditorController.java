@@ -149,11 +149,16 @@ public class MessageEditorController {
 	 * Returns the community name
 	 */
 	public String getCommunityName() {
-		if (targetCommunity == null) {
-			return "";
+		String communities = "";
+		for(CommunityDTO community: this.selectedCommunities){
+			if(communities != ""){
+				communities += " und ";
+			}
+			
+			communities += community.getName();
 		}
-
-		return targetCommunity.getName();
+		
+		return communities;
 	}
 
 	/**
@@ -209,13 +214,13 @@ public class MessageEditorController {
 			}
 
 			if (targetCommunity == null || targetCommunity.getSystemInternal()) {
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + targetCommunity.getName() + 
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + getCommunityName() + 
 						" gepostet."));
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
 			} else if (targetCommunity.isPrivateChannel()) {
 				Person receiver = targetCommunity.getPrivateUser();
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht an " + receiver.getUserName() + 
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht an " + receiver.getFullName() + 
 						" wurde erfolgreich gesendet."));
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
 				extContext.redirect(url+"?userName=" + receiver.getUserName() + "&mode=view");
@@ -238,11 +243,27 @@ public class MessageEditorController {
 
 	/**
 	 * Removes a message from the database
+	 * @throws IOException 
 	 */
 	public void removeMessage() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
 		int id = Integer.parseInt(messageId);
 		feedService.removeMessage(id);
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExternalContext extContext = context.getExternalContext();
+		extContext.getFlash().setKeepMessages(true);
+		
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gelöscht", "Ihre Nachricht wurde erfolgreich gelöscht."));
+		String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
+		
+		try {
+			extContext.redirect(url);
+		} catch (IOException e) {
+			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nachricht konnte nicht gelöscht werden", 
+					"Fehler beim Löschen der Nachricht! Bitte versuchen Sie es erneut."));
+		}
 	}
 
 	/**
