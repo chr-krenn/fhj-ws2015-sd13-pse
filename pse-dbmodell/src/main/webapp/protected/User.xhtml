@@ -243,10 +243,12 @@
 						<p:dataTable var="membership" id="membershipList"
 							value="#{userProfileController.communityMemberships}">
 							<p:column headerText="Name">
-								<h:outputLink value="#{request.contextPath}/protected/Community.jsf">
+								<h:outputLink value="#{request.contextPath}/protected/Community.jsf" rendered="#{membership.community.confirmedBy != null}">
 									<h:outputText value="#{membership.community.name}" />
 									<f:param name="id" value="#{membership.community.communityId}" />
 								</h:outputLink>
+								<h:outputText value="#{membership.community.name}" rendered="#{membership.community.confirmedBy == null}"/>
+
 							</p:column>
 							<p:column headerText="Bestätigt">
 								<h:selectBooleanCheckbox value="#{membership.community.confirmedBy != null}" disabled="True" 
