@@ -39,19 +39,20 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		super(dbContext);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see at.fhj.swd13.pse.domain.chat.ChatService#getCommunity(int)
+	/**
+	 * Returns community found by  communityId
 	 */
 	@Override
-	public Community getCommunity(final int communityId) {
+	public Community getCommunity(final int communityId) throws EntityNotFoundException  {
 
 		return dbContext.getCommunityDAO().get(communityId);
 	}
 
+	/**
+	 * Returns community found by communityName
+	 */
 	@Override
-	public Community getCommunity(String communityName) {
+	public Community getCommunity(final String communityName) throws EntityNotFoundException {
 		return dbContext.getCommunityDAO().getByName(communityName);
 	}
 

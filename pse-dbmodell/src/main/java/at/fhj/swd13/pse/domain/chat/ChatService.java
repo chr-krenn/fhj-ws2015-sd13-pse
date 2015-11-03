@@ -18,8 +18,9 @@ public interface ChatService {
 	 *            the id of the community to retrieve
 	 * 
 	 * @return community or null if not found
+	 * @throws EntityNotFoundException 
 	 */
-	Community getCommunity(final int communityId);
+	Community getCommunity(final int communityId) throws EntityNotFoundException;
 
 	/**
 	 * Get the community with the given name
@@ -28,8 +29,9 @@ public interface ChatService {
 	 *            the id of the community to retrieve
 	 * 
 	 * @return community or null if not found
+	 * @throws EntityNotFoundException 
 	 */
-	Community getCommunity(final String communityName);
+	Community getCommunity(final String communityName) throws EntityNotFoundException;
 
 	/**
 	 * Create a public chat community. If the creator is an administrator, the

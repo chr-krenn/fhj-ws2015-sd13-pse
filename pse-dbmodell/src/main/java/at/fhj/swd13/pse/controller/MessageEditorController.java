@@ -134,7 +134,12 @@ public class MessageEditorController {
 	}
 	
 	private void loadCommunity(String communityName){
-		targetCommunity = chatService.getCommunity(communityName);
+		try {
+			targetCommunity = chatService.getCommunity(communityName);
+		} catch (EntityNotFoundException e) {
+			logger.info("[MSG+] failed to load community ");
+			e.printStackTrace();
+		}
 		if (targetCommunity != null) {
 			selectedCommunities.add(new CommunityDTO(targetCommunity));
 		}
@@ -183,7 +188,12 @@ public class MessageEditorController {
 		}
 
 		for (CommunityDTO communityDto : selectedCommunities) {
-			communities.add(chatService.getCommunity(communityDto.getName()));
+			try {
+				communities.add(chatService.getCommunity(communityDto.getName()));
+			} catch (EntityNotFoundException e) {
+				logger.error("[MSG+] failed to add community ");
+				e.printStackTrace();
+			}
 		}
 
 		FacesContext context = FacesContext.getCurrentInstance();
