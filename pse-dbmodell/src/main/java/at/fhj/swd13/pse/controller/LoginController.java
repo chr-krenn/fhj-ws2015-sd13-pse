@@ -210,7 +210,7 @@ public class LoginController {
 	 * @return
 	 */
 	public String navigateToOwnProfile() {
-		FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("userForm:userGrid");
+		FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("userForm");
 		return "/protected/User.jsf";
 	}
 }
