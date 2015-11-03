@@ -24,6 +24,9 @@
 					</span>
 					<p:splitButton value="#{loginController.loggedInUsername}"
 						action="#{loginController.navigateToOwnProfile}">
+						<f:param name="userName"		
+								value="#{loginController.loggedInUsername}" />		
+							<f:param name="mode" value="view" />
 						<p:menuitem>
 							<h:link outcome="/protected/User.jsf"
 								styleClass="ui-menuitem-link ui-corner-all">
