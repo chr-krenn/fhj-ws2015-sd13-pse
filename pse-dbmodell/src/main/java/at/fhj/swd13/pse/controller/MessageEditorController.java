@@ -220,7 +220,7 @@ public class MessageEditorController {
 				extContext.redirect(url);
 			} else if (targetCommunity.isPrivateChannel()) {
 				Person receiver = targetCommunity.getPrivateUser();
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht an " + receiver.getUserName() + 
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht an " + receiver.getFullName() + 
 						" wurde erfolgreich gesendet."));
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
 				extContext.redirect(url+"?userName=" + receiver.getUserName() + "&mode=view");
