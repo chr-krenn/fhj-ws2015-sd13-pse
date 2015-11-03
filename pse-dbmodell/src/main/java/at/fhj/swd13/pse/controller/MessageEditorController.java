@@ -149,11 +149,16 @@ public class MessageEditorController {
 	 * Returns the community name
 	 */
 	public String getCommunityName() {
-		if (targetCommunity == null) {
-			return "";
+		String communities = "";
+		for(CommunityDTO community: this.selectedCommunities){
+			if(communities != ""){
+				communities += " und ";
+			}
+			
+			communities += community.getName();
 		}
-
-		return targetCommunity.getName();
+		
+		return communities;
 	}
 
 	/**
@@ -209,7 +214,7 @@ public class MessageEditorController {
 			}
 
 			if (targetCommunity == null || targetCommunity.getSystemInternal()) {
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + targetCommunity.getName() + 
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nachricht gesendet", "Ihre Nachricht wurde erfolgreich in " + getCommunityName() + 
 						" gepostet."));
 				String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/Main.jsf"));
 				extContext.redirect(url);
