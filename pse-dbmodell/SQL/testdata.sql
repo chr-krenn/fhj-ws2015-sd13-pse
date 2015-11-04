@@ -1,10 +1,22 @@
+--Community for testing, test person is a member
+insert into community
+	(community_id, invitation_only, name, created_by, confirmed_by)
+	values (100, 0, "SWD", 108, 108);
+	
+insert into community_member 
+	(community_id, person_id)
+	values(100, 108);
+
 ----------------------------------------------
---Required for DBMessageTest: message with header by other user (no community)
+--Required for DBMessageTest: message with header by other user
 --should be selected in testActivityStream() (1)
---should be selected in testActivityStream2() (1)
 insert into message 
 	(message_id, created_by, headline, message, valid_from, delivered_by) 
-	values (1, 105, "Message Headline", "Test message", '2015-10-10 00:00:00', 1);	
+	values (1, 105, "Message Headline", "Test message", '2015-10-10 00:00:00', 1);
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values(1, 100);
 ----------------------------------------------
 
 ----------------------------------------------
@@ -30,6 +42,10 @@ insert into message
 insert into message 
 	(created_by, message, delivered_by, expires_on) 
 	values (102, "Expired test message", 1, '2015-10-10 00:00:00');
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message like "Expired test message"), 100);
 ----------------------------------------------
 
 ----------------------------------------------
@@ -38,6 +54,10 @@ insert into message
 insert into message 
 	(created_by, message, delivered_by, valid_from) 
 	values (102, "Message that isn't valid yet", 1, '2017-01-01 00:00:00');
+
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message like "Message that isn't valid yet"), 100);
 ----------------------------------------------
 
 ----------------------------------------------
@@ -55,37 +75,29 @@ insert into message_community
 ----------------------------------------------	
 --Required for DBMessageTest: long message by other user (no community)
 --should be selected in testActivityStream() (2)
---should be selected in testActivityStream2() (2)
+--should be selected in testActivityStream2() (1)
 insert into message 
-	(created_by, message, delivered_by) 
+	(created_by, message, delivered_by, created_at) 
 	values (104, "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-			, 1);
+			, 1, '2015-10-01 00:00:00');
 ----------------------------------------------
 
 ----------------------------------------------			
 --Required for DBMessageTest: Message in community of test person
 --should be selected in testActivityStream() (3)
 insert into message 
-	(created_by, message, delivered_by) 
-	values (107, "Community message__", 1);
+	(created_by, headline, message, delivered_by, created_at) 
+	values (107, "Message in SWD Community", "Community message__", 1, '2015-10-10 00:00:00');
 	
-insert into community
-	(community_id, invitation_only, name, created_by, confirmed_by)
-	values (100, 0, "SWD", 108, 108);
-	
-insert into community_member 
-	(community_id, person_id)
-	values(100, 108);
-
 insert into message_community
 	(messages_message_id, communities_community_id)
 	values((select message_id from message where message = "Community message__" limit 1), 100);
 ----------------------------------------------
 
 ----------------------------------------------
---Required for DBMessageTest: message by test user
+--Required for DBMessageTest: message by test user (no community)
 --should NOT be selected in testActivityStream()
---should be selected in testActivityStream2() (3)
+--should be selected in testActivityStream2() (2)
 insert into message 
 	(created_by, message, delivered_by) 
 	values (108, "Test message by pompenig13", 1);
@@ -216,4 +228,13 @@ insert into message_community
 insert into person_relation
 	(source_person_id, target_person_id)
 	values(107, 108);
+
+--Likes
+insert into message_rating
+	(message_id, rating_person_id, created_at)
+	values(1, 108, '2015-10-10 00:00:00');
+
+insert into message_rating
+	(message_id, rating_person_id, created_at)
+	values(1, 105, '2015-10-09 00:00:00');
 	
