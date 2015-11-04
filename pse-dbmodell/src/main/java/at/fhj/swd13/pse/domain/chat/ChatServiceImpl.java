@@ -41,10 +41,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	/**
-	 * Returns community found by  communityId
+	 * Returns community found by communityId
 	 */
 	@Override
-	public Community getCommunity(final int communityId) throws EntityNotFoundException  {
+	public Community getCommunity(final int communityId) throws EntityNotFoundException {
 
 		return dbContext.getCommunityDAO().get(communityId);
 	}
@@ -95,24 +95,26 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 		return dbContext.getCommunityDAO().getUnconfirmedCommunites();
 	}
-	
+
 	@Override
 	public List<Community> getAllCommunities() {
 
 		return dbContext.getCommunityDAO().getAllCommunities();
 	}
-	
+
 	@Override
 	public List<CommunityMember> getAllUnconfirmedCommunityMembers(){
 		List<CommunityMember> memberrequests = new LinkedList<CommunityMember>();
     	List<Community> communities = getAllCommunities();
     	for(int i = 0; i < communities.size();i++)
     	{
-    		List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
-    		for(int j = 0; j < mlist.size();j++)
-    		{
-    			if(mlist.get(j).getConfirmer()==null)
-    				memberrequests.add(mlist.get(j));
+    		if(!communities.get(i).isPrivateChannel()){
+    			List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
+    			for(int j = 0; j < mlist.size();j++)
+    			{
+    				if(mlist.get(j).getConfirmer()==null)
+    					memberrequests.add(mlist.get(j));
+    			}
     		}
     	}
     	return memberrequests;
@@ -241,7 +243,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
-	
+
 	@Override
 	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 
@@ -261,24 +263,25 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			throw new IllegalStateException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
-	
+
 	@Override
 	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
 
 		if (adminPerson.isActive() && adminPerson.isAdmin()) {
-				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+			Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
 
-				dbContext.remove(c);
+			dbContext.remove(c);
 		} else {
 			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
+
 	@Override
 	public void declineCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 
 		if (adminPerson.isActive() && adminPerson.isAdmin()) {
 			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
-				dbContext.remove(c);
+			dbContext.remove(c);
 		} else {
 			throw new IllegalStateException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
 		}
@@ -376,7 +379,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		return dbContext.getCommunityDAO().getAllAccessibleCommunities();
 
 	}
-	
+
 	@Override
 	public List<Community> getAllAccessibleCommunities(String searchfieldText) {
 
@@ -430,10 +433,10 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				message.setHeadline(headline);
 				message.setMessage(comment);
 				message.setPerson(author);
-				message.setValidFrom( new Date() );
+				message.setValidFrom(new Date());
 				message.setCommunities(getAllAccessibleCommunities());
-				message.setDeliverySystem( dbContext.getDeliverySystemDAO().getPseService());
-				
+				message.setDeliverySystem(dbContext.getDeliverySystemDAO().getPseService());
+
 				return commentedMessage.addMessage(message);
 
 			} catch (EntityNotFoundException e) {
@@ -449,8 +452,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 	@Override
 	public CommunityMember getUnconfirmedCommunityMember(int communityId) {
-		for(CommunityMember c : getAllUnconfirmedCommunityMembers()){
-			if(c.getCommunityMemberId() == communityId)
+		for (CommunityMember c : getAllUnconfirmedCommunityMembers()) {
+			if (c.getCommunityMemberId() == communityId)
 				return c;
 		}
 		return null;
