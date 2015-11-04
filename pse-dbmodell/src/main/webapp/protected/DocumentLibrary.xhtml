@@ -9,7 +9,7 @@
 		listener="#{documentLibraryController.init}" />
 	<p:panel id="documentLibraryPnl" header="Dokumentenbibliothek">
 		<h:form>
-			<p:messages autoUpdate="true" showDetail="true"/>
+			<p:messages autoUpdate="true" showDetail="true" redisplay="false"/>
 			<p:toolbar rendered="#{documentLibraryController.canEditLibrary}">
 				<f:facet name="left">
 					<p:commandButton id="uploadDocumentBtn" value="Neu"
