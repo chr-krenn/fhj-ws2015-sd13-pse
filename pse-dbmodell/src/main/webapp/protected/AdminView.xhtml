@@ -32,5 +32,33 @@
 			    </p:column>
 			</p:dataTable>
 		</h:form>
+		<h:form id="communityMemberSearch">
+
+	    	<h1>Mitgliedschafts Anträge</h1>
+			<p:dataTable var="communityMember" value="#{requestController.memberrequests}" id="memberrequests"
+				paginator="true" rows="10"
+               	paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+               	selectionMode="single" selection="#{requestController.selectedMemberRequest}" 
+               	rowKey="#{communityMember.communityMemberId}"
+			>
+			<p:ajax event="rowSelect" listener="#{requestController.onMemberRequestSelected}" ></p:ajax>
+			    <p:column headerText="Community Name">
+			        <h:outputText value="#{communityMember.community.name}" />
+			    </p:column>
+			    <p:column headerText="Member Name">
+			        <h:outputText value="#{communityMember.member.userName}" />
+			    </p:column>
+			    <p:column headerText="Actions">
+					<p:commandLink update="memberrequests" actionListener="#{requestController.approveMemberRequest}">	
+			    		<p:commandButton value="Annehmen" id="approveMemberRequest" disabled="false" />
+			   			<f:param name="communityMemberId" value="#{communityMember.communityMemberId}" />
+		     		</p:commandLink>
+		     		<p:commandLink update="memberrequests" actionListener="#{requestController.declineMemberRequest}">	
+			    		<p:commandButton value="Ablehnen" id="declineMemberRequest" disabled="false" />
+			   			<f:param name="communityMemberId" value="#{communityMember.communityMemberId}" />
+		     		</p:commandLink>			
+			    </p:column>
+			</p:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>

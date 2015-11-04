@@ -21,7 +21,7 @@ public interface ChatService {
 	 * @throws EntityNotFoundException 
 	 */
 	Community getCommunity(final int communityId) throws EntityNotFoundException;
-
+	List<CommunityMember> getAllUnconfirmedCommunityMembers();
 	/**
 	 * Get the community with the given name
 	 * 
@@ -109,6 +109,8 @@ public interface ChatService {
 	 */
 	int createAllPrivateCommunities();
 	
+	List<Community> getAllCommunities();
+
 	List<Community> getAllAccessibleCommunities();
 	
 	List <Community> getAllAccessibleCommunities(String searchfieldText);
@@ -140,4 +142,7 @@ public interface ChatService {
 	 * @param comment text of the comment itself
 	 */
 	Message addComment( final String username, final int commentedMessageId, final String headline, final String comment );
+	void confirmCommunityMember(Person adminPerson, CommunityMember unconfirmed);
+	void declineCommunityMember(Person adminPerson, CommunityMember unconfirmed);
+	CommunityMember getUnconfirmedCommunityMember(int communityId);
 }

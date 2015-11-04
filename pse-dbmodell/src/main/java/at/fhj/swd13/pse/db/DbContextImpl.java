@@ -200,6 +200,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 
 		return new CommunityDAOImpl(this);
 	}
+	
 
 	/*
 	 * (non-Javadoc)

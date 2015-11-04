@@ -1,6 +1,7 @@
 package at.fhj.swd13.pse.domain.chat;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -93,6 +94,28 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	public List<Community> getUnconfirmedCommunities() {
 
 		return dbContext.getCommunityDAO().getUnconfirmedCommunites();
+	}
+	
+	@Override
+	public List<Community> getAllCommunities() {
+
+		return dbContext.getCommunityDAO().getAllCommunities();
+	}
+	
+	@Override
+	public List<CommunityMember> getAllUnconfirmedCommunityMembers(){
+		List<CommunityMember> memberrequests = new LinkedList<CommunityMember>();
+    	List<Community> communities = getAllCommunities();
+    	for(int i = 0; i < communities.size();i++)
+    	{
+    		List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
+    		for(int j = 0; j < mlist.size();j++)
+    		{
+    			if(mlist.get(j).getConfirmer()==null)
+    				memberrequests.add(mlist.get(j));
+    		}
+    	}
+    	return memberrequests;
 	}
 
 	/**
@@ -220,6 +243,26 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 	
 	@Override
+	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+			try {
+
+				CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
+
+				c.setConfirmer(adminPerson);
+
+				dbContext.persist(c);
+
+			} catch (ConstraintViolationException e) {
+				e.printStackTrace();
+			}
+		} else {
+			throw new IllegalStateException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
+		}
+	}
+	
+	@Override
 	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
 
 		if (adminPerson.isActive() && adminPerson.isAdmin()) {
@@ -228,6 +271,16 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				dbContext.remove(c);
 		} else {
 			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
+		}
+	}
+	@Override
+	public void declineCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
+
+		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
+				dbContext.remove(c);
+		} else {
+			throw new IllegalStateException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
 		}
 	}
 
@@ -323,7 +376,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		return dbContext.getCommunityDAO().getAllAccessibleCommunities();
 
 	}
-
+	
 	@Override
 	public List<Community> getAllAccessibleCommunities(String searchfieldText) {
 
@@ -392,6 +445,15 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 		}
 		return null;
 
+	}
+
+	@Override
+	public CommunityMember getUnconfirmedCommunityMember(int communityId) {
+		for(CommunityMember c : getAllUnconfirmedCommunityMembers()){
+			if(c.getCommunityMemberId() == communityId)
+				return c;
+		}
+		return null;
 	}
 
 }
