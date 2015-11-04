@@ -108,7 +108,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
     	List<Community> communities = getAllCommunities();
     	for(int i = 0; i < communities.size();i++)
     	{
-    		if(!communities.get(i).isPrivateChannel()){
+    		if(!communities.get(i).isPrivateChannel()&&communities.get(i).getInvitationOnly()){
     			List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
     			for(int j = 0; j < mlist.size();j++)
     			{
