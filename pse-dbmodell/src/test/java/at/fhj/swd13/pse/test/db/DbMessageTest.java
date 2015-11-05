@@ -80,7 +80,7 @@ public class DbMessageTest extends DbTestBase {
 			List<Message> activities = messageDAO.loadForUser(getPerson(110));
 
 			assertNotNull(activities);
-			assertEquals(3, activities.size());
+			assertEquals(2, activities.size());
 		}
 	}
 	

@@ -211,6 +211,6 @@ public class LoginController {
 	 */
 	public String navigateToOwnProfile() {
 		FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("userForm");
-		return "/protected/User.jsf?userName" + userSession.getUsername() + "&mode=view";
+		return "/protected/User.jsf";
 	}
 }

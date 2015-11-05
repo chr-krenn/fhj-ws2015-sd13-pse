@@ -22,3 +22,4 @@ INSERT INTO `person` VALUES (117, 'poschdan13','Posch','Daniel','daniel.posch@ed
 INSERT INTO `person` VALUES (118, 'marcher13','Marcher','Sandra','sandra.marcher@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (119, 'windhaber13','Windhaber','Thomas','thomas.windhaber@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 3','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (120, 'mussnm','Mussner','Mark','mark.mussner@edu.fh-joanneum.at','+436644711815','--','Knecht','Team 4','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);
+INSERT INTO `person` VALUES (121, 'zoechlin13','Zöchling','Philipp','philipp.zoechling@edu.fh-joanneum.at','+436505421172','--','Knecht','Team 4','A','-2','666',NULL,NULL,1,0,1,0,0,NULL, NULL);

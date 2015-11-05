@@ -4,61 +4,63 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
+	<h:form>
+		<p:panel id="newsPanel" header="News">
+			<p:toolbar rendered="#{userProfileController.canEditNews}">
+				<f:facet name="left">
 
-	<p:panel id="newsPanel" header="News">
-		<p:toolbar rendered="#{userProfileController.canEditNews}">
-			<f:facet name="left">
-			
-			 	<p:button id="addNewsBtn" value="Neu"
-					icon="ui-icon-circle-plus"
-					href="/protected/xperimental/AddMessage.jsf?community=Portal-News&amp;lockCommunity=true" >
-				</p:button>
+					<p:button id="addNewsBtn" value="Neu" icon="ui-icon-circle-plus"
+						href="/protected/xperimental/AddMessage.jsf?community=Portal-News&amp;lockCommunity=true">
+					</p:button>
 
-			</f:facet>
-		</p:toolbar>
-		<p:dataScroller value="#{simpleFeedController.getNews(1)}"
-			var="news" chunkSize="10" mode="inline" scrollHeight="400">
-			<h:panelGrid columns="1" style="width:100%"
-				columnClasses="logo,detail">
-				<p:outputPanel>
-					<h:panelGrid columns="7" cellpadding="5">
-						<h:outputText value="Datum:" />
-						<h:outputText value="#{news.date}"
-							style="font-weight: bold">
-							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-						</h:outputText>
-						<p:commandButton id="detailsNewsBtn" value="Details" 
-							action="#{messageDetailsController.openDetailView}">
- 						<f:param name="messageId" value="#{news.id}" />
-						</p:commandButton>
-					</h:panelGrid>
-					<h:panelGrid columns="2" cellpadding="5">
-						<p:graphicImage id="newsIcon" styleClass="userimage"
-							value="#{news.imageRef}" cache="false"
-							rendered="#{news.imageRef ne null}" />
-						<h:panelGrid>
-							<h:outputText value="#{news.headline} &lt;br/&gt;"
-								escape="false" style="font-weight: bold" />
-							<h:outputText value="#{news.text}" escape="false" />
+				</f:facet>
+			</p:toolbar>
+			<p:dataScroller value="#{simpleFeedController.getNews(1)}" var="news"
+				chunkSize="10" mode="inline" scrollHeight="400">
+				<h:panelGrid columns="1" style="width:100%"
+					columnClasses="logo,detail">
+					<p:outputPanel>
+						<h:panelGrid columns="7" cellpadding="5">
+							<h:outputText value="Datum:" />
+							<h:outputText value="#{news.date}" style="font-weight: bold">
+								<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+							</h:outputText>
+							<h:commandButton id="detailsNewsBtn" value="Details"
+								action="#{messageDetailsController.openDetailView}">
+								<f:param name="messageId" value="#{news.id}" />
+							</h:commandButton>
 						</h:panelGrid>
-					</h:panelGrid>
-					<h:panelGrid >
-						<p:row>
-							<p:column>
-								<p:button rendered="#{userProfileController.canEditNews}" id="editNewsBtn" value="Bearbeiten"
-									href="/protected/xperimental/AddMessage.jsf?messageId=#{news.id}&amp;lockCommunity=true">
-								</p:button>
-							</p:column>
-							<p:column>
-								<p:commandButton rendered="#{userProfileController.canEditNews}" id="deleteNewsBtn" value="Löschen"
-									process="@this" update="newsPanel"	action="#{messageEditorController.removeMessage}">
-									<f:param name="messageId" value="#{news.id}" />
-								</p:commandButton>
-							</p:column>
-						</p:row>
-					</h:panelGrid>
-				</p:outputPanel>
-			</h:panelGrid>
-		</p:dataScroller>
-	</p:panel>
+						<h:panelGrid columns="2" cellpadding="5">
+							<p:graphicImage id="newsIcon" styleClass="userimage"
+								value="#{news.imageRef}" cache="false"
+								rendered="#{news.imageRef ne null}" />
+							<h:panelGrid>
+								<h:outputText value="#{news.headline} &lt;br/&gt;"
+									escape="false" style="font-weight: bold" />
+								<h:outputText value="#{news.text}" escape="false" />
+							</h:panelGrid>
+						</h:panelGrid>
+						<h:panelGrid>
+							<p:row>
+								<p:column>
+									<p:button rendered="#{userProfileController.canEditNews}"
+										id="editNewsBtn" value="Bearbeiten"
+										href="/protected/xperimental/AddMessage.jsf?messageId=#{news.id}&amp;lockCommunity=true">
+									</p:button>
+								</p:column>
+								<p:column>
+									<p:commandButton
+										rendered="#{userProfileController.canEditNews}"
+										id="deleteNewsBtn" value="Löschen" update="newsPanel"
+										action="#{messageEditorController.removeMessage}">
+										<f:param name="messageId" value="#{news.id}" />
+									</p:commandButton>
+								</p:column>
+							</p:row>
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+			</p:dataScroller>
+		</p:panel>
+	</h:form>
 </ui:composition>
