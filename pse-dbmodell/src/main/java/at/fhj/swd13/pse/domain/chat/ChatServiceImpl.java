@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.domain.chat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,21 +104,19 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	@Override
-	public List<CommunityMember> getAllUnconfirmedCommunityMembers(){
+	public List<CommunityMember> getAllUnconfirmedCommunityMembers() {
 		List<CommunityMember> memberrequests = new LinkedList<CommunityMember>();
-    	List<Community> communities = getAllCommunities();
-    	for(int i = 0; i < communities.size();i++)
-    	{
-    		if(!communities.get(i).isPrivateChannel()&&communities.get(i).getInvitationOnly()){
-    			List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
-    			for(int j = 0; j < mlist.size();j++)
-    			{
-    				if(mlist.get(j).getConfirmer()==null)
-    					memberrequests.add(mlist.get(j));
-    			}
-    		}
-    	}
-    	return memberrequests;
+		List<Community> communities = getAllCommunities();
+		for (int i = 0; i < communities.size(); i++) {
+			if (!communities.get(i).isPrivateChannel() && communities.get(i).getInvitationOnly()) {
+				List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
+				for (int j = 0; j < mlist.size(); j++) {
+					if (mlist.get(j).getConfirmer() == null)
+						memberrequests.add(mlist.get(j));
+				}
+			}
+		}
+		return memberrequests;
 	}
 
 	/**
@@ -427,6 +426,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			try {
 				final Message commentedMessage = dbContext.getMessageDAO().getById(commentedMessageId);
 
+				List<Community> communities = new ArrayList<Community>();
+				for (Community c : commentedMessage.getCommunities()) {
+					communities.add(dbContext.getCommunityDAO().get(c.getCommunityId()));
+				}
+
 				Message message = new Message();
 
 				message.setCreatedAt(new Date());
@@ -434,7 +438,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				message.setMessage(comment);
 				message.setPerson(author);
 				message.setValidFrom(new Date());
-				message.setCommunities(getAllAccessibleCommunities());
+				message.setCommunities(communities);
 				message.setDeliverySystem(dbContext.getDeliverySystemDAO().getPseService());
 
 				return commentedMessage.addMessage(message);
