@@ -37,9 +37,18 @@ import javax.persistence.TemporalType;
 		@NamedQuery(name = "Community.deleteById", query = "DELETE FROM Community c WHERE c.communityId = :id"),
 		@NamedQuery(name = "Community.findCommunitiesByMember", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person"),
 		@NamedQuery(name = "Community.findCommunitiesByMemberButOwn", query = "SELECT c.communityId FROM Community c JOIN c.communityMembers m WHERE m.member = :person AND c.privateUser <> :person AND c.name LIKE :needle"),
-		@NamedQuery(name = "Community.findMatchingByMemberButOwn", query = "SELECT c FROM Community c JOIN c.communityMembers m " +
-				" WHERE ( m.member.userName = :uname  AND c.privateUser.userName <> :uname AND c.name LIKE :needle ) OR ( c.privateUser IS NOT NULL AND c.privateUser.userName <> :uname AND c.name LIKE :needle)") })
-
+		// @NamedQuery(name = "Community.findMatchingByMemberButOwn", query = "SELECT c FROM Community c WHERE c.name LIKE :needle AND ( c.privateUser.personId
+		// IS NOT NULL OR ( c.privateUser IS NULL AND c.invitationOnly = false ))") })
+		@NamedQuery(name = "Community.findMatchingByMemberButOwn", query =//
+		"SELECT c FROM Community c " //
+		+ " LEFT JOIN c.communityMembers m " //
+				+ " LEFT JOIN m.member m2 " // 
+ 				+ " LEFT JOIN c.privateUser pU " //
+				+ " WHERE c.name LIKE :needle AND " //
+				+ "           ( ( pU IS NOT NULL AND pU.userName <> :uname) OR ( c.privateUser IS NULL AND c.invitationOnly = false ) " //
+				+ "        OR ( m2.userName = :uname ))" //
+		)//
+})
 public class Community implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -70,7 +79,7 @@ public class Community implements Serializable {
 	 * are only used for private messages to that person
 	 */
 	@OneToOne(optional = true)
-	@JoinColumn(name = "private_user")
+	@JoinColumn(name = "private_user", nullable = true)
 	private Person privateUser;
 
 	// bi-directional many-to-one association to Person
