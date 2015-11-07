@@ -326,7 +326,7 @@ public class Message implements Serializable {
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
 		messageTags.remove(messageTag);
-		messageTag.getMessages().remove(messageTag);
+		messageTag.getMessages().remove(this);
 
 		return messageTag;
 	}
