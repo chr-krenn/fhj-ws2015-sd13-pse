@@ -97,7 +97,7 @@ public class Tag implements Serializable {
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
 		getMessageTags().remove(messageTag);
-		messageTag.setTag(null);
+		messageTag.setTag(null);//ok, messageTat removed anyway
 
 		return messageTag;
 	}
