@@ -7,9 +7,9 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>TODO</name>
+	<name>PSE Portal</name>
 
-	<description>TODO</description>
+	<description>PSE Portal. Enterprise 2.0</description>
 
 
 	<properties>
@@ -27,6 +27,8 @@
 		<!-- maven-compiler-plugin -->
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
+		
+		<sonar.host.url>https://jenkins.salzinger.at</sonar.host.url>
 	</properties>
 
 	<dependencyManagement>
