@@ -25,8 +25,8 @@
 			
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.show_sql" value="true" />
-			<property name="format_sql">true</property>
-			<property name="use_sql_comments">true</property>
+			<property name="format_sql"  value="true"/>
+			<property name="use_sql_comments" value="true"/>
 		</properties>
 		
 	</persistence-unit>
