@@ -59,7 +59,6 @@ public class Community implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + communityId;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -79,13 +78,6 @@ public class Community implements Serializable {
 		}
 		Community other = (Community) obj;
 		if (communityId != other.communityId) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
 			return false;
 		}
 		return true;
