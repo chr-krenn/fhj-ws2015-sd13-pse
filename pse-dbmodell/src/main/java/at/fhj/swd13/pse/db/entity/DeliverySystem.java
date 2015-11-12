@@ -16,6 +16,38 @@ import java.util.List;
 	@NamedQuery(name="DeliverySystem.findByToken", query="SELECT d FROM DeliverySystem d WHERE d.token = :token")
 })
 public class DeliverySystem implements Serializable {
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + deliverySystemId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DeliverySystem)) {
+			return false;
+		}
+		DeliverySystem other = (DeliverySystem) obj;
+		if (deliverySystemId != other.deliverySystemId) {
+			return false;
+		}
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Id

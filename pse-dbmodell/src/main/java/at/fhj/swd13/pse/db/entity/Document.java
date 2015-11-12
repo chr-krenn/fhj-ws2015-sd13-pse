@@ -30,6 +30,38 @@ import at.fhj.swd13.pse.plumbing.JpaHelper;
 		@NamedQuery(name = "Document.deleteById", query = "DELETE FROM Document d WHERE d.documentId = :id") })
 public class Document implements Serializable {
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + documentId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Document)) {
+			return false;
+		}
+		Document other = (Document) obj;
+		if (documentId != other.documentId) {
+			return false;
+		}
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	private static final int nameLength = JpaHelper.getColumneLength(Document.class, "name");

@@ -12,6 +12,38 @@ import javax.persistence.*;
 @Table(name="person_message")
 @NamedQuery(name="PersonMessage.findAll", query="SELECT p FROM PersonMessage p")
 public class PersonMessage implements Serializable {
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + personMessageId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof PersonMessage)) {
+			return false;
+		}
+		PersonMessage other = (PersonMessage) obj;
+		if (personMessageId != other.personMessageId) {
+			return false;
+		}
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
