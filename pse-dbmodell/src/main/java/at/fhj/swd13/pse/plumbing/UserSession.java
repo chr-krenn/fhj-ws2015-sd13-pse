@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -59,6 +60,8 @@ public class UserSession implements Serializable {
 		logger.info("[USERSESSION] logged out " + loggedInUser);
 		loggedInUser = null;
 		isAdmin = false;
+		
+		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	}
 
 	public String login(final String username) {
