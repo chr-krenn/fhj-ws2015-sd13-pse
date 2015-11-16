@@ -1,0 +1,43 @@
+<project name="Selenium-Webdriver" default="all">
+
+	<property name="src" location="src" />
+	<property name="src.test" location="src-test" />
+	<property name="build" location="build" />
+	<property name="selenium.server.lib" location="vendor/selenium-2.48.2" />
+	<property name="junit.lib" location="vendor/junit-4.4/lib" />
+	<property name="junit.log.dir" location="."/>
+	
+	
+	<path id="classpath">
+        <fileset dir="${selenium.server.lib}">
+            <include name="*.jar"/>
+        	 <include name="libs/*.jar"/>
+        </fileset>
+		
+		<pathelement path="${junit.lib}/junit-4.4.jar" />
+		<pathelement path="${build}" />
+	</path>
+	
+	
+	<target name="all" depends="junit"/>
+	
+	<target name="junit">
+		<junit haltonfailure="false" >
+			<classpath>				
+				<path refid="classpath" />
+			</classpath>
+		    <formatter type="xml" usefile="true" />
+			<formatter type="brief" usefile="false" />
+			
+			<batchtest fork="true" todir="${junit.log.dir}">
+			    <fileset dir="${src.test}">
+			        <include name="**/SeleniumWebdriverTest.java"/>
+			    </fileset>
+			</batchtest>
+		</junit>
+	
+	</target>
+	
+	
+
+</project>
