@@ -1,6 +1,6 @@
 package at.fhj.swd13.pse.domain.user;
 
-public class PasswortStrengthValidatorImpl implements PasswordStrengthValidator
+public class PasswordStrengthValidatorImpl implements PasswordStrengthValidator
 {
 	@Override
 	public void validate( String password ) throws WeakPasswordException
