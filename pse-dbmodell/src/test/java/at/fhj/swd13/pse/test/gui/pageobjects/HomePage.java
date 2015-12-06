@@ -124,6 +124,62 @@ public class HomePage {
 		return parseDate(dateString);
 	}
 	
+	public int getNumberOfLikes(int messageNumber) {
+		String number = getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":j_idt62']/table[3]/tbody/tr/td[2]").getText().trim();
+		return Integer.parseInt(number);	
+	}
+	
+	/**
+	 * Click Like button if activity is not already liked by the current user
+	 * 
+	 * @param messageNumber: index of activity
+	 * @return True if button was clicked
+	 */
+	public Boolean likeMessage(int messageNumber) {
+		WebElement button = getLikeButton(messageNumber);
+		if(button.getAttribute("value").equals("Like")) {
+			button.click();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Click "Like zurücknehmen" button if activity is liked by the current user
+	 * 
+	 * @param messageNumber: index of activity
+	 * @return True if button was clicked
+	 */
+	public Boolean revertLike(int messageNumber) {
+		WebElement button = getLikeButton(messageNumber);
+		if(button.getAttribute("value").equals("Like zurücknehmen")) {
+			button.click();
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public int clickLikeButton(int messageNumber) {
+		if(likeMessage(messageNumber)) {
+			return 1;
+		} else if (revertLike(messageNumber)) {
+			return -1;
+		}
+		return 0;
+		
+	}
+	
+	/**
+	 * Get Like button WebElement for indicated activity
+	 * 
+	 * @param messageNumber: index of activity
+	 * @return Like button as WebElement
+	 */
+	private WebElement getLikeButton(int messageNumber) {
+		return getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":j_idt62']/table[3]/tbody/tr/td[1]/input");
+	}
+	
 	/**
 	 * Get Details button WebElement for indicated activity
 	 * 

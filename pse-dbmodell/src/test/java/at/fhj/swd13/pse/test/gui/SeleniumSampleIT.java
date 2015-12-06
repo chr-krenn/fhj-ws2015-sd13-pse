@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhj.swd13.pse.test.db;
+package at.fhj.swd13.pse.test.gui;
 
 import org.junit.Test;
 

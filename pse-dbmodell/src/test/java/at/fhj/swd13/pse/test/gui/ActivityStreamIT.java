@@ -37,4 +37,29 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	public void testActivityDetailView() {
 		verifyTrue(homepage.isActivityStreamDetailViewCorrect());
 	}
+	
+	@Test
+	public void testLike() {
+		int expected = homepage.getNumberOfLikes(0);
+		if(homepage.likeMessage(0)) {
+			expected += 1;
+		}
+		verifyEquals(expected, homepage.getNumberOfLikes(0));
+	}
+	
+	@Test
+	public void testRevertLike() {
+		int expected = homepage.getNumberOfLikes(0);
+		if(homepage.revertLike(0)) {
+			expected -= 1;
+		}
+		verifyEquals(expected, homepage.getNumberOfLikes(0));
+	}
+	
+	@Test
+	public void testLikeButton() {
+		int expected = homepage.getNumberOfLikes(0);
+		int change = homepage.clickLikeButton(0);
+		verifyEquals(expected+change,homepage.getNumberOfLikes(0));
+	}
 }
