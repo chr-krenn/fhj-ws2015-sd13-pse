@@ -62,4 +62,10 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		int change = homepage.clickLikeButton(0);
 		verifyEquals(expected+change,homepage.getNumberOfLikes(0));
 	}
+	
+	@Test
+	public void testGetUsersLikingMessage() {
+		homepage.likeMessage(0);
+		verifyTrue(homepage.getUsersLikingMessage(0).contains("Florian Genser"));
+	}
 }

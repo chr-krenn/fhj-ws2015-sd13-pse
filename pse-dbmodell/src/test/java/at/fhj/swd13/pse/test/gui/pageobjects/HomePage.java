@@ -2,6 +2,8 @@ package at.fhj.swd13.pse.test.gui.pageobjects;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -159,7 +161,15 @@ public class HomePage {
 		return false;
 	}
 	
-	
+	/**
+	 * Click "Like" or "Like zurücknehmen" button
+	 * 
+	 * @param messageNumber
+	 * @return 
+	 * 			1 if "Like" was clicked
+	 * 			-1 if "Like zurücknehmen" was clicked
+	 * 			0 if no button was clicked
+	 */
 	public int clickLikeButton(int messageNumber) {
 		if(likeMessage(messageNumber)) {
 			return 1;
@@ -168,6 +178,30 @@ public class HomePage {
 		}
 		return 0;
 		
+	}
+	
+	/**
+	 * Get list of names of users who like the indicated message
+	 * 
+	 * @param messageNumber
+	 * @return ArrayList<String> of names
+	 */
+	public List<String> getUsersLikingMessage(int messageNumber) {
+		List<String> names = new ArrayList<>();
+		int number = getNumberOfLikes(messageNumber);
+		if (number > 0) {
+			getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":fadePersons']").click();
+			if(number == 1) {
+				names.add(getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber 
+						+":ratingScroller']/div/ul/li/table/tbody/tr/td/a/span").getText());
+			} else {
+				for(int i = 1; i <= number; i++) {
+					names.add(getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":ratingScroller']/div/ul/li[" +i 
+							+"]/table/tbody/tr/td/a/span").getText());
+				}
+			}
+		}
+		return names;
 	}
 	
 	/**
