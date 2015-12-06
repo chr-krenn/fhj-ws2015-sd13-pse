@@ -17,6 +17,8 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author florian.genser
@@ -53,7 +55,7 @@ public abstract class SeleniumBaseTestCase {
 		driver.quit();
 	}
 
-	protected void login(String username, String password) {
+	protected static void login(String username, String password) {
 		
 		driver.get(baseUrl + "/index.jsf");
 		driver.findElement(By.linkText("einloggen!")).click();
@@ -62,6 +64,19 @@ public abstract class SeleniumBaseTestCase {
 		driver.findElement(By.id("j_idt40:password")).clear();
 		driver.findElement(By.id("j_idt40:password")).sendKeys(password);
 		driver.findElement(By.id("j_idt40:j_idt49")).click();
+		
+	}
+	
+	protected static void logout() {
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menuButton']")).click();
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[4]/a")).click();
+		
+		//wait
+		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+            	return d.findElement(By.linkText("einloggen!")) != null;
+            }
+        });
 		
 	}
 
