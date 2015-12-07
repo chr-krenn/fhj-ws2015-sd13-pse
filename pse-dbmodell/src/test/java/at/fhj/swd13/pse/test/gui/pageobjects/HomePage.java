@@ -232,6 +232,12 @@ public class HomePage {
 		return names;
 	}
 	
+	/**
+	 * Get number of comments
+	 * 
+	 * @param messageNumber
+	 * @return number of comments
+	 */
 	public int getNumberOfComments(int messageNumber) {
 		String text = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[3]/tbody/tr/td[5]").getText();
 		String number = text.split(" ")[0];

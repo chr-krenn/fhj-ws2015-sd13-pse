@@ -33,7 +33,7 @@ public abstract class SeleniumBaseTestCase {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 	}
 
 	private static String getBaseUrl() {

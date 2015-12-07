@@ -126,6 +126,38 @@ public class MessageDetailView {
 	}
 	
 	/**
+	 * Get number of comments indicated in Comments section header
+	 * 
+	 * @return number of comments
+	 */
+	public int getNumberOfCommentsInHeader() {
+		String text = getElement(".//*[@id='j_idt65:j_idt66_header']/span").getText();
+		String pattern = "(.*\\()(\\d+)(\\))";
+		String number = text.replaceAll(pattern, "$2");
+		return Integer.parseInt(number);	
+	}
+	
+	/**
+	 * Get number of comments listed in comments section
+	 * FIXME: extremely slow! (waiting for timeout - why?)
+	 * 
+	 * @return number of comments
+	 */
+	public int getNumberOfDisplayedComments() {
+		int number = driver.findElements(By.xpath(".//*[@id='j_idt65:commentList']/div/ul/li")).size();
+		return number;	
+	}
+	
+	public List<String> getCommentsText() {
+		List<String> comments = new ArrayList<>();
+		for(int i = 0; i < getNumberOfCommentsInHeader(); i++) {
+			comments.add(getElement(".//*[@id='j_idt65:commentList:" + i
+					+":j_idt75']/table[2]/tbody/tr/td/table/tbody/tr[2]/td").getText());
+		}
+		return comments;
+	}
+	
+	/**
 	 * Get the WebElement for the given xPath
 	 * 
 	 * @param xPath

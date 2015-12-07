@@ -89,6 +89,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		verifyEquals(2, detailView.getNumberOfLikes());
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testLike() {
 		Boolean revert = false;
@@ -106,6 +109,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		}
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testLikeDetailView() {
 		Boolean revert = false;
@@ -124,6 +130,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		}
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testRevertLike() {
 		Boolean revert = false;
@@ -141,6 +150,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		}
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testRevertLikeDetailView() {
 		Boolean revert = false;
@@ -159,6 +171,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		}
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testLikeButton() {
 		int expected = homepage.getNumberOfLikes(0);
@@ -169,6 +184,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		homepage.clickLikeButton(0);
 	}
 	
+	/*
+	 * PSE2015-25 "Als angemeldeter Benutzer möchte ich eine Activity "liken" können, um zu zeigen, dass ich diese gut finde."
+	 */
 	@Test
 	public void testLikeButtonDetailView() {
 		MessageDetailView detailView = homepage.openDetailView();
@@ -181,8 +199,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	}
 	
 	/*
-	 * PSE2015-66: "Als angemeldeter Benutzer möchte ich ausgehend vom Activity Stream 
-	 * auf meiner Startseite die Details der Activity ansehen können"
+	 * PSE2015-26 "Als angemeldeter Benutzer möchte ich sehen können, wer eine Activity geliked hat."
 	 */
 	@Test
 	public void testGetUsersLikingMessage() {
@@ -190,10 +207,36 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 		verifyTrue(homepage.getUsersLikingMessage(0).contains("Christine Pompenig"));
 	}
 
+	/*
+	 * PSE2015-26 "Als angemeldeter Benutzer möchte ich sehen können, wer eine Activity geliked hat."
+	 */
 	@Test
 	public void testGetUsersLikingMessageDetailView() {
 		MessageDetailView detailView = homepage.openDetailView();
 		detailView.likeMessage();
 		verifyTrue(detailView.getUsersLikingMessage().contains("Christine Pompenig"));
+	}
+	
+	/* 
+	 * PSE2015-27 "Als angemeldeter Benutzer möchte ich die Kommentare zu einer Activity lesen können."
+	 */
+	@Test
+	public void testNumberOfCommentsDisplayedInDetailView() {
+		int numberOfComments = homepage.getNumberOfComments(0);
+		MessageDetailView detailView = homepage.openDetailView(0);
+		verifyEquals(numberOfComments, detailView.getNumberOfCommentsInHeader());
+		verifyEquals(detailView.getNumberOfCommentsInHeader(), detailView.getNumberOfDisplayedComments());
+	}
+	
+	/*
+	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-27 "Als angemeldeter Benutzer möchte ich die Kommentare zu einer Activity lesen können."
+	 */
+	@Test
+	public void testCommentsDisplay() {
+		int messageWithComments = homepage.getMessageNumberByHeadline("Message Headline");
+		MessageDetailView detailView = homepage.openDetailView(messageWithComments);
+		verifyTrue(detailView.getCommentsText().contains("Comment 3"));
 	}
 }
