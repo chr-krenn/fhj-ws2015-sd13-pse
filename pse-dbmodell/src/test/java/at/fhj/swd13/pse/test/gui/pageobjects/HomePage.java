@@ -259,6 +259,16 @@ public class HomePage {
 	}
 	
 	/**
+	 * Get read-only UserPage
+	 * 
+	 * @return UserPage PageObject
+	 */
+	public UserPage getReadOnlyUserProfilePage() {
+	    driver.findElement(By.id("j_idt8:j_idt15_button")).click();
+	    return new UserPage(driver);
+	}
+	
+	/**
 	 * Get UserPage
 	 * 
 	 * @return UserPage PageObject
