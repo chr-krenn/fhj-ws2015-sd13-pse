@@ -27,10 +27,15 @@ public class UserList {
 		return driver.findElements(By.className("ui-datascroller-item"));
 	}
 
+	/**
+	 *  Forwards to the User Page for the list entry with the given index
+	 * 
+	 * @param index the list index of the entry 
+	 * @return UserPage PageObject for the entry 
+	 */
 	public UserPage openUserPage(int index) {
 		List<WebElement> elements = driver.findElements(By.className("ui-datascroller-item"));
 		elements.get(index).findElement(By.cssSelector("a > span")).click();
 		return new UserPage(driver);
 	}
-
 }
