@@ -6,7 +6,10 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
+<<<<<<< HEAD
 import at.fhj.swd13.pse.test.gui.pageobjects.MessageDetailView;
+=======
+>>>>>>> 71fe058301c11efedcedbe27087d72c9b3c4afa6
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 
@@ -18,7 +21,11 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	@Before
 	public void init() {
 		loginPage = new LoginPage(driver, BASE_URL);
+<<<<<<< HEAD
 		homepage = loginPage.login("pompenig13", "12345678");
+=======
+		homepage = loginPage.login("florian.genser", "12345678");
+>>>>>>> 71fe058301c11efedcedbe27087d72c9b3c4afa6
 	}
 	
 	@After

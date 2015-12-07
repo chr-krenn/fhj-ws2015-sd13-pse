@@ -73,17 +73,39 @@ public class HomePage {
 		LocalDateTime date = getDate(messageNumber);
 		String header = author +", am " + date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) 
 						+" um " +date.format(DateTimeFormatter.ofPattern("HH:mm"));
+		String headline = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[2]/tbody/tr/td/table/tbody/tr[1]/td").getText();
 		String message = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[2]/tbody/tr/td/table/tbody/tr[2]/td").getText();
-		getDetailsButton(messageNumber).click();
 		
-		//TODO: extract into MessageDetailViewPage
-		String detailsHeader = getElement(".//*[@id='messagedetails:messagedetailspanel_header']/span").getText();
-		String detailsMessage = getElement(".//*[@id='messagedetails:messagedetailspanel_content']/table/tbody/tr[2]/td").getText();
+		MessageDetailView detailView = openDetailView(messageNumber);
+
+		String detailsHeader = detailView.getHeader();
+		String detailsHeadline = detailView.getHeadline();
+		String detailsMessage = detailView.getMessage();
 		
-		if(header.equals(detailsHeader) && message.equals(detailsMessage)) {
+		if(header.equals(detailsHeader) && headline.equals(detailsHeadline) && message.equals(detailsMessage)) {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Get detail view for first activity
+	 * 
+	 * @return MessageDetailView page object
+	 */
+	public MessageDetailView openDetailView() {
+		return openDetailView(0);
+	}
+	
+	/**
+	 * Get detail view for indicated activity
+	 * 
+	 * @param messageNumber
+	 * @return MessageDetailView page object
+	 */
+	public MessageDetailView openDetailView(int messageNumber) {
+		getDetailsButton(messageNumber).click();
+		return new MessageDetailView(driver);
 	}
 	
 	/**
@@ -126,6 +148,12 @@ public class HomePage {
 		return parseDate(dateString);
 	}
 	
+	/**
+	 * Get number of likes for indicated activity
+	 * 
+	 * @param messageNumber
+	 * @return number of likes
+	 */
 	public int getNumberOfLikes(int messageNumber) {
 		String number = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[3]/tbody/tr/td[2]").getText().trim();
 		return Integer.parseInt(number);	
@@ -204,6 +232,11 @@ public class HomePage {
 		return names;
 	}
 	
+	public int getNumberOfComments(int messageNumber) {
+		String text = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[3]/tbody/tr/td[5]").getText();
+		String number = text.split(" ")[0];
+		return Integer.parseInt(number);	
+	}
 
 	/**
 	 * Get UserPage
@@ -230,6 +263,22 @@ public class HomePage {
 	    return new UserList(driver);
 	}
 
+	/**
+	 * Returns message number (index in activity stream) for message with indicated headline
+	 * Required for testing
+	 * 
+	 * @param headline
+	 * @return message number as int or -1 if not found
+	 */
+	public int getMessageNumberByHeadline(String headline) {
+		for (int i = 0; i < driver.findElements(By.xpath(".//*[@id='activityform:activities']/div/ul/li")).size(); i++) {
+			if(getElement(".//*[@id='activityform:activities:"+i+":j_idt57']/table[2]/tbody/tr/td/table/tbody/tr[1]/td/span")
+					.getText().equals(headline)) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	
 	/**
 	 * Get Like button WebElement for indicated activity
