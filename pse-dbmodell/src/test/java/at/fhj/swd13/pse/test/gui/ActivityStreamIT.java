@@ -6,21 +6,23 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
+import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 
 public class ActivityStreamIT extends SeleniumBaseTestCase {
 	
+	private LoginPage loginPage;
 	private static HomePage homepage;
 
 	@Before
 	public void init() {
-		login("florian.genser", "12345678");
-		homepage = new HomePage(driver);
+		loginPage = new LoginPage(driver, baseUrl);
+		homepage = loginPage.login("florian.genser", "12345678");
 	}
 	
 	@After
-	public void tearDown() {
-		logout();
+	public void logoutAfter() {
+		loginPage.logout();
 	}
 	
 	@Test

@@ -17,8 +17,6 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author florian.genser
@@ -35,10 +33,22 @@ public abstract class SeleniumBaseTestCase {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		baseUrl = "http://localhost:8080/pse";
+		baseUrl = getBaseUrl();
+		System.out.println("baseUrl for selenium tests is: " + baseUrl);
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
+	private static String getBaseUrl() {
+
+		final String pseEnv = System.getenv("PSE_ENV");
+		
+		if (pseEnv == null || !pseEnv.equals("CI")) {
+			return "http://localhost:8080/pse";
+		}
+		
+		return "http://localhost:8000/pse";
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 
@@ -53,31 +63,6 @@ public abstract class SeleniumBaseTestCase {
 	@AfterClass
 	public static void tearDownAl() throws Exception {
 		driver.quit();
-	}
-
-	protected static void login(String username, String password) {
-		
-		driver.get(baseUrl + "/index.jsf");
-		driver.findElement(By.linkText("einloggen!")).click();
-		driver.findElement(By.id("loginform:username")).clear();
-		driver.findElement(By.id("loginform:username")).sendKeys(username);
-		driver.findElement(By.id("loginform:password")).clear();
-		driver.findElement(By.id("loginform:password")).sendKeys(password);
-		driver.findElement(By.id("loginform:loginbutton")).click();
-		
-	}
-	
-	protected static void logout() {
-		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menuButton']")).click();
-		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[4]/a")).click();
-		
-		//wait
-		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver d) {
-            	return d.findElement(By.linkText("einloggen!")) != null;
-            }
-        });
-		
 	}
 
 	protected boolean isElementPresent(By by) {
