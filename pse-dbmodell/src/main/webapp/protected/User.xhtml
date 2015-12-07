@@ -163,7 +163,7 @@
 					<p:column>
 						<p:selectBooleanCheckbox
 							value="#{userProfileController.userDTO.extern}"
-							disabled="#{!(userProfileController.externFlagEnabled)}" />
+							disabled="#{!(userProfileController.externFlagEnabled)}" id="outofoffice"/>
 						<p:outputLabel value="  Abwesend" />
 					</p:column>
 				</p:row>
@@ -190,7 +190,7 @@
 					<p:column colspan="2">
 						<p:commandButton value="Speichern"
 							action="#{userProfileController.updateProfile}" update="messages"
-							type="submit" icon="ui-icon-disk">
+							type="submit" icon="ui-icon-disk" id="savebutton">
 							<f:param name="mode" value="edit"
 								disable="#{!(userProfileController.modeEdit)}" />
 						</p:commandButton>

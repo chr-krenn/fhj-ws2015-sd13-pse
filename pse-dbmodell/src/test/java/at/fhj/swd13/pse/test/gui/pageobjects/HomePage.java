@@ -204,6 +204,19 @@ public class HomePage {
 		return names;
 	}
 	
+
+	/**
+	 * Get UserPage
+	 * 
+	 * @return UserPage PageObject
+	 */
+	public UserPage getUserPage() {
+	    driver.findElement(By.id("j_idt8:j_idt15_menuButton")).click();
+	    driver.findElement(By.cssSelector("span.ui-menuitem-text")).click();
+	    return new UserPage(driver);
+	}
+	
+	
 	/**
 	 * Get Like button WebElement for indicated activity
 	 * 
