@@ -16,7 +16,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {
-		loginPage = new LoginPage(driver, baseUrl);
+		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("florian.genser", "12345678");
 	}
 	

@@ -15,7 +15,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {
-		LoginPage loginPage = new LoginPage(driver, baseUrl);
+		LoginPage loginPage = new LoginPage(driver, BASE_URL);
 //		login("florian.genser", "12345678");
 		homepage = loginPage.login("florian.genser", "12345678");
 	}

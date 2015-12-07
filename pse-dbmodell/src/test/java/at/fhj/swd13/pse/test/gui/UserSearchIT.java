@@ -17,7 +17,7 @@ public class UserSearchIT extends SeleniumBaseTestCase {
 	@Test
 	public void testSearchUser() {
 
-		LoginPage loginPage = new LoginPage(driver, baseUrl);
+		LoginPage loginPage = new LoginPage(driver, BASE_URL);
 		HomePage homepage = loginPage.login("florian.genser", "12345678");
 		
 		UserList userList = homepage.searchUser("ei");

@@ -25,7 +25,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public abstract class SeleniumBaseTestCase {
 
 	protected static WebDriver driver;
-	protected static String baseUrl;
+	protected static final String BASE_URL = getBaseUrl();
 
 	protected StringBuffer verificationErrors = new StringBuffer();
 	private boolean acceptNextAlert = true;
@@ -33,19 +33,24 @@ public abstract class SeleniumBaseTestCase {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		baseUrl = getBaseUrl();
-		System.out.println("baseUrl for selenium tests is: " + baseUrl);
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	private static String getBaseUrl() {
+		
+		String baseUrl = resolveBaseUrl();
+		System.out.println("baseUrl for selenium tests is: " + baseUrl);
+		return baseUrl;
+	}
+	
+	private static String resolveBaseUrl() {
 
 		final String pseEnv = System.getenv("PSE_ENV");
-		
-		if (pseEnv == null || !pseEnv.equals("CI")) {
+
+		final String pseEnvSystem = System.getProperty("PSE_ENV", pseEnv);
+		if (pseEnvSystem == null || !pseEnvSystem.equals("CI")) {
 			return "http://localhost:8080/pse";
 		}
-		
 		return "http://localhost:8000/pse";
 	}
 	
