@@ -245,6 +245,20 @@ public class HomePage {
 	}
 
 	/**
+	 * Get AdminPage
+	 * 
+	 * @return AdminPage PageObject
+	 */
+	public AdminPage getAdministrationPage() {
+	    WebElement button = driver.findElement(By.id("j_idt8:j_idt13"));
+		if(button != null) {
+			button.click();
+			return new AdminPage(driver);
+		}
+		return null;
+	}
+	
+	/**
 	 * Get UserPage
 	 * 
 	 * @return UserPage PageObject
