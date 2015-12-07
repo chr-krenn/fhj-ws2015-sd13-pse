@@ -20,9 +20,9 @@
 			</div>
 			<div class="ui-grid-row">
 				<div class="ui-grid-col-7">
-					<h:form>
-						<p:panel header="Activities">
-							<p:dataScroller value="#{simpleFeedController.activities}"
+					<h:form id="activityform">
+						<p:panel id="activitypanel" header="Activities">
+							<p:dataScroller value="#{simpleFeedController.activities}" id="activities"
 								var="message" chunkSize="10" mode="inline" scrollHeight="500">
 										<h:panelGrid columns="1" style="width:100%">
 											<p:outputPanel>

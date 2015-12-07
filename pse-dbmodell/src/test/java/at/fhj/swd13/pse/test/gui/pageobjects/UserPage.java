@@ -48,4 +48,15 @@ public class UserPage {
 		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:outofoffice']/div[2]/span"));
 		return checkbox.getAttribute("class").contains("ui-icon-check");
 	}
+
+	/**
+	 * Get user last name
+	 * 
+	 * @return user last name
+	 */
+	public String getUserLastName() {
+		WebElement input = driver.findElement(By.id("userForm:lastName"));
+		return input.getAttribute("value");
+	}
+
 }

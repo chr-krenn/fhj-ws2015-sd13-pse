@@ -20,7 +20,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	
 	@Test
 	public void testSetOutOfOffice() {
-		UserPage userPage = homepage.getUserPage();
+		UserPage userPage = homepage.getUserProfilePage();
 		userPage.setOutOfOffice(true);
 		verifyTrue(userPage.getOutOfOffice());
 	}

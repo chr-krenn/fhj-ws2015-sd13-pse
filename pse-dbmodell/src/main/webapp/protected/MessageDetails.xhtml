@@ -9,9 +9,9 @@
 		<h:outputText value="Error loading message"
 			rendered="#{messageDetailsController.messageDTO == null}" />
 
-		<h:form>
+		<h:form id="messagedetails">
 			<p:growl id="messageDetailGrowl"/>
-			<p:panel rendered="#{messageDetailsController.messageDTO ne null}">
+			<p:panel rendered="#{messageDetailsController.messageDTO ne null}" id="messagedetailspanel">
 				<f:facet name="header">
 					<h:outputText
 						value="#{messageDetailsController.messageDTO.author}, am " />

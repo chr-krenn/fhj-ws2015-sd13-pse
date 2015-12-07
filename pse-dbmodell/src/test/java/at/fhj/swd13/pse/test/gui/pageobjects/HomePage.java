@@ -28,7 +28,7 @@ public class HomePage {
 	 */
 	public Boolean isActivitiesStreamPresent(){
 		String header = "Activities";
-		String text = getElement(".//*[@id='j_idt58:j_idt59_header']/span").getText();	
+		String text = getElement(".//*[@id='activityform:activitypanel_header']/span").getText();	
 		return header.equals(text);
 	}
 	
@@ -73,12 +73,12 @@ public class HomePage {
 		LocalDateTime date = getDate(messageNumber);
 		String header = author +", am " + date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) 
 						+" um " +date.format(DateTimeFormatter.ofPattern("HH:mm"));
-		String message = getElement(".//*[@id='j_idt58:j_idt60:0:j_idt62']/table[2]/tbody/tr/td/table/tbody/tr[2]/td").getText();
+		String message = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[2]/tbody/tr/td/table/tbody/tr[2]/td").getText();
 		getDetailsButton(messageNumber).click();
 		
 		//TODO: extract into MessageDetailViewPage
-		String detailsHeader = getElement(".//*[@id='j_idt40:j_idt41_header']/span").getText();
-		String detailsMessage = getElement(".//*[@id='j_idt40:j_idt51']/table/tbody/tr[2]/td").getText();
+		String detailsHeader = getElement(".//*[@id='messagedetails:messagedetailspanel_header']/span").getText();
+		String detailsMessage = getElement(".//*[@id='messagedetails:messagedetailspanel_content']/table/tbody/tr[2]/td").getText();
 		
 		if(header.equals(detailsHeader) && message.equals(detailsMessage)) {
 			return true;
@@ -127,7 +127,7 @@ public class HomePage {
 	}
 	
 	public int getNumberOfLikes(int messageNumber) {
-		String number = getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":j_idt62']/table[3]/tbody/tr/td[2]").getText().trim();
+		String number = getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[3]/tbody/tr/td[2]").getText().trim();
 		return Integer.parseInt(number);	
 	}
 	
@@ -190,13 +190,13 @@ public class HomePage {
 		List<String> names = new ArrayList<>();
 		int number = getNumberOfLikes(messageNumber);
 		if (number > 0) {
-			getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":fadePersons']").click();
+			getElement(".//*[@id='activityform:activities:" +messageNumber +":fadePersons']").click();
 			if(number == 1) {
-				names.add(getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber 
+				names.add(getElement(".//*[@id='activityform:activities:" +messageNumber 
 						+":ratingScroller']/div/ul/li/table/tbody/tr/td/a/span").getText());
 			} else {
 				for(int i = 1; i <= number; i++) {
-					names.add(getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":ratingScroller']/div/ul/li[" +i 
+					names.add(getElement(".//*[@id='activityform:activities:" +messageNumber +":ratingScroller']/div/ul/li[" +i 
 							+"]/table/tbody/tr/td/a/span").getText());
 				}
 			}
@@ -210,12 +210,26 @@ public class HomePage {
 	 * 
 	 * @return UserPage PageObject
 	 */
-	public UserPage getUserPage() {
+	public UserPage getUserProfilePage() {
 	    driver.findElement(By.id("j_idt8:j_idt15_menuButton")).click();
 	    driver.findElement(By.cssSelector("span.ui-menuitem-text")).click();
 	    return new UserPage(driver);
 	}
 	
+	/**
+	 * Search User
+	 * 
+	 * @param search: search string
+	 * @return UserList PageObject with user list
+	 */
+	public UserList searchUser(String search) {
+		WebElement searchInput = driver.findElement(By.id("searchform:usersearch"));
+		searchInput.clear();
+		searchInput.sendKeys(search);
+	    driver.findElement(By.id("searchform:searchbutton")).click();
+	    return new UserList(driver);
+	}
+
 	
 	/**
 	 * Get Like button WebElement for indicated activity
@@ -224,7 +238,7 @@ public class HomePage {
 	 * @return Like button as WebElement
 	 */
 	private WebElement getLikeButton(int messageNumber) {
-		return getElement(".//*[@id='j_idt58:j_idt60:" +messageNumber +":j_idt62']/table[3]/tbody/tr/td[1]/input");
+		return getElement(".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[3]/tbody/tr/td[1]/input");
 	}
 	
 	/**
@@ -248,7 +262,7 @@ public class HomePage {
 	 * @return
 	 */
 	private String getMessageHeaderLineXPath(int messageNumber) {
-		return ".//*[@id='j_idt58:j_idt60:" +messageNumber +":j_idt62']/table[1]/tbody/tr/";
+		return ".//div[starts-with(@id, 'activityform:activities:" + messageNumber + "')]/table[1]/tbody/tr/";
 	}
 
 	/**

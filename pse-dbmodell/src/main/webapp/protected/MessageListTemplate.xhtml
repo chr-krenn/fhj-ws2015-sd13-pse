@@ -6,7 +6,7 @@
 	template="/WEB-INF/templates/default.xhtml">
 	<ui:define name="messageList">
 
-		<h:panelGrid columns="7" cellpadding="5">
+		<h:panelGrid columns="7" cellpadding="5" id="messagecontent">
 			<h:outputText value="Community:"
 				rendered="#{!message.privateMessage and !message.isComment}" />
 			<h:outputLabel

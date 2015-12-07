@@ -62,9 +62,9 @@
 			</f:facet>
 			<f:facet name="right">
 				<h:form id="searchform">
-					<p:inputText value="#{userSearchController.search}" />
+					<p:inputText value="#{userSearchController.search}" id="usersearch"/>
 					<p:commandButton process="@parent"
-						action="#{userSearchController.doSearch}" value="Suche"
+						action="#{userSearchController.doSearch}" value="Suche" id="searchbutton"
 						icon="ui-icon-search">
 						<f:param name="search" value="#{userSearchController.search}" />
 					</p:commandButton>

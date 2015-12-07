@@ -59,11 +59,11 @@ public abstract class SeleniumBaseTestCase {
 		
 		driver.get(baseUrl + "/index.jsf");
 		driver.findElement(By.linkText("einloggen!")).click();
-		driver.findElement(By.id("j_idt40:username")).clear();
-		driver.findElement(By.id("j_idt40:username")).sendKeys(username);
-		driver.findElement(By.id("j_idt40:password")).clear();
-		driver.findElement(By.id("j_idt40:password")).sendKeys(password);
-		driver.findElement(By.id("j_idt40:j_idt49")).click();
+		driver.findElement(By.id("loginform:username")).clear();
+		driver.findElement(By.id("loginform:username")).sendKeys(username);
+		driver.findElement(By.id("loginform:password")).clear();
+		driver.findElement(By.id("loginform:password")).sendKeys(password);
+		driver.findElement(By.id("loginform:loginbutton")).click();
 		
 	}
 	
