@@ -1,8 +1,5 @@
 package at.fhj.swd13.pse.test.gui.pageobjects;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -214,6 +211,34 @@ public class UserPage {
 			return this;
 		}
 		return null;
+	}
+	
+	/**
+	 * Get "Nachricht senden" button
+	 * 
+	 * @return WebElement for button
+	 */
+	public WebElement getSendMessageButton() {
+		return driver.findElement(By.id("userForm:sendMessageButton"));
+	}
+	
+	/**
+	 * Click "Nachricht senden" button to open new message page
+	 * 
+	 * @return NewMessagePage PageObject
+	 */
+	public NewMessagePage clickSendMessageButton() {
+		getSendMessageButton().click();
+		return new NewMessagePage(driver);
+	}
+	
+	//FIXME: not tested because sending message doesn't work via Selenium yet
+	/**
+	 * Get confirmation text that message has been sent
+	 * @return
+	 */
+	public String getConfirmationForSendingMessage() {
+		return driver.findElement(By.xpath(".//*[@id='userForm:messages_container']/div/div/div[2]/span")).getText();
 	}
 
 }

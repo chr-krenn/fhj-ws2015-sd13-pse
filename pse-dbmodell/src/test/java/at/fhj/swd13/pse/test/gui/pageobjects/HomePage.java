@@ -337,6 +337,16 @@ public class HomePage {
 	    driver.findElement(By.id("searchform:searchbutton")).click();
 	    return new UserList(driver);
 	}
+	
+	/**
+	 * Open new message page
+	 * 
+	 * @return NewMessagePage PageObject
+	 */
+	public NewMessagePage openNewMessage() {
+		getElement(".//*[@id='j_idt34_content']/div[1]/a").click();
+		return new NewMessagePage(driver);
+	}
 
 	/**
 	 * Returns message number (index in activity stream) for message with indicated headline
