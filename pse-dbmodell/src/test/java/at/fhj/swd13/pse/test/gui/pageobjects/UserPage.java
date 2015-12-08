@@ -1,5 +1,8 @@
 package at.fhj.swd13.pse.test.gui.pageobjects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -177,4 +180,40 @@ public class UserPage {
 		WebElement input = driver.findElement(By.id("userForm:phoneNumberMobile"));
 		return input.getAttribute("value");
 	}
+	
+	/**
+	 * Click on tab "Kontakte" in user profile page
+	 */
+	public void openContactsTab() {
+		driver.findElement(By.xpath(".//*[@id='userForm:j_idt97']/ul/li[2]/a")).click();
+	}
+	
+	/**
+	 * Get number of contacts
+	 * 
+	 * @return number of contacts
+	 */
+	public int getNumberOfContacts() {
+		return driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")).size();
+	}
+	
+	/**
+	 * Open profile of contact
+	 * 
+	 * @param contactNumber: start with 1 for first contact
+	 * @return UserPage PageObject
+	 */
+	public UserPage openContactProfile(int contactNumber) {
+		openContactsTab();
+		int numberOfContacts = getNumberOfContacts();
+		if(numberOfContacts == 1 && contactNumber == 1) {
+			driver.findElement(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr/td[1]/a")).click();
+			return this;
+		} else if (numberOfContacts > 1) {
+			driver.findElement(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr[" +contactNumber +"]/td[1]/a")).click();
+			return this;
+		}
+		return null;
+	}
+
 }
