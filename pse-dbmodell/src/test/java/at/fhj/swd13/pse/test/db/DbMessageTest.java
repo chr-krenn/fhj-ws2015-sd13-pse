@@ -2,15 +2,19 @@ package at.fhj.swd13.pse.test.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import javax.persistence.Query;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.MessageDAO;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -35,6 +39,19 @@ public class DbMessageTest extends DbTestBase {
 		}
 		//Adding private message
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
+	}
+	
+	@Test
+	public void testLoadAllMessages() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+
+			List<Message> activities = messageDAO.loadAll();
+
+			assertNotNull(activities);
+			assertEquals(17, activities.size());
+		}
 	}
 
 	/**
@@ -149,7 +166,7 @@ public class DbMessageTest extends DbTestBase {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testFindNews() throws Exception {
+	public void testFindNewsQuery() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			Query query = dbContext.createNamedQuery("Message.findNews");
 			query.setParameter("id", 1);
@@ -159,15 +176,82 @@ public class DbMessageTest extends DbTestBase {
 		}
 	}
 	
+	@Test
+	public void testLoadMessagesForCommunity() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+
+			List<Message> activities = messageDAO.loadNews(100);
+
+			assertNotNull(activities);
+			assertEquals(2, activities.size());
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testFindComments() throws Exception {
+	public void testFindCommentsQuery() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			Query query = dbContext.createNamedQuery("Message.findComments");
 			query.setParameter("message", dbContext.getMessageDAO().getById(1));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
 			assertEquals(3, message.size());
+		}
+	}
+	
+	@Test
+	public void testFindComments() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+
+			List<Message> activities = messageDAO.loadComments(dbContext.getMessageDAO().getById(1));
+
+			assertNotNull(activities);
+			assertEquals(3, activities.size());
+		}
+	}
+	
+	@Test
+	public void testUpdateMessage() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			
+			Message m = messageDAO.getById(1);
+			assertTrue(!m.getMessage().equals("Updated message text"));
+			m.setMessage("Updated message text");
+
+			messageDAO.update(m);
+
+			assertEquals("Updated message text", dbContext.getMessageDAO().getById(1).getMessage());
+		}
+	}
+	
+	@Ignore
+	@Test
+	public void testRemoveAndReinsertMessage() throws Exception {
+		
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			
+			Message m = messageDAO.getById(8);
+			
+			messageDAO.remove(8);
+			dbContext.commit();
+			
+			try {
+				messageDAO.getById(8);
+				fail();
+			} catch(EntityNotFoundException e) {
+				//FIXME
+				try (DbContext dbContext2 = contextProvider.getDbContext()) {
+					dbContext2.getMessageDAO().insert(m);
+					dbContext2.commit();
+				}
+			}
 		}
 	}
 	

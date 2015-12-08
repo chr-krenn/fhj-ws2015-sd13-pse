@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.db.dao;
 
-import java.util.List;
-
 import javax.persistence.Query;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
@@ -25,15 +23,6 @@ public class MessageTagDAOImpl extends DAOBase implements MessageTagDAO {
 		Query query = dbContext.createNamedQuery("MessageTag.findById");
 		query.setParameter("id", messageTagId);
 		return (MessageTag) query.getSingleResult();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MessageTag> getByTokenLike(String beginning) {
-		
-		Query query = dbContext.createNamedQuery("MessageTag.findMatching");
-		query.setParameter("needle", beginning);
-		return (List<MessageTag>)query.getResultList();
 	}
 
 	@Override
