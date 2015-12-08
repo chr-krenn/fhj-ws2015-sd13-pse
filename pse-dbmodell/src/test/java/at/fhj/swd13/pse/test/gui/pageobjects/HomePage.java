@@ -380,4 +380,36 @@ public class HomePage {
 		LocalDateTime date = LocalDateTime.parse(dateString, formatter);
 		return date;
 	}
+	
+	/**
+	 * Change the password of the logged in user
+	 */
+	public void changePassword(String oldPassword, String newPassword) {
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menuButton']")).click();
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[3]/a")).click();
+		driver.findElement(By.id("passwordchangeform:oldPassword")).clear();
+		driver.findElement(By.id("passwordchangeform:oldPassword")).sendKeys(oldPassword);
+		driver.findElement(By.id("passwordchangeform:newPassword")).clear();
+		driver.findElement(By.id("passwordchangeform:newPassword")).sendKeys(newPassword);
+		driver.findElement(By.id("passwordchangeform:newPasswordConfirmation")).clear();
+		driver.findElement(By.id("passwordchangeform:newPasswordConfirmation")).sendKeys(newPassword);
+		driver.findElement(By.id("passwordchangeform:confirmationButton")).click();
+		
+		//wait
+		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            @Override
+			public Boolean apply(WebDriver d) {
+            	return d.findElement(By.linkText("Nachricht eingeben")) != null;
+            }
+        });		
+	}
+	
+	/**
+	 * Get logged in user
+	 * 
+	 * @return logged in user
+	 */
+	public String getLoggedInUser() {
+		return driver.findElement(By.id("j_idt8:j_idt15_button")).getText();
+	}
 }
