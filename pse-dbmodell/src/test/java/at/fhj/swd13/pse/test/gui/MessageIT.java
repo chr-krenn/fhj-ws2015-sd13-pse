@@ -24,6 +24,9 @@ public class MessageIT extends SeleniumBaseTestCase {
 		homepage.logout();
 	}
 	
+	/*
+	 * PSE2015-60 "Beim Erfassen einer Nachricht kann ich Tags auswählen, um meine Nachricht zu klassifizieren."
+	 */
 	@Test
 	public void testSetMessageTags() {
 		homepage = loginPage.login("pompenig13", "12345678");
@@ -34,6 +37,9 @@ public class MessageIT extends SeleniumBaseTestCase {
 		//verifyEquals(2, messagePage.addKeyword("soft")); //FIXME: adding second keyword is not working
 	}
 	
+	/*
+	 * PSE2015-60 "Beim Erfassen einer Nachricht kann ich Tags auswählen, um meine Nachricht zu klassifizieren."
+	 */
 	@Test
 	public void testSetExistingMessageTag() {
 		homepage = loginPage.login("pompenig13", "12345678");

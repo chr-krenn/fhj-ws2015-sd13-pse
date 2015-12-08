@@ -59,6 +59,8 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	
 	/*
 	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können"
 	 */
 	@Test(expected=NoSuchElementException.class)
 	public void testSendMessageButtonNotPresent() {
@@ -69,6 +71,8 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	
 	/*
 	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können"
 	 */
 	@Test
 	public void testSendMessageButtonPresent() {
@@ -80,6 +84,8 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	
 	/*
 	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können"
 	 */
 	@Test
 	public void testSendMessageButton() {
@@ -90,6 +96,9 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyTrue(messagePage.getHeader().startsWith("Neue Nachricht eingeben für"));
 	}
 	
+	/*
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können"
+	 */
 	@Ignore //FIXME: fix sendBasicMessage
 	@Test
 	public void testSendMessageToContact() {
