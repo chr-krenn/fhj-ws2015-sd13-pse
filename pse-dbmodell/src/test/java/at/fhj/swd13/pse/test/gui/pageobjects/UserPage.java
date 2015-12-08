@@ -49,6 +49,31 @@ public class UserPage {
 		return checkbox.getAttribute("class").contains("ui-icon-check");
 	}
 
+
+	/**
+	 * Set active state
+	 *
+	 * @param active state
+	 */
+	public void setActive(boolean active) {
+		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:active']/div[2]/span"));
+		boolean checked = checkbox.getAttribute("class").contains("ui-icon-check");
+		
+		if (active ^ checked) {
+			driver.findElement(By.xpath("//div[@id='userForm:active']/div[2]/span")).click();
+		}
+	}
+
+	/**
+	 * Get active state
+	 * 
+	 * @return active state
+	 */
+	public boolean getActive() {
+		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:active']/div[2]/span"));
+		return checkbox.getAttribute("class").contains("ui-icon-check");
+	}
+
 	/**
 	 * Get user last name
 	 * 
@@ -58,5 +83,4 @@ public class UserPage {
 		WebElement input = driver.findElement(By.id("userForm:lastName"));
 		return input.getAttribute("value");
 	}
-
 }
