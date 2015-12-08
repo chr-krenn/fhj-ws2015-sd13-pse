@@ -107,4 +107,74 @@ public class UserPage {
 		WebElement input = driver.findElement(By.id("userForm:lastName"));
 		return input.getAttribute("value");
 	}
+
+	/**
+	 * Get user first name
+	 * 
+	 * @return user first name
+	 */
+	public String getUserFirstName() {
+		WebElement input = driver.findElement(By.id("userForm:firstName"));
+		return input.getAttribute("value");
+	}
+
+	/**
+	 * Get user email address
+	 * 
+	 * @return user email address
+	 */
+	public String getUserEmailAddress() {
+		WebElement input = driver.findElement(By.id("userForm:emailAddress"));
+		return input.getAttribute("value");
+	}
+
+	/**
+	 * Get user department
+	 * 
+	 * @return user department
+	 */
+	public String getUserDepartment() {
+		WebElement input = driver.findElement(By.id("userForm:department"));
+		return input.getAttribute("value");
+	}
+	
+	/**
+	 * Get user building
+	 * 
+	 * @return user building
+	 */
+	public String getUserBuilding() {
+		WebElement input = driver.findElement(By.id("userForm:building"));
+		return input.getAttribute("value");
+	}
+
+	/**
+	 * Get user floor
+	 * 
+	 * @return user floor
+	 */
+	public String getUserFloor() {
+		WebElement input = driver.findElement(By.id("userForm:floor"));
+		return input.getAttribute("value");
+	}
+
+	/**
+	 * Get user room number
+	 * 
+	 * @return user room number
+	 */
+	public String getUserRoomNumber() {
+		WebElement input = driver.findElement(By.id("userForm:roomnumber"));
+		return input.getAttribute("value");
+	}
+	
+	/**
+	 * Get user phone number mobile
+	 * 
+	 * @return user phone number mobil
+	 */
+	public String getUserPhoneNumberMobile() {
+		WebElement input = driver.findElement(By.id("userForm:phoneNumberMobile"));
+		return input.getAttribute("value");
+	}
 }

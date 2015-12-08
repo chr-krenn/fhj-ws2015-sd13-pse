@@ -93,6 +93,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask
+							id="building" 
 							value="#{userProfileController.userDTO.locationBuilding}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
@@ -104,6 +105,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask
+							id="floor" 
 							value="#{userProfileController.userDTO.locationFloor}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
@@ -115,6 +117,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask
+							id="roomnumber" 
 							value="#{userProfileController.userDTO.locationRoomNumber}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
