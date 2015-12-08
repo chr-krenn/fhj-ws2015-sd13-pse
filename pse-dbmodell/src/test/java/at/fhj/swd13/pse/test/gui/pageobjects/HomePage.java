@@ -8,6 +8,8 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage {
 	
@@ -19,6 +21,19 @@ public class HomePage {
 	 */
 	public HomePage (WebDriver driver) {
 		this.driver = driver;
+	}
+	
+	public void logout() {
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menuButton']")).click();
+		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[4]/a")).click();
+		
+		//wait
+		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            @Override
+			public Boolean apply(WebDriver d) {
+            	return d.findElement(By.linkText("einloggen!")) != null;
+            }
+        });
 	}
 
 	/**

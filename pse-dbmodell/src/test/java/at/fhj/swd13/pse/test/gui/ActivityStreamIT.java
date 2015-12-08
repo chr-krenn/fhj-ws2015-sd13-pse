@@ -23,7 +23,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	
 	@After
 	public void logoutAfter() {
-		loginPage.logout();
+		homepage.logout();
 	}
 	
 	@Test

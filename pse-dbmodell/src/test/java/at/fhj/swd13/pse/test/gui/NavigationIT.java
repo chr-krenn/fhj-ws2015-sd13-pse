@@ -22,7 +22,7 @@ public class NavigationIT  extends SeleniumBaseTestCase {
 	
 	@After
 	public void logoutAfter() {
-		loginPage.logout();
+		homepage.logout();
 	}
 	
 	/*

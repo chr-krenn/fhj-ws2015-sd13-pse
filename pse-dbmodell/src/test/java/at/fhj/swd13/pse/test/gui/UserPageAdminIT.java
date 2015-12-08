@@ -36,5 +36,8 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		// set inactive and save
 		userPage.setActive(false);
 		verifyFalse(userPage.getActive());
+		
+		// user must not be able to login
+		homepage.logout();
 	}
 }

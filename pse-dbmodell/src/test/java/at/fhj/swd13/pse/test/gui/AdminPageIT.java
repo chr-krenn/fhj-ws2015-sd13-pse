@@ -11,6 +11,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 public class AdminPageIT  extends SeleniumBaseTestCase {
 	private LoginPage loginPage;
+	private HomePage homepage;
 	
 	@Before
 	public void init() {
@@ -19,7 +20,7 @@ public class AdminPageIT  extends SeleniumBaseTestCase {
 	
 	@After
 	public void logoutAfter() {
-		loginPage.logout();
+		homepage.logout();
 	}
 
 	/*
@@ -27,7 +28,7 @@ public class AdminPageIT  extends SeleniumBaseTestCase {
 	 */
 	@Test(expected=NoSuchElementException.class)
 	public void testAdminPageWithNormalUser() {
-		HomePage homepage = loginPage.login("florian.genser", "12345678");
+		homepage = loginPage.login("florian.genser", "12345678");
 		homepage.getAdministrationPage();
 	}
 	
@@ -36,7 +37,7 @@ public class AdminPageIT  extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testAdminPageWithAdminUser() {
-		HomePage homepage = loginPage.login("padmin", "12345678");
+		homepage = loginPage.login("padmin", "12345678");
 		verifyTrue(homepage.getAdministrationPage() != null);
 	}
 }
