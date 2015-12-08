@@ -5,8 +5,6 @@ package at.fhj.swd13.pse.test.gui.pageobjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author florian.genser

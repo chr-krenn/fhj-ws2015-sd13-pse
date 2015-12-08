@@ -73,7 +73,31 @@ public class UserPage {
 		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:active']/div[2]/span"));
 		return checkbox.getAttribute("class").contains("ui-icon-check");
 	}
+	
+	/**
+	 * Set active state
+	 *
+	 * @param active state
+	 */
+	public void setLoginAllowed(boolean loginAllowed) {
+		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:loginallowed']/div[2]/span"));
+		boolean checked = checkbox.getAttribute("class").contains("ui-icon-check");
+		
+		if (loginAllowed ^ checked) {
+			driver.findElement(By.xpath("//div[@id='userForm:loginallowed']/div[2]/span")).click();
+		}
+	}
 
+	/**
+	 * Get login allowed state
+	 * 
+	 * @return active state
+	 */
+	public boolean getLoginAllowed() {
+		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:loginallowed']/div[2]/span"));
+		return checkbox.getAttribute("class").contains("ui-icon-check");
+	}
+	
 	/**
 	 * Get user last name
 	 * 
