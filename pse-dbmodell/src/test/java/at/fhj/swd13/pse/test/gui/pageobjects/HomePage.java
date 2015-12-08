@@ -260,6 +260,36 @@ public class HomePage {
 	}
 
 	/**
+	 * Get CommunitiesPage
+	 * 
+	 * @return CommunitiesPage PageObject
+	 */
+	public CommunitiesPage getCommunitiesPage() {
+		driver.findElement(By.id("j_idt8:j_idt10")).click();
+		return new CommunitiesPage(driver);
+	}
+	
+	/**
+	 * Get EmployeesPage
+	 * 
+	 * @return UserList PageObject
+	 */
+	public UserList getEmployeesPage() {
+		driver.findElement(By.id("j_idt8:j_idt11")).click();
+		return new UserList(driver);
+	}
+	
+	/**
+	 * Get ServicesPage
+	 * 
+	 * @return ServicesPage PageObject
+	 */
+	public ServicesPage getServicesPage() {
+		driver.findElement(By.id("j_idt8:j_idt12")).click();
+		return new ServicesPage(driver);
+	}
+	
+	/**
 	 * Get AdminPage
 	 * 
 	 * @return AdminPage PageObject

@@ -19,6 +19,15 @@ public class UserList {
 	}
 	
 	/**
+	 * Get title of user list
+	 * 
+	 * @return Title of data scroller
+	 */
+	public String getTitle() {
+		return driver.findElement(By.xpath(".//*[@id='j_idt37:j_idt38']/div[1]")).getText();
+	}
+	
+	/**
 	 *  Get User WebElements from user list
 	 * 
 	 * @return List with WebElements
