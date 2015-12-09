@@ -2,9 +2,6 @@ package at.fhj.swd13.pse.domain.user;
 
 import java.util.List;
 
-import javax.mail.MessagingException;
-
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.dto.UserDTO;
@@ -37,9 +34,8 @@ public interface UserService {
 	 *            of the person to retrieve
 	 * 
 	 * @return instance of the user with the given username
-	 * @throws EntityNotFoundException 
 	 */
-	Person getUser(final String username) throws EntityNotFoundException;
+	Person getUser(final String username);
 
 	/**
 	 * get a list of all known usrs
@@ -102,13 +98,8 @@ public interface UserService {
 	 *            username of for whom to change the password
 	 * @param newPlainPassword
 	 *            plaintext of the new password
-	 * 
-	 * @throws WeakPasswordException
-	 *             password does not meet strength criteria
-	 * @throws EntityNotFoundException
-	 *             when the username is not associated with any existing user
 	 */
-	void setPassword(String username, String newPlainPassword) throws WeakPasswordException, EntityNotFoundException;
+	void setPassword(String username, String newPlainPassword);
 
 	/**
 	 * Set a new password for the user but verify the current
@@ -130,10 +121,8 @@ public interface UserService {
 	 * @param userDTO
 	 *            the UserDTO from which ALL of the data is taken and updated into the person
 	 * 
-	 * @throws EntityNotFoundException
-	 *             when the username was not given/ found
 	 */
-	void update(final UserDTO userDTO) throws EntityNotFoundException;
+	void update(final UserDTO userDTO);
 
 	/**
 	 * Set or clear the image of a user
@@ -144,11 +133,8 @@ public interface UserService {
 	 * @param documentId
 	 *            the id of the document to set as the users image. If 0 the image is cleared
 	 * 
-	 * @throws EntityNotFoundException
-	 *             when the username was not given/ found
-	 *             when the document was not found via the documentId
 	 */
-	void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException;
+	void setUserImage(final String username, final Integer documentId);
 	
 	/**
 	 * Create a relation between two persons
@@ -166,8 +152,7 @@ public interface UserService {
 	/**
 	 * Resets the password of the user with a given E-Mail-Address to a random value
 	 * @param emailAddress the E-Mail-Address as String
-	 * @throws InvalidEmailAddressException
 	 */
 	
-	void resetPassword(String emailAddress) throws InvalidEmailAddressException, MessagingException;
+	void resetPassword(String emailAddress);
 }

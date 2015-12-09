@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.user.PasswordStrengthValidatorImpl;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
@@ -146,7 +147,7 @@ public class DbUserServiceTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = WeakPasswordException.class)
+	@Test
 	public void passwordWeakNull() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -155,10 +156,12 @@ public class DbUserServiceTest extends DbTestBase {
 			userService.setPasswordStrengthValidator(new PasswordStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), null);
+		} catch (ServiceException e) {
+			assertTrue(e.getCause() instanceof WeakPasswordException);
 		}
 	}
 
-	@Test(expected = WeakPasswordException.class)
+	@Test
 	public void passwordWeakEmpty() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -167,18 +170,21 @@ public class DbUserServiceTest extends DbTestBase {
 			userService.setPasswordStrengthValidator(new PasswordStrengthValidatorImpl());
 
 			userService.setPassword(plainPerson.getUserName(), "");
+		} catch (ServiceException e) {
+			assertTrue(e.getCause() instanceof WeakPasswordException);
 		}
 	}
 
-	@Test(expected = WeakPasswordException.class)
+	@Test
 	public void passwordWeakShort() throws Exception {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswordStrengthValidatorImpl());
-
 			userService.setPassword(plainPerson.getUserName(), "3344");
+		} catch (ServiceException e) {
+			assertTrue(e.getCause() instanceof WeakPasswordException);
 		}
 	}
 

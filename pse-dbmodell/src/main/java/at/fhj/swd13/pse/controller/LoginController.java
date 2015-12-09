@@ -12,9 +12,9 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
@@ -203,10 +203,8 @@ public class LoginController {
 	public boolean getIsAdmin() {
 		try {
 			return userService.getUser(getLoggedInUsername()).isAdmin();
-		} catch (EntityNotFoundException e) {
-			RequestContext context = RequestContext.getCurrentInstance();
-			logger.info("[LOGIN] isAdmin failed for " + username + " from " + context.toString());
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "GetIsAdmin Error", "Invalid user");
+		} catch (ServiceException e) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "GetIsAdmin Error", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return false;
 		}

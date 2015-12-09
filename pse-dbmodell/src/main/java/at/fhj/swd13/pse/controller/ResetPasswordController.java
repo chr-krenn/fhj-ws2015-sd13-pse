@@ -1,54 +1,36 @@
 package at.fhj.swd13.pse.controller;
 
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 
-import at.fhj.swd13.pse.domain.user.InvalidEmailAddressException;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.user.UserService;
 
 @ManagedBean
-@Stateless
+@RequestScoped
 public class ResetPasswordController {
 	
 	private String emailAddress;
-	
 	private String statusText;
-	
 	
 	@Inject
 	private UserService userService;
 	
 	public void resetPassword() {		
-		
-		
-		if(emailAddress != null) {
+		if (emailAddress != null) {
 			try {
 				userService.resetPassword(emailAddress);
-				
 				setStatusText("Sie bekommen in Kürze Ihr neues Passwort per E-Mail übermittelt.");
-				
-				
-			} catch (InvalidEmailAddressException e) {
-				setStatusText("E-Mail-Adresse nicht gefunden.");
-			} catch( MessagingException e ) {
-				setStatusText("E-Mail konnte nicht gesendet werden. (interner Fehler)");
+			} catch (ServiceException ex) {
+				setStatusText("E-Mail-Adresse konnte nicht gesendet werden.");
 			}
 		}		
-	}
-	
-	
-	public String test() {
-		setStatusText("success");
-		
-		return null;
 	}
 	
 	public String getEmailAddress() {
 		return emailAddress;
 	}
-
 	
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;

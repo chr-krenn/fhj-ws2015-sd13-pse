@@ -6,19 +6,17 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.MailService;
@@ -67,23 +65,29 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public Person loginUser(final String username, final String plainPassword, String sessionId) {
-
-		Person p = dbContext.getPersonDAO().getByUsername(username);
-
-		if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
-			p.setIsOnline(true);
-			p.setCurrentSessionId(sessionId);
-			return p;
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(username);
+	
+			if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
+				p.setIsOnline(true);
+				p.setCurrentSessionId(sessionId);
+				return p;
+			}
+		} catch (Throwable ex) {
+			throw new ServiceException(ex);
 		}
-
 		return null;
 	}
 
 	@Override
 	public void logoutUser(String username) {
-		Person p = dbContext.getPersonDAO().getByUsername(username);
-		p.setIsOnline(false);
-		p.setCurrentSessionId(null);
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(username);
+			p.setIsOnline(false);
+			p.setCurrentSessionId(null);
+		} catch (Throwable ex) {
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -93,16 +97,16 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public int updateNullPasswords() {
-
-		int userCount = 0;
-
-		for (Person person : dbContext.getPersonDAO().getAllWithNullPasswords()) {
-
-			person.setPassword("12345678");
-			++userCount;
+		try {
+			int userCount = 0;
+			for (Person person : dbContext.getPersonDAO().getAllWithNullPasswords()) {
+				person.setPassword("12345678");
+				++userCount;
+			}
+			return userCount;
+		} catch (Throwable ex) {
+			throw new ServiceException(ex);
 		}
-
-		return userCount;
 	}
 
 	/*
@@ -112,7 +116,6 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public void setPasswordStrengthValidator(PasswordStrengthValidator passwordStrengthValidator) {
-
 		this.passwordStrengthValidator = passwordStrengthValidator;
 	}
 
@@ -123,9 +126,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public boolean isMatchingPassword(final String username, final String plainPassword) {
-		Person p = dbContext.getPersonDAO().getByUsername(username);
-
-		return p != null && p.isMatchingPassword(plainPassword);
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(username);
+			return p != null && p.isMatchingPassword(plainPassword);
+		} catch (Throwable ex) {
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -134,13 +140,14 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * @see at.fhj.swd13.pse.domain.user.UserService#setPassword(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void setPassword(final String username, final String newPlainPassword) throws WeakPasswordException, EntityNotFoundException {
-
-		Person p = dbContext.getPersonDAO().getByUsername(username, true);
-
-		passwordStrengthValidator.validate(newPlainPassword);
-
-		p.setPassword(newPlainPassword);
+	public void setPassword(final String username, final String newPlainPassword) {
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(username, true);
+			passwordStrengthValidator.validate(newPlainPassword);
+			p.setPassword(newPlainPassword);
+		} catch (Throwable ex) {
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -149,8 +156,13 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * @see at.fhj.swd13.pse.domain.user.UserService#getUser(java.lang.String)
 	 */
 	@Override
-	public Person getUser(final String username) throws EntityNotFoundException {
-		return dbContext.getPersonDAO().getByUsername(username, true);
+	public Person getUser(final String username) {
+		try {
+			return dbContext.getPersonDAO().getByUsername(username, true);
+		} catch (Throwable ex) {
+			logger.info("[UserService] getUser failed for " + username + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -160,10 +172,13 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public List<Person> getUsers() {
-
-		// TODO use better method
-		return dbContext.getPersonDAO().getAllPersons(0, 1000);
-
+		try {
+			// TODO use better method
+			return dbContext.getPersonDAO().getAllPersons(0, 1000);
+		} catch (Throwable ex) {
+			logger.info("[UserService] getUsers failed : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -173,8 +188,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public List<Person> getUsersWithDepartment(String department) {
-		return dbContext.getPersonDAO().getAllPersonsWithDepartment(department);
-
+		try {
+			return dbContext.getPersonDAO().getAllPersonsWithDepartment(department);
+		} catch (Throwable ex) {
+			logger.info("[UserService] getUsersWithDepartment failed for " + department + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -184,7 +203,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public List<Person> findUsers(String search) {
-		return dbContext.getPersonDAO().getPersonLike(search);
+		try {
+			return dbContext.getPersonDAO().getPersonLike(search);
+		} catch (Throwable ex) {
+			logger.info("[UserService] findUsers failed for " + search + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -193,80 +217,91 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * @see at.fhj.swd13.pse.domain.user.UserService#update(at.fhj.swd13.pse.dto.UserDTO)
 	 */
 	@Override
-	public void update(final UserDTO userDTO) throws EntityNotFoundException {
+	public void update(final UserDTO userDTO) {
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(userDTO.getUserName(), true);
 
-		Person p = dbContext.getPersonDAO().getByUsername(userDTO.getUserName(), true);
+			p.setLastName(userDTO.getLastName());
+			p.setFirstName(userDTO.getFirstName());
 
-		p.setLastName(userDTO.getLastName());
-		p.setFirstName(userDTO.getFirstName());
+			p.setEmailAddress(userDTO.getEmailAddress());
+			p.setPhoneNumberMobile(userDTO.getPhoneNumberMobile());
 
-		p.setEmailAddress(userDTO.getEmailAddress());
-		p.setPhoneNumberMobile(userDTO.getPhoneNumberMobile());
+			p.setDateOfBirth(userDTO.getDateOfBirth());
+			p.setDateOfEntry(userDTO.getDateOfEntry());
 
-		p.setDateOfBirth(userDTO.getDateOfBirth());
-		p.setDateOfEntry(userDTO.getDateOfEntry());
+			p.setDepartment(userDTO.getDepartment());
+			p.setJobPosition(userDTO.getJob());
+			p.setLocationBuilding(userDTO.getLocationBuilding());
+			p.setLocationFloor(userDTO.getLocationFloor());
+			p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
+			p.setIsActive(userDTO.getActive());
+			p.setIsExtern(userDTO.getExtern());
+			p.setIsLoginAllowed(userDTO.getLoginAllowed());
 
-		p.setDepartment(userDTO.getDepartment());
-		p.setJobPosition(userDTO.getJob());
-		p.setLocationBuilding(userDTO.getLocationBuilding());
-		p.setLocationFloor(userDTO.getLocationFloor());
-		p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
-		p.setIsActive(userDTO.getActive());
-		p.setIsExtern(userDTO.getExtern());
-		p.setIsLoginAllowed(userDTO.getLoginAllowed());
+			// remove deleted tags
+			List<PersonTag> deletedTags = new ArrayList<PersonTag>();
+			if (userDTO.getTags() != null) {
+				for (PersonTag personTag : p.getPersonTags()) {
+					if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+						deletedTags.add(personTag);
+					}
+				}
 
-		// remove deleted tags
-		List<PersonTag> deletedTags = new ArrayList<PersonTag>();
-		if (userDTO.getTags() != null) {
-			for (PersonTag personTag : p.getPersonTags()) {
-				if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+				// add new tags
+				for (String token : userDTO.getTags()) {
+					boolean bExists = false;
+					for (PersonTag personTag : p.getPersonTags()) {
+						if (personTag.getTag().getToken().equals(token)) {
+							bExists = true;
+							break;
+						}
+					}
+
+					if (!bExists) {
+						Tag tag = tagService.getTagByToken(token);
+						PersonTag personTag = new PersonTag();
+						personTag.setTag(tag);
+						p.addPersonTag(personTag);
+					}
+				}
+			} else {
+				for (PersonTag personTag : p.getPersonTags()) {
 					deletedTags.add(personTag);
 				}
 			}
 
-			// add new tags
-			for (String token : userDTO.getTags()) {
-				boolean bExists = false;
-				for (PersonTag personTag : p.getPersonTags()) {
-					if (personTag.getTag().getToken().equals(token)) {
-						bExists = true;
-						break;
-					}
-				}
-
-				if (!bExists) {
-					Tag tag = tagService.getTagByToken(token);
-					PersonTag personTag = new PersonTag();
-					personTag.setTag(tag);
-					p.addPersonTag(personTag);
-				}
+			for (PersonTag personTag : deletedTags) {
+				p.removePersonTag(personTag);
 			}
-		} else {
-			for (PersonTag personTag : p.getPersonTags()) {
-				deletedTags.add(personTag);
-			}
-		}
-
-		for (PersonTag personTag : deletedTags) {
-			p.removePersonTag(personTag);
+		} catch (Throwable ex) {
+			logger.info("[UserService] update failed for user " + userDTO.getFullName() + " : " + ex.getMessage());
+			throw new ServiceException(ex);
 		}
 	}
 
 	@Override
-	public void setUserImage(final String username, final Integer documentId) throws EntityNotFoundException {
+	public void setUserImage(final String username, final Integer documentId) {
+		Document userImage = null;
+		try {
+			Person p = dbContext.getPersonDAO().getByUsername(username, true);
 
-		Person p = dbContext.getPersonDAO().getByUsername(username, true);
-
-		if (documentId == 0) {
-			p.setDocument(null);
-		} else {
-			Document userImage = dbContext.getDocumentDAO().getById(documentId);
-
-			if (userImage != null) {
-				p.setDocument(userImage);
+			if (documentId == 0) {
+				p.setDocument(null);
 			} else {
-				throw new EntityNotFoundException("Document not found : " + documentId);
+				userImage = dbContext.getDocumentDAO().getById(documentId);
+
+				if (userImage != null)
+					p.setDocument(userImage);
 			}
+		} catch (Throwable ex) {
+			logger.info("[UserService] setUserImage failed for user " + username + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
+
+		if (userImage == null) {
+			logger.info("[UserService] setUserImage failed for user " + username + " : Document not found : " + documentId);
+			throw new ServiceException("Document not found : " + documentId);
 		}
 	}
 
@@ -277,48 +312,43 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 */
 	@Override
 	public boolean changePassword(String loggedInUsername, String passwordOldPlain, String passwordNewPlain) {
-		Person p;
 		try {
-			p = dbContext.getPersonDAO().getByUsername(loggedInUsername, true);
-		} catch (EntityNotFoundException e) {
-			return false;
-		}
-
-		if (!p.isMatchingPassword(passwordOldPlain))
-			return false;
-
-		try {
+			Person p = dbContext.getPersonDAO().getByUsername(loggedInUsername, true);
+	
+			if (!p.isMatchingPassword(passwordOldPlain))
+				return false;
+	
 			passwordStrengthValidator.validate(passwordNewPlain);
-		} catch (WeakPasswordException e) {
-			return false;
+			p.setPassword(passwordNewPlain);
+			return true;
+		} catch (Throwable ex) {
+			logger.info("[UserService] changePassword failed for user " + loggedInUsername + " : " + ex.getMessage());
+			throw new ServiceException(ex);
 		}
-
-		p.setPassword(passwordNewPlain);
-
-		return true;
 	}
 
 	@Override
 	public PersonRelation createRelation(Person sourcePerson, Person targetPerson) {
-		PersonRelation relation = null;
-
 		try {
-			relation = dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
-		} catch (ConstraintViolationException e) {
-
-			logger.error("[USER] ConstraintViolation while creating relation ... oopsi");
+			return dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
+		} catch (Throwable ex) {
+			logger.info("[UserService] createRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage());
+			throw new ServiceException(ex);
 		}
-		return relation;
 	}
 
 	@Override
 	public void removeRelation(Person sourcePerson, Person targetPerson) {
-		dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
-
+		try {
+			dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
+		} catch (Throwable ex) {
+			logger.info("[UserService] removeRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
-	public void resetPassword(final String emailAddress) throws InvalidEmailAddressException, MessagingException {
+	public void resetPassword(final String emailAddress) {
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest rq = (HttpServletRequest)context.getExternalContext().getRequest();
@@ -338,9 +368,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
 
-		} catch (EntityNotFoundException e1) {
-			logger.error("[USER] unkown email address: " + emailAddress);
-			throw new InvalidEmailAddressException("No user found for given E-Mail address");
+		} catch (Throwable ex) {
+			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage());
+			throw new ServiceException(ex);
 		}
 	}
 }
