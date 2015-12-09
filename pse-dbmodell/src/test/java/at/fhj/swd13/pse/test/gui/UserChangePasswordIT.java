@@ -1,22 +1,22 @@
 package at.fhj.swd13.pse.test.gui;
 
-import org.junit.After;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
-public class UserChangePassword extends SeleniumBaseTestCase {
+public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
-	private static HomePage homepage = null;
-
+	private  static HomePage homepage = null;
+	private  static LoginPage loginPage = null;
+	
 	/**
 	 * PSE2015-12: Als angemeldeter Benutzer des Systems möchte ich mein Passwort ändern können
 	 */
 	@Test
 	public void testChangePasswordLoginWithNewPassword() {
-		LoginPage loginPage;
 		final String username = "angelofr13";
 		final String oldPassword = "12345678";
 		final String newPassword = "87654321";
@@ -30,13 +30,13 @@ public class UserChangePassword extends SeleniumBaseTestCase {
 		homepage = loginPage.login(username, newPassword);
 
 		verifyEquals(homepage.getLoggedInUser(), username);
+		
+		homepage.logout();
 
 	}
-/* not working so far
 	@Test
 	public void testChangePasswordLoginWithOldPassword() {
-		HomePage homepage;
-		NotLoggedInPage notLoggedInPage;
+		
 		final String username = "loeflerm13";
 		final String oldPassword = "12345678";
 		final String newPassword = "87654321";
@@ -45,18 +45,12 @@ public class UserChangePassword extends SeleniumBaseTestCase {
 		homepage = loginPage.login(username, oldPassword);
 
 		homepage.changePassword(oldPassword, newPassword);
-		loginPage = loginPage.logout();
+		homepage.logout();
 
-		notLoggedInPage = loginPage.loginInWrongPassword(username, oldPassword);
+		loginPage.login(username, oldPassword);
 
-		verifyTrue(notLoggedInPage.pagePresent());
-
-	}*/
-
-	@After
-	public void logoutAfter() {
-		if (homepage != null)
-			homepage.logout();
+		// forwarded to NotLoggedIn Page
+		verifyEquals(1, driver.findElements(By.linkText("Doors of Durin")).size());
 	}
 
 }
