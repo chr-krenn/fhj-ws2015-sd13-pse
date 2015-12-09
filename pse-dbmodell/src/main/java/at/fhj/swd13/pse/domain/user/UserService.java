@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
-import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.dto.UserDTO;
 
 public interface UserService {
@@ -19,23 +18,18 @@ public interface UserService {
 	 *            username of the user to log in (case sensitive)
 	 * @param plainPassword
 	 *            plaintext password (case sensitive)
+	 * @param sessionId
+	 *            sessionId
 	 * 
 	 * @return instance of a person or null if it could not be found or logged in or may not log in
 	 */
-	Person loginUser(String username, String plainPassword);
+	Person loginUser(String username, String plainPassword, String sessionId);
 
 	/**
-	 * logout the user in the current session
+	 * logout the given user
 	 */
-	void logoutCurrentUser();
+	void logoutUser(String username);
 	
-	/**
-	 * get the currently logged in user from the session
-	 * 
-	 * @return the logged in user
-	 */
-	public Person getLoggedInUser();
-
 	/**
 	 * Get the user with the given username
 	 * 
@@ -176,14 +170,4 @@ public interface UserService {
 	 */
 	
 	void resetPassword(String emailAddress) throws InvalidEmailAddressException, MessagingException;
-
-	/**
-	 * Set a new instance of the chat service
-	 * 
-	 * @param chatService
-	 *            new instance of the ChatService
-	 * 
-	 * 
-	 */
-	void setChatService(ChatService chatService);
 }

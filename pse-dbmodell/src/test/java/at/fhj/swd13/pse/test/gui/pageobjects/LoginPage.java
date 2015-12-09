@@ -43,4 +43,19 @@ public class LoginPage {
 		
 	    return new HomePage(driver);
 	}
+	
+	
+	/**
+	 * Opens the page where the user can reset the password
+	 * 
+	 * @return ResetPasswordPage PageObject
+	 */
+	public ResetPasswordPage forgotPassword() {
+		driver.get(baseUrl + "/index.jsf");
+		driver.findElement(By.linkText("einloggen!")).click();
+		driver.findElement(By.id("loginform:resetPasswordLink")).click();
+		
+		return new ResetPasswordPage(driver);
+	}
+	
 }

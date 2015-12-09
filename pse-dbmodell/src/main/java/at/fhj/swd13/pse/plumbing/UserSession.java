@@ -23,6 +23,7 @@ public class UserSession implements Serializable {
 
 	private String sessionId = UUID.randomUUID().toString();
 
+
 	@Inject
 	private Logger logger;
 
@@ -45,12 +46,16 @@ public class UserSession implements Serializable {
 
 		try {
 
-			userService.logoutCurrentUser();
+			userService.logoutUser(getUsername());
 		} catch (Exception e) {
 			logger.error("[USERSESSION] error durin preDestroy: " + e.getMessage());
 		}
 	}
 
+	public String getSessionId() {
+		return sessionId;
+	}
+	
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}

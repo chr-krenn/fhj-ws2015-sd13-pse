@@ -14,17 +14,14 @@ import org.jboss.logging.Logger;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
-import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
-import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.MailService;
-import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
@@ -38,13 +35,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	private PasswordStrengthValidator passwordStrengthValidator;
 
 	@Inject
-	private UserSession userSession;
-
-	@Inject
 	private TagService tagService;
-
-	@Inject
-	private ChatService chatService;
 
 	@Inject
 	private Logger logger;
@@ -65,9 +56,8 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		super();
 	}
 
-	public UserServiceImpl(DbContext dbContext, UserSession userSession) {
+	public UserServiceImpl(DbContext dbContext) {
 		super(dbContext);
-		this.userSession = userSession;
 	}
 
 	/*
@@ -76,19 +66,13 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	 * @see at.fhj.swd13.pse.domain.user.UserService#loginUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Person loginUser(final String username, final String plainPassword) {
+	public Person loginUser(final String username, final String plainPassword, String sessionId) {
 
 		Person p = dbContext.getPersonDAO().getByUsername(username);
 
 		if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
 			p.setIsOnline(true);
-			p.setCurrentSessionId(userSession.login(username));
-			userSession.setAdmin(p.isAdmin());
-			
-			//get private community
-			Community community = chatService.getPrivateCommunity(p);
-			if (community != null)
-				userSession.setPrivateCommunityId(community.getCommunityId());
+			p.setCurrentSessionId(sessionId);
 			return p;
 		}
 
@@ -96,24 +80,10 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	}
 
 	@Override
-	public void logoutCurrentUser() {
-
-		if (userSession.isLoggedIn()) {
-			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
-			p.setIsOnline(false);
-			p.setCurrentSessionId(null);
-
-			userSession.logout();
-		}
-	}
-
-	@Override
-	public Person getLoggedInUser() {
-		if (userSession.isLoggedIn()) {
-			Person p = dbContext.getPersonDAO().getByUsername(userSession.getUsername());
-			return p;
-		}
-		return null;
+	public void logoutUser(String username) {
+		Person p = dbContext.getPersonDAO().getByUsername(username);
+		p.setIsOnline(false);
+		p.setCurrentSessionId(null);
 	}
 
 	/*
@@ -171,17 +141,6 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		passwordStrengthValidator.validate(newPlainPassword);
 
 		p.setPassword(newPlainPassword);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see at.fhj.swd13.pse.domain.user.UserService#setChatService(at.fhj.swd13.pse.domain.chat.ChatService)
-	 */
-	@Override
-	public void setChatService(ChatService chatService) {
-
-		this.chatService = chatService;
 	}
 
 	/*

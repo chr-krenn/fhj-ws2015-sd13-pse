@@ -14,12 +14,9 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
-import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbUserServiceDocumentTest extends DbTestBase {
-
-	private UserSession userSession;
 
 	private Person plainPerson = new Person("plainPerson", "Person", "Plain", "12345678");
 	private Person pwPerson = new Person("pwPerson", "Person", "PW", "12345678");
@@ -49,8 +46,6 @@ public class DbUserServiceDocumentTest extends DbTestBase {
 
 			context.commit();
 		}
-
-		userSession = new UserSession();
 	}
 
 	@After
@@ -83,7 +78,7 @@ public class DbUserServiceDocumentTest extends DbTestBase {
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
-			final UserService userService = new UserServiceImpl(dbContext, userSession);
+			final UserService userService = new UserServiceImpl(dbContext);
 
 			userService.setUserImage(plainPerson.getUserName(), document.getDocumentId());
 

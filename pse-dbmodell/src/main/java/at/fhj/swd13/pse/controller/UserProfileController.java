@@ -280,6 +280,14 @@ public class UserProfileController implements Serializable {
 		return getTagEditStyle().equals("display:none") ? "display:all" : "display:none";
 	}
 	
+	private Person getLoggedInUser() {
+		try {
+			return userService.getUser(userSession.getUsername());
+		} catch (EntityNotFoundException e) {
+			// todo
+			return null;
+		}
+	}
 
 	/**
 	 * returns the display representation for tags
@@ -302,14 +310,14 @@ public class UserProfileController implements Serializable {
 	}
 
 	public boolean canSendMessage() {
-		if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
+		if (userDTO.getContacts().contains(getLoggedInUser())) {
 			return true;
 		}
 		return false;
 	}
 
 	public String contactButtonText() {
-		if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
+		if (userDTO.getContacts().contains(getLoggedInUser())) {
 			return "Aus meinen Kontakten entfernen";
 		} else {
 			return "Zu meinen Kontakten hinzufügen";
@@ -337,20 +345,20 @@ public class UserProfileController implements Serializable {
 	public void contactButtonAction() {
 
 		try {
-			if (userDTO.getContacts().contains(userService.getLoggedInUser())) {
+			if (userDTO.getContacts().contains(getLoggedInUser())) {
 
-				userService.removeRelation(userService.getLoggedInUser(),
+				userService.removeRelation(getLoggedInUser(),
 						userService.getUser(userDTO.getUserName()));
 
 				// Update userDTO
-				userDTO.getContacts().remove(userService.getLoggedInUser());
+				userDTO.getContacts().remove(getLoggedInUser());
 
 			} else {
-				userService.createRelation(userService.getLoggedInUser(),
+				userService.createRelation(getLoggedInUser(),
 						userService.getUser(userDTO.getUserName()));
 
 				// Update userDTO
-				userDTO.getContacts().add(userService.getLoggedInUser());
+				userDTO.getContacts().add(getLoggedInUser());
 			}
 		} catch (EntityNotFoundException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
