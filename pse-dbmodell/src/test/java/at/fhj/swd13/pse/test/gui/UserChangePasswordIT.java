@@ -7,7 +7,7 @@ import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
-public class UserChangePassword extends SeleniumBaseTestCase {
+public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
 	private  static HomePage homepage = null;
 	private  static LoginPage loginPage = null;
