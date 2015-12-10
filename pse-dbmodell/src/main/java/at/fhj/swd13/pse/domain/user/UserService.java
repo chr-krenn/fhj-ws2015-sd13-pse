@@ -4,7 +4,6 @@ import java.util.List;
 
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
-import at.fhj.swd13.pse.dto.UserDTO;
 
 public interface UserService {
 
@@ -115,14 +114,17 @@ public interface UserService {
 	 */
 	boolean changePassword(String loggedInUsername, String password, String passwordNew);
 	/**
-	 * Update the user data base on the contents of the userDTO
+	 * Update the user data
 	 * !! Warning: permissions are not checked!
 	 * 
-	 * @param userDTO
-	 *            the UserDTO from which ALL of the data is taken and updated into the person
+	 * @param person
+	 *            the Person from which ALL of the data is taken and updated 
+	 *     
+	 * @param
+	 * 			  tags to be updated 	    
 	 * 
 	 */
-	void update(final UserDTO userDTO);
+	void update(final Person Person, final List<String> tags);
 
 	/**
 	 * Set or clear the image of a user
@@ -155,4 +157,16 @@ public interface UserService {
 	 */
 	
 	void resetPassword(String emailAddress);
+	
+	/**
+	 * Returns the Image Reference for the User
+	 * @param p .. User
+	 */
+	String getImageRef(Person p);
+	
+	/**
+	 * Returns the full name of the User
+	 * @param p .. User
+	 */
+	String getFullName(Person p);
 }

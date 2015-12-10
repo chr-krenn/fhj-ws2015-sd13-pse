@@ -27,7 +27,6 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
-import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
@@ -167,7 +166,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public void setMessageLikes(MessageDTO message, String username) {
 		List<MessageRating> ratingList = message.getRatingList();
-		List<UserDTO> personList = new ArrayList<UserDTO>();
+		List<Person> personList = new ArrayList<Person>();
 		
 		if(ratingList == null) {
 			ratingList = new ArrayList<MessageRating>();
@@ -178,7 +177,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			int quantityRatings = ratingList.size();
 			
 			for (int j = 0; j < quantityRatings; j++) {
-				personList.add(new UserDTO(ratingList.get(j).getPerson()));
+				personList.add(ratingList.get(j).getPerson());
 				if (ratingList.get(j).getPerson().getUserName().equals(username)) {
 					message.setLike(true);
 				}
@@ -240,17 +239,17 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO) {
-		messageDTO.getRatingPersonsList().add(userDTO);
+	public void updateDTOafterRating(MessageDTO messageDTO, Person person) {
+		messageDTO.getRatingPersonsList().add(person);
 		messageDTO.setLike(true);
 		messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
 	}
 
 	@Override
-	public void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO) {
-		List<UserDTO> ratingPersonsList = messageDTO.getRatingPersonsList();
+	public void updateDTOAfterRemove(MessageDTO messageDTO, Person person) {
+		List<Person> ratingPersonsList = messageDTO.getRatingPersonsList();
 		for (int i = 0; i < ratingPersonsList.size(); i++) {
-			if (ratingPersonsList.get(i).getUserName().contentEquals(userDTO.getUserName())) {
+			if (ratingPersonsList.get(i).getUserName().contentEquals(person.getUserName())) {
 				messageDTO.getRatingPersonsList().remove(i);
 				break;
 			}

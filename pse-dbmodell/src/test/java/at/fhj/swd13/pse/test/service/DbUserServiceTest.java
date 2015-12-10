@@ -20,7 +20,6 @@ import at.fhj.swd13.pse.domain.user.PasswordStrengthValidatorImpl;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceImpl;
 import at.fhj.swd13.pse.domain.user.WeakPasswordException;
-import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 
@@ -223,17 +222,15 @@ public class DbUserServiceTest extends DbTestBase {
 			final UserService userService = new UserServiceImpl(dbContext);
 			userService.setPasswordStrengthValidator(new PasswordStrengthValidatorImpl());
 
-			Person p = userService.getUser(pwPerson.getUserName());
+			Person p = userService.getUser(pwPerson.getUserName());	
 
-			UserDTO userDTO = new UserDTO(p);
-
-			userDTO.setFirstName("Hans-Otto");
-			userDTO.setLocationBuilding("Stall");
-			userDTO.setDateOfEntry(doe);
+			p.setFirstName("Hans-Otto");
+			p.setLocationBuilding("Stall");
+			p.setDateOfEntry(doe);
 
 			// TODO - test more
 
-			userService.update(userDTO);
+			userService.update(p, null);
 
 			dbContext.commit();
 		}

@@ -9,6 +9,7 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
+import at.fhj.swd13.pse.db.entity.Person;
 
 public class MessageDTO {
 
@@ -36,7 +37,7 @@ public class MessageDTO {
 	
 	private int quantityRatings;
 	
-	private List<UserDTO> ratingPersonsList;
+	private List<Person> ratingPersonsList;
 	
 	private Integer numberOfComments;
 	
@@ -213,12 +214,12 @@ public class MessageDTO {
 	}
 
 
-	public List<UserDTO> getRatingPersonsList() {
+	public List<Person> getRatingPersonsList() {
 		return ratingPersonsList;
 	}
 
 
-	public void setRatingPersonsList(List<UserDTO> ratingPersonsList) {
+	public void setRatingPersonsList(List<Person> ratingPersonsList) {
 		this.ratingPersonsList = ratingPersonsList;
 	}
 

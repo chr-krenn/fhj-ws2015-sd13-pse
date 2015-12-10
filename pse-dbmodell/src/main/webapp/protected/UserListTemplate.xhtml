@@ -8,7 +8,7 @@
 		<h:panelGrid columns="2" 
 			columnClasses="logo,detail">
 			<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-				<p:graphicImage value="#{user.imageRef}" styleClass="userimage"/>
+				<p:graphicImage value="#{userListController.getImageRef(user)}" styleClass="userimage"/>
 				<f:param name="userName" value="#{user.userName}" />
 				<f:param name="mode" value="view" />
 			</h:outputLink>
@@ -17,7 +17,7 @@
 				<h:panelGrid columns="2" cellpadding="5">
 					<h:outputText value="Name:" />
 					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
-						<h:outputText value="#{user.fullname}"  style="font-weight: bold"/>
+						<h:outputText value="#{userListController.getFullName(user)}"  style="font-weight: bold"/>
 						<f:param name="userName" value="#{user.userName}" />
 						<f:param name="mode" value="view" />
 					</h:outputLink>
@@ -26,10 +26,10 @@
 					<h:outputText value="#{user.department}" style="font-weight: bold" />
 
 					<h:outputText value="Funktion:" />
-					<h:outputText value="#{user.job}" style="font-weight: bold" />
+					<h:outputText value="#{user.jobPosition}" style="font-weight: bold" />
 					
 					<h:outputText value="Online:" />
-					<p:selectBooleanCheckbox value="#{user.online}" style="font-weight: bold" disabled="True" />
+					<p:selectBooleanCheckbox value="#{user.isOnline}" style="font-weight: bold" disabled="True" />
 				</h:panelGrid>
 			</p:outputPanel>
 		</h:panelGrid>

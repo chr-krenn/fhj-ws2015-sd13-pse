@@ -19,7 +19,6 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
-import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
@@ -114,14 +113,13 @@ public class MessageDetailsController {
 	    
 		try {
 			Person p = userService.getUser(userSession.getUsername());
-			UserDTO userDTO = new UserDTO(p);
 			if(getMessageDTO().getId() == id) {
 				feedService.rateMessage(getMessageDTO().getId(), p);
-				feedService.updateDTOafterRating(getMessageDTO(), userDTO);
+				feedService.updateDTOafterRating(getMessageDTO(), p);
 			}
 			else {
 				if(getMessageDTO().getComments().size() > 0) {
-					commentsRatingRecursive(getMessageDTO(), id, p, userDTO);
+					commentsRatingRecursive(getMessageDTO(), id, p);
 				}
 			}
 		}
@@ -145,14 +143,13 @@ public class MessageDetailsController {
 			 
 		try {
 			Person p = userService.getUser(userSession.getUsername());
-			UserDTO userDTO = new UserDTO(p);
 			if(getMessageDTO().getId() == id) {
 				feedService.removeRating(getMessageDTO().getId(), p);
-				feedService.updateDTOAfterRemove(getMessageDTO(), userDTO);
+				feedService.updateDTOAfterRemove(getMessageDTO(), p);
 			}
 			else {
 				if(getMessageDTO().getComments().size() > 0) {
-					commentsRemovingRecursive(getMessageDTO(), id, p, userDTO);
+					commentsRemovingRecursive(getMessageDTO(), id, p);
 				}
 			}
 		}
@@ -177,18 +174,18 @@ public class MessageDetailsController {
 	}
 	 
 	/*
-	 * Helper for recursively check where the right message (id) is to add the new "like"-info (p and UserDTO) 
+	 * Helper for recursively check where the right message (id) is to add the new "like"-info (p) 
 	 */
-	private void commentsRatingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException, ConstraintViolationException {
+	private void commentsRatingRecursive(MessageDTO message, int id, Person p) throws EntityNotFoundException, ConstraintViolationException {
 		for(int l = 0; l < message.getComments().size(); l++) {
 			if(message.getComments().get(l).getId() == id) {
     			feedService.rateMessage(id, p);
-    			feedService.updateDTOafterRating(message.getComments().get(l), userDTO);
+    			feedService.updateDTOafterRating(message.getComments().get(l), p);
     			message.getComments().get(l).setLike(true);
 			} else {
 				if(message.getComments().get(l).getComments() != null) {
 					if(message.getComments().get(l).getComments().size() > 0) {
-					commentsRatingRecursive(message.getComments().get(l), id, p, userDTO);
+					commentsRatingRecursive(message.getComments().get(l), id, p);
 					}
 				}
 			}
@@ -196,17 +193,17 @@ public class MessageDetailsController {
 	}
 	
 	/*
-	 * Helper for recursively check where the right message (id) is to remove the "like"-info (p and UserDTO)
+	 * Helper for recursively check where the right message (id) is to remove the "like"-info (p)
 	 */
-	private void commentsRemovingRecursive(MessageDTO message, int id, Person p, UserDTO userDTO) throws EntityNotFoundException {
+	private void commentsRemovingRecursive(MessageDTO message, int id, Person p) throws EntityNotFoundException {
 		for(int l = 0; l < message.getComments().size(); l++) {
 			if(message.getComments().get(l).getId() == id) {
 				feedService.removeRating(id, p);
-				feedService.updateDTOAfterRemove(message.getComments().get(l), userDTO);
+				feedService.updateDTOAfterRemove(message.getComments().get(l), p);
 				message.getComments().get(l).setLike(false);
 			} else {
 				if(message.getComments().get(l).getComments().size() > 0) {
-					commentsRemovingRecursive(message.getComments().get(l), id, p, userDTO);
+					commentsRemovingRecursive(message.getComments().get(l), id, p);
 				}
 			}
 		}

@@ -17,8 +17,8 @@ import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.ServiceException;
+import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
-import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.MailService;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -43,6 +43,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
 	private MailService mailService;
+	
+	@Inject
+	private DocumentService documentService;
 
 	/**
 	 * Create an instance of the user service
@@ -68,7 +71,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			Person p = dbContext.getPersonDAO().getByUsername(username);
 	
-			if (p != null && p.isLoginAllowed() && p.isActive() && p.isMatchingPassword(plainPassword)) {
+			if (p != null && p.getIsLoginAllowed() && p.getIsActive() && p.isMatchingPassword(plainPassword)) {
 				p.setIsOnline(true);
 				p.setCurrentSessionId(sessionId);
 				return p;
@@ -214,42 +217,42 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see at.fhj.swd13.pse.domain.user.UserService#update(at.fhj.swd13.pse.dto.UserDTO)
+	 * @see at.fhj.swd13.pse.domain.user.UserService#update
 	 */
 	@Override
-	public void update(final UserDTO userDTO) {
+	public void update(final Person person,final List<String> tags) {
 		try {
-			Person p = dbContext.getPersonDAO().getByUsername(userDTO.getUserName(), true);
+			Person p = dbContext.getPersonDAO().getByUsername(person.getUserName(), true);
 
-			p.setLastName(userDTO.getLastName());
-			p.setFirstName(userDTO.getFirstName());
+			p.setLastName(person.getLastName());
+			p.setFirstName(person.getFirstName());
 
-			p.setEmailAddress(userDTO.getEmailAddress());
-			p.setPhoneNumberMobile(userDTO.getPhoneNumberMobile());
+			p.setEmailAddress(person.getEmailAddress());
+			p.setPhoneNumberMobile(person.getPhoneNumberMobile());
 
-			p.setDateOfBirth(userDTO.getDateOfBirth());
-			p.setDateOfEntry(userDTO.getDateOfEntry());
+			p.setDateOfBirth(person.getDateOfBirth());
+			p.setDateOfEntry(person.getDateOfEntry());
 
-			p.setDepartment(userDTO.getDepartment());
-			p.setJobPosition(userDTO.getJob());
-			p.setLocationBuilding(userDTO.getLocationBuilding());
-			p.setLocationFloor(userDTO.getLocationFloor());
-			p.setLocationRoomNumber(userDTO.getLocationRoomNumber());
-			p.setIsActive(userDTO.getActive());
-			p.setIsExtern(userDTO.getExtern());
-			p.setIsLoginAllowed(userDTO.getLoginAllowed());
+			p.setDepartment(person.getDepartment());
+			p.setJobPosition(person.getJobPosition());
+			p.setLocationBuilding(person.getLocationBuilding());
+			p.setLocationFloor(person.getLocationFloor());
+			p.setLocationRoomNumber(person.getLocationRoomNumber());
+			p.setIsActive(person.getIsActive());
+			p.setIsExtern(person.getIsExtern());
+			p.setIsLoginAllowed(person.getIsLoginAllowed());
 
 			// remove deleted tags
 			List<PersonTag> deletedTags = new ArrayList<PersonTag>();
-			if (userDTO.getTags() != null) {
+			if (tags != null) {
 				for (PersonTag personTag : p.getPersonTags()) {
-					if (!userDTO.getTags().contains(personTag.getTag().getToken())) {
+					if (!tags.contains(personTag.getTag().getToken())) {
 						deletedTags.add(personTag);
 					}
 				}
 
 				// add new tags
-				for (String token : userDTO.getTags()) {
+				for (String token : tags) {
 					boolean bExists = false;
 					for (PersonTag personTag : p.getPersonTags()) {
 						if (personTag.getTag().getToken().equals(token)) {
@@ -275,7 +278,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 				p.removePersonTag(personTag);
 			}
 		} catch (Throwable ex) {
-			logger.info("[UserService] update failed for user " + userDTO.getFullName() + " : " + ex.getMessage());
+			logger.info("[UserService] update failed for user " + person.getFullName() + " : " + ex.getMessage());
 			throw new ServiceException(ex);
 		}
 	}
@@ -372,5 +375,22 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage());
 			throw new ServiceException(ex);
 		}
+	}
+	
+	@Override
+	public String getImageRef(Person p)
+	{
+		if ( p.getDocument() != null ) 
+			return documentService.buildServiceUrl( p.getDocument().getDocumentId() ) ;
+		else {
+			return documentService.getDefaultDocumentRef( DocumentService.DocumentCategory.USER_IMAGE ) ;
+		} 
+
+	}
+	
+	@Override
+	public String getFullName(Person p)
+	{
+		return p.getFirstName() + " " + p.getLastName();
 	}
 }

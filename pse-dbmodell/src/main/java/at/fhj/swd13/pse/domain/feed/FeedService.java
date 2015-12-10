@@ -14,7 +14,6 @@ import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.dto.MessageDTO;
-import at.fhj.swd13.pse.dto.UserDTO;
 
 /**
  * @author florian.genser
@@ -101,17 +100,17 @@ public interface FeedService {
 	 * Update DTO object after rating for correctly render xhtml
 	 * 
 	 * @param messageDTO
-	 * @param userDTO
+	 * @param person
 	 */
-	void updateDTOafterRating(MessageDTO messageDTO, UserDTO userDTO);
+	void updateDTOafterRating(MessageDTO messageDTO, Person person);
 
 	/**
 	 * Update DTO object after removing rate for correctly render xhtml
 	 * 
 	 * @param messageDTO
-	 * @param userDTO
+	 * @param person
 	 */
-	void updateDTOAfterRemove(MessageDTO messageDTO, UserDTO userDTO);
+	void updateDTOAfterRemove(MessageDTO messageDTO, Person person);
 
 	/**
 	 * Deletes a message from the database

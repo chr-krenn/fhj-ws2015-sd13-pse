@@ -70,7 +70,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
-		if (creator.isActive()) {
+		if (creator.getIsActive()) {
 
 			Community community = new Community(communityName);
 
@@ -224,7 +224,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
 
-		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
 			try {
 
 				adminPerson.addConfirmedCommunities(unconfirmed);
@@ -246,7 +246,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 
-		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
 			try {
 
 				CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
@@ -266,7 +266,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
 
-		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
 			Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
 
 			dbContext.remove(c);
@@ -278,7 +278,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void declineCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 
-		if (adminPerson.isActive() && adminPerson.isAdmin()) {
+		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
 			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
 			dbContext.remove(c);
 		} else {

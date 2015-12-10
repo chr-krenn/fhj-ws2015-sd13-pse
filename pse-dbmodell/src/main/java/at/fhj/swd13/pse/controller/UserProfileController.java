@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -23,14 +24,13 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
 import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
 import at.fhj.swd13.pse.domain.user.UserService;
-import at.fhj.swd13.pse.dto.UserDTO;
-import at.fhj.swd13.pse.dto.UserDTOBuilder;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
@@ -52,19 +52,16 @@ public class UserProfileController implements Serializable {
 	private DocumentService documentService;
 
 	@Inject
-	private UserDTOBuilder userDTOBuilder;
-
-	@Inject
 	private ChatService chatService;
 
-	private UserDTO userDTO;
-
+	private Person person;
+	
 	private String editMode;
 	private String userName;
 
 	private String communityName = "";
-
-	private List<UserDTO> usersWithDepartment = new ArrayList<UserDTO>();
+	
+	private List<String> tags = new ArrayList<String>();
 
 	@PostConstruct
 	public void setup() {
@@ -73,29 +70,41 @@ public class UserProfileController implements Serializable {
 		editMode = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("mode");
 		try {
-			getPerson();
+			getPersonData();
+			
 		} catch (ServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Setup Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
-		}
+		}		
 	}
 	
-	private void getPerson() {
+	private void getPersonData() {
 		if (userName != null) {
-			Person person = userService.getUser(userName);
-			userDTO = userDTOBuilder.createFrom(person);
-			setUsersWithDepartment(userService.getUsersWithDepartment(person.getDepartment()));
+			person = userService.getUser(userName);
+
+			for (PersonTag p : person.getPersonTags())
+				tags.add(p.getTag().getToken());
 		}
 	}
 	
 	private Person getLoggedInUser() {
 		return userService.getUser(userSession.getUsername());
 	}
-
-	public UserDTO getUserDTO() {
-		return userDTO;
+	
+	public void setTags(List<String> tags)
+	{
+		this.tags = tags;
 	}
-
+	
+	public List<String> getTags()
+	{
+		return this.tags;
+	}
+	
+	public Person getPerson(){
+		return person;
+	}
+	
 	/**
 	 * returns the name of the current login user
 	 *
@@ -112,9 +121,7 @@ public class UserProfileController implements Serializable {
 
 		try {
 			Document document = documentService.store(file.getFileName(), file.getInputstream());
-			int documentid = document.getDocumentId();
-			userService.setUserImage(getUserDTO().getUserName(), document.getDocumentId());
-			getUserDTO().setImageRef(documentService.buildServiceUrl(documentid));
+			userService.setUserImage(getPerson().getUserName(), document.getDocumentId());
 		} catch (IOException e) {
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -122,6 +129,17 @@ public class UserProfileController implements Serializable {
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
+		
+		try {
+			ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+			FacesContext context = FacesContext.getCurrentInstance();
+			String url = extContext.encodeActionURL(context.getApplication().getViewHandler().getActionURL(context, "/protected/User.jsf"));
+			extContext.redirect(url + "?userName=" + userName + "&mode=" + editMode);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public String getModeEditAdminDisplay() {
@@ -132,8 +150,8 @@ public class UserProfileController implements Serializable {
 	public void updateProfile() {
 		try {
 			// add tag if not already existing
-			if (getUserDTO().getTags() != null) {
-				for (String token : getUserDTO().getTags()) {
+			if (getTags() != null) {
+				for (String token : getTags()) {
 					Tag tag = tagService.getTagByToken(token);
 					if (tag == null) {
 						tag = new Tag();
@@ -143,8 +161,9 @@ public class UserProfileController implements Serializable {
 					}
 				}
 			}
-
-			userService.update(userDTO);
+			
+			
+			userService.update(person, getTags());
 
 		} catch (ServiceException e) { 
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler", e.getMessage());
@@ -208,7 +227,7 @@ public class UserProfileController implements Serializable {
 
 	private boolean isTagAlreadySelected(final String token) {
 		final String needle = token.toLowerCase();
-		for (String tag : userDTO.getTags()) {
+		for (String tag : getTags()) {
 			if (tag.toLowerCase().equals(needle)) {
 				return true;
 			}
@@ -248,7 +267,7 @@ public class UserProfileController implements Serializable {
 	 */
 	public String getTagDisplayString() {
 		StringBuffer result = new StringBuffer();
-		for (String tag : getUserDTO().getTags()) {
+		for (String tag : getTags()) {
 			if (result.length() > 0)
 				result.append(" ");
 			result.append(tag);
@@ -261,14 +280,14 @@ public class UserProfileController implements Serializable {
 	}
 
 	public boolean canSendMessage() {
-		if (userDTO.getContacts().contains(getLoggedInUser())) {
+		if (person.getContacts().contains(getLoggedInUser())) {
 			return true;
 		}
 		return false;
 	}
 
 	public String contactButtonText() {
-		if (userDTO.getContacts().contains(getLoggedInUser())) {
+		if (person.getContacts().contains(getLoggedInUser())) {
 			return "Aus meinen Kontakten entfernen";
 		} else {
 			return "Zu meinen Kontakten hinzufügen";
@@ -280,7 +299,7 @@ public class UserProfileController implements Serializable {
 	}
 
 	public String sendMessageButtonAction() {
-		List<Community> communities = userDTO.getCommunities();
+		List<Community> communities = person.getConfirmedCommunities();
 		Optional<Community> userCommunity = communities
 				.stream()
 				.filter(c -> c.getPrivateUser() != null
@@ -293,26 +312,23 @@ public class UserProfileController implements Serializable {
 		return "/protected/xperimental/AddMessage.jsf?faces-redirect=true";
 	}
 
-	public void contactButtonAction() {
+	public String contactButtonAction() {
 
 		try {
-			if (userDTO.getContacts().contains(getLoggedInUser())) {
+			if (person.getContacts().contains(getLoggedInUser())) {
 
-				userService.removeRelation(getLoggedInUser(), userService.getUser(userDTO.getUserName()));
-
-				// Update userDTO
-				userDTO.getContacts().remove(getLoggedInUser());
+				userService.removeRelation(getLoggedInUser(), userService.getUser(person.getUserName()));
 
 			} else {
-				userService.createRelation(getLoggedInUser(), userService.getUser(userDTO.getUserName()));
-
-				// Update userDTO
-				userDTO.getContacts().add(getLoggedInUser());
+				userService.createRelation(getLoggedInUser(), userService.getUser(person.getUserName()));
 			}
+			
 		} catch (ServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Kontakt hinzufügen Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
+		
+		return "/protected/User.jsf/?faces-redirect=true&userName=" + userName + "&mode=" + editMode;
 	}
 
 	public boolean isActiveFlagEnabled() {
@@ -327,13 +343,8 @@ public class UserProfileController implements Serializable {
 		return isModeEdit() || isAdmin();
 	}
 
-	public List<UserDTO> getUsersWithDepartment() {
-		return usersWithDepartment;
-	}
-
-	public void setUsersWithDepartment(List<Person> usersWithDepartment) {
-		for (Person p : usersWithDepartment)
-			this.usersWithDepartment.add(userDTOBuilder.createFrom(p));
+	public List<Person> getUsersWithDepartment() {
+		return userService.getUsersWithDepartment(person.getDepartment());
 	}
 	
 	public String getContactListEntryClass(String username, String department) {
@@ -374,13 +385,13 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */	
 	public List<CommunityMember> getCommunityMemberships() {
-		List<CommunityMember> communityMemberships = getUserDTO().getCommunityMemberships();
+		List<CommunityMember> communityMemberships = person.getMemberships();
 		Iterator<CommunityMember> membershipIterator = communityMemberships.iterator();
 		
 		while (membershipIterator.hasNext()) {
 			CommunityMember membership = membershipIterator.next();
 			if (membership.getCommunity().getPrivateUser() != null && 
-				membership.getCommunity().getPrivateUser().getPersonId() == userDTO.getId()) {
+				membership.getCommunity().getPrivateUser().getPersonId() == person.getPersonId()) {
 				membershipIterator.remove();	
 			}
 		}
@@ -404,5 +415,9 @@ public class UserProfileController implements Serializable {
 	 */
 	public boolean getCanEditNews() {
 		return userSession.canEditNews();
+	}
+	
+	public String getImageRef () {
+		return userService.getImageRef(person);
 	}
 }

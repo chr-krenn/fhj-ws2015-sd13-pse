@@ -201,7 +201,7 @@ public class Person implements Serializable {
 
 	@Column(name = "current_session_id", nullable = true, length = 64)
 	private String currentSessionId;
-
+	
 	public Person() {
 
 		isActive = true;
@@ -306,7 +306,7 @@ public class Person implements Serializable {
 		return plainPassword != null && plainPassword.length() > 3 && BCrypt.checkpw(plainPassword, hashedPassword);
 	}
 
-	public boolean isActive() {
+	public boolean getIsActive() {
 		return this.isActive;
 	}
 
@@ -314,7 +314,7 @@ public class Person implements Serializable {
 		this.isActive = isActive;
 	}
 
-	public boolean isExtern() {
+	public boolean getIsExtern() {
 		return this.isExtern;
 	}
 
@@ -322,7 +322,7 @@ public class Person implements Serializable {
 		this.isExtern = isExtern;
 	}
 
-	public boolean isLoginAllowed() {
+	public boolean getIsLoginAllowed() {
 		return this.isLoginAllowed;
 	}
 
@@ -330,7 +330,7 @@ public class Person implements Serializable {
 		this.isLoginAllowed = isLoginAllowed;
 	}
 
-	public boolean isOnline() {
+	public boolean getIsOnline() {
 		return this.isOnline;
 	}
 
@@ -746,5 +746,5 @@ public class Person implements Serializable {
 			}
 		}
 		return contacts;
-	}
+	}	
 }

@@ -20,7 +20,6 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
-import at.fhj.swd13.pse.dto.UserDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 /**
@@ -86,9 +85,8 @@ public class SimpleFeedController {
     	    		if(messageList.get(i).getId() == id) {
     	    			Person p = userService.getUser(userSession.getUsername());
     	    			MessageDTO messageDTO = messageList.get(i);
-    	    			UserDTO userDTO = new UserDTO(p);
     	    			feedService.rateMessage(id, p);
-    	    			feedService.updateDTOafterRating(messageDTO, userDTO);
+    	    			feedService.updateDTOafterRating(messageDTO, p);
     	    			break;
     	    		}
     	    	}
@@ -115,9 +113,8 @@ public class SimpleFeedController {
 					if(messageList.get(j).getId() == id) {
 						Person p = userService.getUser(userSession.getUsername());
 						MessageDTO messageDTO = messageList.get(j);
-						UserDTO userDTO = new UserDTO(p);
 						feedService.removeRating(id, p);
-						feedService.updateDTOAfterRemove(messageDTO, userDTO);
+						feedService.updateDTOAfterRemove(messageDTO, p);
 						break;
 					}
 				}

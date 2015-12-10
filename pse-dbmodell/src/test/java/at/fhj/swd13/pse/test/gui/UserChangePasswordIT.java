@@ -17,7 +17,7 @@ public class UserChangePasswordIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testChangePasswordLoginWithNewPassword() {
-		final String username = "angelofr13";
+		final String username = "krenn";
 		final String oldPassword = "12345678";
 		final String newPassword = "87654321";
 

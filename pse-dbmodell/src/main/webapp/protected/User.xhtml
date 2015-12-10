@@ -18,12 +18,12 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask id="firstName" styleClass="forminput"
-							value="#{userProfileController.userDTO.firstName}"
+							value="#{userProfileController.person.firstName}"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
 					<p:column rowspan="10">
 						<p:graphicImage id="userimage" styleClass="userimage"
-							value="#{userProfileController.userDTO.imageRef}" cache="false" />
+							value="#{userProfileController.getImageRef()}" cache="false" />
 
 						<h:panelGroup id="fileUploadGroup"
 							style="#{userProfileController.modeEditAdminDisplay}">
@@ -44,7 +44,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask id="lastName" styleClass="forminput"
-							value="#{userProfileController.userDTO.lastName}"
+							value="#{userProfileController.person.lastName}"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
 				</p:row>
@@ -55,12 +55,12 @@
 					<p:column colspan="2">
 						<p:calendar id="dateOfBirth" styleClass="forminput"
 							showOn="button"
-							value="#{userProfileController.userDTO.dateOfBirth}"
+							value="#{userProfileController.person.dateOfBirth}"
 							rendered="#{userProfileController.admin}" />
 						<p:inputText id="dateOfBirthDisplay"
 							rendered="#{!(userProfileController.admin)}"
 							styleClass="forminput"
-							value="#{userProfileController.userDTO.dateOfBirth}"
+							value="#{userProfileController.person.dateOfBirth}"
 							readonly="true">
 							<f:convertDateTime pattern="dd.MM.yy" />
 						</p:inputText>
@@ -73,7 +73,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask id="emailAddress" styleClass="forminput"
-							value="#{userProfileController.userDTO.emailAddress}"
+							value="#{userProfileController.person.emailAddress}"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
 				</p:row>
@@ -83,7 +83,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask id="department" styleClass="forminput"
-							value="#{userProfileController.userDTO.department}"
+							value="#{userProfileController.person.department}"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
 				</p:row>
@@ -94,7 +94,7 @@
 					<p:column colspan="2">
 						<p:inputMask
 							id="building" 
-							value="#{userProfileController.userDTO.locationBuilding}"
+							value="#{userProfileController.person.locationBuilding}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
@@ -106,7 +106,7 @@
 					<p:column colspan="2">
 						<p:inputMask
 							id="floor" 
-							value="#{userProfileController.userDTO.locationFloor}"
+							value="#{userProfileController.person.locationFloor}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
@@ -118,7 +118,7 @@
 					<p:column colspan="2">
 						<p:inputMask
 							id="roomnumber" 
-							value="#{userProfileController.userDTO.locationRoomNumber}"
+							value="#{userProfileController.person.locationRoomNumber}"
 							styleClass="forminput"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
@@ -129,7 +129,7 @@
 					</p:column>
 					<p:column colspan="2">
 						<p:inputMask id="phoneNumberMobile" styleClass="forminput"
-							value="#{userProfileController.userDTO.phoneNumberMobile}"
+							value="#{userProfileController.person.phoneNumberMobile}"
 							readonly="#{!(userProfileController.admin)}" />
 					</p:column>
 				</p:row>
@@ -144,7 +144,7 @@
 							value="#{userProfileController.tagDisplayString}" readonly="true" />
 						<p:autoComplete id="personTags" multiple="true"
 							style="#{userProfileController.tagEditStyle}"
-							value="#{userProfileController.userDTO.tags}"
+							value="#{userProfileController.tags}"
 							completeMethod="#{userProfileController.completeTag}"
 							forceSelection="true" minQueryLength="3">
 							<p:ajax event="itemSelect"
@@ -160,12 +160,12 @@
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox
-							value="#{userProfileController.userDTO.online}" disabled="true" />
+							value="#{userProfileController.person.isOnline}" disabled="true" />
 						<p:outputLabel value="  Online" />
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox
-							value="#{userProfileController.userDTO.extern}"
+							value="#{userProfileController.person.isExtern}"
 							disabled="#{!(userProfileController.externFlagEnabled)}" id="outofoffice"/>
 						<p:outputLabel value="  Abwesend" />
 					</p:column>
@@ -175,13 +175,13 @@
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox
-							value="#{userProfileController.userDTO.active}"
+							value="#{userProfileController.person.isActive}"
 							disabled="#{!(userProfileController.activeFlagEnabled)}" id="active"/>
 						<p:outputLabel value="  Aktiv" />
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox
-							value="#{userProfileController.userDTO.loginAllowed}"  id="loginallowed"
+							value="#{userProfileController.person.isLoginAllowed}"  id="loginallowed"
 							disabled="#{!(userProfileController.loginAllowedFlagEnabled)}" />
 						<p:outputLabel value="  Login erlaubt" />
 					</p:column>
@@ -205,9 +205,9 @@
 				<p:commandButton id="contactButton"
 					value="#{userProfileController.contactButtonText()}" type="submit"
 					icon="ui-icon-contact"
-					actionListener="#{userProfileController.contactButtonAction()}"
-					rendered="#{userProfileController.addToContactVisible()}"
-					update="addtocontact,contacts,sendmessage" />
+					action="#{userProfileController.contactButtonAction()}"
+					rendered="#{userProfileController.addToContactVisible()}">
+				</p:commandButton>
 			</p:panel>
 			<p:panel id="sendmessage" cache="false">
 				<p:commandButton id="sendMessageButton"
@@ -221,7 +221,7 @@
 				<p:tabView>
 					<p:tab title="Abteilung">
 						<p:dataTable var="userWithDepartment"
-							value="#{userProfileController.usersWithDepartment}">
+							value="#{userProfileController.getUsersWithDepartment()}">
 							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{userWithDepartment.lastName}"
@@ -234,30 +234,30 @@
 								<h:outputText value="#{userWithDepartment.firstName}" />
 							</p:column>
 							<p:column headerText="Online">
-								<h:selectBooleanCheckbox value="#{userWithDepartment.online}"
+								<h:selectBooleanCheckbox value="#{userWithDepartment.isOnline}"
 									disabled="True" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
 					<p:tab title="Kontakte">
 						<p:dataTable var="contact"
-							value="#{userProfileController.userDTO.contacts}">
+							value="#{userProfileController.person.contacts}">
 							<p:column headerText="Nachname">
 								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
 									<h:outputText value="#{contact.lastName}"
-										class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+										class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
 									<f:param name="userName" value="#{contact.userName}" />
 									<f:param name="mode" value="view" />
 								</h:outputLink>
 							</p:column>
 							<p:column headerText="Vorname">
 								<h:outputText value="#{contact.firstName}"
-									class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+									class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
 							</p:column>
 							<p:column headerText="Online">
-								<h:selectBooleanCheckbox value="#{contact.online}"
+								<h:selectBooleanCheckbox value="#{contact.isOnline}"
 									disabled="True"
-									class="#{userProfileController.getContactListEntryClass(userProfileController.userDTO.userName, contact.department)}" />
+									class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
 							</p:column>
 						</p:dataTable>
 					</p:tab>
