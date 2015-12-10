@@ -44,7 +44,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(true, false);
 		
 		// forwarded to NotLoggedIn Page
-		verifyEquals(1, driver.findElements(By.linkText("Doors of Durin")).size());
+		verifyTrue(driver.findElements(By.linkText("Doors of Durin")).size() > 0);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(false, false);
 		
 		// forwarded to NotLoggedIn Page
-		verifyEquals(1, driver.findElements(By.linkText("Doors of Durin")).size());
+		verifyTrue(driver.findElements(By.linkText("Doors of Durin")).size() > 0);
 	}
 
 	/**

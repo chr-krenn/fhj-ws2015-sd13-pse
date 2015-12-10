@@ -53,7 +53,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage = loginPage.login("pompenig13", "12345678");
 		UserPage userPage = homepage.getUserProfilePage();
 		UserPage contactPage = userPage.openContactProfile(2);
-		verifyEquals("Löfler", contactPage.getUserLastName());
+		verifyEquals("mario.loefler@edu.fh-joanneum.at", contactPage.getUserEmailAddress());
 	}
 
 	/*

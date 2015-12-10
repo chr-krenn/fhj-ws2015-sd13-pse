@@ -23,7 +23,7 @@ public class ResetPasswordController {
 				userService.resetPassword(emailAddress);
 				setStatusText("Sie bekommen in Kürze Ihr neues Passwort per E-Mail übermittelt.");
 			} catch (ServiceException ex) {
-				setStatusText("E-Mail-Adresse konnte nicht gesendet werden.");
+				setStatusText("An die E-Mail-Adresse konnte nicht gesendet werden.");
 			}
 		}		
 	}

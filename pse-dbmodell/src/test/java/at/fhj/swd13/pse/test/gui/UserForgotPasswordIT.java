@@ -13,7 +13,7 @@ public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 	private ResetPasswordPage resetPasswordPage = null;
 	private LoginPage loginPage;
 	private static final String RESET_PASSWORD_HEADER = "Kennwort zurücksetzen";
-	private static final String RESET_STATUS_EMAIL_INVALID = "E-Mail-Adresse nicht gefunden.";
+	private static final String RESET_STATUS_EMAIL_INVALID = "An die E-Mail-Adresse konnte nicht gesendet werden.";
 	
 	@Before
 	public void setup() {
