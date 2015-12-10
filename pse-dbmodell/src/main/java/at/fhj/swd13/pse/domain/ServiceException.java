@@ -1,5 +1,8 @@
 package at.fhj.swd13.pse.domain;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException
 public class ServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = -6039587106876295562L;
