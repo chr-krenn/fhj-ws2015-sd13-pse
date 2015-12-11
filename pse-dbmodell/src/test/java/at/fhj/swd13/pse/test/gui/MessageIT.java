@@ -34,7 +34,7 @@ public class MessageIT extends SeleniumBaseTestCase {
 		int result = messagePage.addKeyword("keyword");
 		verifyEquals(1, result);
 		verifyTrue(messagePage.getKeywords().contains("keyword"));
-		//verifyEquals(2, messagePage.addKeyword("soft")); //FIXME: adding second keyword is not working
+		verifyEquals(2, messagePage.addKeyword("soft"));
 	}
 	
 	/*

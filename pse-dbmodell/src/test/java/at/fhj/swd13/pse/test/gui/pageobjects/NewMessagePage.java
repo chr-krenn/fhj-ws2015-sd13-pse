@@ -7,18 +7,22 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import at.fhj.swd13.pse.test.util.SleepUtil;
+
 public class NewMessagePage {
-	
+
 	protected WebDriver driver;
-	
+
 	/**
 	 * Constructor taking web driver as parameter.
-	 * @param driver the web driver.
+	 * 
+	 * @param driver
+	 *            the web driver.
 	 */
-	public NewMessagePage (WebDriver driver) {
+	public NewMessagePage(WebDriver driver) {
 		this.driver = driver;
 	}
-	
+
 	/**
 	 * Get header line of new message page
 	 * 
@@ -27,14 +31,14 @@ public class NewMessagePage {
 	public String getHeader() {
 		return driver.findElement(By.xpath(".//*[@id='j_idt39:j_idt40']/tbody/tr[1]/td")).getText();
 	}
-	
+
 	/**
 	 * Press Save button
 	 */
 	public void save() {
 		driver.findElement(By.id("j_idt39:j_idt81")).click();
 	}
-	
+
 	/**
 	 * Send message with indicated title and text
 	 * 
@@ -58,8 +62,8 @@ public class NewMessagePage {
 		addKeyword(keyword);
 		save();
 	}
-	
-	//FIXME: Error @textField.clear: WebDriverException: Element must be user-editable to clear it
+
+	// FIXME: Error @textField.clear: WebDriverException: Element must be user-editable to clear it
 	/**
 	 * Enter title and text
 	 * 
@@ -73,12 +77,12 @@ public class NewMessagePage {
 		String window = driver.getWindowHandle();
 		WebElement iframe = driver.findElement(By.tagName("iframe"));
 		driver.switchTo().frame(iframe);
-		WebElement textField = driver.findElement(By.xpath("html/body")); //FIXME!
-		textField.clear(); 
+		WebElement textField = driver.findElement(By.xpath("html/body")); // FIXME!
+		textField.clear();
 		textField.sendKeys(text);
 		driver.switchTo().frame(window);
 	}
-	
+
 	/**
 	 * Add keyword
 	 * 
@@ -88,10 +92,11 @@ public class NewMessagePage {
 	public int addKeyword(String keyword) {
 		WebElement tagInput = driver.findElement(By.id("j_idt39:messageTags_input"));
 		tagInput.sendKeys(keyword);
+		SleepUtil.sleep(500);
 		driver.findElement(By.xpath(".//*[@id='j_idt39:messageTags_panel']/ul/li")).click();
-		return driver.findElements(By.xpath(".//*[@id='j_idt39:messageTags']/ul/li")).size()-1;
+		return driver.findElements(By.xpath(".//*[@id='j_idt39:messageTags']/ul/li")).size() - 1;
 	}
-	
+
 	/**
 	 * Get WebElements for keywords
 	 * 
@@ -100,7 +105,7 @@ public class NewMessagePage {
 	private List<WebElement> getKeywordWebElements() {
 		return driver.findElements(By.xpath(".//*[@id='j_idt39:messageTags']/ul/li"));
 	}
-	
+
 	/**
 	 * Get String list of keywords
 	 * 
@@ -108,7 +113,7 @@ public class NewMessagePage {
 	 */
 	public List<String> getKeywords() {
 		List<String> keywords = new ArrayList<>();
-		for(WebElement e : getKeywordWebElements()) {
+		for (WebElement e : getKeywordWebElements()) {
 			keywords.add(e.getText());
 		}
 		return keywords;
