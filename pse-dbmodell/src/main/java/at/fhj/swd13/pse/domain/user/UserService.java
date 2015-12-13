@@ -124,7 +124,7 @@ public interface UserService {
 	 * 			  tags to be updated 	    
 	 * 
 	 */
-	void update(final Person Person, final List<String> tags);
+	void update(final Person person, final List<String> tags);
 
 	/**
 	 * Set or clear the image of a user
