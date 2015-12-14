@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.domain.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -27,6 +28,7 @@ import at.fhj.swd13.pse.service.ServiceBase;
  * 
  */
 @Stateless
+@Local(UserService.class)
 public class UserServiceImpl extends ServiceBase implements UserService {
 
 	@Inject
