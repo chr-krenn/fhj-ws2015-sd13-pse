@@ -26,7 +26,6 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
-import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
@@ -72,7 +71,7 @@ public class UserProfileController implements Serializable {
 		try {
 			getPersonData();
 			
-		} catch (ServiceException e) {
+		} catch (Throwable e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Setup Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}		
@@ -122,10 +121,7 @@ public class UserProfileController implements Serializable {
 		try {
 			Document document = documentService.store(file.getFileName(), file.getInputstream());
 			userService.setUserImage(getPerson().getUserName(), document.getDocumentId());
-		} catch (IOException e) {
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
-		} catch (ServiceException e) {
+		} catch (Throwable e) {
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
@@ -137,7 +133,8 @@ public class UserProfileController implements Serializable {
 			extContext.redirect(url + "?userName=" + userName + "&mode=" + editMode);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "File-Upload Fehler", e.getMessage());
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 		
 	}
@@ -165,11 +162,7 @@ public class UserProfileController implements Serializable {
 			
 			userService.update(person, getTags());
 
-		} catch (ServiceException e) { 
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler", e.getMessage());
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			return;
-		} catch (Exception e) { // todo remove
+		} catch (Throwable e) { 
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Aktualisiserung Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
@@ -323,7 +316,7 @@ public class UserProfileController implements Serializable {
 				userService.createRelation(getLoggedInUser(), userService.getUser(person.getUserName()));
 			}
 			
-		} catch (ServiceException e) {
+		} catch (Throwable e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Kontakt hinzufügen Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
@@ -358,7 +351,7 @@ public class UserProfileController implements Serializable {
 				return "samedepartment";
 			else
 				return "";
-		} catch (ServiceException e) {
+		} catch (Throwable e) {
 			return "";
 		}
 	}
@@ -371,8 +364,7 @@ public class UserProfileController implements Serializable {
 			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
 			setCommunityName("");
 			getPerson();
-			// todo -> ServiceException
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Community anlegen Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
