@@ -38,7 +38,7 @@ public class LoginPage {
 
 		loginInternal(username, password);
 
-		return new HomePage(driver);
+		return new HomePage(driver, baseUrl);
 	}
 	
 	/**
@@ -75,6 +75,16 @@ public class LoginPage {
 		driver.findElement(By.id("loginform:resetPasswordLink")).click();
 
 		return new ResetPasswordPage(driver);
+	}
+	
+	/**
+	 * Checks if the einloggen link is present
+	 * 
+	 * @return boolean
+	 */
+	public boolean isEinloggenLinkPresent()
+	{
+		return (driver.findElement(By.linkText("einloggen!")) != null);
 	}
 
 }

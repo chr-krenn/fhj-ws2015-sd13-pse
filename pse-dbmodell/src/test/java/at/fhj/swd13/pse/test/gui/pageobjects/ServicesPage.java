@@ -6,12 +6,17 @@ import org.openqa.selenium.WebDriver;
 public class ServicesPage {
 	
 	protected WebDriver driver;
+	protected String baseUrl;
 	
 	/**
 	 * Constructor taking web driver as parameter.
-	 * @param driver the web driver.
+	 * @param driver
+	 *            - the web driver.
+	 * @param baseUrl
+	 *            - the baseUrl of the app
 	 */
-	public ServicesPage (WebDriver driver) {
+	public ServicesPage (WebDriver driver, String baseUrl) {
+		this.baseUrl = baseUrl;
 		this.driver = driver;
 	}
 	
@@ -31,7 +36,7 @@ public class ServicesPage {
 	 */
 	public HomePage openHomePage() {
 		driver.findElement(By.id("j_idt8:j_idt9")).click();
-		return new HomePage(driver);
+		return new HomePage(driver, baseUrl);
 	}
 	
 }

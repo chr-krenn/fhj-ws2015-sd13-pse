@@ -14,16 +14,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class HomePage {
 	
 	protected WebDriver driver;
+	protected String baseUrl;
 	
 	/**
 	 * Constructor taking web driver as parameter.
-	 * @param driver the web driver.
+	 * @param driver
+	 *            - the web driver.
+	 * @param baseUrl
+	 *            - the baseUrl of the app
 	 */
-	public HomePage (WebDriver driver) {
+	public HomePage (WebDriver driver, String baseUrl) {
 		this.driver = driver;
+		this.baseUrl = baseUrl;
 	}
 	
-	public void logout() {
+	public LoginPage logout() {
 		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menuButton']")).click();
 		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[4]/a")).click();
 		
@@ -34,6 +39,8 @@ public class HomePage {
             	return d.findElement(By.linkText("einloggen!")) != null;
             }
         });
+		
+		return new LoginPage(driver, baseUrl);
 	}
 
 	/**
@@ -286,7 +293,7 @@ public class HomePage {
 	 */
 	public ServicesPage getServicesPage() {
 		driver.findElement(By.id("j_idt8:j_idt12")).click();
-		return new ServicesPage(driver);
+		return new ServicesPage(driver, baseUrl);
 	}
 	
 	/**
