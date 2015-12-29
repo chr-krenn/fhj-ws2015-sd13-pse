@@ -44,7 +44,7 @@ public interface UserService {
 	List<Person> getUsers();
 	
 	/**
-	 * get a list of all known usrs with the given department
+	 * get a list of all known users with the given department
 	 * @param deparment
 	 *           of the persons to retrieve
 	 * @return a list of all currently known users
