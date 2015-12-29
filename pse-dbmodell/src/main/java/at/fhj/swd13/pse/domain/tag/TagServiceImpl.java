@@ -2,22 +2,29 @@ package at.fhj.swd13.pse.domain.tag;
 
 import java.util.List;
 
+import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
+import org.jboss.logging.Logger;
+
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.service.ServiceBase;
 
 /**
  * provide all tag related services
  * 
- * @author Gustav Gans
- *
  */
 @Stateless
+@Local(TagService.class)
 public class TagServiceImpl extends ServiceBase implements TagService {
+	
+	@Inject
+	private Logger logger;
+
 
 	/**
 	 * parameterless ctor needed for injection to work
@@ -27,7 +34,7 @@ public class TagServiceImpl extends ServiceBase implements TagService {
 	}
 
 	/**
-	 * ctor for testing purpses mainly
+	 * ctor for testing purposes mainly
 	 * 
 	 * @param dbContext
 	 */
@@ -35,27 +42,43 @@ public class TagServiceImpl extends ServiceBase implements TagService {
 		super(dbContext);
 	}
 
-	/* (non-Javadoc)
-	 * @see at.fhj.swd13.pse.domain.chat.TagService#getMatchingTags(java.lang.String)
-	 */
 	@Override
 	public List<Tag> getMatchingTags(final String needle) {
-
-		return dbContext.getTagDAO().getByTokenLike(needle);
+		try {
+			return dbContext.getTagDAO().getByTokenLike(needle);
+		} catch (Throwable ex) {
+			logger.info("[TagService] getMatchingTags failed for needle " + needle + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public Tag getTagByToken(String token) {
-		return dbContext.getTagDAO().getByToken(token);
+		try {
+			return dbContext.getTagDAO().getByToken(token);
+		} catch (Throwable ex) {
+			logger.info("[TagService] getTagByToken failed for token " + token + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
-	public void insert(Tag tag) throws ConstraintViolationException{
-		dbContext.getTagDAO().insert(tag);
+	public void insert(Tag tag) {
+		try {
+			dbContext.getTagDAO().insert(tag);
+		} catch (Throwable ex) {
+			logger.info("[TagService] insert failed for tag " + tag.getToken() + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public List<Tag> getTagsforPerson(Person p) {
-		return dbContext.getTagDAO().getByPerson(p);
+		try {
+			return dbContext.getTagDAO().getByPerson(p);
+		} catch (Throwable ex) {
+			logger.info("[TagService] getTagsforPerson failed for Person " + p.getFullName() + " : " + ex.getMessage());
+			throw new ServiceException(ex);
+		}
 	}
 }
