@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
@@ -184,10 +185,51 @@ public class UserServiceTestIT extends RemoteTestBase {
 	/*
 	 * PSE2015-46	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können
 	 */
+    @Test
+    public void addContact() {
+    	Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
+		assertNotNull(user);
+
+		List<Person> persons = userService.findUsers("integrationtestcontactuser");
+		assertEquals(1, persons.size());
+		Person contactPersonExisting = persons.get(0);
+
+		persons = userService.findUsers("angelofr13");
+		assertEquals(1, persons.size());
+		Person contactPersonNew = persons.get(0);
+		
+		userService.createRelation(user, contactPersonNew);
+
+		persons = userService.findUsers("integrationtestuser");
+		assertEquals(1, persons.size());
+		
+		List<PersonRelation> relations = persons.get(0).getPersonSourceRelations();
+		
+		int relationsFound = 0;
+		for (PersonRelation relation : relations) {
+			if (relation.getTargetPerson().equals(contactPersonNew) || relation.getTargetPerson().equals(contactPersonExisting))
+				relationsFound++;
+		}
+		assertEquals(2, relationsFound);
+    }
 		
 	/*
 	 * PSE2015-47	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt entfernen können
 	 */
+    @Test
+    public void removeContact() {
+    	Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
+		assertNotNull(user);
+		assertEquals(1, user.getPersonSourceRelations().size());
+
+		List<Person> persons = userService.findUsers("integrationtestcontactuser");
+		Person contactPersonExisting = persons.get(0);
+
+		userService.removeRelation(user, contactPersonExisting);
+
+		persons = userService.findUsers("integrationtestuser");
+		assertEquals(0, persons.get(0).getPersonSourceRelations().size());
+    }
 	
 	/*
 	 * 	PSE2015-49	Als angemeldeter Benutzer möchte ich die Benutzer, die ich als Kontakt hinzugefügt habe, angezeigt bekommen
