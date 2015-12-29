@@ -1,16 +1,16 @@
 package at.fhj.swd13.pse.test.gui;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
-
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
+import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
 
 public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
 	private  static HomePage homepage = null;
 	private  static LoginPage loginPage = null;
+	private  static NotLoggedInPage notLoggedInPage = null;
 	
 	/**
 	 * PSE2015-12: Als angemeldeter Benutzer des Systems möchte ich mein Passwort ändern können
@@ -47,10 +47,10 @@ public class UserChangePasswordIT extends SeleniumBaseTestCase {
 		homepage.changePassword(oldPassword, newPassword);
 		homepage.logout();
 
-		loginPage.login(username, oldPassword);
+		notLoggedInPage = loginPage.loginWithWrongCredentials(username, oldPassword);
 
 		// forwarded to NotLoggedIn Page
-		verifyEquals(1, driver.findElements(By.linkText("Doors of Durin")).size());
+		verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());
 	}
 
 }
