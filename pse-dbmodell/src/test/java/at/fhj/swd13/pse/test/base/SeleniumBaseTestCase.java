@@ -18,6 +18,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import at.fhj.swd13.pse.test.util.EnvironmentUtil;
+
 /**
  * @author florian.genser
  *
@@ -45,13 +47,11 @@ public abstract class SeleniumBaseTestCase {
 	
 	private static String resolveBaseUrl() {
 
-		final String pseEnv = System.getenv("PSE_ENV");
+		final String port = EnvironmentUtil.reolvePort();
+		
+		final String baseUrl = "http://localhost:" + port +"/pse";
 
-		final String pseEnvSystem = System.getProperty("PSE_ENV", pseEnv);
-		if (pseEnvSystem == null || !pseEnvSystem.equals("CI")) {
-			return "http://localhost:8080/pse";
-		}
-		return "http://localhost:8000/pse";
+		return baseUrl;
 	}
 	
 	@After
