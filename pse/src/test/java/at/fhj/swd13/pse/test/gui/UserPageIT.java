@@ -10,6 +10,7 @@ import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
+import at.fhj.swd13.pse.test.gui.pageobjects.UserList;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
 
 public class UserPageIT extends SeleniumBaseTestCase {
@@ -43,6 +44,27 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage = loginPage.login("pompenig13", "12345678");
 		UserPage userPage = homepage.getUserProfilePage();
 		verifyEquals(2, userPage.getNumberOfContacts());
+	}
+	
+	/*
+	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-46 "Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können"
+	 */
+	@Ignore // FIXME
+	@Test
+	public void testAddToContact() {
+		homepage = loginPage.login("haringst13", "12345678");
+		
+		UserPage userPage = homepage.getUserProfilePage();
+		verifyEquals(userPage.getNumberOfContacts(), 0);
+		
+		UserList userList = homepage.searchUser("Angelo");
+		userPage = userList.openUserPage(0);
+		userPage.addToContact();
+		
+		userPage = homepage.getUserProfilePage();
+		verifyEquals(userPage.getNumberOfContacts(), 1);
 	}
 
 	/*
