@@ -353,30 +353,25 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	}
 
 	@Override
-	public void resetPassword(final String emailAddress) {
-		
-		FacesContext context = FacesContext.getCurrentInstance();
-		HttpServletRequest rq = (HttpServletRequest)context.getExternalContext().getRequest();
-		int port = rq.getServerPort();
-		String serverName = rq.getServerName();
+	public String resetPassword(final String emailAddress, String serverName, int port) {
+		String randomPassword = passwordCreator.createRandomPassword();
 
 		try {
 			Person person = dbContext.getPersonDAO().getByEmailAddress(emailAddress);
 
 			logger.info("[USER] found person, now sending email...");
 
-			String randomPassword = passwordCreator.createRandomPassword();
 			person.setPassword(randomPassword);
 
 			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
 					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
-
 		} catch (Throwable ex) {
 			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage());
 			throw new ServiceException(ex);
 		}
+		return randomPassword;
 	}
 	
 	@Override

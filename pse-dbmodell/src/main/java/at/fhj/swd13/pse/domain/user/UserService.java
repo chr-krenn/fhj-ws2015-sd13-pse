@@ -154,9 +154,12 @@ public interface UserService {
 	/**
 	 * Resets the password of the user with a given E-Mail-Address to a random value
 	 * @param emailAddress the E-Mail-Address as String
+	 * @param serverName the server name 
+	 * @param serverName the server port 
+	 * @return the new random password
 	 */
 	
-	void resetPassword(String emailAddress);
+	String resetPassword(String emailAddress, String serverName, int port);
 	
 	/**
 	 * Returns the Image Reference for the User

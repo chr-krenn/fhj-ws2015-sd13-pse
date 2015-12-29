@@ -21,7 +21,7 @@ public class UserSession implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String sessionId = UUID.randomUUID().toString();
+	private String sessionId = createSessionId();
 
 
 	@Inject
@@ -50,6 +50,10 @@ public class UserSession implements Serializable {
 		} catch (Exception e) {
 			logger.error("[USERSESSION] error durin preDestroy: " + e.getMessage());
 		}
+	}
+	
+	public static String createSessionId() {
+		return UUID.randomUUID().toString();
 	}
 
 	public String getSessionId() {

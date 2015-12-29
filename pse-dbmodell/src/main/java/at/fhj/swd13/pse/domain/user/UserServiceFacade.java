@@ -93,8 +93,8 @@ public class UserServiceFacade implements UserService {
 	}
 
 	@Override
-	public void resetPassword(String emailAddress) {
-		userService.resetPassword(emailAddress);
+	public String resetPassword(String emailAddress, String serverName, int port) {
+		return userService.resetPassword(emailAddress, serverName, port);
 	}
 
 	@Override
