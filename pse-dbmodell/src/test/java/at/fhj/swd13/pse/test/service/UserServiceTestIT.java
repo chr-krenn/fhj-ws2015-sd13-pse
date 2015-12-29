@@ -111,4 +111,64 @@ public class UserServiceTestIT extends RemoteTestBase {
 		assertFalse(person.getIsOnline());
 		assertFalse(person.isAdmin());
 	}
+	
+	/*
+	 * PSE2015-11	Als angemeldeter Benutzer des Systems möchte ich meine Persönlichen Daten verändern können
+	 */
+	@Test
+	public void changeData() {
+
+		
+	}
+	
+	
+	/*
+	 * PSE2015-12	Als angemeldeter Benutzer des Systems möchte ich mein Passwort ändern können
+	 */
+    @Test
+    public void changePassword() {
+    	assertTrue(userService.changePassword("integrationtestuser", "12345678", "ABCDEFGH"));
+    	// login must be possible with new password
+		assertNull(userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId()));
+		assertNotNull(userService.loginUser("integrationtestuser", "ABCDEFGH", UserSession.createSessionId()));
+    }
+
+	
+	/*
+	 * PSE2015-13	Als angemeldeter Admin möchte ich einen User aktiv/inaktiv setzen können
+	 */
+	
+	/*
+	 * PSE2015-14	Als angemeldeter Admin möchte ich allgemeine Informationen eines Users verändern können
+	 */
+	
+	
+	/*
+	 * PSE2015-29	Als angemeldeter User möchte ich per Klick auf das Startseitemenuitem des angemeldeten Users im Header auf die Userseite kommen
+	 */
+	
+	/*
+	 * PSE2015-30	Als angemeldeter Benutzer des Systems möchte ich mich vom System abmelden können	
+	 */
+	
+	/*
+	 * PSE2015-46	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können
+	 */
+		
+	/*
+	 * PSE2015-47	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt entfernen können
+	 */
+	
+	/*
+	 * 	PSE2015-49	Als angemeldeter Benutzer möchte ich die Benutzer, die ich als Kontakt hinzugefügt habe, angezeigt bekommen
+	 */
+	
+	/*
+	 * PSE2015-51	Als angemeldeter Benutzer möchte ich die Benutzer die in der selben Abteilung sind, angezeigt bekommen
+	 */
+	
+	
+	/*
+	 * 	PSE2015-61	Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten
+	 */
 }
