@@ -193,6 +193,22 @@ public class UserPage {
 	public int getNumberOfContacts() {
 		return driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")).size();
 	}
+
+	/**
+	 * Get "contactButton" button
+	 * 
+	 * @return WebElement for button
+	 */
+	private WebElement getContactButton() {
+		return driver.findElement(By.id("userForm:contactButton"));
+	}
+		
+	/**
+	 * Add to contact
+	 */
+	public void addToContact() {
+		getContactButton().click();
+	}
 	
 	/**
 	 * Open profile of contact
@@ -222,6 +238,7 @@ public class UserPage {
 		return driver.findElement(By.id("userForm:sendMessageButton"));
 	}
 	
+	
 	/**
 	 * Click "Nachricht senden" button to open new message page
 	 * 
@@ -240,5 +257,4 @@ public class UserPage {
 	public String getConfirmationForSendingMessage() {
 		return driver.findElement(By.xpath(".//*[@id='userForm:messages_container']/div/div/div[2]/span")).getText();
 	}
-
 }
