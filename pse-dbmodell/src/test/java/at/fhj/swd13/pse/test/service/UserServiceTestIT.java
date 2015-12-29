@@ -2,11 +2,13 @@ package at.fhj.swd13.pse.test.service;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -60,17 +62,53 @@ public class UserServiceTestIT extends RemoteTestBase {
      */
 	@Test
 	public void findUsers() {
-		List<Person> persons = userService.findUsers("Tein");
-		assertEquals("Teiniker", persons.get(0).getLastName());
+		List<Person> persons = userService.findUsers("ei");
+		assertEquals(2, persons.size());
 	}
-	
 	
 	/*
 	 * 	PSE2015-10 Als angemeldeter Benutzer des Systems möchte ich die Profile anderer Benutzer des Systems anschauen können
 	 */
 	@Test
 	public void viewProfile() {
-		List<Person> persons = userService.findUsers("Tein");
-		assertEquals("Teiniker", persons.get(0).getLastName());
+		List<Person> persons = userService.findUsers("Test");
+		assertEquals(1, persons.size());
+		Person person = persons.get(0);
+		
+		assertEquals("Test", person.getLastName());
+		assertEquals("User", person.getFirstName());
+		assertEquals("test.user@edu.fh-joanneum.at", person.getEmailAddress());
+		assertEquals("+43666123456789", person.getPhoneNumberMobile());
+		assertEquals("Knecht", person.getJobPosition());
+		assertEquals("Team 4", person.getDepartment());
+		assertEquals("A", person.getLocationBuilding());
+		assertEquals("666", person.getLocationRoomNumber());
+		assertEquals(new Integer(-2), person.getLocationFloor());
+		
+		Calendar calBirth = Calendar.getInstance();
+		calBirth.set(Calendar.YEAR, 1980);
+		calBirth.set(Calendar.MONTH, Calendar.JANUARY);
+		calBirth.set(Calendar.DAY_OF_MONTH, 1);
+		calBirth.set(Calendar.HOUR_OF_DAY, 0);
+		calBirth.set(Calendar.MINUTE, 0);
+		calBirth.set(Calendar.SECOND, 0);
+		calBirth.set(Calendar.MILLISECOND, 0);
+		assertEquals(calBirth.getTime(), person.getDateOfBirth());
+
+		Calendar calEntry = Calendar.getInstance();
+		calEntry.set(Calendar.YEAR, 2015);
+		calEntry.set(Calendar.MONTH, Calendar.JANUARY);
+		calEntry.set(Calendar.DAY_OF_MONTH, 1);
+		calEntry.set(Calendar.HOUR_OF_DAY, 0);
+		calEntry.set(Calendar.MINUTE, 0);
+		calEntry.set(Calendar.SECOND, 0);
+		calEntry.set(Calendar.MILLISECOND, 0);
+		assertEquals(calEntry.getTime(), person.getDateOfEntry());
+		
+		assertTrue(person.getIsActive());
+		assertFalse(person.getIsExtern());
+		assertTrue(person.getIsLoginAllowed());
+		assertFalse(person.getIsOnline());
+		assertFalse(person.isAdmin());
 	}
 }

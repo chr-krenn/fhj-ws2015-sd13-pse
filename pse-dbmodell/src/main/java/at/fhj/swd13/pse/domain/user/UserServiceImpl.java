@@ -5,9 +5,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 

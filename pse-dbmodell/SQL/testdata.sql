@@ -1,3 +1,7 @@
+-- testuser
+INSERT INTO `person` VALUES (999, 'testuser','Test','User','test.user@edu.fh-joanneum.at','+43666123456789','--','Knecht','Team 4','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
+
+
 --Community for testing, test person is a member
 insert into community
 	(community_id, invitation_only, name, created_by, confirmed_by)

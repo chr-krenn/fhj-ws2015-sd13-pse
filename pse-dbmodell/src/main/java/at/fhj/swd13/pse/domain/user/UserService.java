@@ -52,7 +52,7 @@ public interface UserService {
 	List<Person> getUsersWithDepartment(String department);
 	
 	/**
-	 * searc users by firstname, lastname, email 
+	 * search users by firstname, lastname, email 
 	 * 
 	 * @return a list of all users mathcing the search
 	 */
