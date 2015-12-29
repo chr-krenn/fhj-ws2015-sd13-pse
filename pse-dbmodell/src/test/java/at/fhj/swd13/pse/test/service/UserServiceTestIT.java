@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.test.service;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
@@ -31,13 +32,13 @@ public class UserServiceTestIT extends RemoteTestBase {
         jndiProperties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         final Context context = new InitialContext(jndiProperties);
         
-        final String jndiName = "ejb:" + "" 
+        final String jndiNameUserService = "ejb:" + "" 
         		+ "/" + "pse-dbmodell" 
         		+ "/" 
         		+ "/" + "UserServiceFacade" 
         		+ "!" + UserService.class.getName();
    
-        userService = (UserService) context.lookup(jndiName);
+        userService = (UserService) context.lookup(jndiNameUserService);
 		userService.updateNullPasswords();
     }	
 	
@@ -114,12 +115,25 @@ public class UserServiceTestIT extends RemoteTestBase {
 	}
 	
 	/*
-	 * PSE2015-11	Als angemeldeter Benutzer des Systems möchte ich meine Persönlichen Daten verändern können
+	 * PSE2015-11	Als angemeldeter Benutzer des Systems möchte ich meine persönlichen Daten verändern können
 	 */
 	@Test
-	public void changeData() {
+	public void changePersonalData() {
+    	Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
 
+    	// Interessen
+		List<String> tags = new ArrayList<>();
+		tags.add("Software");
+		userService.update(user, tags);
 		
+    	// Communities
+		// TODO
+		
+    	// Foto
+		// TODO
+		
+		user = userService.findUsers("integrationtestuser").get(0);
+		assertEquals("Software", user.getPersonTags().get(0).getTag().getToken());
 	}
 	
 	/*
@@ -138,10 +152,6 @@ public class UserServiceTestIT extends RemoteTestBase {
 	 */
     @Test
     public void setUserActive() {
-    	// login must be possible with new password
-		Person admin = userService.loginUser("integrationtestadmin", "12345678", UserSession.createSessionId());
-		assertNotNull(admin);
-		
 		// login person is possible
 		Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
 		assertNotNull(user);
@@ -157,9 +167,25 @@ public class UserServiceTestIT extends RemoteTestBase {
 	/*
 	 * PSE2015-14	Als angemeldeter Admin möchte ich allgemeine Informationen eines Users verändern können
 	 */
-	
-	
-	/*
+	@Test
+	public void changeUserData() {
+		List<Person> persons = userService.findUsers("integrationtestuser");
+		Person user = persons.get(0);
+
+		user.setFirstName("User_Updated");
+		user.setLastName("Test_Updated");
+		user.setDepartment("Team 4 Updated");
+		userService.update(user, null);
+
+		persons = userService.findUsers("integrationtestuser");
+		user = persons.get(0);
+		assertEquals("User_Updated", user.getFirstName());
+		assertEquals("Test_Updated", user.getLastName());
+		assertEquals("Team 4 Updated", user.getDepartment());
+	}
+
+    
+    /*
 	 * PSE2015-29	Als angemeldeter User möchte ich per Klick auf das Startseitemenuitem des angemeldeten Users im Header auf die Userseite kommen
 	 * reine GUI Userstory
 	 */
@@ -234,6 +260,18 @@ public class UserServiceTestIT extends RemoteTestBase {
 	/*
 	 * 	PSE2015-49	Als angemeldeter Benutzer möchte ich die Benutzer, die ich als Kontakt hinzugefügt habe, angezeigt bekommen
 	 */
+    @Test
+    public void listContacts() {
+    	Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
+		assertNotNull(user);
+		assertEquals(1, user.getPersonSourceRelations().size());
+
+		List<Person> persons = userService.findUsers("integrationtestcontactuser");
+		Person contactPersonExisting = persons.get(0);
+
+		persons = userService.findUsers("integrationtestuser");
+		assertEquals(contactPersonExisting, persons.get(0).getPersonSourceRelations().get(0).getTargetPerson());
+    }
 	
 	/*
 	 * PSE2015-51	Als angemeldeter Benutzer möchte ich die Benutzer die in der selben Abteilung sind, angezeigt bekommen
