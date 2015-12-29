@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
@@ -184,6 +185,23 @@ public class UserServiceTestIT extends RemoteTestBase {
 	/*
 	 * PSE2015-46	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können
 	 */
+    @Test
+    public void addContact() {
+    	Person user = userService.loginUser("integrationtestuser", "12345678", UserSession.createSessionId());
+		assertNotNull(user);
+
+		List<Person> persons = userService.findUsers("angelofr13");
+		assertEquals(1, persons.size());
+		Person contactPerson = persons.get(0);
+		
+		userService.createRelation(user, contactPerson);
+
+		persons = userService.findUsers("integrationtestuser");
+		assertEquals(1, persons.size());
+		List<PersonRelation> relations = persons.get(0).getPersonSourceRelations();
+		assertEquals(1, relations.size());
+		assertEquals("angelofr13", relations.get(0).getTargetPerson().getUserName());
+    }
 		
 	/*
 	 * PSE2015-47	Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt entfernen können
