@@ -217,9 +217,4 @@ public class UserServiceTestIT extends RemoteTestBase {
 		assertEquals(1, persons.size());
 		assertTrue(users.contains(persons.get(0)));
     }
-	
-	
-	/*
-	 * 	PSE2015-61	Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten
-	 */
 }
