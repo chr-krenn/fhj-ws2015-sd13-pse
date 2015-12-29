@@ -2,19 +2,19 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
+import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserList;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
 
 
 public class UserPageAdminIT extends SeleniumBaseTestCase {
 	
-	private HomePage homepage;
-	private LoginPage loginPage;
+	private HomePage homepage = null;
+	private LoginPage loginPage = null;
+	private NotLoggedInPage notLoggedInPage = null;
 
 	@Before
 	public void init() {
@@ -32,7 +32,6 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(false, true);
 		
 		// forwarded to NotLoggedIn Page
-		verifyEquals(1, driver.findElements(By.linkText("Doors of Durin")).size());
 	}
 
 	/**
@@ -44,7 +43,6 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(true, false);
 		
 		// forwarded to NotLoggedIn Page
-		verifyTrue(driver.findElements(By.linkText("Doors of Durin")).size() > 0);
 	}
 	
 	/**
@@ -56,7 +54,6 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(false, false);
 		
 		// forwarded to NotLoggedIn Page
-		verifyTrue(driver.findElements(By.linkText("Doors of Durin")).size() > 0);
 	}
 
 	/**
@@ -68,7 +65,6 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		testLogin(true, true);
 		
 		// forwarded to HomePage
-		verifyTrue(homepage.isActivitiesStreamPresent());
 		homepage.logout();
 	}
 	
@@ -88,6 +84,17 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		
 		// user must not be able to login
 		homepage.logout();
-		homepage = loginPage.login("angelofr13", "12345678");
+		if((!active) || (!loginAllowed))
+		{
+			//forwarded to NotLoggedIn Page
+			notLoggedInPage = loginPage.loginWithWrongCredentials("angelofr13", "12345678");
+			
+			verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());
+		}
+		else
+		{
+			homepage = loginPage.login("angelofr13", "12345678");
+			verifyTrue(homepage.isActivitiesStreamPresent());
+		}
 	}
 }
