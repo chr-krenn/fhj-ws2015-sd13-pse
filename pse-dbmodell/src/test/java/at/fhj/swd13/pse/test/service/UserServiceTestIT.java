@@ -1,17 +1,21 @@
 package at.fhj.swd13.pse.test.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -31,11 +35,11 @@ public class UserServiceTestIT extends RemoteTestBase {
         final Context context = new InitialContext(jndiProperties);
         
         final String jndiName = "ejb:" + "" 
-        		+ "/" + "pse-dbmodell" 
+        		+ "/" + "pse" 
         		+ "/" 
         		+ "/" + "UserServiceFacade" 
         		+ "!" + UserService.class.getName();
-   
+
         userService = (UserService) context.lookup(jndiName);
 		userService.updateNullPasswords();
     }	
