@@ -84,6 +84,24 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyTrue(names.contains("Oswald Gerald"));
 		verifyTrue(names.contains("Schmidt Roman"));
 	}
+	
+	/*
+	 * Test only works with correct test data 
+	 * 
+	 * PSE2015-49 "Als angemeldeter Benutzer möchte ich die Benutzer, die ich als Kontakt hinzugefügt habe, angezeigt bekommen"
+	 */
+	@Test
+	public void testContacts() {
+		homepage = loginPage.login("pompenig13", "12345678");
+				
+		UserPage userPage = homepage.getUserProfilePage();
+		userPage.openContactsTab();
+		verifyEquals(userPage.getNumberOfContacts(), 2);
+		
+		List<String> names = userPage.getNamesOfContacts();
+		verifyTrue(names.contains("Löfler Mario"));
+		verifyTrue(names.contains("Genser Florian"));		
+	}
 
 
 	/*

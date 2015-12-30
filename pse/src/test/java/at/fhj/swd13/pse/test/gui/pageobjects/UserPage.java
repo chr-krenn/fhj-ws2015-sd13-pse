@@ -203,7 +203,25 @@ public class UserPage {
 		else
 			return driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")).size();
 	}
-
+	
+	/**
+	 * Get names of contacts
+	 * 
+	 * @return List with names of contacts
+	 */
+	public List<String> getNamesOfContacts() {
+		
+		List<String> nameList = new ArrayList<String>();
+		
+		for (WebElement we : driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")))
+		{
+			if(!we.getText().equals("No records found."))
+				nameList.add(we.getText());
+		}
+		
+		return nameList;
+	}
+	
 	/**
 	 * Get "contactButton" button
 	 * 
@@ -293,7 +311,7 @@ public class UserPage {
 	 */
 	public List<String> getNamesOfUsersWithDepartment()
 	{
-		List<String> lastNamesList = new ArrayList<String>();
+		List<String> nameList = new ArrayList<String>();
 		
 		boolean bCaption = false;
 		for (WebElement we : driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")))
@@ -301,9 +319,9 @@ public class UserPage {
 			if(!bCaption)
 				bCaption = true;
 			else
-				lastNamesList.add(we.getText());
+				nameList.add(we.getText());
 		}
 		
-		return lastNamesList;
+		return nameList;
 	}
 }
