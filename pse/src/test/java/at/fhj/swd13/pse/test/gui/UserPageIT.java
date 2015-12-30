@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.test.gui;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,21 +53,38 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	 * 
 	 * PSE2015-46 "Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können"
 	 */
-	@Ignore // FIXME
 	@Test
 	public void testAddToContact() {
 		homepage = loginPage.login("haringst13", "12345678");
-		
-		UserPage userPage = homepage.getUserProfilePage();
-		verifyEquals(userPage.getNumberOfContacts(), 0);
-		
+				
 		UserList userList = homepage.searchUser("Angelo");
-		userPage = userList.openUserPage(0);
+		UserPage userPage = userList.openUserPage(0);
+		userPage.openContactsTab();
+		verifyEquals(userPage.getNumberOfContacts(), 0);
 		userPage.addToContact();
-		
-		userPage = homepage.getUserProfilePage();
+		userPage.openContactsTab();
 		verifyEquals(userPage.getNumberOfContacts(), 1);
 	}
+	
+	/*
+	 * Test only works with correct test data 
+	 * 
+	 * PSE2015-51 "Als angemeldeter Benutzer möchte ich die Benutzer die in der selben Abteilung sind, angezeigt bekommen"
+	 */
+	@Test
+	public void testUsersWithDepartment() {
+		homepage = loginPage.login("haringst13", "12345678");
+		
+		UserPage userPage = homepage.getUserProfilePage();
+		verifyEquals(4, userPage.getNumberOfUsersWithDepartment());
+		
+		List<String> names = userPage.getNamesOfUsersWithDepartment();
+		verifyTrue(names.contains("Haring Stefan"));
+		verifyTrue(names.contains("Angelo Franz"));
+		verifyTrue(names.contains("Oswald Gerald"));
+		verifyTrue(names.contains("Schmidt Roman"));
+	}
+
 
 	/*
 	 * Test only works with correct test data (see testdata.sql)

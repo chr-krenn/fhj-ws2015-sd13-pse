@@ -1,8 +1,13 @@
 package at.fhj.swd13.pse.test.gui.pageobjects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class UserPage {
 	
@@ -191,7 +196,12 @@ public class UserPage {
 	 * @return number of contacts
 	 */
 	public int getNumberOfContacts() {
-		return driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")).size();
+		
+		if(((driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr"))).size() == 1) &&
+		    (driver.findElement(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr"))).getText().equals("No records found."))
+			return 0;
+		else
+			return driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt110_data']/tr")).size();
 	}
 
 	/**
@@ -205,9 +215,18 @@ public class UserPage {
 		
 	/**
 	 * Add to contact
+	 * @return UserPage PageObject
 	 */
 	public void addToContact() {
 		getContactButton().click();
+		
+		//wait
+		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            @Override
+			public Boolean apply(WebDriver d) {
+            	return getContactButton().getText().equals("Aus meinen Kontakten entfernen");
+            }
+        });	
 	}
 	
 	/**
@@ -256,5 +275,35 @@ public class UserPage {
 	 */
 	public String getConfirmationForSendingMessage() {
 		return driver.findElement(By.xpath(".//*[@id='userForm:messages_container']/div/div/div[2]/span")).getText();
+	}
+	
+	/**
+	 * Get number of users with department
+	 * 
+	 * @return number of contacts
+	 */
+	public int getNumberOfUsersWithDepartment() {	
+		 return driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")).size() -1;  //-1 because of caption
+	}
+	
+	/**
+	 * Get names of users with department
+	 * 
+	 * @return List of users with department
+	 */
+	public List<String> getNamesOfUsersWithDepartment()
+	{
+		List<String> lastNamesList = new ArrayList<String>();
+		
+		boolean bCaption = false;
+		for (WebElement we : driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")))
+		{
+			if(!bCaption)
+				bCaption = true;
+			else
+				lastNamesList.add(we.getText());
+		}
+		
+		return lastNamesList;
 	}
 }
