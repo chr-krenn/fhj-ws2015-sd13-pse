@@ -67,6 +67,24 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	}
 	
 	/*
+	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-46 "Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können"
+	 */
+	@Test
+	public void testRemoveContact() {
+		homepage = loginPage.login("oswaldge13", "12345678");
+				
+		UserList userList = homepage.searchUser("Schmidt");
+		UserPage userPage = userList.openUserPage(0);
+		userPage.openContactsTab();
+		verifyEquals(userPage.getNumberOfContacts(), 1);
+		userPage.removeContact();
+		userPage.openContactsTab();
+		verifyEquals(userPage.getNumberOfContacts(), 0);
+	}
+	
+	/*
 	 * Test only works with correct test data 
 	 * 
 	 * PSE2015-51 "Als angemeldeter Benutzer möchte ich die Benutzer die in der selben Abteilung sind, angezeigt bekommen"

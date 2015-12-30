@@ -245,4 +245,10 @@ insert into message_rating
 insert into message_rating
 	(message_id, rating_person_id, created_at)
 	values(1, 105, '2015-10-09 00:00:00');
+---------------------------------------------
+--Added relation between person 109 and 114
+insert into person_relation
+	(source_person_id, target_person_id)
+	values(109, 114);	
+	
 	

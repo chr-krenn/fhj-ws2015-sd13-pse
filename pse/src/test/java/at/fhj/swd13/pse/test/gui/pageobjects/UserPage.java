@@ -233,7 +233,6 @@ public class UserPage {
 		
 	/**
 	 * Add to contact
-	 * @return UserPage PageObject
 	 */
 	public void addToContact() {
 		getContactButton().click();
@@ -243,6 +242,21 @@ public class UserPage {
             @Override
 			public Boolean apply(WebDriver d) {
             	return getContactButton().getText().equals("Aus meinen Kontakten entfernen");
+            }
+        });	
+	}
+	
+	/**
+	 * Remove  contact
+	 */
+	public void removeContact() {
+		getContactButton().click();
+		
+		//wait
+		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            @Override
+			public Boolean apply(WebDriver d) {
+            	return getContactButton().getText().equals("Zu meinen Kontakten hinzufügen");
             }
         });	
 	}
