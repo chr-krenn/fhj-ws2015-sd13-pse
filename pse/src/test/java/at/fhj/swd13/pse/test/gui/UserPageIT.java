@@ -30,6 +30,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage.logout();
 	}
 
+	
 	@Test
 	public void testSetOutOfOffice() {
 		homepage = loginPage.login("florian.genser", "12345678");
@@ -41,6 +42,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	/*
 	 * Test only works with correct test data (see testdata.sql)
 	 */
+	
 	@Test
 	public void testNumberOfContacts() {
 		homepage = loginPage.login("pompenig13", "12345678");
@@ -220,4 +222,8 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyEquals("+436644711815", userPage.getUserPhoneNumberMobile());
 
 	}
+
+	
+	
+	
 }

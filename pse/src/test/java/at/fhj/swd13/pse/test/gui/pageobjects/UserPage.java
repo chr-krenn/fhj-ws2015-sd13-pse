@@ -338,4 +338,23 @@ public class UserPage {
 		
 		return nameList;
 	}
+	
+	/**
+	 * Get the user interests
+	 */
+	public String getUserInterests() {
+		WebElement input = driver.findElement(By.id("userForm:personTags_input"));
+		return input.getAttribute("value");
+	}
+	
+	/**
+	 * Set the lastname of a user
+	 * @param the new lastname
+	 */
+	public void setUserLastname(String lastname) {
+		WebElement inputLastname = driver.findElement(By.id("userForm:lastName"));
+		inputLastname.clear();
+		inputLastname.sendKeys(lastname);
+	}
+	
 }

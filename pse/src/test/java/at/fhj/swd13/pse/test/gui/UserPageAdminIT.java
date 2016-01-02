@@ -97,4 +97,29 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 			verifyTrue(homepage.isActivitiesStreamPresent());
 		}
 	}
+	
+	/**
+	 * PSE2015-14 Als angemeldeter Admin möchte ich allgemeine Informationen eines Users 
+	 * verändern können
+	 */	
+	@Test
+	public void testChangeUserData() {
+		
+		final String newLastname = "NewLastName";
+		
+		UserList userList = homepage.searchUser("Gerald");
+		UserPage userPage = userList.openUserPage(0);
+		
+		verifyEquals("Oswald", userPage.getUserLastName());
+		
+		userPage.setUserLastname(newLastname);
+		userPage.save();
+		
+		homepage.logout();
+		homepage = loginPage.login("oswaldge13", "12345678");
+		
+		UserPage userProfilePage = homepage.getUserProfilePage();
+		
+		verifyEquals(newLastname, userProfilePage.getUserLastName());
+	}
 }
