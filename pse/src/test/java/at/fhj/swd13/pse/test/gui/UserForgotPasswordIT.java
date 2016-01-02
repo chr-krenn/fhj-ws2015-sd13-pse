@@ -23,6 +23,9 @@ public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 		resetPasswordPage = loginPage.forgotPassword();
 	}
 	
+	/*
+	 * PSE2015-8 Als Benutzer des Systems möchte ich eine Möglichkeit haben mein Passwort zurücksetzen zu lassen wenn ich es vergessen habe
+	 */
 	
 	@Test
 	public void testOpenResetPasswordPage() {		
