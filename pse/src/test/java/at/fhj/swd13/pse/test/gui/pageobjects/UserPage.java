@@ -329,15 +329,6 @@ public class UserPage {
 	}
 	
 	/**
-	 * Get number of users with department
-	 * 
-	 * @return number of contacts
-	 */
-	public int getNumberOfUsersWithDepartment() {	
-		 return driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")).size() -1;  //-1 because of caption
-	}
-	
-	/**
 	 * Get names of users with department
 	 * 
 	 * @return List of users with department
@@ -346,15 +337,12 @@ public class UserPage {
 	{
 		List<String> nameList = new ArrayList<String>();
 		
-		boolean bCaption = false;
-		for (WebElement we : driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")))
+		for (WebElement we : driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt99_data']/tr")))
 		{
-			if(!bCaption)
-				bCaption = true;
-			else
+			if(!we.getText().equals("No records found."))
 				nameList.add(we.getText());
 		}
-		
+				
 		return nameList;
 	}
 	

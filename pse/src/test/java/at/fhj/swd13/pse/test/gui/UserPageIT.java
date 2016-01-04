@@ -107,7 +107,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage = loginPage.login("haringst13", "12345678");
 		
 		UserPage userPage = homepage.getUserProfilePage();
-		verifyEquals(4, userPage.getNumberOfUsersWithDepartment());
+		verifyEquals(4, userPage.getNamesOfUsersWithDepartment().size());
 		
 		List<String> names = userPage.getNamesOfUsersWithDepartment();
 		verifyTrue(names.contains("Haring Stefan"));
