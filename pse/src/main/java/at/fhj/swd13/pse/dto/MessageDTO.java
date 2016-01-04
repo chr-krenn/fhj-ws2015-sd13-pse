@@ -28,6 +28,7 @@ public class MessageDTO implements Serializable {
 	
 	private boolean privateMessage;
 	
+	//Comma-separated string listing all communities
 	private String community;
 	
 	private Document image;
@@ -125,13 +126,11 @@ public class MessageDTO implements Serializable {
 	public boolean isPrivateMessage() {
 		return privateMessage;
 	}
-	
-	/*
-	 * FIXME: If the message has been posted in a community and privately at the same time,
-	 *  it is considered private. Possible use case? 
-	 */
+
 	/**
 	 * Checks whether the message has been posted in a private community
+	 * If the message has been posted in a community and privately at the same time,
+	 *  it is considered private.
 	 *  
 	 * @param m - the Message
 	 * @return true if message has been posted to at least one person privately

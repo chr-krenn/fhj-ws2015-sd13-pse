@@ -185,9 +185,7 @@ public class MessageEditorController {
 					logger.error("[MSG+] error creating new tag (duplicate...)");
 				}
 			}
-			messageTag = new MessageTag();
-			messageTag.setTag(tag);
-			messageTag.setCreatedAt(new Date());
+			messageTag = new MessageTag(tag);
 			messageTags.add(messageTag);
 		}
 

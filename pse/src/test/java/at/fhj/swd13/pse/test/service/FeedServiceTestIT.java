@@ -12,14 +12,13 @@ import javax.naming.NamingException;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
-import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.chat.ChatService;
+import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.feed.FeedServiceFacade;
 import at.fhj.swd13.pse.domain.tag.TagService;
@@ -28,10 +27,12 @@ import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceFacade;
 import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class FeedServiceTestIT extends RemoteTestBase {
 
 	private FeedService feedService;
+	private ChatService chatService;
 	private TagService tagService;
 	private UserService userService;
 	private Person user;
@@ -41,6 +42,7 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	prepareDatabase();
     	
         feedService = lookup(FeedServiceFacade.class, FeedService.class);
+        chatService = lookup(ChatServiceFacade.class, ChatService.class);
         tagService = lookup(TagServiceFacade.class, TagService.class);
         userService = lookup(UserServiceFacade.class, UserService.class);
         user = userService.getUser("pompenig13");
@@ -66,6 +68,8 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	List<MessageRating> likes = feedService.getMessageById(messageID).getMessageRatings();
     	feedService.rateMessage(messageID, user);
     	assertEquals(likes.size()+1,feedService.getMessageById(messageID).getMessageRatings().size());
+    	feedService.removeRating(messageID, user);
+    	assertEquals(likes.size(),feedService.getMessageById(messageID).getMessageRatings().size());
     }
     
     /*
@@ -105,7 +109,31 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	assertEquals(numberOfMessages+1,messages.size());
     	//Newest message is first in list -> index 0
     	assertEquals("IT Test headline",messages.get(0).getHeadline());
+    	feedService.removeMessage(messages.get(0).getId());
     }
     
-    
+    /*
+     * PSE2015-60 Beim Erfassen einer Nachricht kann ich Tags auswählen, um meine Nachricht zu klassifizieren.
+     */
+    @Test
+    public void sendMessageWithTags() throws Exception {
+    	//Prepare Community list
+    	List<Community> communities = new ArrayList<>();
+    	communities.add(chatService.getCommunity(100));
+    	
+    	//Prepare MessageTag list (Add MessageTag with existing Tag)
+    	List<MessageTag> tags = new ArrayList<MessageTag>();
+    	tags.add(new MessageTag(tagService.getTagByToken("Software")));
+    	
+    	//Create new message
+    	feedService.saveMessage("IT Test with Tags headline", "IT Test with Tags Text", user.getUserName(), 
+    			null, null, communities, tags, new Date(), null);
+    	SleepUtil.sleep(1000);
+    	
+    	//Get first (= newest) message of Message list for community
+    	MessageDTO m = feedService.loadNews(100).get(0);
+    	
+    	assertEquals("Software",m.getTags().get(0));
+    	feedService.removeMessage(m.getId());
+    }
 }

@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.controller;
 
-import java.util.ArrayList;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;

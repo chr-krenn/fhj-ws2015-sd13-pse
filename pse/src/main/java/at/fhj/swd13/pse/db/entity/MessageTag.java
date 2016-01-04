@@ -86,8 +86,7 @@ public class MessageTag implements Serializable {
 	public MessageTag() {
 	}
 	
-	public MessageTag(List<Message> messages, Tag tag) {
-		this.messages = messages;
+	public MessageTag(Tag tag) {
 		this.tag = tag;
 		this.createdAt = new Date();
 	}
