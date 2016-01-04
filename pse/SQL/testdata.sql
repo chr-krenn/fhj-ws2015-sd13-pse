@@ -2,8 +2,12 @@
 INSERT INTO `person` VALUES (999, 'integrationtestuser','Test','User','test.user@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Knecht','Team 4','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (997, 'integrationtestcontactuser','Test','ContactUser','test.contactuser@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Knecht','Team 4','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
 INSERT INTO `person` VALUES (998, 'integrationtestadmin','Test','Admin','test.admin@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Administrator','Team A','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,1,NULL, NULL);
-
 insert into person_relation(source_person_id, target_person_id) values(999, 997);
+
+INSERT INTO `person` VALUES (996, 'dbtestuser','Test','User','dbtest.user@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Knecht','DeleteDep','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
+INSERT INTO `person` VALUES (995, 'dbtestcontactuser','Test','ContactUser','dbtest.contactuser@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Knecht','DeleteDep','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
+insert into person_relation(source_person_id, target_person_id) values(996, 995);
+
 
 
 --Community for testing, test person is a member

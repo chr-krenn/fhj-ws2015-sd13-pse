@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.test.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
@@ -14,6 +13,7 @@ import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class DbPersonTest extends DbTestBase {
@@ -25,95 +25,12 @@ public class DbPersonTest extends DbTestBase {
 	}
 
 	@Test
-	public void getById() {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			Person p = personDAO.getById(1); // 1 is the system internal user
-												// that should always exist
-
-			assertEquals(p.getUserName(), "pse_system");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception " + e.getMessage());
-		}
-	}
-
-	@Test(expected = EntityNotFoundException.class)
-	public void getByIdNoneFound() throws Exception {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			personDAO.getById(-1);
-		}
-	}
-
-	@Test
-	public void getByUsername() {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			Person p = personDAO.getByUsername("pse_system");
-
-			assertEquals(p.getPersonId(), 1);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception " + e.getMessage());
-		}
-	}
-
-	@Test
-	public void getByUsernameXaseMismatch() {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			Person p = personDAO.getByUsername("Pse_system");
-
-			assertNull(p);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception " + e.getMessage());
-		}
-	}
-
-	@Test
-	public void getByUsernameNoneFound() {
-
-		try (DbContext dbContext = contextProvider.getDbContext()) {
-
-			PersonDAO personDAO = dbContext.getPersonDAO();
-
-			Person p = personDAO
-					.getByUsername("gnurmifgjp�sh l hlfdyghlfd glkdfghv y");
-
-			assertEquals(p, null);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("Exception " + e.getMessage());
-		}
-	}
-
-	@Test
 	public void insert() throws Exception, ConstraintViolationException {
 
 		Person p = new Person("etester", "Tester", "Ehrenfried", "1234567");
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-
 			PersonDAO personDAO = dbContext.getPersonDAO();
-
 			personDAO.insert(p);
 			dbContext.commit();
 
@@ -196,6 +113,27 @@ public class DbPersonTest extends DbTestBase {
 			throw e;
 		}
 	}
+	
+	@Test(expected = EntityNotFoundException.class)
+	public void remove() throws Exception, ConstraintViolationException {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			
+			Person p1 = personDAO.getById(996);
+			personDAO.remove(p1);
+			dbContext.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception " + e.getMessage());
+		} 
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			Person p1 = personDAO.getById(996);
+			fail("User not deleted: " + p1.getFullName());
+		} 
+	}
+	
 
 	@Test(expected = ParameterException.class)
 	public void removeOnNull() throws Exception {
@@ -219,31 +157,58 @@ public class DbPersonTest extends DbTestBase {
 			personDAO.remove(p);
 		}
 	}
-
+	
 	@Test
-	public void getByEmailAddress() {
-
+	public void createRelation() {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-
 			PersonDAO personDAO = dbContext.getPersonDAO();
+			Person p1 = personDAO.getByUsername("angelofr13");
+			Person p2 = personDAO.getByUsername("haringst13");
+			
+			PersonRelation relation = personDAO.createRelation(p1, p2);
+			assertEquals(p1,  relation.getSourcePerson());
+			assertEquals(p2,  relation.getTargetPerson());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void removeTargetRelations() {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			Person p1 = personDAO.getByUsername("pompenig13");
+			personDAO.removeTargetRelations(p1);
 
-			Person p = personDAO.getByEmailAddress("pse@edu.fh-joanneum.at");
-
-			assertEquals(p.getPersonId(), 2);
-
+			p1 = personDAO.getByUsername("pompenig13");
+			assertEquals(0,  p1.getPersonTargetRelations().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Exception " + e.getMessage());
 		}
 	}
 
-	@Test(expected = EntityNotFoundException.class)
-	public void getUserByInvalidEMailAddress() throws Exception {
-		DbContext dbContext = contextProvider.getDbContext();
+	@Test
+	public void removeRelation() {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			Person p1 = personDAO.getByUsername("oswaldge13");
+			Person p2 = personDAO.getByUsername("schmidtr13");
+			personDAO.removeRelation(p2, p1);
+			dbContext.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception " + e.getMessage());
+		}
 
-		PersonDAO personDAO = dbContext.getPersonDAO();
-		Person p = personDAO.getByEmailAddress("xx@yy.at");
-		assertEquals(p, new Person("", "", "", ""));
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			Person p1 = personDAO.getByUsername("oswaldge13");
+			assertEquals(0,  p1.getPersonSourceRelations().size());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Exception " + e.getMessage());
+		}
 	}
-
 }
