@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,9 @@ import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 
-public class MessageDTO {
+public class MessageDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private int id;
 	

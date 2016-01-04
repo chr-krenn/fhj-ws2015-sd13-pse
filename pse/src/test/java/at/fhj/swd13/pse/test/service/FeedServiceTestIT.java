@@ -28,9 +28,6 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	
         feedService = lookup(FeedServiceFacade.class, FeedService.class);
         userService = lookup(UserServiceFacade.class, UserService.class);
-        userService.updateNullPasswords();
-        
-        executeSqlScript("SQL/testdata_DBMessageTest.sql");
     }	
 	
     /*
@@ -43,6 +40,6 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	Person user = userService.getUser("pompenig13");
     	List<MessageDTO> activities = feedService.loadFeedForUser(user);
     	
-		assertEquals(6, activities.size());
+		assertEquals(5, activities.size());
     }
 }
