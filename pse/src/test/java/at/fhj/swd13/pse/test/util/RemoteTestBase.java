@@ -52,4 +52,8 @@ public abstract class RemoteTestBase {
 		JDBC_HELPER.executeSqlScript("SQL/users.sql");
 		JDBC_HELPER.executeSqlScript("SQL/testdata.sql");
 	}
+	
+	protected static void executeSqlScript(String filename) {
+		JDBC_HELPER.executeSqlScript(filename);
+	}
 }

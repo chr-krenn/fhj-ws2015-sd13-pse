@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -229,7 +228,7 @@ public class DbMessageTest extends DbTestBase {
 		}
 	}
 	
-	@Ignore
+	//FIXME
 	@Test
 	public void testRemoveAndReinsertMessage() throws Exception {
 		
