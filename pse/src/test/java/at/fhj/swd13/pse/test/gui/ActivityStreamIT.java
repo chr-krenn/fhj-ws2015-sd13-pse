@@ -32,6 +32,10 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	}
 	
 	/*
+	 * PSE2015-19: Funktionalität über andere Tests geprüft, zugehörige GUI mit Tests für PSE2015-66 getestet
+	 */
+	
+	/*
 	 * PSE2015-66: "Als angemeldeter Benutzer möchte ich ausgehend vom Activity Stream 
 	 * auf meiner Startseite die Details der Activity ansehen können"
 	 */

@@ -9,6 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import at.fhj.swd13.pse.test.util.SleepUtil;
+
 public class UserPage {
 	
 	protected WebDriver driver;
@@ -80,9 +82,9 @@ public class UserPage {
 	}
 	
 	/**
-	 * Set active state
+	 * Set Login Allowed state
 	 *
-	 * @param active state
+	 * @param loginAllowed state
 	 */
 	public void setLoginAllowed(boolean loginAllowed) {
 		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:loginallowed']/div[2]/span"));
@@ -96,13 +98,13 @@ public class UserPage {
 	/**
 	 * Get login allowed state
 	 * 
-	 * @return active state
+	 * @return loginAllowed state
 	 */
 	public boolean getLoginAllowed() {
 		WebElement checkbox = driver.findElement(By.xpath("//div[@id='userForm:loginallowed']/div[2]/span"));
 		return checkbox.getAttribute("class").contains("ui-icon-check");
 	}
-	
+		
 	/**
 	 * Get user last name
 	 * 
@@ -188,6 +190,23 @@ public class UserPage {
 	 */
 	public void openContactsTab() {
 		driver.findElement(By.xpath(".//*[@id='userForm:j_idt97']/ul/li[2]/a")).click();
+	}
+	
+	/**
+	 * Click on tab "Communities" in user profile page
+	 */
+	public void openCommunitiesTab() {
+		driver.findElement(By.xpath(".//*[@id='userForm:j_idt97']/ul/li[3]/a")).click();
+	}
+	
+	/**
+	 * Press community request button
+	 */
+	public void communityRequest(String community) {
+		driver.findElement(By.id("userForm:j_idt97:membershipList:communityButton")).click(); 
+		driver.findElement(By.id("communityDialogForm:communityname")).clear();
+		driver.findElement(By.id("communityDialogForm:communityname")).sendKeys(community);
+		driver.findElement(By.id("communityDialogForm:requestButton")).click();		
 	}
 	
 	/**
@@ -310,15 +329,6 @@ public class UserPage {
 	}
 	
 	/**
-	 * Get number of users with department
-	 * 
-	 * @return number of contacts
-	 */
-	public int getNumberOfUsersWithDepartment() {	
-		 return driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")).size() -1;  //-1 because of caption
-	}
-	
-	/**
 	 * Get names of users with department
 	 * 
 	 * @return List of users with department
@@ -327,25 +337,50 @@ public class UserPage {
 	{
 		List<String> nameList = new ArrayList<String>();
 		
-		boolean bCaption = false;
-		for (WebElement we : driver.findElement(By.id("userForm:j_idt97:j_idt98")).findElements(By.tagName("tr")))
+		for (WebElement we : driver.findElements(By.xpath(".//*[@id='userForm:j_idt97:j_idt99_data']/tr")))
 		{
-			if(!bCaption)
-				bCaption = true;
-			else
+			if(!we.getText().equals("No records found."))
 				nameList.add(we.getText());
 		}
-		
+				
 		return nameList;
+	}
+	
+	/**
+	 * Add interest
+	 * 
+	 * @param interest
+	 */
+	public void addInterest(String interest) {
+		WebElement tagInput = driver.findElement(By.id("userForm:personTags_input"));
+		tagInput.sendKeys(interest);
+		SleepUtil.sleep(500);
+		driver.findElement(By.xpath(".//*[@id='userForm:personTags_panel']/ul/li")).click();
 	}
 	
 	/**
 	 * Get the user interests
 	 */
-	public String getUserInterests() {
-		WebElement input = driver.findElement(By.id("userForm:personTags_input"));
-		return input.getAttribute("value");
+	public List<String> getUserInterests() {
+		List<String> interests = new ArrayList<>();
+		for (WebElement e : getInterestsWebElements()) {
+			if(e.getText().length() > 0) 
+				interests.add(e.getText());
+		}
+		return interests;
 	}
+	
+	/**
+	 * Get WebElements for interests
+	 * 
+	 * @return List of WebElements
+	 */
+	private List<WebElement> getInterestsWebElements() {
+		return driver.findElements(By.xpath(".//*[@id='userForm:personTags']/ul/li"));
+	}
+
+	
+
 	
 	/**
 	 * Set the lastname of a user
