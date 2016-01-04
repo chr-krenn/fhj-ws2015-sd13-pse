@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
+import at.fhj.swd13.pse.test.gui.pageobjects.AdminPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
@@ -30,13 +31,21 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage.logout();
 	}
 
-	
+	/*
+	 * 	PSE2015-11 "Als angemeldeter Benutzer des Systems möchte ich meine Persönlichen Daten verändern können"
+	 */
 	@Test
 	public void testSetOutOfOffice() {
 		homepage = loginPage.login("florian.genser", "12345678");
 		UserPage userPage = homepage.getUserProfilePage();
 		userPage.setOutOfOffice(true);
-		verifyTrue(userPage.getOutOfOffice());
+				userPage.save();
+		
+		homepage.logout();
+		homepage = loginPage.login("florian.genser", "12345678");
+		
+		UserPage userProfilePage = homepage.getUserProfilePage();				
+		verifyTrue(userProfilePage.getOutOfOffice());
 	}
 
 	/*
@@ -54,6 +63,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	 * Test only works with correct test data (see testdata.sql)
 	 * 
 	 * PSE2015-46 "Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können"
+	 * PSE2015-61 "Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten"
 	 */
 	@Test
 	public void testAddToContact() {
@@ -72,6 +82,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	 * Test only works with correct test data (see testdata.sql)
 	 * 
 	 * PSE2015-46 "Als angemeldeter Benutzer des System möchte ich einen anderen Benutzer als Kontakt hinzufügen können"
+	 * PSE2015-61 "Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten"
 	 */
 	@Test
 	public void testRemoveContact() {
@@ -109,6 +120,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	 * Test only works with correct test data 
 	 * 
 	 * PSE2015-49 "Als angemeldeter Benutzer möchte ich die Benutzer, die ich als Kontakt hinzugefügt habe, angezeigt bekommen"
+	 * PSE2015-61 "Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten"
 	 */
 	@Test
 	public void testContacts() {
@@ -122,10 +134,11 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyTrue(names.contains("Löfler Mario"));
 		verifyTrue(names.contains("Genser Florian"));		
 	}
-
-
+	
 	/*
 	 * Test only works with correct test data (see testdata.sql)
+	 * 
+	 * PSE2015-61 "Als angemeldeter Benutzer sehe ich welche anderen Benutzer in meinem Netzwerk sind und deren Status auf meiner Benutzerseite und kann diese Kontakte verwalten"
 	 */
 	@Test
 	public void testOpenContactProfile() {
@@ -205,6 +218,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyEquals("+436644711815", userPage.getUserPhoneNumberMobile());
 
 	}
+	
 	/*
 	 * PSE2015-29 "Als angemeldeter User möchte ich per Klick auf das Startseitemenuitem des angemeldeten Users im Header auf die Userseite kommen"
 	 */
@@ -222,8 +236,52 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		verifyEquals("+436644711815", userPage.getUserPhoneNumberMobile());
 
 	}
+	
+	/*
+	 * PSE2015-11 "Als angemeldeter Benutzer des Systems möchte ich meine Persönlichen Daten verändern können"
+	 */	
+	@Test
+	public void testChangeInterests() {
+		final String INTEREST = "sk8n";
+		
+		homepage = loginPage.login("haringst13", "12345678");
+		UserPage userPage = homepage.getUserProfilePage();
+		userPage.addInterest(INTEREST);
+		userPage.save();
+		
+		homepage.logout();
+		homepage = loginPage.login("haringst13", "12345678");
+		
+		UserPage userProfilePage = homepage.getUserProfilePage();
+		
+		verifyEquals(1, userProfilePage.getUserInterests().size());
+		verifyTrue(userProfilePage.getUserInterests().contains(INTEREST));
+	}
+	
+	/*
+	 * PSE2015-11 "Als angemeldeter Benutzer des Systems möchte ich meine Persönlichen Daten verändern können"
+	 */	
+	@Test
+	public void testCommunityRequest() {
+		
+		final String COMMUNITY = "SK8BOARD";
+		
+		homepage = loginPage.login("haringst13", "12345678");
+		UserPage userPage = homepage.getUserProfilePage();
 
-	
-	
-	
+		userPage.openCommunitiesTab();
+		
+		userPage.communityRequest(COMMUNITY);
+		
+		homepage.logout();
+		
+		homepage = loginPage.login("padmin", "12345678");
+		AdminPage adminPage = homepage.getAdministrationPage();
+		verifyTrue(adminPage.getCommunityRequests().contains(COMMUNITY));
+		verifyEquals(1, adminPage.getCommunityRequests().size());
+		
+		verifyTrue(adminPage.getUserCommunityRequests().contains(COMMUNITY + " " + "haringst13"));
+		verifyEquals(1, adminPage.getUserCommunityRequests().size());
+		
+	}	
 }
