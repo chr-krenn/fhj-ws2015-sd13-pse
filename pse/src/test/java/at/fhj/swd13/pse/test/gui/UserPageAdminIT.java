@@ -121,5 +121,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		UserPage userProfilePage = homepage.getUserProfilePage();
 		
 		verifyEquals(newLastname, userProfilePage.getUserLastName());
+		
+		homepage.logout();
 	}
 }
