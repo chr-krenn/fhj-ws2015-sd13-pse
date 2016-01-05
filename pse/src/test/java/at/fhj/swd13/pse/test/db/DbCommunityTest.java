@@ -1,8 +1,10 @@
 package at.fhj.swd13.pse.test.db;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -46,7 +48,8 @@ public class DbCommunityTest extends DbTestBase {
 
 			privOther.setCreatedBy(baertl);
 			privOther.setPrivateUser(baertl);
-
+			
+			
 			dbContext.getCommunityDAO().insert(inv);
 			dbContext.getCommunityDAO().insert(invited);
 			dbContext.getCommunityDAO().insert(privMe);
@@ -208,5 +211,112 @@ public class DbCommunityTest extends DbTestBase {
 
 			assertEquals(2, communities.size());
 		}	
+	}
+
+	@Test
+	public void findMatchingUsers5() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			List<Community> communities = context.getCommunityDAO().getMatchingCommunities("@sal");
+
+			assertEquals(1, communities.size());
+		}
+	}
+	
+	@Test
+	public void getUnconfirmedCommunites() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			List<Community> communities = context.getCommunityDAO().getUnconfirmedCommunites();
+			assertEquals(4, communities.size());
+			assertTrue(communities.contains(inv));
+			assertTrue(communities.contains(invited));
+			assertTrue(communities.contains(privMe));
+			assertTrue(communities.contains(privOther));
+		}
+	}
+	
+	@Test
+	public void remove1() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			Person angelofr13 = context.getPersonDAO().getByUsername("angelofr13", true);
+			Person padmin = context.getPersonDAO().getByUsername("padmin", true);
+			Community todelete = new Community("@todelete");
+			todelete.setInvitationOnly(true);
+			todelete.setCreatedBy(angelofr13);
+			todelete.setConfirmedBy(padmin);
+			context.getCommunityDAO().insert(todelete);
+
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			Community c = communityDAO.get(todelete.getCommunityId());
+			communityDAO.remove(c);
+
+			List<Community> communities = communityDAO.getAllCommunities();
+			assertFalse(communities.contains(todelete));
+		}
+	}
+
+	@Test(expected = ParameterException.class)
+	public void remove2() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			communityDAO.remove(null);
+		}
+	}
+
+	@Test(expected = ParameterException.class)
+	public void remove3() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			communityDAO.remove(new Community());
+		}
+	}
+	
+	@Test
+	public void getAllCommunities1() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			List<Community> communities = communityDAO.getAllCommunities();
+			assertEquals(8, communities.size());
+		}
+	}
+	
+	@Test
+	public void getAllCommunities2() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			List<Community> communities = communityDAO.getAllCommunities("public_not_so");
+			assertEquals(2, communities.size());
+		}
+	}
+	
+	@Test
+	public void getPrivateCommunity() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			final Person person = context.getPersonDAO().getByUsername("loeflerm13", true);
+
+			Community community = communityDAO.getPrivateCommunity(person);
+			assertEquals(privMe, community);
+		}
+	}
+	
+	@Test
+	public void getAllAccessibleCommunities() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			List<Community> communities = communityDAO.getAllAccessibleCommunities();
+			assertEquals(3, communities.size());
+		}
+	}
+	
+	@Test
+	public void getCommunityMembers() throws Exception {
+		try (DbContext context = contextProvider.getDbContext()) {
+			CommunityDAO communityDAO = context.getCommunityDAO();
+			Community community = communityDAO.getAllCommunities("SWD").get(0);
+			Person member = context.getPersonDAO().getByUsername("pompenig13", true);
+			
+			List<CommunityMember> members = communityDAO.getCommunityMembers(community);
+			assertEquals(member, members.get(0).getMember());
+		}
 	}
 }
