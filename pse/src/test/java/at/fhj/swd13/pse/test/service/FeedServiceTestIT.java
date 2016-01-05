@@ -16,6 +16,7 @@ import org.junit.Test;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
+import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
@@ -143,6 +144,11 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	feedService.removeMessage(m.getId());
     }
     
+    /*
+     * PSE2015-66 "Als angemeldeter Benutzer möchte ich ausgehend vom Activity Stream auf meiner Startseite die Details der Activity ansehen können."
+     * 
+     * NOT WORKING! "No EJB receiver available..." ??
+     */
     @Test
     public void getMessageDetailsWithIcon() throws Exception {
     	//Prepare Community list
@@ -152,5 +158,26 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	//Prepare document
     	Document doc = documentService.store("pic", new FileInputStream("src/test/resources/testDocs/no_img.png"));
     	assertTrue(doc != null);
+    	
+    	String headline = "IT Test with Icon headline";
+    	String text = "IT Test with Icon Text";
+    	Date date = new Date();
+
+    	//Create new message
+		feedService.saveMessage(headline, text, user.getUserName(), 
+    			null, doc, communities, new ArrayList<MessageTag>(), date, null);
+    	SleepUtil.sleep(1000);
+    	
+    	//Get Id of first (= newest) message of Message list for community
+    	int messageId = feedService.loadNews(100).get(0).getId();
+    	
+    	//Check data
+    	Message m = feedService.getMessageById(messageId);
+    	assertEquals(doc, m.getIcon());
+    	assertEquals(headline, m.getHeadline());
+    	assertEquals(text, m.getMessage());
+    	assertEquals(user, m.getPerson());
+    	assertEquals(date,m.getCreatedAt());
+    	assertEquals(communities,m.getCommunities());
     }
 }
