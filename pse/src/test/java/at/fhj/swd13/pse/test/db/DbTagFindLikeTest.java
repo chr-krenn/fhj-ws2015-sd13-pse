@@ -1,6 +1,7 @@
 package at.fhj.swd13.pse.test.db;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.After;
 import org.junit.Before;
@@ -68,6 +69,14 @@ public class DbTagFindLikeTest extends DbTestBase {
 			TagDAO tagDAO = dbContext.getTagDAO();
 
 			assertEquals(2, tagDAO.getByTokenLike("ball").size());
+		}
+	}
+
+	@Test
+	public void notFound() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			TagDAO tagDAO = dbContext.getTagDAO();
+			assertNull(tagDAO.getByToken("Unknown"));
 		}
 	}
 }
