@@ -8,6 +8,7 @@ import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
+import at.fhj.swd13.pse.test.gui.pageobjects.PrivateMessagesPage;
 
 public class MessageIT extends SeleniumBaseTestCase {
 
@@ -66,5 +67,30 @@ public class MessageIT extends SeleniumBaseTestCase {
 		
 		verifyEquals(title, actualTitle);
 		verifyEquals(text, actualText);
+	}
+	
+	/*
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können."
+	 */
+	@Test
+	public void testSendMessage() {
+		homepage = loginPage.login("zametter13", "12345678");
+		NewMessagePage messagePage = homepage.openNewMessage();
+		String title = "Title123456";
+		String text = "Text";
+		
+		int numberOfCommunities = messagePage.addCommunity("@zametter");
+		messagePage.sendBasicMessage(title, text);
+		
+		PrivateMessagesPage privateMessagesPage = homepage.getPrivateMessagePage();
+		
+		String actualText = privateMessagesPage.getLatestMessageText();
+		String actualTitle = privateMessagesPage.getLatestMessageTitle();
+		String actualAuthor = privateMessagesPage.getLastMessageAuthor();
+		
+		verifyEquals(title, actualTitle);
+		verifyEquals(text, actualText);
+		verifyEquals("Manuel Zametter", actualAuthor);
+		verifyEquals(1, numberOfCommunities);
 	}
 }
