@@ -352,7 +352,7 @@ public class Message implements Serializable {
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
 		messageTags.remove(messageTag);
-		messageTag.getMessages().remove(messageTag);
+		messageTag.getMessages().remove(this);
 
 		return messageTag;
 	}
@@ -411,4 +411,9 @@ public class Message implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Message [messageId=" + messageId + ", createdAt=" + createdAt + ", headline=" + headline + ", message=" + message + ", person=" + person + "]";
+	}
+	
 }

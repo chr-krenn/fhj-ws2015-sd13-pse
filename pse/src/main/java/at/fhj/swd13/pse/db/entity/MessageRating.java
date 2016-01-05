@@ -33,38 +33,6 @@ public class MessageRating implements Serializable {
 	@JoinColumn(name="message_id")
 	private Message message;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + messageRatingId;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof MessageRating)) {
-			return false;
-		}
-		MessageRating other = (MessageRating) obj;
-		if (messageRatingId != other.messageRatingId) {
-			return false;
-		}
-		return true;
-	}
-
 	//bi-directional many-to-one association to Person
 	@ManyToOne
 	@JoinColumn(name="rating_person_id")
@@ -104,5 +72,42 @@ public class MessageRating implements Serializable {
 	public void setPerson(Person person) {
 		this.person = person;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + messageRatingId;
+		return result;
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof MessageRating)) {
+			return false;
+		}
+		MessageRating other = (MessageRating) obj;
+		if (messageRatingId != other.messageRatingId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "MessageRating [messageRatingId=" + messageRatingId + ", createdAt=" + createdAt + ", message=" + message + ", person=" + person + "]";
+	}
+	
 }

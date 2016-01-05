@@ -24,6 +24,40 @@ public class DocumentLibraryEntry implements Serializable {
 		super();
 	}
 	
+	
+	@ManyToOne
+	@JoinColumn(name="community_id")
+	private Community community;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="document_id")
+	private Document document;
+	
+	public int getDocumentLibraryEntryId() {
+		return documentLibraryEntryId;
+	}
+
+	public void setDocumentLibraryEntryId(int documentLibraryEntryId) {
+		this.documentLibraryEntryId = documentLibraryEntryId;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
+	}
+
+	public Community getCommunity() {
+		return community;
+	}
+
+	public void setCommunity(Community community) {
+		this.community = community;
+	}
+   
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -56,42 +90,9 @@ public class DocumentLibraryEntry implements Serializable {
 		return true;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="community_id")
-	private Community community;
-	
-	
-	@ManyToOne
-	@JoinColumn(name="document_id")
-	private Document document;
-	
-	
-	
-	public int getDocumentLibraryEntryId() {
-		return documentLibraryEntryId;
+	@Override
+	public String toString() {
+		return "DocumentLibraryEntry [documentLibraryEntryId=" + documentLibraryEntryId + ", document=" + document + "]";
 	}
 
-	public void setDocumentLibraryEntryId(int documentLibraryEntryId) {
-		this.documentLibraryEntryId = documentLibraryEntryId;
-	}
-
-	public Document getDocument() {
-		return document;
-	}
-
-	public void setDocument(Document document) {
-		this.document = document;
-	}
-
-	public Community getCommunity() {
-		return community;
-	}
-
-	public void setCommunity(Community community) {
-		this.community = community;
-	}
-   
-	
-	
-	
 }

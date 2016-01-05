@@ -15,37 +15,6 @@ import javax.persistence.*;
 	@NamedQuery(name="PersonRelation.findAll", query="SELECT p FROM PersonRelation p"),
 	@NamedQuery(name = "PersonRelation.deleteByPersonIds", query = "DELETE FROM PersonRelation p WHERE p.sourcePerson = :sourcePerson AND p.targetPerson = :targetPerson") })
 public class PersonRelation implements Serializable {
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + personRelationId;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof PersonRelation)) {
-			return false;
-		}
-		PersonRelation other = (PersonRelation) obj;
-		if (personRelationId != other.personRelationId) {
-			return false;
-		}
-		return true;
-	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -120,4 +89,42 @@ public class PersonRelation implements Serializable {
 	public void setTargetPerson( Person person ) {
 		this.targetPerson = person;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + personRelationId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof PersonRelation)) {
+			return false;
+		}
+		PersonRelation other = (PersonRelation) obj;
+		if (personRelationId != other.personRelationId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PersonRelation [personRelationId=" + personRelationId + ", sourcePerson=" + sourcePerson + ", targetPerson=" + targetPerson + "]";
+	}
+	
 }

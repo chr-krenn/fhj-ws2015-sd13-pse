@@ -185,7 +185,7 @@ public class CommunityController {
 
 				try {
 					CommunityMember m = chatService.getCommunityMember(com, currentUser);
-					System.out.println("PRIVATE COMMUNITY MEMBER ->->-> " + m.getCommunityMemberId());
+					logger.debug("	PRIVATE COMMUNITY MEMBER ->->-> " + m.getCommunityMemberId());
 					if (m.getConfirmer() != null || m.getIsAdministrator()) {
 						setMember(chatService.isPersonMemberOfCommunity(currentUser, com));
 					} else {
