@@ -103,8 +103,18 @@ public interface CommunityDAO {
 	 */
 	List<Community> getAllCommunities();
 
+	/**
+	 * Get a list of all members of community
+	 * 
+	 * @param com
+	 *            the community
+	 * @return list of community members
+	 */
 	List<CommunityMember> getCommunityMembers(Community com);
+	
+	
 	CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p);
+	
 	/**
 	 * Get a list of all communities with a search string
 	 * 

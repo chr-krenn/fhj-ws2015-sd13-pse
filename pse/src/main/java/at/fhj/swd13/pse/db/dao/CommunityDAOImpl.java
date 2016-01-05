@@ -176,25 +176,17 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p) {
-			try 
-			{
-				final Query q = dbContext.createNamedQuery("CommunityMember.findByCommunityAndPerson");
-				q.setParameter("community", com);
-				q.setParameter("person", p);
-				
-				List<CommunityMember> memberList = q.getResultList();
-				
-				if(memberList.size() == 1)
-				{
-					return memberList.get(0);
-				}
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				System.out.println("#### CommunityMember ERROR:" +  e.getMessage());
-			}	
-
+		final Query q = dbContext.createNamedQuery("CommunityMember.findByCommunityAndPerson");
+		q.setParameter("community", com);
+		q.setParameter("person", p);
+		
+		List<CommunityMember> memberList = q.getResultList();
+		
+		if(memberList.size() == 1)
+		{
+			return memberList.get(0);
+		}
+			
 		return null;
 	}
 	
