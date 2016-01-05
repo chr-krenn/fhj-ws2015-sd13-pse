@@ -33,14 +33,6 @@ public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 	}
 	
 	
-	
-	@Test
-	public void testResetEmptyEmail() {		
-		resetPasswordPage.resetPassword("");
-		verifyEquals(RESET_STATUS_EMAIL_INVALID, resetPasswordPage.getStatusText());
-	}
-	
-	
 	@Test
 	public void testLoginWithOldPassword() {
 		final String username = "oswaldge13";
