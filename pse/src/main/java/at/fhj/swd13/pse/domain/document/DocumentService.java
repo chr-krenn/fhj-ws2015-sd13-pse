@@ -30,7 +30,15 @@ public interface DocumentService {
 	
 	Document store(String filename, InputStream data, String description);
 	
-
+	/**
+	 * For remote access, InputStream must be opened in store Method
+	 * 
+	 * @param filename
+	 * @param filepath
+	 * @return
+	 */
+	Document store(String filename, String filepath);
+	
 	/**
 	 * Get the document with the given id
 	 * 

@@ -116,8 +116,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			try {
 				data.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("[DOCS] Error with file input stream for " + filename + " : " + e.getMessage());
 			}
 		}
 	}
@@ -132,6 +131,16 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	@Override
 	public Document store(final String filename, InputStream data) {
 		return store(filename, data, null);
+	}
+	
+	@Override
+	public Document store(String filename, String filepath) {
+		try (InputStream in = new FileInputStream(filepath)) {
+			return store(filename, in);
+		} catch (IOException e) {
+			logger.error("[DOCS] Error creating file input stream for " + filename + " with filepath " +filepath +": " + e.getMessage());
+			return null;
+		}
 	}
 
 	/*
@@ -269,6 +278,4 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			throw new DocumentNotFoundException("", e);
 		}
 	}
-
-	
 }

@@ -17,13 +17,18 @@ public class DocumentServiceFacade implements DocumentService {
 	private DocumentService documentService;
 	
 	@Override
+	public Document store(String filename, String filepath) {
+		return documentService.store(filename, filepath);
+	}
+	
+	@Override
 	public Document store(String filename, InputStream data) {
-		return documentService.store(filename, data);
+		throw new UnsupportedOperationException("InputStream is not serializable. Use the store(String, String) method instead");
 	}
 
 	@Override
 	public Document store(String filename, InputStream data, String description) {
-		return documentService.store(filename, data, description);
+		throw new UnsupportedOperationException("InputStream is not serializable. Use the store(String, String) method instead");
 	}
 
 	@Override
