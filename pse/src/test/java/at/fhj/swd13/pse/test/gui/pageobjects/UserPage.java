@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -314,12 +315,11 @@ public class UserPage {
 	 * 
 	 * @return NewMessagePage PageObject
 	 */
-	public NewMessagePage clickSendMessageButton() {
-		getSendMessageButton().click();
+	public NewMessagePage clickSendMessageButton() {	
+		getSendMessageButton().sendKeys(Keys.ENTER);
 		return new NewMessagePage(driver);
 	}
 	
-	//FIXME: not tested because sending message doesn't work via Selenium yet
 	/**
 	 * Get confirmation text that message has been sent
 	 * @return

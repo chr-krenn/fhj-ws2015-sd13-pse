@@ -43,50 +43,6 @@ import org.mindrot.jbcrypt.BCrypt;
 		@NamedQuery(name = "Person.deleteById", query = "DELETE FROM Person p WHERE p.personId = :id") })
 public class Person implements Serializable {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + personId;
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Person)) {
-			return false;
-		}
-		Person other = (Person) obj;
-		if (personId != other.personId) {
-			return false;
-		}
-		if (userName == null) {
-			if (other.userName != null) {
-				return false;
-			}
-		} else if (!userName.equals(other.userName)) {
-			return false;
-		}
-		return true;
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -595,7 +551,6 @@ public class Person implements Serializable {
 	public void removeRelationTo(Person personTo) {
 
 		for (PersonRelation relation : getPersonSourceRelations()) {
-			System.out.println(personTo.equals(relation.getTargetPerson()));
 			if (relation.getTargetPerson() == personTo) {
 
 				getPersonSourceRelations().remove(relation);
@@ -747,4 +702,54 @@ public class Person implements Serializable {
 		}
 		return contacts;
 	}	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + personId;
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Person)) {
+			return false;
+		}
+		Person other = (Person) obj;
+		if (personId != other.personId) {
+			return false;
+		}
+		if (userName == null) {
+			if (other.userName != null) {
+				return false;
+			}
+		} else if (!userName.equals(other.userName)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Person [personId=" + personId + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + "]";
+	}
+	
 }

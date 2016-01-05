@@ -332,6 +332,17 @@ public class HomePage {
 	}
 	
 	/**
+	 * Get PrivateMessagePage
+	 * 
+	 * @return PrivateMessagePage PageObject
+	 */
+	public PrivateMessagesPage getPrivateMessagePage() {
+		driver.findElement(By.id("j_idt8:j_idt15_menuButton")).click();
+		driver.findElements(By.cssSelector("span.ui-menuitem-text")).get(1).click();
+		return new PrivateMessagesPage(driver, baseUrl);
+	}
+	
+	/**
 	 * Search User
 	 * 
 	 * @param search: search string

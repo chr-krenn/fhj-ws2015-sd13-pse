@@ -37,4 +37,13 @@ public interface MessageRatingDAO {
 	 * @param message
 	 */
 	List<Person> loadAllRatersByMessage(Message message);
+
+	/**
+	 * Find rating by specific message and person
+	 * 
+	 * @param message
+	 * @param person
+	 * @return rating
+	 */
+	MessageRating findRatingByPersonAndMessage(Message message, Person person);
 }

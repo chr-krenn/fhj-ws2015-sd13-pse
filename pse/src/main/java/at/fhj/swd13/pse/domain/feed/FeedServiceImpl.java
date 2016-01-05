@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 
@@ -149,10 +148,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	public void removeRating(int messageId, Person person) throws EntityNotFoundException {
 		Message m = dbContext.getMessageDAO().getById(messageId);
 		Person p = dbContext.getPersonDAO().getById(person.getPersonId());
-		Query q = dbContext.createNamedQuery("MessageRating.findRatingByPersonAndMessage");
-		q.setParameter("message", m);
-		q.setParameter("person", p);
-		MessageRating rating = (MessageRating) q.getSingleResult();
+		MessageRating rating = dbContext.getMessageRatingDAO().findRatingByPersonAndMessage(m, p);
 		m.removeMesasgeRating(rating);
 		p.removeMesasgeRating(rating);
 		dbContext.getMessageRatingDAO().remove(rating);

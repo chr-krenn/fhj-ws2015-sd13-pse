@@ -37,38 +37,7 @@ public class MessageTag implements Serializable {
 	@Column(name = "message_tag_id", unique = true, nullable = false)
 	private int messageTagId;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + messageTagId;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof MessageTag)) {
-			return false;
-		}
-		MessageTag other = (MessageTag) obj;
-		if (messageTagId != other.messageTagId) {
-			return false;
-		}
-		return true;
-	}
-
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false)
 	private Date createdAt;
@@ -122,6 +91,43 @@ public class MessageTag implements Serializable {
 	public void setTag(Tag tag) {
 		this.tag = tag;
 		tag.getMessageTags().add(this);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + messageTagId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof MessageTag)) {
+			return false;
+		}
+		MessageTag other = (MessageTag) obj;
+		if (messageTagId != other.messageTagId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "MessageTag [messageTagId=" + messageTagId + ", createdAt=" + createdAt + ", messages=" + messages + ", tag=" + tag + "]";
 	}
 
 }

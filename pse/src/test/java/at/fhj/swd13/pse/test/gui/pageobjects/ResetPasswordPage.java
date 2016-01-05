@@ -38,13 +38,4 @@ public class ResetPasswordPage {
 		driver.findElement(By.id("resetPasswordForm:resetPasswordButton")).click();	
 	}
 	
-	/**
-	 * Returns the status text, which is displayed when the user resets his password
-	 * @return status text as string
-	 */
-	public String getStatusText() {
-		WebElement statusElement = driver.findElement(By.xpath("/html/body/div[2]/div/div/div/form/span/span"));
-		return statusElement.getText();
-	}
-	
 }

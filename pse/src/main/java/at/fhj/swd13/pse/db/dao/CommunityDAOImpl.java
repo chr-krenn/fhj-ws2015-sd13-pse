@@ -130,14 +130,6 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Community> getCommunities(final Person person, final boolean includePrivateCommunity) {
-		final Query q = dbContext.createNamedQuery(includePrivateCommunity ? "Community.findCommunitiesByMember" : "Community.findCommunitiesByMemberButOwn");
-		q.setParameter("person", person);
-		return (List<Community>) q.getResultList();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public List<Community> getAllCommunities() {
 
 		final Query q = dbContext.createNamedQuery("Community.findAll");
@@ -184,25 +176,17 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p) {
-			try 
-			{
-				final Query q = dbContext.createNamedQuery("CommunityMember.findByCommunityAndPerson");
-				q.setParameter("community", com);
-				q.setParameter("person", p);
-				
-				List<CommunityMember> memberList = q.getResultList();
-				
-				if(memberList.size() == 1)
-				{
-					return memberList.get(0);
-				}
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				System.out.println("#### CommunityMember ERROR:" +  e.getMessage());
-			}	
-
+		final Query q = dbContext.createNamedQuery("CommunityMember.findByCommunityAndPerson");
+		q.setParameter("community", com);
+		q.setParameter("person", p);
+		
+		List<CommunityMember> memberList = q.getResultList();
+		
+		if(memberList.size() == 1)
+		{
+			return memberList.get(0);
+		}
+			
 		return null;
 	}
 	

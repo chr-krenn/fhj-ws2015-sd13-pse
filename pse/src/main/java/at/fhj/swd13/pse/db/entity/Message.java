@@ -70,37 +70,7 @@ import org.jsoup.Jsoup;
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id"),
 		@NamedQuery(name="Message.findComments", query = "SELECT m FROM Message m where m.messageBean = :message")})
 public class Message implements Serializable {
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + messageId;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Message)) {
-			return false;
-		}
-		Message other = (Message) obj;
-		if (messageId != other.messageId) {
-			return false;
-		}
-		return true;
-	}
+	
 
 	private static final long serialVersionUID = 1L;
 
@@ -132,7 +102,7 @@ public class Message implements Serializable {
 	private Date validFrom;
 
 	// bi-directional many-to-one association to MesasgeRating
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade=CascadeType.ALL)
 	private List<MessageRating> messageRatings;
 
 	// bi-directional many-to-one association to Message
@@ -185,6 +155,30 @@ public class Message implements Serializable {
 	}
 	
 	public Message() {
+	}
+	
+	/**
+	 * Copy constructor for the message object. Copies everything but the messageId.
+	 * 
+	 * @param other Message Object which should get copied.
+	 */
+	public Message(Message other){
+		this.attachment = other.attachment;
+		this.communities = other.communities;
+		this.createdAt = other.createdAt;
+		this.deliverySystem = other.deliverySystem;
+		this.expiresOn = other.expiresOn;
+		this.headline = other.headline;
+		this.icon = other.icon;
+		this.message = other.message;
+		this.messageBean = other.messageBean;
+		this.messageRatings = other.messageRatings;
+		this.messages = other.messages;
+		this.messageTags = other.messageTags;
+		this.person = other.person;
+		this.personMessages = other.personMessages;
+		this.updatedOn = other.updatedOn;
+		this.validFrom = other.validFrom;
 	}
 
 	public int getMessageId() {
@@ -358,7 +352,7 @@ public class Message implements Serializable {
 
 	public MessageTag removeMessageTag(MessageTag messageTag) {
 		messageTags.remove(messageTag);
-		messageTag.getMessages().remove(messageTag);
+		messageTag.getMessages().remove(this);
 
 		return messageTag;
 	}
@@ -384,5 +378,42 @@ public class Message implements Serializable {
 
 		return personMessage;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + messageId;
+		return result;
+	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Message)) {
+			return false;
+		}
+		Message other = (Message) obj;
+		if (messageId != other.messageId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Message [messageId=" + messageId + ", createdAt=" + createdAt + ", headline=" + headline + ", message=" + message + ", person=" + person + "]";
+	}
+	
 }

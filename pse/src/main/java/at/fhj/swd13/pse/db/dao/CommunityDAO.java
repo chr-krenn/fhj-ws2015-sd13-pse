@@ -99,21 +99,22 @@ public interface CommunityDAO {
 	/**
 	 * Get a list of all communities
 	 * 
-	 * @param person
-	 * @param includePrivateCommunity
-	 * @return list of communities of the person
-	 */
-	List<Community> getCommunities(final Person person, final boolean includePrivateCommunity);
-
-	/**
-	 * Get a list of all communities
-	 * 
 	 * @return list of communities
 	 */
 	List<Community> getAllCommunities();
 
+	/**
+	 * Get a list of all members of community
+	 * 
+	 * @param com
+	 *            the community
+	 * @return list of community members
+	 */
 	List<CommunityMember> getCommunityMembers(Community com);
+	
+	
 	CommunityMember getCommunityMemberByCommunityAndPerson(Community com, Person p);
+	
 	/**
 	 * Get a list of all communities with a search string
 	 * 

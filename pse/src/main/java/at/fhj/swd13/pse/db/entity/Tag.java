@@ -23,38 +23,7 @@ import java.util.List;
 	@NamedQuery(name="Tag.findByPerson", query="SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person")
 } )
 public class Tag implements Serializable {
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + tagId;
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Tag)) {
-			return false;
-		}
-		Tag other = (Tag) obj;
-		if (tagId != other.tagId) {
-			return false;
-		}
-		return true;
-	}
-
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -149,6 +118,43 @@ public class Tag implements Serializable {
 		getPersonTags().remove(personTag);
 
 		return personTag;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + tagId;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Tag)) {
+			return false;
+		}
+		Tag other = (Tag) obj;
+		if (tagId != other.tagId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Tag [tagId=" + tagId + ", description=" + description + ", token=" + token + "]";
 	}
 
 }

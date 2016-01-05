@@ -99,6 +99,20 @@ public class NewMessagePage {
 		driver.findElement(By.xpath(".//*[@id='j_idt39:messageTags_panel']/ul/li")).click();
 		return driver.findElements(By.xpath(".//*[@id='j_idt39:messageTags']/ul/li")).size() - 1;
 	}
+	
+	/**
+	 * Add community
+	 * 
+	 * @param community
+	 * @return number of communities
+	 */
+	public int addCommunity(String community) {
+		WebElement tagInput = driver.findElement(By.id("j_idt39:targetCommunities_input"));
+		tagInput.sendKeys(community);
+		SleepUtil.sleep(500);
+		driver.findElement(By.xpath(".//*[@id='j_idt39:targetCommunities_panel']/ul/li")).click();
+		return driver.findElements(By.xpath(".//*[@id='j_idt39:targetCommunities']/ul/li")).size() - 1;
+	}
 
 	/**
 	 * Returns the title of the Message
