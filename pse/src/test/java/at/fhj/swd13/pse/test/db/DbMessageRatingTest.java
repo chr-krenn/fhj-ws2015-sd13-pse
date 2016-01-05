@@ -80,10 +80,17 @@ public class DbMessageRatingTest extends DbTestBase {
 
 			Person person = personDAO.getById(118);
 			Message message = messageDAO.getById(2);
-			
-			messageRatingDAO.findRatingByPersonAndMessage(message, person);
-			messageRatingDAO.remove(messageRatingDAO.findRatingByPersonAndMessage(message, person));
-
+			MessageRating rating = dbContext.getMessageRatingDAO().findRatingByPersonAndMessage(message, person);
+			message.removeMesasgeRating(rating);
+			person.removeMesasgeRating(rating);
+			messageRatingDAO.remove(rating);
+			dbContext.commit();
+		}
+		
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			Message message = messageDAO.getById(2);
 			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
 			assertEquals(0, raters.size());
 		}
@@ -99,8 +106,8 @@ public class DbMessageRatingTest extends DbTestBase {
 			Person person = personDAO.getById(114);
 			Message message = messageDAO.getById(3);
 			
-			messageRatingDAO.findRatingByPersonAndMessage(message, person);
 			messageRatingDAO.remove(messageRatingDAO.findRatingByPersonAndMessage(message, person).getMessageRatingId());
+			dbContext.commit();
 
 			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
 			assertEquals(0, raters.size());
@@ -114,8 +121,8 @@ public class DbMessageRatingTest extends DbTestBase {
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
 
-			Person person = personDAO.getById(118);
-			Message message = messageDAO.getById(2);
+			Person person = personDAO.getById(108);
+			Message message = messageDAO.getById(1);
 			
 			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
 			assertEquals(person, raters.get(0));
@@ -129,8 +136,8 @@ public class DbMessageRatingTest extends DbTestBase {
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
 
-			Person person = personDAO.getById(118);
-			Message message = messageDAO.getById(2);
+			Person person = personDAO.getById(108);
+			Message message = messageDAO.getById(1);
 			
 			MessageRating rating = messageRatingDAO.findRatingByPersonAndMessage(message, person);
 			assertEquals(message, rating.getMessage());
