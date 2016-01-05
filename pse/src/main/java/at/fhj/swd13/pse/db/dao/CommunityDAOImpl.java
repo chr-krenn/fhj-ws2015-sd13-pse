@@ -130,14 +130,6 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Community> getCommunities(final Person person, final boolean includePrivateCommunity) {
-		final Query q = dbContext.createNamedQuery(includePrivateCommunity ? "Community.findCommunitiesByMember" : "Community.findCommunitiesByMemberButOwn");
-		q.setParameter("person", person);
-		return (List<Community>) q.getResultList();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public List<Community> getAllCommunities() {
 
 		final Query q = dbContext.createNamedQuery("Community.findAll");
