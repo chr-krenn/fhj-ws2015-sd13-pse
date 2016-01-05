@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -190,13 +189,13 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	/*
 	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können"
 	 */
-	@Ignore // FIXME: fix sendBasicMessage
 	@Test
 	public void testSendMessageToContact() {
 		homepage = loginPage.login("pompenig13", "12345678");
 		UserPage userPage = homepage.getUserProfilePage();
-		UserPage contactPage = userPage.openContactProfile(1);
+		UserPage contactPage = userPage.openContactProfile(1);		
 		NewMessagePage messagePage = contactPage.clickSendMessageButton();
+
 		messagePage.sendBasicMessage("Title 123", "Text");
 		verifyEquals("Nachricht gesendet", contactPage.getConfirmationForSendingMessage());
 	}
