@@ -24,22 +24,22 @@ import at.fhj.swd13.pse.test.util.DbTestBase;
 import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 public class DbMessageTest extends DbTestBase {
-	
+
 	private static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
-	
+
 	@BeforeClass
 	public static void init() throws Exception {
 		DbTestBase.prepare();
-		//Setting up private communities per user
+		// Setting up private communities per user
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			ChatService chatService = new ChatServiceImpl(dbContext);
 			chatService.createAllPrivateCommunities();
 			dbContext.commit();
 		}
-		//Adding private message
+		// Adding private message
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
 	}
-	
+
 	@Test
 	public void testLoadAllMessages() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -54,17 +54,12 @@ public class DbMessageTest extends DbTestBase {
 	}
 
 	/**
-	 * See testdata.sql & testdata_DBMessageTest.sql
-	 * Should NOT select 
-	 * 			expired messages
-	 * 			not yet valid messages
-	 * 			news
-	 * 			messages created by the user
-	 * 			comments
-	 * 			messages in private communities the user is not a member of
-	 * 			messages in public communities the user is not a member of UNLESS
-	 * 				the message is tagged with a user interest
-	 * 				the message is written by a contact of the user
+	 * See testdata.sql & testdata_DBMessageTest.sql Should NOT select expired
+	 * messages not yet valid messages news messages created by the user
+	 * comments messages in private communities the user is not a member of
+	 * messages in public communities the user is not a member of UNLESS the
+	 * message is tagged with a user interest the message is written by a
+	 * contact of the user
 	 * 
 	 * @throws Exception
 	 */
@@ -80,10 +75,10 @@ public class DbMessageTest extends DbTestBase {
 			assertEquals(6, activities.size());
 		}
 	}
-	
+
 	/**
-	 * See testdata.sql
-	 * No specific message exists for this user, but there are three messages without any restrictions (no community)
+	 * See testdata.sql No specific message exists for this user, but there are
+	 * three messages without any restrictions (no community)
 	 * 
 	 * @throws Exception
 	 */
@@ -99,7 +94,7 @@ public class DbMessageTest extends DbTestBase {
 			assertEquals(2, activities.size());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testfindForUserQuery() throws Exception {
@@ -108,7 +103,7 @@ public class DbMessageTest extends DbTestBase {
 			query.setParameter("person", getPerson(108));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(4,message.size());
+			assertEquals(4, message.size());
 		}
 	}
 
@@ -118,26 +113,28 @@ public class DbMessageTest extends DbTestBase {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			Query query = dbContext.createNamedQuery("Message.findByTags");
 			query.setParameter("person", getPerson(108));
-			query.setParameter("tags", dbContext.getTagDAO().getByToken("Software"));
+			query.setParameter("tags",
+					dbContext.getTagDAO().getByToken("Software"));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(1,message.size());
+			assertEquals(1, message.size());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindByTagsQuery() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			Query query = dbContext.createNamedQuery("Message.findByTags");
 			query.setParameter("person", getPerson(108));
-			query.setParameter("tags", dbContext.getTagDAO().getByPerson(getPerson(108)));
+			query.setParameter("tags",
+					dbContext.getTagDAO().getByPerson(getPerson(108)));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(1,message.size());
+			assertEquals(1, message.size());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindByContactsQuery() throws Exception {
@@ -146,21 +143,22 @@ public class DbMessageTest extends DbTestBase {
 			query.setParameter("person", getPerson(108));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(2,message.size());
+			assertEquals(2, message.size());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindForUserAndTagsAndContactsQuery() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			Query query = dbContext.createNamedQuery("Message.findForUserAndTagsAndContacts");
+			Query query = dbContext
+					.createNamedQuery("Message.findForUserAndTagsAndContacts");
 			query.setParameter("person", getPerson(108));
 			List<Message> message = query.getResultList();
 			assertNotNull(message);
-			assertEquals(6,message.size());
+			assertEquals(6, message.size());
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -174,7 +172,7 @@ public class DbMessageTest extends DbTestBase {
 			assertEquals(2, message.size());
 		}
 	}
-	
+
 	@Test
 	public void testLoadMessagesForCommunity() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
@@ -187,7 +185,7 @@ public class DbMessageTest extends DbTestBase {
 			assertEquals(2, activities.size());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindCommentsQuery() throws Exception {
@@ -199,61 +197,67 @@ public class DbMessageTest extends DbTestBase {
 			assertEquals(3, message.size());
 		}
 	}
-	
+
 	@Test
 	public void testFindComments() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
-			List<Message> activities = messageDAO.loadComments(dbContext.getMessageDAO().getById(1));
+			List<Message> activities = messageDAO.loadComments(dbContext
+					.getMessageDAO().getById(1));
 
 			assertNotNull(activities);
 			assertEquals(3, activities.size());
 		}
 	}
-	
+
 	@Test
 	public void testUpdateMessage() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			MessageDAO messageDAO = dbContext.getMessageDAO();
-			
+
 			Message m = messageDAO.getById(1);
 			assertTrue(!m.getMessage().equals("Updated message text"));
 			m.setMessage("Updated message text");
 
 			messageDAO.update(m);
 
-			assertEquals("Updated message text", dbContext.getMessageDAO().getById(1).getMessage());
+			assertEquals("Updated message text", dbContext.getMessageDAO()
+					.getById(1).getMessage());
 		}
 	}
-	
-	//FIXME
+
 	@Test
 	public void testRemoveAndReinsertMessage() throws Exception {
+		Message message = null;
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			Message m = messageDAO.getById(8);
+			messageDAO.remove(8);
+			message = new Message(m);
+			dbContext.commit();
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			dbContext.getMessageDAO().getById(8);
+			fail();
+		} catch (EntityNotFoundException e) {
+			assertNotNull(e);
+		}
+
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			// Attention: Transaction will be set to read only when you try to persist a detached entity 
+			dbContext.getMessageDAO().insert(message);
+			dbContext.commit();
+		}
 		
 		try (DbContext dbContext = contextProvider.getDbContext()) {
-			
-			MessageDAO messageDAO = dbContext.getMessageDAO();
-			
-			Message m = messageDAO.getById(8);
-			
-			messageDAO.remove(8);
-			dbContext.commit();
-			
-			try {
-				messageDAO.getById(8);
-				fail();
-			} catch(EntityNotFoundException e) {
-				//FIXME
-				try (DbContext dbContext2 = contextProvider.getDbContext()) {
-					dbContext2.getMessageDAO().insert(m);
-					dbContext2.commit();
-				}
-			}
+			Message m = dbContext.getMessageDAO().getById(message.getMessageId());
+			assertEquals(m, message);
 		}
 	}
-	
+
 	private Person getPerson(int id) throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -262,5 +266,5 @@ public class DbMessageTest extends DbTestBase {
 			return personDAO.getById(id);
 		}
 	}
-	
+
 }
