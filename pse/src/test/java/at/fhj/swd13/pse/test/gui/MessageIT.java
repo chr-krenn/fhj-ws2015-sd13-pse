@@ -48,4 +48,23 @@ public class MessageIT extends SeleniumBaseTestCase {
 		verifyEquals(1, result);
 		verifyTrue(messagePage.getKeywords().contains("Software"));
 	}
+	
+	/*
+	 * PSE2015-48 "Als angemeldeter Benutzer des System möchte ich einem meiner Kontakte eine private Nachricht schicken können."
+	 */
+	@Test
+	public void testEnterBasicMessageData() {
+		homepage = loginPage.login("zametter13", "12345678");
+		NewMessagePage messagePage = homepage.openNewMessage();
+		String title = "Title123456";
+		String text = "Text";
+		
+		messagePage.enterBasicMessageData(title, text);
+		
+		String actualTitle = messagePage.getTitle();
+		String actualText = messagePage.getText();
+		
+		verifyEquals(title, actualTitle);
+		verifyEquals(text, actualText);
+	}
 }
