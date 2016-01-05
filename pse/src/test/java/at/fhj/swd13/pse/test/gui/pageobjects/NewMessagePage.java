@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -63,24 +64,26 @@ public class NewMessagePage {
 		save();
 	}
 
-	// FIXME: Error @textField.clear: WebDriverException: Element must be user-editable to clear it
 	/**
 	 * Enter title and text
 	 * 
 	 * @param title
 	 * @param text
 	 */
-	private void enterBasicMessageData(String title, String text) {
+	public void enterBasicMessageData(String title, String text) {
 		WebElement titleField = driver.findElement(By.id("j_idt39:headline"));
 		titleField.clear();
 		titleField.sendKeys(title);
 		String window = driver.getWindowHandle();
 		WebElement iframe = driver.findElement(By.tagName("iframe"));
 		driver.switchTo().frame(iframe);
-		WebElement textField = driver.findElement(By.xpath("html/body")); // FIXME!
-		textField.clear();
-		textField.sendKeys(text);
-		driver.switchTo().frame(window);
+		WebElement iframeBody = driver.findElement(By.xpath("html/body"));
+		
+		// As the editor does not use a textfield but the body of a iframe, we are not able to call clear()
+		// so we select the existing text and replace it with the new text.
+		iframeBody.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		iframeBody.sendKeys(text);
+		driver.switchTo().window(window);
 	}
 
 	/**
@@ -97,6 +100,31 @@ public class NewMessagePage {
 		return driver.findElements(By.xpath(".//*[@id='j_idt39:messageTags']/ul/li")).size() - 1;
 	}
 
+	/**
+	 * Returns the title of the Message
+	 * 
+	 * @return Title of the message
+	 */
+	public String getTitle(){
+		WebElement titleField = driver.findElement(By.id("j_idt39:headline"));
+		return titleField.getAttribute("value");
+	}
+	
+	/**
+	 * Returns the text of the message
+	 * 
+	 * @return Text of the message
+	 */
+	public String getText(){
+		String window = driver.getWindowHandle();
+		WebElement iframe = driver.findElement(By.tagName("iframe"));
+		driver.switchTo().frame(iframe);
+		WebElement iframeBody = driver.findElement(By.xpath("html/body"));
+		String text = iframeBody.getText();
+		driver.switchTo().window(window);
+		return text;
+	}
+	
 	/**
 	 * Get WebElements for keywords
 	 * 
