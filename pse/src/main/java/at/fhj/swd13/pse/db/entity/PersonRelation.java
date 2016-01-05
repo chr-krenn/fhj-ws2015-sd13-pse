@@ -2,7 +2,16 @@ package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -48,15 +57,15 @@ public class PersonRelation implements Serializable {
 	public PersonRelation( Person fromPerson, Person toPerson ) {
 		
 		if ( fromPerson == null ) {
-			throw new ParameterException("fromPerson must not be null");
+			throw new IllegalArgumentException("fromPerson must not be null");
 		}
 
 		if ( toPerson == null ) {
-			throw new ParameterException("toPerson must not be null");
+			throw new IllegalArgumentException("toPerson must not be null");
 		}
 		
 		if ( fromPerson == toPerson ) {
-			throw new ParameterException("from and to person may not be identical");			
+			throw new IllegalArgumentException("from and to person may not be identical");			
 		}
 		
 		this.sourcePerson = fromPerson;

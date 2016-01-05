@@ -71,7 +71,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	 * @see at.fhjoanneum.swd13.pse.db.DbContext#persist(java.lang.Object)
 	 */
 	@Override
-	public void persist(final Object target) throws ConstraintViolationException {
+	public void persist(final Object target) {
 
 		try {
 			entityManager.persist(target);
@@ -99,7 +99,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	 * @see at.fhjoanneum.swd13.pse.db.DbContext#commit()
 	 */
 	@Override
-	public void commit() throws ConstraintViolationException {
+	public void commit() {
 
 		if (transaction == null || !transaction.isActive()) {
 

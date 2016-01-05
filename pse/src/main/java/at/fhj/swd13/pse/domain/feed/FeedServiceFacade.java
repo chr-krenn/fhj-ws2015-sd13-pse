@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
@@ -56,7 +55,7 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
+	public void rateMessage(int messageId, Person person) throws EntityNotFoundException {
 		feedService.rateMessage(messageId, person);
 	}
 
@@ -66,7 +65,7 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException {
+	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException {
 		return feedService.loadNews(communityId);
 	}
 

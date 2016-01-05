@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.dao.DocumentLibraryEntryDAO;
@@ -47,7 +46,7 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 	}
 
 	@Override
-	public void addEntry(String fileName, String description, InputStream content, int communityId) throws ConstraintViolationException {
+	public void addEntry(String fileName, String description, InputStream content, int communityId) {
 		
 		Community community = communityDAO.get(communityId);
 		

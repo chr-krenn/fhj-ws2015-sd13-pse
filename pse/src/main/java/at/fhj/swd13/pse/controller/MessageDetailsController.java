@@ -174,7 +174,7 @@ public class MessageDetailsController {
 	/*
 	 * Helper for recursively check where the right message (id) is to add the new "like"-info (p) 
 	 */
-	private void commentsRatingRecursive(MessageDTO message, int id, Person p) throws EntityNotFoundException, ConstraintViolationException {
+	private void commentsRatingRecursive(MessageDTO message, int id, Person p) throws EntityNotFoundException {
 		for(int l = 0; l < message.getComments().size(); l++) {
 			if(message.getComments().get(l).getId() == id) {
     			feedService.rateMessage(id, p);

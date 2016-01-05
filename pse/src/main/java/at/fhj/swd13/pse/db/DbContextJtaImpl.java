@@ -52,7 +52,7 @@ public class DbContextJtaImpl implements DbContext {
 	}
 
 	@Override
-	public void commit() throws ConstraintViolationException {
+	public void commit() {
 		// nothing, handled by jta
 	}
 

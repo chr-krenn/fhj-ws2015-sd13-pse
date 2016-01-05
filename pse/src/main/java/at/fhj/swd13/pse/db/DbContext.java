@@ -26,7 +26,7 @@ public interface DbContext extends AutoCloseable {
 	 * @param target
 	 *            the object to add
 	 */
-	void persist(Object target) throws ConstraintViolationException;
+	void persist(Object target);
 
 	/**
 	 * Remove an object from the persistent storage
@@ -39,13 +39,11 @@ public interface DbContext extends AutoCloseable {
 	/**
 	 * Write all pending changes since instantiation to the storage
 	 * 
-	 * @throws ConstraintViolationException
-	 *             when an unique index is violated
 	 * @throws IllegalStateException
 	 *             when commit is called
 	 *             on an already closed DbContext
 	 */
-	void commit() throws ConstraintViolationException;
+	void commit();
 
 	/**
 	 * Undo all pending changes since instantiation to the storage

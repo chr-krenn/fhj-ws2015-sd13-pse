@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.db.dao;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 
 public interface MessageTagDAO {
@@ -10,7 +9,7 @@ public interface MessageTagDAO {
 	 * @param messageTag
 	 *            the messageTag to persist
 	 */
-	void insert(MessageTag messageTag) throws ConstraintViolationException;
+	void insert(MessageTag messageTag);
 
 	/**
 	 * Get a MessageTag by its id

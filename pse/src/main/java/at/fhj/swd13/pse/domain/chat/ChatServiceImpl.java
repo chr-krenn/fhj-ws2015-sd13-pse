@@ -175,11 +175,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			return member;
 
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-		} catch (ConstraintViolationException e) {
-			e.printStackTrace();
+			logger.error("[CHAT] Error creating community member. Person " +person +" not found: ", e);
 		}
-
 		return null;
 	}
 
@@ -193,7 +190,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 			isMemberOfCommunity = c.isMember(p);
 
 		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
+			logger.error("[CHAT] Error checking community membership. Person " +person +" not found: ", e);
 		}
 
 		return isMemberOfCommunity;
@@ -224,8 +221,6 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
 
 		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
-			try {
-
 				adminPerson.addConfirmedCommunities(unconfirmed);
 
 				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
@@ -233,10 +228,6 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				c.setConfirmedBy(adminPerson);
 
 				dbContext.persist(c);
-
-			} catch (ConstraintViolationException e) {
-				e.printStackTrace();
-			}
 		} else {
 			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
@@ -246,17 +237,11 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 
 		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
-			try {
+			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
 
-				CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
+			c.setConfirmer(adminPerson);
 
-				c.setConfirmer(adminPerson);
-
-				dbContext.persist(c);
-
-			} catch (ConstraintViolationException e) {
-				e.printStackTrace();
-			}
+			dbContext.persist(c);
 		} else {
 			throw new IllegalStateException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
 		}

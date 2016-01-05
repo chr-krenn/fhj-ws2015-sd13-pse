@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.Person;
@@ -15,7 +14,7 @@ public interface MessageRatingDAO {
 	 * @param messageRating
 	 * 
 	 */
-	void insert(MessageRating rating) throws ConstraintViolationException;
+	void insert(MessageRating rating);
 	
 	/**
 	 * Remove a "like" from a message from persistent storage

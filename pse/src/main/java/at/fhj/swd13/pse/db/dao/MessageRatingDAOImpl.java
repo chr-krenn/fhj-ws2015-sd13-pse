@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -18,7 +17,7 @@ public class MessageRatingDAOImpl extends DAOBase implements MessageRatingDAO {
 	}
 	
 	@Override
-	public void insert(MessageRating rating) throws ConstraintViolationException {
+	public void insert(MessageRating rating) {
 		dbContext.persist(rating);	
 	}
 

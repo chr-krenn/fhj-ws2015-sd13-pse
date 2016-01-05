@@ -119,7 +119,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
+	public void rateMessage(int messageId, Person person) throws EntityNotFoundException {
 		Date createdDate = new Date();
 		Message m = dbContext.getMessageDAO().getById(messageId);
 		Person p = dbContext.getPersonDAO().getById(person.getPersonId());
@@ -140,7 +140,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException {
+	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException {
 		return getMessageDTOs(dbContext.getMessageDAO().loadNews(communityId));
 	}
 

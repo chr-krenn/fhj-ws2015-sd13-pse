@@ -119,8 +119,7 @@ public class MailServiceImpl implements MailService {
 
 			throw e;
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("[MAIL] unsupported encoding: " +e.getMessage());
 		}
 	}	
 }
