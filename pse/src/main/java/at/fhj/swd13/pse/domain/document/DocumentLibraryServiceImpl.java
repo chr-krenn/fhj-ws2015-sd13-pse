@@ -53,10 +53,8 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 		
 		Document document = documentService.store(fileName, content, description);
 		
-		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry = new at.fhj.swd13.pse.db.entity.DocumentLibraryEntry();
-		
-		entry.setCommunity(community);
-		entry.setDocument(document);
+		at.fhj.swd13.pse.db.entity.DocumentLibraryEntry entry = 
+				new at.fhj.swd13.pse.db.entity.DocumentLibraryEntry(community, document);
 		
 		documentLibraryEntryDAO.insert(entry);
 	}

@@ -31,18 +31,12 @@ public class DbMessageRatingTest extends DbTestBase {
 
 			Person person = personDAO.getById(118);
 			Message message = messageDAO.getById(2);
-			MessageRating rating = new MessageRating();
-			rating.setMessage(message);
-			rating.setPerson(person);
-			rating.setCreatedAt(new Date());
+			MessageRating rating = new MessageRating(new Date(), message, person);
 			messageRatingDAO.insert(rating);
 
 			person = personDAO.getById(114);
 			message = messageDAO.getById(3);
-			rating = new MessageRating();
-			rating.setMessage(message);
-			rating.setPerson(person);
-			rating.setCreatedAt(new Date());
+			rating = new MessageRating(new Date(), message, person);
 			messageRatingDAO.insert(rating);
 			
 			dbContext.commit();
@@ -59,10 +53,7 @@ public class DbMessageRatingTest extends DbTestBase {
 			Person person = personDAO.getById(104);
 			Message message = messageDAO.getById(4);
 			
-			MessageRating rating = new MessageRating();
-			rating.setMessage(message);
-			rating.setPerson(person);
-			rating.setCreatedAt(new Date());
+			MessageRating rating = new MessageRating(new Date(), message, person);
 
 			messageRatingDAO.insert(rating);
 			

@@ -41,6 +41,12 @@ public class MessageRating implements Serializable {
 	public MessageRating() {
 	}
 
+	public MessageRating(Date createdAt, Message message, Person person) {
+		this.createdAt = createdAt;
+		this.message = message;
+		this.person = person;
+	}
+
 	public int getMessageRatingId() {
 		return this.messageRatingId;
 	}

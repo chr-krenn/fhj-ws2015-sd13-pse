@@ -176,9 +176,7 @@ public class MessageEditorController {
 		for (String tagString : selectedTags) {
 			tag = tagService.getTagByToken(tagString);
 			if (tag == null) {
-				tag = new Tag();
-				tag.setToken(tagString);
-				tag.setDescription(tagString);
+				tag = new Tag(tagString, tagString);
 				try {
 					tagService.insert(tag);
 				} catch (Throwable x) {

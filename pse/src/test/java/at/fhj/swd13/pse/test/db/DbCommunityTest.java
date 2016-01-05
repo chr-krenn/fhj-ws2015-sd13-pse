@@ -108,9 +108,7 @@ public class DbCommunityTest extends DbTestBase {
 
 			CommunityDAO communityDAO = dbContext.getCommunityDAO();
 
-			Community c = new Community();
-			c.setName("Test-InsertRemove");
-			c.setCreatedBy(dbContext.getPersonDAO().getById(1));
+			Community c = new Community("Test-InsertRemove", dbContext.getPersonDAO().getById(1));
 
 			communityDAO.insert(c);
 

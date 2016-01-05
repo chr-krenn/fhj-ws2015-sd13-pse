@@ -72,9 +72,8 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 		if (creator.getIsActive()) {
 
-			Community community = new Community(communityName);
+			Community community = new Community(communityName, creator);
 
-			community.setCreatedBy(creator);
 			community.setInvitationOnly(invitationOnly);
 
 			return createCommunity(creator, community);
@@ -431,15 +430,9 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 					communities.add(dbContext.getCommunityDAO().get(c.getCommunityId()));
 				}
 
-				Message message = new Message();
-
-				message.setCreatedAt(new Date());
-				message.setHeadline(headline);
-				message.setMessage(comment);
-				message.setPerson(author);
-				message.setValidFrom(new Date());
+				Message message = new Message(new Date(), headline, comment, new Date(), 
+						dbContext.getDeliverySystemDAO().getPseService(), author);
 				message.setCommunities(communities);
-				message.setDeliverySystem(dbContext.getDeliverySystemDAO().getPseService());
 
 				return commentedMessage.addMessage(message);
 

@@ -33,6 +33,11 @@ public class PersonTag implements Serializable {
 	public PersonTag() {
 	}
 
+	public PersonTag(Tag tag) {
+		this.tag = tag;
+	}
+
+
 	public int getPersonTagId() {
 		return this.personTagId;
 	}

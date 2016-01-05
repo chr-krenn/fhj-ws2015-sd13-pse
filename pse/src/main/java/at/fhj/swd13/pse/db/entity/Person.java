@@ -653,10 +653,7 @@ public class Person implements Serializable {
 	public void addTag(Tag t) {
 		if (!hasTag(t)) {
 
-			PersonTag myTag = new PersonTag();
-			myTag.setPerson(this);
-			myTag.setTag(t);
-
+			PersonTag myTag = new PersonTag(t);
 			addPersonTag(myTag);
 			t.addPersonTag(myTag);
 		}
