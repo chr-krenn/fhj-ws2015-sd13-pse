@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 import org.jboss.logging.Logger;
 

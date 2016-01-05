@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,13 +31,20 @@ public class DbMessageRatingTest extends DbTestBase {
 
 			Person person = personDAO.getById(118);
 			Message message = messageDAO.getById(2);
-			
 			MessageRating rating = new MessageRating();
 			rating.setMessage(message);
 			rating.setPerson(person);
 			rating.setCreatedAt(new Date());
-
 			messageRatingDAO.insert(rating);
+
+			person = personDAO.getById(114);
+			message = messageDAO.getById(3);
+			rating = new MessageRating();
+			rating.setMessage(message);
+			rating.setPerson(person);
+			rating.setCreatedAt(new Date());
+			messageRatingDAO.insert(rating);
+			
 			dbContext.commit();
 		}
 	}
@@ -51,7 +57,7 @@ public class DbMessageRatingTest extends DbTestBase {
 			MessageDAO messageDAO = dbContext.getMessageDAO();
 
 			Person person = personDAO.getById(104);
-			Message message = messageDAO.getById(3);
+			Message message = messageDAO.getById(4);
 			
 			MessageRating rating = new MessageRating();
 			rating.setMessage(message);
@@ -80,6 +86,55 @@ public class DbMessageRatingTest extends DbTestBase {
 
 			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
 			assertEquals(0, raters.size());
+		}
+	}	
+
+	@Test
+	public void removeById() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+
+			Person person = personDAO.getById(114);
+			Message message = messageDAO.getById(3);
+			
+			messageRatingDAO.findRatingByPersonAndMessage(message, person);
+			messageRatingDAO.remove(messageRatingDAO.findRatingByPersonAndMessage(message, person).getMessageRatingId());
+
+			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
+			assertEquals(0, raters.size());
+		}
+	}	
+
+	@Test
+	public void loadAllRatersByMessage() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
+
+			Person person = personDAO.getById(118);
+			Message message = messageDAO.getById(2);
+			
+			List<Person> raters = messageRatingDAO.loadAllRatersByMessage(message);
+			assertEquals(person, raters.get(0));
+		}
+	}	
+
+	@Test
+	public void findRatingByPersonAndMessage() throws Exception {
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			PersonDAO personDAO = dbContext.getPersonDAO();
+			MessageDAO messageDAO = dbContext.getMessageDAO();
+			MessageRatingDAO messageRatingDAO = dbContext.getMessageRatingDAO();
+
+			Person person = personDAO.getById(118);
+			Message message = messageDAO.getById(2);
+			
+			MessageRating rating = messageRatingDAO.findRatingByPersonAndMessage(message, person);
+			assertEquals(message, rating.getMessage());
+			assertEquals(person, rating.getPerson());
 		}
 	}	
 }
