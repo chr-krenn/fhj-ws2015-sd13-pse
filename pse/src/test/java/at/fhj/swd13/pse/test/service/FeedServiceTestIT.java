@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,11 +15,14 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageRating;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
+import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.document.DocumentServiceFacade;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.feed.FeedServiceFacade;
 import at.fhj.swd13.pse.domain.tag.TagService;
@@ -34,6 +38,7 @@ public class FeedServiceTestIT extends RemoteTestBase {
 	private FeedService feedService;
 	private ChatService chatService;
 	private TagService tagService;
+	private DocumentService documentService;
 	private UserService userService;
 	private Person user;
 	
@@ -44,6 +49,7 @@ public class FeedServiceTestIT extends RemoteTestBase {
         feedService = lookup(FeedServiceFacade.class, FeedService.class);
         chatService = lookup(ChatServiceFacade.class, ChatService.class);
         tagService = lookup(TagServiceFacade.class, TagService.class);
+        documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
         userService = lookup(UserServiceFacade.class, UserService.class);
         user = userService.getUser("pompenig13");
     }	
@@ -135,5 +141,16 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	
     	assertEquals("Software",m.getTags().get(0));
     	feedService.removeMessage(m.getId());
+    }
+    
+    @Test
+    public void getMessageDetailsWithIcon() throws Exception {
+    	//Prepare Community list
+    	List<Community> communities = new ArrayList<>();
+    	communities.add(chatService.getCommunity(100));
+    	
+    	//Prepare document
+    	Document doc = documentService.store("pic", new FileInputStream("src/test/resources/testDocs/no_img.png"));
+    	assertTrue(doc != null);
     }
 }
