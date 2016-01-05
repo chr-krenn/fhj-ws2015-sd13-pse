@@ -43,4 +43,11 @@ public class MessageRatingDAOImpl extends DAOBase implements MessageRatingDAO {
 		return (List<Person>) q.getResultList();
 	}
 
+	@Override
+	public MessageRating findRatingByPersonAndMessage(Message message, Person person) {
+		Query q = dbContext.createNamedQuery("MessageRating.findRatingByPersonAndMessage");
+		q.setParameter("message", message);
+		q.setParameter("person", person);
+		return (MessageRating) q.getSingleResult();
+	}
 }

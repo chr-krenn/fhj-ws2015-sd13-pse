@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name="message_rating")
 @NamedQueries({
 	@NamedQuery(name="MessageRating.findAll", query="SELECT m FROM MessageRating m"),
-	@NamedQuery(name="MessageRating.findAllRatersByMessage", query="SELECT m FROM MessageRating m WHERE m.message =:message"),
+	@NamedQuery(name="MessageRating.findAllRatersByMessage", query="SELECT m.person FROM MessageRating m WHERE m.message =:message"),
 	@NamedQuery(name="MessageRating.findRatingByPersonAndMessage", query="SELECT m FROM MessageRating m WHERE m.message =:message AND m.person =:person"),
 	@NamedQuery(name = "MessageRating.deleteById", query = "DELETE FROM MessageRating m WHERE m.messageRatingId = :id")})
 public class MessageRating implements Serializable {
