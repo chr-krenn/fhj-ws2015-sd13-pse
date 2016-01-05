@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
-import at.fhj.swd13.pse.db.dao.PersonDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.ParameterException;
