@@ -38,7 +38,7 @@ public class MailerTest {
 			
 			final String receipientList = chatService.resolveReceipientsMail( message ); 
 			
-			mailService.sendMail( message, receipientList );
+			mailService.sendMail( message, receipientList, null );
 		} catch (MessagingException | EntityNotFoundException e) {
 			logger.error("[XPERIMENTAL] error sending message: " + e.getMessage() );
 		}

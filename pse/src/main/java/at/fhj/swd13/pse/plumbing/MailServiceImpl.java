@@ -1,6 +1,7 @@
 package at.fhj.swd13.pse.plumbing;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -49,7 +50,11 @@ public class MailServiceImpl implements MailService {
 	 * @see at.fhj.swd13.pse.plumbing.MailService#sendMail(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void sendMail(final String subject, final String htmlBody, final String recipient) throws MessagingException {
+	public void sendMail(final String subject, final String htmlBody, final String recipient, Properties props) throws MessagingException {
+		
+		if(props != null) {
+			this.session = Session.getInstance(props);
+		}
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		try {
@@ -79,7 +84,11 @@ public class MailServiceImpl implements MailService {
 	 */
 	@Override
 	@Asynchronous
-	public void sendMail(final Message message, final String receipientList) throws MessagingException {
+	public void sendMail(final Message message, final String receipientList, Properties props) throws MessagingException {
+		
+		if(props != null) {
+			this.session = Session.getInstance(props);
+		}
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		try {

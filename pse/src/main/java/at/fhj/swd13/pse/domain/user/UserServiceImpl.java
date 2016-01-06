@@ -367,7 +367,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
-					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
+					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress, null);
 			logger.info("[USER] email sent");
 		} catch (Throwable ex) {
 			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage(), ex);
