@@ -2,6 +2,9 @@ package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 import java.util.Date;
 
 
@@ -42,6 +45,11 @@ public class MessageRating implements Serializable {
 	}
 
 	public MessageRating(Date createdAt, Message message, Person person) {
+		
+		ArgumentChecker.assertNotNull(createdAt, "createdAt");
+		ArgumentChecker.assertNotNull(message, "message");
+		ArgumentChecker.assertNotNull(person, "person");
+		
 		this.createdAt = createdAt;
 		this.message = message;
 		this.person = person;

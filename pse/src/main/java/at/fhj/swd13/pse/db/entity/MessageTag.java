@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 /**
  * The persistent class for the message_tag database table.
  * 
@@ -56,6 +58,9 @@ public class MessageTag implements Serializable {
 	}
 	
 	public MessageTag(Tag tag) {
+		
+		ArgumentChecker.assertNotNull( tag, "tag");
+		
 		this.tag = tag;
 		this.createdAt = new Date();
 	}

@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
 import at.fhj.swd13.pse.plumbing.JpaHelper;
 
 /**
@@ -71,8 +72,13 @@ public class Document implements Serializable {
 	private List<Person> persons;
 
 	public Document() {}
-	
+
 	public Document(String description, String mimeType, String name, int size, String storageLocation) {
+
+		ArgumentChecker.assertContent(mimeType, "mimeType");
+		ArgumentChecker.assertContent(name, "name");
+		ArgumentChecker.assertContent(storageLocation, "storageLocation");
+
 		this.description = description;
 		this.mimeType = mimeType;
 		this.name = name;
@@ -98,6 +104,9 @@ public class Document implements Serializable {
 	}
 
 	public void setCreatedAt(Date createdAt) {
+
+		ArgumentChecker.assertNotNull(createdAt, "createdAt");
+
 		this.createdAt = createdAt;
 	}
 
@@ -114,6 +123,9 @@ public class Document implements Serializable {
 	}
 
 	public void setMimeType(String mimeType) {
+
+		ArgumentChecker.assertContent(mimeType, "mimeType");
+
 		this.mimeType = mimeType;
 	}
 
@@ -123,19 +135,21 @@ public class Document implements Serializable {
 
 	public void setName(String name) {
 
-		if (nameLength == 0 || name.length() <= nameLength ) {
+		ArgumentChecker.assertContent(name, "name");
+
+		if (nameLength == 0 || name.length() <= nameLength) {
 
 			this.name = name;
 		} else {
-			//name is too long to fit into the db column --> truncate
-			
+			// name is too long to fit into the db column --> truncate
+
 			final int charsTooMuch = name.length() - nameLength;
-			final int lastDot = name.lastIndexOf( '.');
-			
-			if ( lastDot > charsTooMuch ) {
-				
-				this.name = name.substring( 0, lastDot - charsTooMuch);
-				this.name = this.name + name.substring( lastDot );
+			final int lastDot = name.lastIndexOf('.');
+
+			if (lastDot > charsTooMuch) {
+
+				this.name = name.substring(0, lastDot - charsTooMuch);
+				this.name = this.name + name.substring(lastDot);
 			} else {
 				this.name = name.substring(0, nameLength);
 			}
@@ -155,6 +169,9 @@ public class Document implements Serializable {
 	}
 
 	public void setStorageLocation(String storageLocation) {
+
+		ArgumentChecker.assertContent(storageLocation, "storageLocation");
+
 		this.storageLocation = storageLocation;
 	}
 
@@ -163,6 +180,9 @@ public class Document implements Serializable {
 	}
 
 	public Message addUseAsIcon(Message messages) {
+
+		ArgumentChecker.assertNotNull(messages, "messages");
+
 		getMessageAsIcons().add(messages);
 		messages.setIcon(this);
 
@@ -170,6 +190,9 @@ public class Document implements Serializable {
 	}
 
 	public Message removeUseAsIcon(Message messages1) {
+
+		ArgumentChecker.assertNotNull(messages1, "messages1");
+
 		getMessageAsIcons().remove(messages1);
 		messages1.setIcon(null);
 
@@ -181,6 +204,9 @@ public class Document implements Serializable {
 	}
 
 	public Message addUseAsAttachment(Message messages) {
+
+		ArgumentChecker.assertNotNull(messages, "messages");
+
 		getMessageAsAttachment().add(messages);
 		messages.setAttachment(this);
 
@@ -188,6 +214,8 @@ public class Document implements Serializable {
 	}
 
 	public Message removeMessages2(Message messages) {
+		ArgumentChecker.assertNotNull(messages, "messages");
+
 		getMessageAsAttachment().remove(messages);
 		messages.setAttachment(null);
 
@@ -203,6 +231,9 @@ public class Document implements Serializable {
 	}
 
 	public Person addPerson(Person person) {
+		
+		ArgumentChecker.assertNotNull(person, "person");				
+		
 		getPersons().add(person);
 		person.setDocument(this);
 
@@ -210,13 +241,17 @@ public class Document implements Serializable {
 	}
 
 	public Person removePerson(Person person) {
+		ArgumentChecker.assertNotNull(person, "person");				
+
 		getPersons().remove(person);
 		person.setDocument(null);
 
 		return person;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -227,7 +262,9 @@ public class Document implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

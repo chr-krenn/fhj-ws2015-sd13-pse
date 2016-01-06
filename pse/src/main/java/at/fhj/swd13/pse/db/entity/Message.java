@@ -208,6 +208,8 @@ public class Message implements Serializable {
 	}
 
 	public void setCreatedAt(Date createdAt) {
+		ArgumentChecker.assertNotNull(createdAt, "createdAt");
+		
 		this.createdAt = createdAt;
 	}
 
@@ -319,6 +321,8 @@ public class Message implements Serializable {
 	}
 
 	public void setDeliverySystem(DeliverySystem deliverySystem) {
+		ArgumentChecker.assertNotNull(deliverySystem, "deliverySystem");
+
 		this.deliverySystem = deliverySystem;
 	}
 
