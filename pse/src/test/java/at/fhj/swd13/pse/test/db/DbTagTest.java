@@ -1,13 +1,11 @@
 package at.fhj.swd13.pse.test.db;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.TagDAO;
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -89,6 +87,8 @@ public class DbTagTest extends DbTestBase {
 
 			dbContext.commit();
 			fail("Expected ConstraintViolation (duplicte key)");
+		} catch (Exception e) {
+			assertTrue(e instanceof ConstraintViolationException);
 		}
 
 		try (DbContext dbContext = contextProvider.getDbContext()) {

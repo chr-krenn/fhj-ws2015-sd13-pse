@@ -8,6 +8,8 @@ INSERT INTO `person` VALUES (996, 'dbtestuser','Test','User','dbtest.user@edu.fh
 INSERT INTO `person` VALUES (995, 'dbtestcontactuser','Test','ContactUser','dbtest.contactuser@edu.fh-joanneum.at','+43666123456789','$2a$12$KtN5EU0wU/l9QXgvQvGIxOIeAzepqsPrpD588ChhTnX4ucP.Sjy..','Knecht','DeleteDep','A','-2','666','1980-01-01 00:00:00','2015-01-01 00:00:00',1,0,1,0,0,NULL, NULL);
 insert into person_relation(source_person_id, target_person_id) values(996, 995);
 
+INSERT INTO `document` (`document_id`, `name`, `mime_type`, `description`, `storage_location`, `size`, `created_at`) VALUES (999, 'dbtestdeletedocument', 'application/pdf', 'Delete This', '7\\5d4c6ff2-0a0b-41a5-b0b3-9171dd4394ae.uploaded', 0, '2016-01-06 16:31:47');
+INSERT INTO `document` (`document_id`, `name`, `mime_type`, `description`, `storage_location`, `size`, `created_at`) VALUES (998, 'dbtestreaddocument', 'application/pdf', 'Delete This', '7\\5d4c6ff2-0a0b-41a5-b0b3-9171dd4394ae.uploaded', 0, '2016-01-06 16:31:47');
 
 
 --Community for testing, test person is a member
