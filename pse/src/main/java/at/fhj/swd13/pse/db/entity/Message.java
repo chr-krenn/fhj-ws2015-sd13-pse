@@ -25,23 +25,23 @@ import javax.persistence.TemporalType;
 
 import org.jsoup.Jsoup;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 /**
  * The persistent class for the message database table.
  * 
  */
 @Entity
 @Table(name = "message")
-@NamedQueries({
-		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
+@NamedQueries({ @NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.messageId = :id"),
 		@NamedQuery(name = "Message.findNews", query = "SELECT m FROM Message m JOIN m.communities c WHERE " +
-			    "(m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
-			    "AND (m.validFrom < CURRENT_TIMESTAMP) AND c.communityId = :id ORDER BY m.createdAt DESC"),
+				"(m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
+				"AND (m.validFrom < CURRENT_TIMESTAMP) AND c.communityId = :id ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findForUserWithCommunitiesParam", query = "SELECT m FROM Message m LEFT JOIN m.communities c " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
-				"AND c.systemInternal = false AND (c.communityId IS NULL OR c.communityId IN (:communities)) " +
-				"ORDER BY m.createdAt DESC"),
+				"AND c.systemInternal = false AND (c.communityId IS NULL OR c.communityId IN (:communities)) " + "ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findForUser", query = "SELECT m FROM Message m LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
@@ -54,22 +54,19 @@ import org.jsoup.Jsoup;
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
 				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
 				"AND m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN p.personTargetRelations tr " +
-					"where sr.targetPerson = :person or tr.sourcePerson = :person) AND c.systemInternal = false AND c.invitationOnly = false " +
+				"where sr.targetPerson = :person or tr.sourcePerson = :person) AND c.systemInternal = false AND c.invitationOnly = false " +
 				"ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findForUserAndTagsAndContacts", query = "SELECT m FROM Message m LEFT JOIN m.messageTags mt " +
 				"LEFT JOIN m.communities c LEFT JOIN c.communityMembers cm " +
 				"WHERE m.person <> :person AND m.messageBean IS NULL AND (m.expiresOn IS NULL OR m.expiresOn > CURRENT_TIMESTAMP) " +
-				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " +
-				"AND (c.communityId IS NULL OR :person = cm.member " +
-					"OR ((mt.tag IN (SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person) " +
-					"OR m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN " +
-						"p.personTargetRelations tr WHERE sr.targetPerson = :person or tr.sourcePerson = :person)) " +
-						"AND c.systemInternal = false AND c.invitationOnly = false)) " +
-				"ORDER BY m.createdAt DESC"),
+				"AND (m.validFrom IS NULL OR m.validFrom <= CURRENT_TIMESTAMP) " + "AND (c.communityId IS NULL OR :person = cm.member " +
+				"OR ((mt.tag IN (SELECT t FROM Tag t LEFT JOIN t.personTags p where p.person = :person) " +
+				"OR m.person in (select p from Person p LEFT JOIN p.personSourceRelations sr LEFT JOIN " +
+				"p.personTargetRelations tr WHERE sr.targetPerson = :person or tr.sourcePerson = :person)) " +
+				"AND c.systemInternal = false AND c.invitationOnly = false)) " + "ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.deleteById", query = "DELETE FROM Message m WHERE m.messageId = :id"),
-		@NamedQuery(name="Message.findComments", query = "SELECT m FROM Message m where m.messageBean = :message")})
+		@NamedQuery(name = "Message.findComments", query = "SELECT m FROM Message m where m.messageBean = :message") })
 public class Message implements Serializable {
-	
 
 	private static final long serialVersionUID = 1L;
 
@@ -101,7 +98,7 @@ public class Message implements Serializable {
 	private Date validFrom;
 
 	// bi-directional many-to-one association to MesasgeRating
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "message", cascade = CascadeType.ALL)
 	private List<MessageRating> messageRatings;
 
 	// bi-directional many-to-one association to Message
@@ -110,7 +107,7 @@ public class Message implements Serializable {
 	private Message messageBean;
 
 	// bi-directional many-to-one association to Message
-	@OneToMany(mappedBy = "messageBean", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "messageBean", cascade = CascadeType.PERSIST)
 	private List<Message> messages;
 
 	// bi-directional many-to-one association to DeliverySystem
@@ -134,11 +131,11 @@ public class Message implements Serializable {
 	private Person person;
 
 	// bi-directional many-to-one association to Community
-	@ManyToMany (fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Community> communities;
 
 	// bi-directional many-to-one association to MessageTag
-	@ManyToMany(mappedBy = "messages", cascade=CascadeType.PERSIST)
+	@ManyToMany(mappedBy = "messages", cascade = CascadeType.PERSIST)
 	private List<MessageTag> messageTags = new ArrayList<MessageTag>();
 
 	// bi-directional many-to-one association to PersonMessage
@@ -152,11 +149,16 @@ public class Message implements Serializable {
 	private void onPreUpdate() {
 		updatedOn = new Date();
 	}
-	
-	public Message() {
-	}
-	
+
+	public Message() {}
+
 	public Message(Date createdAt, String headline, String message, Date validFrom, DeliverySystem deliverySystem, Person person) {
+
+		ArgumentChecker.assertContent(headline, "headline");
+		ArgumentChecker.assertContent(message, "message");
+		ArgumentChecker.assertNotNull(deliverySystem, "deliverySystem");
+		ArgumentChecker.assertNotNull(person, "person");
+
 		this.createdAt = createdAt;
 		this.headline = headline;
 		this.message = message;
@@ -168,9 +170,13 @@ public class Message implements Serializable {
 	/**
 	 * Copy constructor for the message object. Copies everything but the messageId.
 	 * 
-	 * @param other Message Object which should get copied.
+	 * @param other
+	 *            Message Object which should get copied.
 	 */
-	public Message(Message other){
+	public Message(Message other) {
+
+		ArgumentChecker.assertNotNull(other, "other");
+
 		this.attachment = other.attachment;
 		this.communities = other.communities;
 		this.createdAt = other.createdAt;
@@ -218,18 +224,25 @@ public class Message implements Serializable {
 	}
 
 	public void setHeadline(String headline) {
+		
+		ArgumentChecker.assertContent(headline, "headline");
+		
 		this.headline = headline;
 	}
 
 	public String getMessage() {
+		
 		return this.message;
 	}
 
 	public String getPlainMessage() {
 		return Jsoup.parse(message).text();
 	}
-	
+
 	public void setMessage(String message) {
+
+		ArgumentChecker.assertContent(message, "message");
+		
 		this.message = message;
 	}
 
@@ -346,7 +359,7 @@ public class Message implements Serializable {
 	}
 
 	public void setMessageTags(List<MessageTag> messageTags) {
-		for(MessageTag messageTag : messageTags){
+		for (MessageTag messageTag : messageTags) {
 			this.addMessageTag(messageTag);
 		}
 	}
@@ -386,8 +399,10 @@ public class Message implements Serializable {
 
 		return personMessage;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -398,7 +413,9 @@ public class Message implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -423,5 +440,5 @@ public class Message implements Serializable {
 	public String toString() {
 		return "Message [messageId=" + messageId + ", createdAt=" + createdAt + ", headline=" + headline + ", message=" + message + ", person=" + person + "]";
 	}
-	
+
 }
