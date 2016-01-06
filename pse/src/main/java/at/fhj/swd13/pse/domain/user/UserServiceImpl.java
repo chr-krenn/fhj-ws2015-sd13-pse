@@ -71,12 +71,14 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			Person p = dbContext.getPersonDAO().getByUsername(username);
 	
+			
 			if (p != null && p.getIsLoginAllowed() && p.getIsActive() && p.isMatchingPassword(plainPassword)) {
 				p.setIsOnline(true);
 				p.setCurrentSessionId(sessionId);
 				return p;
 			}
 		} catch (Throwable ex) {
+			logger.info("[UserService] loginUser failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 		return null;
@@ -89,6 +91,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			p.setIsOnline(false);
 			p.setCurrentSessionId(null);
 		} catch (Throwable ex) {
+			logger.info("[UserService] logoutUser failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -108,6 +111,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			}
 			return userCount;
 		} catch (Throwable ex) {
+			logger.info("[UserService] updateNullPasswords failed: " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -133,6 +137,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			Person p = dbContext.getPersonDAO().getByUsername(username);
 			return p != null && p.isMatchingPassword(plainPassword);
 		} catch (Throwable ex) {
+			logger.info("[UserService] isMatchingPassword failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -149,6 +154,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			passwordStrengthValidator.validate(newPlainPassword);
 			p.setPassword(newPlainPassword);
 		} catch (Throwable ex) {
+			logger.info("[UserService] setPassword failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -163,7 +169,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			return dbContext.getPersonDAO().getByUsername(username, true);
 		} catch (Throwable ex) {
-			logger.info("[UserService] getUser failed for " + username + " : " + ex.getMessage());
+			logger.info("[UserService] getUser failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -176,10 +182,9 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	@Override
 	public List<Person> getUsers() {
 		try {
-			// TODO use better method
 			return dbContext.getPersonDAO().getAllPersons(0, 1000);
 		} catch (Throwable ex) {
-			logger.info("[UserService] getUsers failed : " + ex.getMessage());
+			logger.info("[UserService] getUsers failed : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -194,7 +199,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			return dbContext.getPersonDAO().getAllPersonsWithDepartment(department);
 		} catch (Throwable ex) {
-			logger.info("[UserService] getUsersWithDepartment failed for " + department + " : " + ex.getMessage());
+			logger.info("[UserService] getUsersWithDepartment failed for " + department + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -209,7 +214,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			return dbContext.getPersonDAO().getPersonLike(search);
 		} catch (Throwable ex) {
-			logger.info("[UserService] findUsers failed for " + search + " : " + ex.getMessage());
+			logger.info("[UserService] findUsers failed for " + search + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -277,7 +282,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 				p.removePersonTag(personTag);
 			}
 		} catch (Throwable ex) {
-			logger.info("[UserService] update failed for user " + person.getFullName() + " : " + ex.getMessage());
+			logger.info("[UserService] update failed for user " + person.getFullName() + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -297,12 +302,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 					p.setDocument(userImage);
 			}
 		} catch (Throwable ex) {
-			logger.info("[UserService] setUserImage failed for user " + username + " : " + ex.getMessage());
+			logger.info("[UserService] setUserImage failed for user " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 
 		if (userImage == null) {
-			logger.info("[UserService] setUserImage failed for user " + username + " : Document not found : " + documentId);
+			logger.info("[UserService] setUserImage failed for user " + username + " : Document not found: " + documentId);
 			throw new ServiceException("Document not found : " + documentId);
 		}
 	}
@@ -324,7 +329,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 			p.setPassword(passwordNewPlain);
 			return true;
 		} catch (Throwable ex) {
-			logger.info("[UserService] changePassword failed for user " + loggedInUsername + " : " + ex.getMessage());
+			logger.info("[UserService] changePassword failed for user " + loggedInUsername + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -334,7 +339,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			return dbContext.getPersonDAO().createRelation(sourcePerson, targetPerson);
 		} catch (Throwable ex) {
-			logger.info("[UserService] createRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage());
+			logger.info("[UserService] createRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -344,7 +349,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 		try {
 			dbContext.getPersonDAO().removeRelation(sourcePerson, targetPerson);
 		} catch (Throwable ex) {
-			logger.info("[UserService] removeRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage());
+			logger.info("[UserService] removeRelation failed for users " + sourcePerson.getFullName() + " and " +  targetPerson.getFullName() + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 	}
@@ -360,11 +365,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 			person.setPassword(randomPassword);
 
+			// emailController.sendNewPassword(emailAddress, randomPassword);
 			mailService.sendMail("Ihr neues Passwort",
 					"Das ist ihr neues Passwort: <em>" + randomPassword + "</em><br/><div>Viel Spass mit <a href=\"" + serverName + ":"+port+"/pse\">pse</a>.</div>", emailAddress);
 			logger.info("[USER] email sent");
 		} catch (Throwable ex) {
-			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage());
+			logger.info("[UserService] resetPassword failed for user " + emailAddress + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
 		return randomPassword;
