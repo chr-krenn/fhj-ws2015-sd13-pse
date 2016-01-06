@@ -65,8 +65,10 @@ public interface FeedService {
 	 * 
 	 * @param message
 	 * @param username
+	 * @return
+	 * 		messageDTO with ratingList, quantityRatings and like set
 	 */
-	void setMessageLikes(MessageDTO message, String username);
+	MessageDTO setMessageLikes(MessageDTO message, String username);
 
 	/**
 	 * The image ref is not available in the message itself and must therefore be

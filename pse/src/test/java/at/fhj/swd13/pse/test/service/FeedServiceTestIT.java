@@ -207,17 +207,17 @@ public class FeedServiceTestIT extends RemoteTestBase {
 			MessageDTO m = feedService.getMessageDTOById(1);
 			assertTrue(m.getComments() == null); //Comments not loaded, should be empty
 			m = feedService.setComments(m); //Load comments
-			assertFalse(m.getComments() == null); //FIXME: why still null??
+			assertFalse(m.getComments() == null);
 			assertEquals("Comment 1", m.getComments().get(0).getText());
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			fail();
 		}
-    	
     }
     
+    //FIXME: only works with locally stored image...
     @Test
-    public void setImageRefTest() {
+    public void setImageRefAndUpdateTest() {
     	//Prepare document
     	//Not working with "src/test/resources/testDocs/no_img.png"
     	Document icon = documentService.store("pic", "D:\\no_img.png");
@@ -238,6 +238,24 @@ public class FeedServiceTestIT extends RemoteTestBase {
 			mDTO = feedService.setImageRef(mDTO); 
 			assertFalse(mDTO.getImageRef() == null);
 			
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+			fail();
+		}
+    }
+    
+    @Test
+    public void setMessageLikesTest() {
+    	try {
+			MessageDTO m = feedService.getMessageDTOById(1);
+			assertEquals(0, m.getQuantityRatings());
+			assertTrue(m.getRatingPersonsList() == null);
+			assertFalse(m.isLike());
+			
+			m = feedService.setMessageLikes(m, "pompenig13");
+			assertEquals(2, m.getQuantityRatings());
+			assertFalse(m.getRatingPersonsList() == null);
+			assertTrue(m.isLike());
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
 			fail();

@@ -70,8 +70,8 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public void setMessageLikes(MessageDTO message, String username) {
-		feedService.setMessageLikes(message, username);
+	public MessageDTO setMessageLikes(MessageDTO message, String username) {
+		return feedService.setMessageLikes(message, username);
 	}
 
 	@Override

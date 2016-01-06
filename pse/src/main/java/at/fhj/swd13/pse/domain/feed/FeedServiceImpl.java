@@ -145,7 +145,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void setMessageLikes(MessageDTO message, String username) {
+	public MessageDTO setMessageLikes(MessageDTO message, String username) {
 		List<MessageRating> ratingList = message.getRatingList();
 		List<Person> personList = new ArrayList<Person>();
 		
@@ -166,6 +166,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			message.setQuantityRatings(quantityRatings);
 			message.setRatingPersonsList(personList);
 		}
+		return message;
 	}
 
 	@Override
