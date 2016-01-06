@@ -15,14 +15,17 @@ import javax.naming.NamingException;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
+import at.fhj.swd13.pse.domain.document.DocumentService;
+import at.fhj.swd13.pse.domain.document.DocumentServiceFacade;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceFacade;
 import at.fhj.swd13.pse.plumbing.UserSession;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
 
-public class UserServiceTestIT extends RemoteTestBase {
+public class UserServiceIT extends RemoteTestBase {
 
 	private UserService userService;
 	
@@ -289,4 +292,48 @@ public class UserServiceTestIT extends RemoteTestBase {
 		assertEquals(1, persons.size());
 		assertTrue(users.contains(persons.get(0)));
     }
+    
+    @Test
+    public void getFullNameTest() {
+    	Person p = userService.getUser("pompenig13");
+    	String name = userService.getFullName(p);
+    	assertEquals("Christine Pompenig", name);
+    }
+    
+    @Test
+    public void getUsersTest() {
+    	List<Person> users = userService.getUsers();
+    	assertEquals(28,users.size());
+    }
+    
+    //FIXME: only working with locally stored image...
+    @Test
+    public void setUserImageTest() throws NamingException {
+    	//Prepare document
+    	//FIXME: Not working with "src/test/resources/testDocs/no_img.png"
+    	DocumentService documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
+    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	assertTrue(icon != null);
+    	
+    	userService.setUserImage("pompenig13", icon.getDocumentId());
+    	
+    	Person p = userService.getUser("pompenig13");
+    	assertEquals(icon, p.getDocument());
+    	assertEquals("/store/media/"+icon.getDocumentId(), userService.getImageRef(p));
+    }
+    
+    @Test
+    public void getImageRefTest() {
+    	Person p = userService.getUser("angelofr13");
+    	assertEquals("/protected/img/default_user_image.jpg", userService.getImageRef(p));
+    }
+    
+    @Test
+    public void setPasswordTest() {
+    	userService.setPassword("integrationtestuser", "87654321");
+		assertNotNull(userService.loginUser("integrationtestuser", "87654321", UserSession.createSessionId()));
+    }
+    
+    //No test for setPasswordStrengthValidator
+    
 }
