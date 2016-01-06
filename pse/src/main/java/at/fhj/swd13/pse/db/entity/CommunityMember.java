@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 /**
  * The persistent class for the community_member database table.
  * 
@@ -70,6 +72,9 @@ public class CommunityMember implements Serializable {
 	 */
 	public CommunityMember(final Community community, final Person member) {
 
+		ArgumentChecker.assertNotNull(community, "community");
+		ArgumentChecker.assertNotNull(member, "member");
+		
 		createdAt = new Date();
 
 		isAdministrator = false;
@@ -91,6 +96,9 @@ public class CommunityMember implements Serializable {
 	}
 
 	public void setCreatedAt(Date createdAt) {
+		
+		ArgumentChecker.assertNotNull(createdAt, "createdAt");
+
 		this.createdAt = createdAt;
 	}
 
@@ -107,6 +115,9 @@ public class CommunityMember implements Serializable {
 	}
 
 	public void setCommunity(Community community) {
+		
+		ArgumentChecker.assertNotNull( community, "community");		
+		
 		this.community = community;
 	}
 
@@ -115,6 +126,9 @@ public class CommunityMember implements Serializable {
 	}
 
 	public void setConfirmer(Person confirmer) {
+		
+		ArgumentChecker.assertNotNull( confirmer, "confirmer");		
+
 		this.confirmer = confirmer;
 	}
 
@@ -123,6 +137,9 @@ public class CommunityMember implements Serializable {
 	}
 
 	public void setMember(Person member) {
+		
+		ArgumentChecker.assertNotNull( community, "community");				
+		
 		this.member = member;
 	}
 

@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 /**
  * The persistent class for the community database table.
  * 
@@ -106,12 +108,19 @@ public class Community implements Serializable {
 	}
 
 	public Community(final String communityName) {
+
 		this();
+		
+		ArgumentChecker.assertContent( communityName, "communityName");
+		
 		this.name = communityName;
 	}
 	
 	public Community(final String communityName, Person createdBy) {
 		this(communityName);
+		
+		ArgumentChecker.assertNotNull(createdBy, "createdBy");
+
 		this.createdBy = createdBy;
 	}
 
@@ -128,6 +137,9 @@ public class Community implements Serializable {
 	}
 
 	public void setCreatedAt(Date createdAt) {
+		
+		ArgumentChecker.assertNotNull(createdAt, "createdAt");
+		
 		this.createdAt = createdAt;
 	}
 
@@ -160,6 +172,9 @@ public class Community implements Serializable {
 	}
 
 	public void setPrivateUser(Person person) {
+		
+		ArgumentChecker.assertNotNull( person, "person");
+		
 		this.privateUser = person;
 		person.setPrivateCommunity(this);
 	}
@@ -179,6 +194,9 @@ public class Community implements Serializable {
 	}
 
 	public void setConfirmedBy(Person person2) {
+		
+		ArgumentChecker.assertNotNull( person2, "person2");
+
 		this.confirmedBy = person2;
 	}
 
@@ -187,6 +205,9 @@ public class Community implements Serializable {
 	}
 
 	public void setCreatedBy(Person person3) {
+		
+		ArgumentChecker.assertNotNull( person3, "person3");
+		
 		this.createdBy = person3;
 	}
 
@@ -195,10 +216,15 @@ public class Community implements Serializable {
 	}
 
 	public void setCommunityMembers(List<CommunityMember> communityMembers) {
+		ArgumentChecker.assertNotNull( communityMembers, "communityMembers");
+
 		this.communityMembers = communityMembers;
 	}
 
 	public CommunityMember addCommunityMember(CommunityMember communityMember) {
+		
+		ArgumentChecker.assertNotNull( communityMember, "communityMember");
+
 		getCommunityMembers().add(communityMember);
 		communityMember.setCommunity(this);
 
@@ -206,6 +232,9 @@ public class Community implements Serializable {
 	}
 
 	public CommunityMember removeCommunityMember(CommunityMember communityMember) {
+		
+		ArgumentChecker.assertNotNull( communityMember, "communityMember");
+
 		getCommunityMembers().remove(communityMember);
 		communityMember.setCommunity(null);
 
@@ -223,6 +252,8 @@ public class Community implements Serializable {
 	 * @return added CommunityMember or null when the user was already present
 	 */
 	public CommunityMember addMember(final Person newMember, final boolean isAdministrator) {
+
+		ArgumentChecker.assertNotNull( newMember, "newMember");
 
 		if (!isMember(newMember)) {
 
@@ -251,6 +282,8 @@ public class Community implements Serializable {
 	 */
 	public boolean isMember(final Person potentialMember) {
 
+		ArgumentChecker.assertNotNull( potentialMember, "potentialMember");
+
 		if (potentialMember != null && getCommunityMembers() != null) {
 			for (CommunityMember membership : getCommunityMembers()) {
 				if (membership.getMember() == potentialMember) {
@@ -267,6 +300,9 @@ public class Community implements Serializable {
 	}
 
 	public void setMessages(List<Message> messages) {
+		
+		ArgumentChecker.assertNotNull(messages, "messages");		
+		
 		this.messages = messages;
 	}
 
@@ -278,6 +314,9 @@ public class Community implements Serializable {
 	}
 
 	public Message removeMessage(Message message) {
+		
+		ArgumentChecker.assertNotNull(message, "message");		
+
 		getMessages().remove(message);
 		message.getCommunities().remove(this);
 
