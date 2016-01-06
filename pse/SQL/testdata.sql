@@ -10,7 +10,7 @@ insert into person_relation(source_person_id, target_person_id) values(996, 995)
 
 INSERT INTO `document` (`document_id`, `name`, `mime_type`, `description`, `storage_location`, `size`, `created_at`) VALUES (999, 'dbtestdeletedocument', 'application/pdf', 'Delete This', '7\\5d4c6ff2-0a0b-41a5-b0b3-9171dd4394ae.uploaded', 0, '2016-01-06 16:31:47');
 INSERT INTO `document` (`document_id`, `name`, `mime_type`, `description`, `storage_location`, `size`, `created_at`) VALUES (998, 'dbtestreaddocument', 'application/pdf', 'Delete This', '7\\5d4c6ff2-0a0b-41a5-b0b3-9171dd4394ae.uploaded', 0, '2016-01-06 16:31:47');
-
+INSERT INTO `document` (`document_id`, `name`, `mime_type`, `description`, `storage_location`, `size`, `created_at`) VALUES (997, 'dbtestdocument', 'application/pdf', 'Delete This', '7\\5d4c6ff2-0a0b-41a5-b0b3-9171dd4394ae.uploaded', 0, '2016-01-06 16:31:47');
 
 --Community for testing, test person is a member
 insert into community
@@ -21,6 +21,9 @@ insert into community_member
 	(community_id, person_id)
 	values(100, 108);
 
+insert into `document_library_entry` values (999, 998, 100);
+insert into `document_library_entry` values (998, 997, 100);
+	
 ----------------------------------------------
 --Required for DBMessageTest: message with header by other user
 --should be selected in testActivityStream() (1)
