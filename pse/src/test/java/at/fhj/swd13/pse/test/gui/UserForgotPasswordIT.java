@@ -43,7 +43,7 @@ public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 		resetPasswordPage.resetPassword(emailAddress);
 		
 		//need to wait for some seconds to have the password reset and the e-mail sent
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(8000);
 		notLoggedInPage = loginPage.loginWithWrongCredentials(username, passwordOld);
 		
 		verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());			
