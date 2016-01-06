@@ -151,9 +151,7 @@ public class UserProfileController implements Serializable {
 				for (String token : getTags()) {
 					Tag tag = tagService.getTagByToken(token);
 					if (tag == null) {
-						tag = new Tag();
-						tag.setToken(token);
-						tag.setDescription(token);
+						tag = new Tag(token, token);
 						tagService.insert(tag);
 					}
 				}

@@ -101,7 +101,7 @@ public class CommunityController {
 				logger.info("User " + userSession.getUsername() + " is not a member of the community " + selectedCommunity.getName());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error redirecting to 'Community.jsf?id=" + selectedCommunity.getCommunityId() +"': " +e.getLocalizedMessage());
 		}
 	}
 

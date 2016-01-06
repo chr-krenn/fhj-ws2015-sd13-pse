@@ -136,8 +136,7 @@ public class MessageEditorController {
 		try {
 			targetCommunity = chatService.getCommunity(communityName);
 		} catch (EntityNotFoundException e) {
-			logger.info("[MSG+] failed to load community ");
-			e.printStackTrace();
+			logger.info("[MSG+] failed to load community: " +e.getMessage());
 		}
 		if (targetCommunity != null) {
 			selectedCommunities.add(new CommunityDTO(targetCommunity));
@@ -176,9 +175,7 @@ public class MessageEditorController {
 		for (String tagString : selectedTags) {
 			tag = tagService.getTagByToken(tagString);
 			if (tag == null) {
-				tag = new Tag();
-				tag.setToken(tagString);
-				tag.setDescription(tagString);
+				tag = new Tag(tagString, tagString);
 				try {
 					tagService.insert(tag);
 				} catch (Throwable x) {
@@ -193,8 +190,7 @@ public class MessageEditorController {
 			try {
 				communities.add(chatService.getCommunity(communityDto.getName()));
 			} catch (EntityNotFoundException e) {
-				logger.error("[MSG+] failed to add community ");
-				e.printStackTrace();
+				logger.error("[MSG+] failed to add community: " +e.getMessage());
 			}
 		}
 

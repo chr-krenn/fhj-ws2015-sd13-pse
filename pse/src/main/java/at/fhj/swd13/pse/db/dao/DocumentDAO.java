@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.db.dao;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.entity.Document;
 
 public interface DocumentDAO {
@@ -11,7 +10,7 @@ public interface DocumentDAO {
 	 * 
 	 * @param document the document to delete
 	 */
-	void insert(Document document) throws ConstraintViolationException;
+	void insert(Document document);
 
 	/**
 	 * Remove the given document

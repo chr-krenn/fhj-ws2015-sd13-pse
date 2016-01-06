@@ -15,8 +15,6 @@ import org.jboss.logging.Logger;
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
-import at.fhj.swd13.pse.db.dao.DeliverySystemDAO;
-import at.fhj.swd13.pse.db.dao.DeliverySystemDAOImpl;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -64,22 +62,12 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
 			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException {
-		Message message = new Message();
-		message.setHeadline(headline);
-		message.setMessage(text);
-
-		message.setValidFrom(validFrom == null ? new Date() : validFrom);
+		
+		Date validFromDate = validFrom == null ? new Date() : validFrom;
+		
+		Message message = new Message(new Date(), headline, text, validFromDate, 
+				dbContext.getDeliverySystemDAO().getPseService(), userService.getUser(username));
 		message.setExpiresOn(validUntil);
-
-		message.setPerson(userService.getUser(username));
-
-		Date createdDate = new Date();
-
-		message.setCreatedAt(createdDate);
-
-		DeliverySystemDAO deliverySystemDAO = new DeliverySystemDAOImpl(dbContext);
-		message.setDeliverySystem(deliverySystemDAO.getPseService());
-
 		message.setAttachment(document);
 		message.setIcon(icon);
 
@@ -131,14 +119,11 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException {
+	public void rateMessage(int messageId, Person person) throws EntityNotFoundException {
 		Date createdDate = new Date();
 		Message m = dbContext.getMessageDAO().getById(messageId);
 		Person p = dbContext.getPersonDAO().getById(person.getPersonId());
-		MessageRating rating = new MessageRating();
-		rating.setMessage(m);
-		rating.setPerson(p);
-		rating.setCreatedAt(createdDate);
+		MessageRating rating = new MessageRating(createdDate, m, p);
 		m.addMesasgeRating(rating);
 		p.addMesasgeRating(rating);
 		dbContext.getMessageRatingDAO().insert(rating);
@@ -155,7 +140,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException {
+	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException {
 		return getMessageDTOs(dbContext.getMessageDAO().loadNews(communityId));
 	}
 

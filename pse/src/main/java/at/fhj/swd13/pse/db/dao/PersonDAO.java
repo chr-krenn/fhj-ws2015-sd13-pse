@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.db.dao;
 
 import java.util.List;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
@@ -17,7 +16,7 @@ public interface PersonDAO {
 	 * 
 	 * @param person the person to persist
 	 */
-	void insert( Person person ) throws ConstraintViolationException;
+	void insert( Person person );
 	
 	
 	/**
@@ -119,7 +118,7 @@ public interface PersonDAO {
 	 * 
 	 * @return the created relation instance
 	 */
-	PersonRelation createRelation( Person sourcePerson, Person targetPerson ) throws ConstraintViolationException;
+	PersonRelation createRelation( Person sourcePerson, Person targetPerson );
 	
 	/**
 	 * Remove all relations where the given person is the target

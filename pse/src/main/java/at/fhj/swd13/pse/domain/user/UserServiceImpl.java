@@ -263,8 +263,7 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 
 					if (!bExists) {
 						Tag tag = tagService.getTagByToken(token);
-						PersonTag personTag = new PersonTag();
-						personTag.setTag(tag);
+						PersonTag personTag = new PersonTag(tag);
 						p.addPersonTag(personTag);
 					}
 				}

@@ -6,7 +6,6 @@ package at.fhj.swd13.pse.domain.feed;
 import java.util.Date;
 import java.util.List;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
@@ -41,9 +40,8 @@ public interface FeedService {
 	 * @param messageId
 	 * @param person
 	 * @throws EntityNotFoundException
-	 * @throws ConstraintViolationException
 	 */
-	void rateMessage(int messageId, Person person) throws EntityNotFoundException, ConstraintViolationException;
+	void rateMessage(int messageId, Person person) throws EntityNotFoundException;
 
 	/**
 	 * Removing a "like" to a message by a specific person from database
@@ -59,9 +57,8 @@ public interface FeedService {
 	 * 
 	 * @param communityId
 	 * @throws EntityNotFundException
-	 * @throws ConstraintViolationException
 	 */
-	List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException, ConstraintViolationException;
+	List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException;
 
 	/**
 	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message
@@ -93,6 +90,7 @@ public interface FeedService {
 	 * Sets the comments in the messageDTO
 	 * 
 	 * @param messageDTO
+	 * @throws EntityNotFoundException
 	 */
 	void setComments(MessageDTO messageDTO) throws EntityNotFoundException;
 

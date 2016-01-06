@@ -71,6 +71,14 @@ public class Document implements Serializable {
 	private List<Person> persons;
 
 	public Document() {}
+	
+	public Document(String description, String mimeType, String name, int size, String storageLocation) {
+		this.description = description;
+		this.mimeType = mimeType;
+		this.name = name;
+		this.size = size;
+		this.storageLocation = storageLocation;
+	}
 
 	@PrePersist
 	protected void prePersist() {

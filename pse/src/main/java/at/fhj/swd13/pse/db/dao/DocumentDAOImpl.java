@@ -2,11 +2,9 @@ package at.fhj.swd13.pse.db.dao;
 
 import javax.persistence.Query;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
-import at.fhj.swd13.pse.db.entity.ParameterException;
 
 public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 
@@ -18,7 +16,7 @@ public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 	 * @see at.fhj.swd13.pse.db.dao.DocumentDAO#insert(at.fhj.swd13.pse.db.entity.Document)
 	 */
 	@Override
-	public void insert(Document document) throws ConstraintViolationException{
+	public void insert(Document document){
 		dbContext.persist(document);
 	}
 
@@ -29,7 +27,7 @@ public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 	public void remove(Document document) {
 		if (document == null || document.getDocumentId() == 0) {
 
-			throw new ParameterException("document null or not persisted yet");
+			throw new IllegalArgumentException("document null or not persisted yet");
 		}
 
 		// TODO clean up references

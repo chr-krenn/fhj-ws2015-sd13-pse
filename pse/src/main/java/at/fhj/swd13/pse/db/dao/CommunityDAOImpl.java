@@ -5,12 +5,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.Query;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DAOBase;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
-import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 
 public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
@@ -29,7 +27,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * Community)
 	 */
 	@Override
-	public void insert(Community community) throws ConstraintViolationException {
+	public void insert(Community community) {
 
 		dbContext.persist(community);
 	}
@@ -102,7 +100,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 
 		if (communityId <= 0) {
 
-			throw new ParameterException("community null or not persisted yet");
+			throw new IllegalArgumentException("community null or not persisted yet");
 		}
 
 		final Query q = dbContext.createNamedQuery("Community.deleteById");
@@ -122,7 +120,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	public void remove(Community community) {
 
 		if (community == null || community.getCommunityId() == 0) {
-			throw new ParameterException("community null or not persisted yet");
+			throw new IllegalArgumentException("community null or not persisted yet");
 		}
 
 		dbContext.remove(community);

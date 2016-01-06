@@ -16,7 +16,6 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
-import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 
@@ -108,9 +107,7 @@ public class DbCommunityTest extends DbTestBase {
 
 			CommunityDAO communityDAO = dbContext.getCommunityDAO();
 
-			Community c = new Community();
-			c.setName("Test-InsertRemove");
-			c.setCreatedBy(dbContext.getPersonDAO().getById(1));
+			Community c = new Community("Test-InsertRemove", dbContext.getPersonDAO().getById(1));
 
 			communityDAO.insert(c);
 
@@ -147,7 +144,7 @@ public class DbCommunityTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void removeIdUnpersisted() throws Exception {
 
 		try (DbContext context = contextProvider.getDbContext()) {
@@ -156,7 +153,7 @@ public class DbCommunityTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void removeObjectUnpersisted() throws Exception {
 
 		try (DbContext context = contextProvider.getDbContext()) {
@@ -258,7 +255,7 @@ public class DbCommunityTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void remove2() throws Exception {
 		try (DbContext context = contextProvider.getDbContext()) {
 			CommunityDAO communityDAO = context.getCommunityDAO();
@@ -266,7 +263,7 @@ public class DbCommunityTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void remove3() throws Exception {
 		try (DbContext context = contextProvider.getDbContext()) {
 			CommunityDAO communityDAO = context.getCommunityDAO();

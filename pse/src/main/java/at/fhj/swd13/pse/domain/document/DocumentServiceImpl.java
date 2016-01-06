@@ -62,7 +62,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	protected void onPostConstruct() {
 		loadSettings();
 	}
-	
+
 	/**
 	 * load the properties from the current system property file.
 	 * Properties loaded are
@@ -76,31 +76,26 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	 */
 	protected void loadSettings() {
 
-		if ( logger != null ) {
+		if (logger != null) {
 			logger.info("[DOCS] loading properties");
 		}
-		
+
 		serviceUrl = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.mediaUrl", serviceUrl);
 		imageFolderUrl = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.imageFolderUrl", imageFolderUrl);
-		
+
 		imageFolder = ConfigurationHelper.saveSetProperty("at.fhj.swd13.pse.imageFolder", imageFolder);
 		maxSubIndices = ConfigurationHelper.saveSetPropertyInt("at.fhj.swd13.pse.maxSubIndices", "9");
 	}
+
 	@Override
 	public Document store(String filename, InputStream data, String description) {
-		Document document = new Document();
 
 		try {
 			File file = new File(filename);
 
 			String mimeType = GetMimeType(filename);
-			
-			document.setName(file.getName());
-			document.setMimeType(mimeType);
-			document.setDescription(description);
-			document.setSize((int) file.length());
 
-			document.setStorageLocation(storeFile(data));
+			Document document = new Document(description, mimeType, file.getName(), (int) file.length(), storeFile(data));
 
 			dbContext.getDocumentDAO().insert(document);
 
@@ -132,13 +127,13 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	public Document store(final String filename, InputStream data) {
 		return store(filename, data, null);
 	}
-	
+
 	@Override
 	public Document store(String filename, String filepath) {
 		try (InputStream in = new FileInputStream(filepath)) {
 			return store(filename, in);
 		} catch (IOException e) {
-			logger.error("[DOCS] Error creating file input stream for " + filename + " with filepath " +filepath +": " + e.getMessage());
+			logger.error("[DOCS] Error creating file input stream for " + filename + " with filepath " + filepath + ": " + e.getMessage());
 			return null;
 		}
 	}
@@ -153,18 +148,17 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		return dbContext.getDocumentDAO().getById(documentId);
 	}
 
-	
-	public void remove( final Document document ) {
-		//TODO: remove from db
-		//TODO: remove file
+	public void remove(final Document document) {
+		// TODO: remove from db
+		// TODO: remove file
 		throw new NotImplementedException("must implement!!!");
 	}
-	
+
 	@Override
 	public void removeDocument(int documentId) {
 		dbContext.getDocumentDAO().remove(documentId);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -208,34 +202,39 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 
 		return Paths.get(subDirIndex.toString(), filename);
 	}
-	
-	private String GetMimeType(String filePath)
-	{
+
+	private String GetMimeType(String filePath) {
 		try {
-			String contentType =  Files.probeContentType(Paths.get(filePath));
+			String contentType = Files.probeContentType(Paths.get(filePath));
 			return contentType == null ? "application/unknown" : contentType;
-			
+
 		} catch (IOException e) {
-			logger.warn("[DOCS] Error while detecting contentType of file: %s",filePath,e);
+			logger.warn("[DOCS] Error while detecting contentType of file: %s", filePath, e);
 			return "application/unknown";
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#buildImageUrl(java.lang.String)
 	 */
 	public String buildImageUrl(final String filename) {
 		return imageFolderUrl + filename;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#buildServiceUrl(int)
 	 */
 	public String buildServiceUrl(final int documentId) {
 		return serviceUrl + Integer.toString(documentId);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#getDefaultDocumentRef(at.fhj.swd13.pse.domain.document.DocumentService.DocumentCategory)
 	 */
 	public String getDefaultDocumentRef(DocumentCategory documentCategory) {
@@ -250,22 +249,24 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#assertDocumentFolders()
 	 */
-	public void assertDocumentFolders() throws IOException  {
-		
-		Path documentPath = Paths.get( imageFolder );
-		
-		Files.createDirectories( documentPath );
-		logger.info("[DOCS] checked document folder " + documentPath );
-		
-		for( int i = 1; i <= maxSubIndices; ++i ) {
-			
-			Path documentSubPath = Paths.get( imageFolder + "/" + i );
-			
-			Files.createDirectories( documentSubPath );
-			logger.info("[DOCS] checked document folder " + documentSubPath );
+	public void assertDocumentFolders() throws IOException {
+
+		Path documentPath = Paths.get(imageFolder);
+
+		Files.createDirectories(documentPath);
+		logger.info("[DOCS] checked document folder " + documentPath);
+
+		for (int i = 1; i <= maxSubIndices; ++i) {
+
+			Path documentSubPath = Paths.get(imageFolder + "/" + i);
+
+			Files.createDirectories(documentSubPath);
+			logger.info("[DOCS] checked document folder " + documentSubPath);
 		}
 	}
 

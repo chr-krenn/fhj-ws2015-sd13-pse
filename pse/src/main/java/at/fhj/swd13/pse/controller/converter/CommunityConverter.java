@@ -40,8 +40,7 @@ public class CommunityConverter implements Converter {
 			try {
 				community = chatService.getCommunity(communityId);
 			} catch (EntityNotFoundException e) {
-				logger.error("[MSG+] failed to add community ");
-				e.printStackTrace();
+				logger.error("[MSG+] failed to add community: " +e.getMessage());
 			}
 
 			if (community != null) {

@@ -109,7 +109,7 @@ public class RequestController {
 		} 
 	    catch (IOException e) 
 	    {
-	    	e.printStackTrace();
+	    	logger.error("Error on redirecting to Community.jsf?id=" + selectedRequest.getCommunityId() +": " +e.getMessage());
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class RequestController {
 		} 
 	    catch (IOException e) 
 	    {
-	    	e.printStackTrace();
+	    	logger.error("Error on redirecting to Community.jsf?id=" + selectedRequest.getCommunityId() +": " +e.getMessage());
 		}
 	}
 	

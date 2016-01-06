@@ -11,7 +11,6 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.PersonDAO;
-import at.fhj.swd13.pse.db.entity.ParameterException;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.test.util.DbTestBase;
@@ -25,7 +24,7 @@ public class DbPersonTest extends DbTestBase {
 	}
 
 	@Test
-	public void insert() throws Exception, ConstraintViolationException {
+	public void insert() throws Exception {
 
 		Person p = new Person("etester", "Tester", "Ehrenfried", "1234567");
 
@@ -115,7 +114,7 @@ public class DbPersonTest extends DbTestBase {
 	}
 	
 	@Test(expected = EntityNotFoundException.class)
-	public void remove() throws Exception, ConstraintViolationException {
+	public void remove() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			PersonDAO personDAO = dbContext.getPersonDAO();
 			
@@ -135,7 +134,7 @@ public class DbPersonTest extends DbTestBase {
 	}
 	
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void removeOnNull() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 
@@ -145,7 +144,7 @@ public class DbPersonTest extends DbTestBase {
 		}
 	}
 
-	@Test(expected = ParameterException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void removeOnIdZero() throws Exception {
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 

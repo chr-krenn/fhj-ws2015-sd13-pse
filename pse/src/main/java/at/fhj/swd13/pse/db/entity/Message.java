@@ -157,6 +157,15 @@ public class Message implements Serializable {
 	public Message() {
 	}
 	
+	public Message(Date createdAt, String headline, String message, Date validFrom, DeliverySystem deliverySystem, Person person) {
+		this.createdAt = createdAt;
+		this.headline = headline;
+		this.message = message;
+		this.validFrom = validFrom;
+		this.deliverySystem = deliverySystem;
+		this.person = person;
+	}
+
 	/**
 	 * Copy constructor for the message object. Copies everything but the messageId.
 	 * 

@@ -88,8 +88,7 @@ public class CommunityProfileController implements Serializable {
 		} 
 	    catch (IOException e) 
 	    {
-	    	logger.error("[COMMUNITY] Failed to load create new community Message site for community" + community.getName()  + "and user" + userSession.getUsername());
-	    	e.printStackTrace();
+	    	logger.error("[COMMUNITY] Failed to load create new community Message site for community" + community.getName()  + "and user" + userSession.getUsername() +": " +e.getMessage());
 		}
 	}	
 }

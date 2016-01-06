@@ -24,7 +24,11 @@ public class DocumentLibraryEntry implements Serializable {
 		super();
 	}
 	
-	
+	public DocumentLibraryEntry(Community community, Document document) {
+		this.community = community;
+		this.document = document;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="community_id")
 	private Community community;

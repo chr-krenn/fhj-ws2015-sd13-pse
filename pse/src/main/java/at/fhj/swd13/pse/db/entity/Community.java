@@ -109,6 +109,11 @@ public class Community implements Serializable {
 		this();
 		this.name = communityName;
 	}
+	
+	public Community(final String communityName, Person createdBy) {
+		this(communityName);
+		this.createdBy = createdBy;
+	}
 
 	public int getCommunityId() {
 		return this.communityId;

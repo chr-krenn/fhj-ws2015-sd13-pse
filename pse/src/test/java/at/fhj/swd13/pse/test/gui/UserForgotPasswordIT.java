@@ -8,6 +8,7 @@ import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.ResetPasswordPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 
@@ -42,11 +43,7 @@ public class UserForgotPasswordIT extends SeleniumBaseTestCase{
 		resetPasswordPage.resetPassword(emailAddress);
 		
 		//need to wait for some seconds to have the password reset and the e-mail sent
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		SleepUtil.sleep(1000);
 		notLoggedInPage = loginPage.loginWithWrongCredentials(username, passwordOld);
 		
 		verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());			
