@@ -16,7 +16,7 @@ import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 import at.fhj.swd13.pse.test.util.DbTestBase;
 
-public class DbPersonRelation extends DbTestBase {
+public class DbPersonRelationTest extends DbTestBase {
 
 	private Person p1 = new Person("etester", "Tester", "Ehrenfried", "1234567");
 	private Person p2 = new Person("xtester", "Tester", "Xaver", "1234567");
