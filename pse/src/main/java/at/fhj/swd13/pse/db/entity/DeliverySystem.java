@@ -2,6 +2,9 @@ package at.fhj.swd13.pse.db.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 import java.util.List;
 
 
@@ -37,6 +40,15 @@ public class DeliverySystem implements Serializable {
 	public DeliverySystem() {
 	}
 
+	public DeliverySystem( final String name, final String token ) {
+		
+		ArgumentChecker.assertContent( name, "name");
+		ArgumentChecker.assertContent( token, "token" );
+		
+		this.name = name;
+		this.token = token;
+	}
+	
 	public int getDeliverySystemId() {
 		return this.deliverySystemId;
 	}
@@ -50,14 +62,22 @@ public class DeliverySystem implements Serializable {
 	}
 
 	public void setName(String name) {
+		
+		ArgumentChecker.assertContent( name, "name");
+
 		this.name = name;
 	}
 
 	public String getToken() {
+		
+
 		return this.token;
 	}
 
 	public void setToken(String token) {
+		
+		ArgumentChecker.assertContent( token, "token" );
+
 		this.token = token;
 	}
 
@@ -66,10 +86,16 @@ public class DeliverySystem implements Serializable {
 	}
 
 	public void setMessages(List<Message> messages) {
+		
+		ArgumentChecker.assertNotNull(messages, "messages");
+		
 		this.messages = messages;
 	}
 
 	public Message addMessage(Message message) {
+
+		ArgumentChecker.assertNotNull(message, "message");
+		
 		getMessages().add(message);
 		message.setDeliverySystem(this);
 
@@ -77,6 +103,9 @@ public class DeliverySystem implements Serializable {
 	}
 
 	public Message removeMessage(Message message) {
+		
+		ArgumentChecker.assertNotNull(message, "message");
+
 		getMessages().remove(message);
 		message.setDeliverySystem(null);
 

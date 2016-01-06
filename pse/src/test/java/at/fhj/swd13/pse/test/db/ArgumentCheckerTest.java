@@ -14,6 +14,11 @@ public class ArgumentCheckerTest {
 		ArgumentChecker.assertContent( "gustl", "test" );
 	}
 
+	@Test
+	public void successNotNull() {
+		ArgumentChecker.assertNotNull("gustl", "test" );
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void fail_null() {
 		ArgumentChecker.assertContent( null, "test" );
@@ -37,5 +42,10 @@ public class ArgumentCheckerTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void fail_whitespace2() {
 		ArgumentChecker.assertContent( " \t ", "test" );
+	}	
+
+	@Test(expected=IllegalArgumentException.class)
+	public void fail_NotNull() {
+		ArgumentChecker.assertNotNull(null, "test");
 	}	
 }
