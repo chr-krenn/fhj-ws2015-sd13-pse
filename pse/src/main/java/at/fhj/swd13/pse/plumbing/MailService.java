@@ -1,5 +1,7 @@
 package at.fhj.swd13.pse.plumbing;
 
+import java.util.Properties;
+
 import javax.mail.MessagingException;
 
 import at.fhj.swd13.pse.db.entity.Message;
@@ -18,7 +20,7 @@ public interface MailService {
 	 * @param recipient
 	 *            mail-adress of the receipient
 	 */
-	void sendMail(String subject, String htmlBody, String recipient) throws MessagingException;
+	void sendMail(String subject, String htmlBody, String recipient, Properties props) throws MessagingException;
 
-	void sendMail(Message message, String receipientList) throws MessagingException;
+	void sendMail(Message message, String receipientList, Properties props) throws MessagingException;
 }

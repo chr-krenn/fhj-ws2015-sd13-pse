@@ -149,7 +149,7 @@ public class RequestController {
 
     	try {
 			mailService.sendMail("Community Antrag "+com.getName()+" Freigegeben",
-					"Die Community " + com.getName() + " ist jetzt freigegeben!", com.getCreatedBy().getEmailAddress());
+					"Die Community " + com.getName() + " ist jetzt freigegeben!", com.getCreatedBy().getEmailAddress(), null);
 			logger.info("Email sent");
 
     	} catch (MessagingException e) {
@@ -184,7 +184,7 @@ public class RequestController {
 
     	try {
 			mailService.sendMail("Community Antrag "+com.getName()+" Abgelehnt",
-					"Die Community " + com.getName() + " wurde nicht freigegeben!", com.getCreatedBy().getEmailAddress());
+					"Die Community " + com.getName() + " wurde nicht freigegeben!", com.getCreatedBy().getEmailAddress(), null);
 			logger.info("Email sent");
 
     	} catch (MessagingException e) {
@@ -218,7 +218,7 @@ public class RequestController {
 
     	try {
 			mailService.sendMail("Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+" Freigegeben",
-					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+ " ist jetzt freigegeben!", com.getMember().getEmailAddress());
+					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+ " ist jetzt freigegeben!", com.getMember().getEmailAddress(), null);
 			logger.info("Email sent");
 
     	} catch (MessagingException e) {
@@ -253,7 +253,7 @@ public class RequestController {
 
     	try {
 			mailService.sendMail("Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+" Abgelehnt",
-					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName() + " wurde nicht freigegeben!", com.getMember().getEmailAddress());
+					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName() + " wurde nicht freigegeben!", com.getMember().getEmailAddress(), null);
 			logger.info("Email sent");
 
     	} catch (MessagingException e) {
