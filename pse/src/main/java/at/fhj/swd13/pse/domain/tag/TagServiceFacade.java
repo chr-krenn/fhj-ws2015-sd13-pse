@@ -29,7 +29,7 @@ public class TagServiceFacade implements TagService {
 
 	@Override
 	public void insert(Tag tag) {
-		insert(tag);
+		tagService.insert(tag);
 	}
 
 	@Override
