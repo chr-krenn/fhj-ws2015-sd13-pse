@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,8 @@ public class Tag implements Serializable {
 	 */
 	public Tag( String token, String description ) {
 		
+		ArgumentChecker.assertContent(token, "token");
+		
 		this.token = token;
 		this.description = description;
 		
@@ -78,6 +82,9 @@ public class Tag implements Serializable {
 	}
 
 	public void setToken(String token) {
+		ArgumentChecker.assertContent(token, "token");
+		
+		
 		this.token = token;
 	}
 
