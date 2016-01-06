@@ -1,7 +1,9 @@
 package at.fhj.swd13.pse.test.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -139,6 +142,7 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	//Get first (= newest) message of Message list for community
     	MessageDTO m = feedService.loadNews(100).get(0);
     	
+    	assertTrue(!m.getTags().isEmpty());
     	assertEquals("Software",m.getTags().get(0));
     	feedService.removeMessage(m.getId());
     }
@@ -146,7 +150,7 @@ public class FeedServiceTestIT extends RemoteTestBase {
     /*
      * PSE2015-66 "Als angemeldeter Benutzer möchte ich ausgehend vom Activity Stream auf meiner Startseite die Details der Activity ansehen können."
      * 
-     * Only working with absolute path to file system...
+     * FIXME: Only working with absolute path to file system...
      */
     @Test
     public void getMessageDetailsWithIcon() throws Exception {
@@ -156,15 +160,15 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	
     	//Prepare document
     	//Not working with "src/test/resources/testDocs/no_img.png"
-    	Document doc = documentService.store("pic", "D:\\no_img.png");
-    	assertTrue(doc != null);
+    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	assertTrue(icon != null);
     	
     	String headline = "IT Test with Icon headline";
     	String text = "IT Test with Icon Text";
 
     	//Create new message
 		feedService.saveMessage(headline, text, user.getUserName(), 
-    			null, doc, communities, new ArrayList<MessageTag>(), new Date(), null);
+    			null, icon, communities, new ArrayList<MessageTag>(), new Date(), null);
     	SleepUtil.sleep(1000);
     	
     	//Get Id of first (= newest) message of Message list for community
@@ -172,10 +176,75 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	
     	//Check data
     	Message m = feedService.getMessageById(messageId);
-    	assertEquals(doc, m.getIcon());
+    	assertEquals(icon, m.getIcon());
     	assertEquals(headline, m.getHeadline());
     	assertEquals(text, m.getMessage());
     	assertEquals(user, m.getPerson());
     	assertEquals(communities,m.getCommunities());
+    }
+    
+    @Test
+    public void getMessageDTOByIdTest() {
+    	try {
+			MessageDTO m = feedService.getMessageDTOById(1);
+			assertTrue(m != null);
+			assertEquals(1, m.getId());
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+			fail();
+		}
+    }
+    
+    @Test
+    public void loadFeedTest() {
+		List<MessageDTO> messages = feedService.loadFeed();
+		assertTrue(messages != null);
+		assertEquals(15, messages.size());
+    }
+    
+    @Ignore //FIXME
+    @Test
+    public void setCommentsTest() {
+		try {
+			MessageDTO m = feedService.getMessageDTOById(1);
+			assertTrue(m.getComments() == null); //Comments not loaded, should be empty
+			feedService.setComments(m); //Load comments
+			assertFalse(m.getComments() == null); //FIXME: why still null??
+			assertEquals("Comment 1", m.getComments().get(0).getText());
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+			fail();
+		}
+    	
+    }
+    
+    @Ignore //FIXME
+    @Test
+    public void setImageRefTest() {
+    	//Prepare document
+    	//Not working with "src/test/resources/testDocs/no_img.png"
+    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	assertTrue(icon != null);
+    	
+		try {
+			//Get message & add icon
+	    	Message m = feedService.getMessageById(1);
+			feedService.updateMessage(m.getMessageId(), m.getHeadline(), m.getMessage(), null, icon, m.getMessageTags(), m.getValidFrom(), m.getExpiresOn());
+		
+			//Get messsageDTO
+			MessageDTO mDTO = feedService.getMessageDTOById(1);
+			assertTrue(mDTO.getImage() != null);
+			
+			//Check whether image ref is there
+			assertTrue(mDTO.getImageRef() == null);
+			
+			feedService.setImageRef(mDTO); 
+			
+			assertFalse(mDTO.getImageRef() == null); //FIXME: same problem as in setCommentsTest, Object that is edited by method not the same as the one checked by the test?
+			
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+			fail();
+		}
     }
 }
