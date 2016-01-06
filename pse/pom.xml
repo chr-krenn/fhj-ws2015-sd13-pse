@@ -37,8 +37,11 @@
 
 		<sonar.scm.provider>git</sonar.scm.provider>
 
+		<!-- jacoco properties -->
+		<jacoco.version>0.7.5.201505241946</jacoco.version>
+
 		<jacoco.outputDir>${project.build.directory}</jacoco.outputDir>
-		
+
 		<jacoco.out.ut.file>jacoco-ut.exec</jacoco.out.ut.file>
 		<sonar.jacoco.reportPath>${jacoco.outputDir}/${jacoco.out.ut.file}</sonar.jacoco.reportPath>
 
