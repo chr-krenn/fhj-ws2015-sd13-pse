@@ -32,7 +32,6 @@ import org.jsoup.Jsoup;
 @Entity
 @Table(name = "message")
 @NamedQueries({
-		@NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
 		@NamedQuery(name = "Message.findAllOrderedByNewest", query = "SELECT m FROM Message m ORDER BY m.createdAt DESC"),
 		@NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.messageId = :id"),
 		@NamedQuery(name = "Message.findNews", query = "SELECT m FROM Message m JOIN m.communities c WHERE " +
