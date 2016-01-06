@@ -72,9 +72,11 @@ public interface FeedService {
 	 * The image ref is not available in the message itself and must therefore be
 	 * set separately after creating the messageDTO based on the message
 	 * 
+	 * @return
+	 * 		messageDTO with image ref
 	 * @param messageDTO
 	 */
-	void setImageRef(MessageDTO messageDTO);
+	MessageDTO setImageRef(MessageDTO messageDTO);
 
 	/**
 	 * Returns all comments for a message
@@ -90,9 +92,11 @@ public interface FeedService {
 	 * Sets the comments in the messageDTO
 	 * 
 	 * @param messageDTO
+	 * @return
+	 * 		messageDTO with comments
 	 * @throws EntityNotFoundException
 	 */
-	void setComments(MessageDTO messageDTO) throws EntityNotFoundException;
+	MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException;
 
 	/**
 	 * Update DTO object after rating for correctly render xhtml

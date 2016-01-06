@@ -207,16 +207,17 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void setImageRef(MessageDTO messageDTO) {
+	public MessageDTO setImageRef(MessageDTO messageDTO) {
 		if (messageDTO.getImage() != null) {
 			messageDTO.setImageRef(documentService.buildServiceUrl(messageDTO.getImage().getDocumentId()));
 		}
+		return messageDTO;
 	}
 
 	@Override
-	public void setComments(MessageDTO messageDTO) throws EntityNotFoundException {
+	public MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException {
 		messageDTO.setComments(loadComments(messageDTO.getId()));
-
+		return messageDTO;
 	}
 
 	@Override

@@ -75,8 +75,8 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public void setImageRef(MessageDTO messageDTO) {
-		feedService.setImageRef(messageDTO);
+	public MessageDTO setImageRef(MessageDTO messageDTO) {
+		return feedService.setImageRef(messageDTO);
 	}
 
 	@Override
@@ -85,8 +85,8 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public void setComments(MessageDTO messageDTO) throws EntityNotFoundException {
-		feedService.setComments(messageDTO);
+	public MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException {
+		return feedService.setComments(messageDTO);
 	}
 
 	@Override

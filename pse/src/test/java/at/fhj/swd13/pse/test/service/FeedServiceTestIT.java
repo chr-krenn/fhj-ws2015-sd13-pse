@@ -12,7 +12,6 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -202,13 +201,12 @@ public class FeedServiceTestIT extends RemoteTestBase {
 		assertEquals(15, messages.size());
     }
     
-    @Ignore //FIXME
     @Test
     public void setCommentsTest() {
 		try {
 			MessageDTO m = feedService.getMessageDTOById(1);
 			assertTrue(m.getComments() == null); //Comments not loaded, should be empty
-			feedService.setComments(m); //Load comments
+			m = feedService.setComments(m); //Load comments
 			assertFalse(m.getComments() == null); //FIXME: why still null??
 			assertEquals("Comment 1", m.getComments().get(0).getText());
 		} catch (EntityNotFoundException e) {
@@ -218,7 +216,6 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	
     }
     
-    @Ignore //FIXME
     @Test
     public void setImageRefTest() {
     	//Prepare document
@@ -238,9 +235,8 @@ public class FeedServiceTestIT extends RemoteTestBase {
 			//Check whether image ref is there
 			assertTrue(mDTO.getImageRef() == null);
 			
-			feedService.setImageRef(mDTO); 
-			
-			assertFalse(mDTO.getImageRef() == null); //FIXME: same problem as in setCommentsTest, Object that is edited by method not the same as the one checked by the test?
+			mDTO = feedService.setImageRef(mDTO); 
+			assertFalse(mDTO.getImageRef() == null);
 			
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
