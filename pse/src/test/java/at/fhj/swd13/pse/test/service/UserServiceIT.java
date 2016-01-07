@@ -121,11 +121,7 @@ public class UserServiceIT extends RemoteTestBase {
 		tags.add("Software");
 		userService.update(user, tags);
 		
-    	// Communities
-		// TODO
-		
-    	// Foto
-		// TODO
+    	// Communities -> ChatService Tests
 		
 		user = userService.findUsers("integrationtestuser").get(0);
 		assertEquals("Software", user.getPersonTags().get(0).getTag().getToken());
