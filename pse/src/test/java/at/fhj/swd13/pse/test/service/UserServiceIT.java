@@ -333,7 +333,4 @@ public class UserServiceIT extends RemoteTestBase {
     	userService.setPassword("integrationtestuser", "87654321");
 		assertNotNull(userService.loginUser("integrationtestuser", "87654321", UserSession.createSessionId()));
     }
-    
-    //No test for setPasswordStrengthValidator
-    
 }

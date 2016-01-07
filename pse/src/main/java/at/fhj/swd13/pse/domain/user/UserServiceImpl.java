@@ -119,16 +119,6 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see at.fhj.swd13.pse.domain.user.UserService#setPasswordStrengthValidator(at.fhj.swd13.pse.domain.user.PasswordStrengthValidator)
-	 */
-	@Override
-	public void setPasswordStrengthValidator(PasswordStrengthValidator passwordStrengthValidator) {
-		this.passwordStrengthValidator = passwordStrengthValidator;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see at.fhj.swd13.pse.domain.user.UserService#isMatchingPassword(java.lang.String, java.lang.String)
 	 */
 	@Override

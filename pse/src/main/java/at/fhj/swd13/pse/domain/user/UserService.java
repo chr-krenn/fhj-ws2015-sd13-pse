@@ -67,16 +67,6 @@ public interface UserService {
 	int updateNullPasswords();
 
 	/**
-	 * Set a new instance that checks the strength of the password
-	 * 
-	 * @param passwordStrengthValidator
-	 *            new instance of the passwordStrengthValidator
-	 * 
-	 * 
-	 */
-	void setPasswordStrengthValidator(PasswordStrengthValidator passwordStrengthValidator);
-
-	/**
 	 * Check whether the given password matches the current password
 	 * 
 	 * @param username

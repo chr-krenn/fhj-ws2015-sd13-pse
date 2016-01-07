@@ -53,11 +53,6 @@ public class UserServiceFacade implements UserService {
 	}
 
 	@Override
-	public void setPasswordStrengthValidator(PasswordStrengthValidator passwordStrengthValidator) {
-		userService.setPasswordStrengthValidator(passwordStrengthValidator);
-	}
-
-	@Override
 	public boolean isMatchingPassword(String username, String plainPassword) {
 		return userService.isMatchingPassword(username, plainPassword);
 	}
