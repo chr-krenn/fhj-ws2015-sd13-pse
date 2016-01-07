@@ -18,20 +18,31 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import at.fhj.swd13.pse.test.util.DbTestBase;
+import at.fhj.swd13.pse.db.DbContextProvider;
+import at.fhj.swd13.pse.db.DbContextProviderImpl;
 import at.fhj.swd13.pse.test.util.EnvironmentUtil;
+import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 /**
  * @author florian.genser
  *
  */
-public abstract class SeleniumBaseTestCase extends DbTestBase {
+public abstract class SeleniumBaseTestCase  {
 
 	protected static WebDriver driver;
 	protected static final String BASE_URL = getBaseUrl();
 
 	protected StringBuffer verificationErrors = new StringBuffer();
 	private boolean acceptNextAlert = true;
+	protected static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
+	protected static DbContextProvider contextProvider;
+
+	protected static void prepare() {
+		JDBC_HELPER.executeSqlScript("SQL/db-create.sql");
+		JDBC_HELPER.executeSqlScript("SQL/users.sql");
+		JDBC_HELPER.executeSqlScript("SQL/testdata.sql");
+		contextProvider = new DbContextProviderImpl();
+	}
 
 	@BeforeClass
 	public static void setUp() throws Exception {

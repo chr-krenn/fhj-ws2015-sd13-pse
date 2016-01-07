@@ -13,7 +13,6 @@ import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.PrivateMessagesPage;
-import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class MessageIT extends SeleniumBaseTestCase {
 
@@ -22,7 +21,7 @@ public class MessageIT extends SeleniumBaseTestCase {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		DbTestBase.prepare();
+		prepare();
 		// Setting up private communities per user
 		try (DbContext dbContext = contextProvider.getDbContext()) {
 			ChatService chatService = new ChatServiceImpl(dbContext);

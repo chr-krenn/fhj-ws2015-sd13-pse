@@ -16,7 +16,9 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	private static HomePage homepage;
 
 	@Before
-	public void init() {
+	public void init() {	
+		// resset Database for each testcase here
+		prepare();
 		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("pompenig13", "12345678");
 	}
