@@ -3,11 +3,8 @@ package at.fhj.swd13.pse.domain.user;
 import java.util.Random;
 
 import javax.ejb.Stateless;
-import javax.faces.bean.ManagedBean;
 
-@ManagedBean
 @Stateless
-
 public class PasswordCreator {
 	
 	

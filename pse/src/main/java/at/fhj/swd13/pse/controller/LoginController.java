@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.controller;
 
 import java.io.IOException;
 
-import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
@@ -21,7 +20,6 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 
 
 @ManagedBean
-@Stateless
 public class LoginController {
 
 	private String username;
