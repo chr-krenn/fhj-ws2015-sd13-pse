@@ -2,21 +2,39 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import at.fhj.swd13.pse.db.DbContext;
+import at.fhj.swd13.pse.domain.chat.ChatService;
+import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.PrivateMessagesPage;
+import at.fhj.swd13.pse.test.util.DbTestBase;
 
 public class MessageIT extends SeleniumBaseTestCase {
 
 	private static LoginPage loginPage;
 	private static HomePage homepage;
 
+	@BeforeClass
+	public static void init() throws Exception {
+		DbTestBase.prepare();
+		// Setting up private communities per user
+		try (DbContext dbContext = contextProvider.getDbContext()) {
+			ChatService chatService = new ChatServiceImpl(dbContext);
+			chatService.createAllPrivateCommunities();
+			dbContext.commit();
+		}
+		// Adding private message
+		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
+	}
+	
 	@Before
-	public void init() {
+	public void loginBefore() {
 		loginPage = new LoginPage(driver, BASE_URL);
 	}
 	

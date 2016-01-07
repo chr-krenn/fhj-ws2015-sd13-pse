@@ -5,7 +5,7 @@ import at.fhj.swd13.pse.db.DbContextProviderImpl;
 
 public abstract class DbTestBase {
 
-	private static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
+	protected static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
 	protected static DbContextProvider contextProvider;
 
 	private static boolean installedDb = false;

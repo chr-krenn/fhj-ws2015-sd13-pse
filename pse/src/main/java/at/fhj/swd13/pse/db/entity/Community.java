@@ -194,9 +194,6 @@ public class Community implements Serializable {
 	}
 
 	public void setConfirmedBy(Person person2) {
-		
-		ArgumentChecker.assertNotNull( person2, "person2");
-
 		this.confirmedBy = person2;
 	}
 

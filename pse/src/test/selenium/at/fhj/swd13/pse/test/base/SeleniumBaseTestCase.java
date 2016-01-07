@@ -18,25 +18,24 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import at.fhj.swd13.pse.test.util.DbTestBase;
 import at.fhj.swd13.pse.test.util.EnvironmentUtil;
-import at.fhj.swd13.pse.test.util.JdbcTestHelper;
 
 /**
  * @author florian.genser
  *
  */
-public abstract class SeleniumBaseTestCase {
+public abstract class SeleniumBaseTestCase extends DbTestBase {
 
 	protected static WebDriver driver;
 	protected static final String BASE_URL = getBaseUrl();
 
 	protected StringBuffer verificationErrors = new StringBuffer();
 	private boolean acceptNextAlert = true;
-	private static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		prepareDatabase();
+		prepare();
 		driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 	}
@@ -222,11 +221,5 @@ public abstract class SeleniumBaseTestCase {
 		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 		return sw.toString();
-	}
-	
-	protected static void prepareDatabase() {
-		JDBC_HELPER.executeSqlScript("SQL/db-create.sql");
-		JDBC_HELPER.executeSqlScript("SQL/users.sql");
-		JDBC_HELPER.executeSqlScript("SQL/testdata.sql");
 	}
 }
