@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -34,38 +33,38 @@ public class FeedServiceFacade implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
-			List<MessageTag> messageTags, Date validFrom, Date validUntil) throws EntityNotFoundException {
+			List<MessageTag> messageTags, Date validFrom, Date validUntil) {
 		feedService.saveMessage(headline, text, username, document, icon, communities, messageTags, validFrom, validUntil);
 	}
 
 	@Override
 	public void updateMessage(int messageId, String headline, String text, Document document, Document icon, List<MessageTag> messageTags, Date validFrom,
-			Date validUntil) throws EntityNotFoundException {
+			Date validUntil) {
 		feedService.updateMessage(messageId, headline, text, document, icon, messageTags, validFrom, validUntil);
 	}
 
 	@Override
-	public Message getMessageById(int messageId) throws EntityNotFoundException {
+	public Message getMessageById(int messageId) {
 		return feedService.getMessageById(messageId);
 	}
 
 	@Override
-	public MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException {
+	public MessageDTO getMessageDTOById(int messageId) {
 		return feedService.getMessageDTOById(messageId);
 	}
 
 	@Override
-	public void rateMessage(int messageId, Person person) throws EntityNotFoundException {
+	public void rateMessage(int messageId, Person person) {
 		feedService.rateMessage(messageId, person);
 	}
 
 	@Override
-	public void removeRating(int messageId, Person person) throws EntityNotFoundException {
+	public void removeRating(int messageId, Person person) {
 		feedService.removeRating(messageId, person);
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException {
+	public List<MessageDTO> loadNews(int communityId) {
 		return feedService.loadNews(communityId);
 	}
 
@@ -80,12 +79,12 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException {
+	public List<MessageDTO> loadComments(int messageId) {
 		return feedService.loadComments(messageId);
 	}
 
 	@Override
-	public MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException {
+	public MessageDTO setComments(MessageDTO messageDTO) {
 		return feedService.setComments(messageDTO);
 	}
 

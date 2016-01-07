@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
@@ -39,7 +38,7 @@ public class MailerTest {
 			final String receipientList = chatService.resolveReceipientsMail( message ); 
 			
 			mailService.sendMail( message, receipientList, null );
-		} catch (MessagingException | EntityNotFoundException e) {
+		} catch (MessagingException e) {
 			logger.error("[XPERIMENTAL] error sending message: " + e.getMessage() );
 		}
 	}

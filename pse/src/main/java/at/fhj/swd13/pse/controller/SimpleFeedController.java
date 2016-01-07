@@ -14,9 +14,8 @@ import javax.persistence.OrderBy;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.dto.MessageDTO;
@@ -59,7 +58,7 @@ public class SimpleFeedController {
     			feedService.setComments(this.messageList.get(i));
     		}
     	}
-    	catch (EntityNotFoundException e) {
+    	catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getActivities failed for " + userSession.getUsername() + " from " + context.toString());
 		}
@@ -91,10 +90,7 @@ public class SimpleFeedController {
     	    		}
     	    	}
         	}
-        	catch (EntityNotFoundException e) {
-        		RequestContext context = RequestContext.getCurrentInstance();
-        		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
-        	} catch (ConstraintViolationException e) {
+        	catch (ServiceException e) {
         		RequestContext context = RequestContext.getCurrentInstance();
         		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
     		}
@@ -119,7 +115,7 @@ public class SimpleFeedController {
 					}
 				}
 			}
-			catch (EntityNotFoundException e) {
+			catch (ServiceException e) {
 				RequestContext context = RequestContext.getCurrentInstance();
 	    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
 			}
@@ -129,7 +125,7 @@ public class SimpleFeedController {
     	try {
     		List<MessageDTO> messageList = feedService.loadNews(communityId);
     		return messageList;
-		} catch (EntityNotFoundException | ConstraintViolationException e) {
+		} catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getNews failed for community " + communityId + " from " + context.toString());
 			return null;
@@ -145,7 +141,7 @@ public class SimpleFeedController {
     			feedService.setComments(messageList.get(i));
     		}
     		return messageList;
-		} catch (EntityNotFoundException | ConstraintViolationException e) {
+		} catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getCommunityAcitivities failed for community " + communityId + " from " + context.toString());
 			return null;

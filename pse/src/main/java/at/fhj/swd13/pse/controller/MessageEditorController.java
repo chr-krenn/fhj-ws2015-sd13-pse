@@ -24,6 +24,7 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
@@ -127,7 +128,7 @@ public class MessageEditorController {
 			
 			selectedTags = messageDto.getTags();
 			
-		} catch (EntityNotFoundException e) {
+		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 		}
 	}
@@ -227,7 +228,7 @@ public class MessageEditorController {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nachricht konnte nicht gesendet werden", 
 					"Fehler beim Senden der Nachricht! Bitte versuchen Sie es erneut."));
-		} catch (EntityNotFoundException e) {
+		} catch (ServiceException e) {
 			logger.error("[MSG+] error redirecting after logout: " + e.getMessage());
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nachricht konnte nicht gesendet werden", 
 					"Fehler beim Senden der Nachricht! Bitte versuchen Sie es erneut."));

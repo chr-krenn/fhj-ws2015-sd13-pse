@@ -13,6 +13,7 @@ import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.user.UserService;
@@ -60,7 +61,7 @@ public class MessageDetailsController {
 				
 			}
 			
-		} catch (EntityNotFoundException e) {
+		} catch (ServiceException e) {
 			logger.info("[MESSAGEDETAILS] message with id " + messageId + " not found");
 		}
 		return "/protected/MessageDetails.jsf";
@@ -96,7 +97,7 @@ public class MessageDetailsController {
 
 			FacesContext context = FacesContext.getCurrentInstance();        
 	        context.addMessage(null, new FacesMessage("Successful",  "Kommentar wurde gespeichert") );
-		} catch (EntityNotFoundException e) {
+		} catch (ServiceException e) {
 			logger.info("[MESSAGEDETAILS] addComment failed for " + userSession.getUsername());
 		}
 	}	

@@ -6,7 +6,6 @@ package at.fhj.swd13.pse.domain.feed;
 import java.util.Date;
 import java.util.List;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -25,40 +24,37 @@ public interface FeedService {
 	List<MessageDTO> loadFeedForUser(Person user);
 
 	void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities, List<MessageTag> messageTags,
-			Date validFrom, Date validUntil) throws EntityNotFoundException;
+			Date validFrom, Date validUntil);
 
 	void updateMessage(int messageId, String headline, String text, Document document, Document icon,
-			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException;
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil);
 	
-	Message getMessageById(int messageId) throws EntityNotFoundException;
+	Message getMessageById(int messageId);
 
-	MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException;
+	MessageDTO getMessageDTOById(int messageId);
 
 	/**
 	 * Insert a "like" to a message by a specific person into database
 	 * 
 	 * @param messageId
 	 * @param person
-	 * @throws EntityNotFoundException
 	 */
-	void rateMessage(int messageId, Person person) throws EntityNotFoundException;
+	void rateMessage(int messageId, Person person);
 
 	/**
 	 * Removing a "like" to a message by a specific person from database
 	 * 
 	 * @param messageId
 	 * @param person
-	 * @throws EntityNotFoundException
 	 */
-	void removeRating(int messageId, Person person) throws EntityNotFoundException;
+	void removeRating(int messageId, Person person);
 
 	/**
 	 * Getting the news from database
 	 * 
 	 * @param communityId
-	 * @throws EntityNotFundException
 	 */
-	List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException;
+	List<MessageDTO> loadNews(int communityId);
 
 	/**
 	 * Check every message whether the logged-in person has liked it and check quantity of likes and prepare list of liking persons for that message
@@ -86,9 +82,8 @@ public interface FeedService {
 	 * @param messageId
 	 * @return
 	 * 		list of messageDTOs
-	 * @throws EntityNotFoundException
 	 */
-	List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException;
+	List<MessageDTO> loadComments(int messageId);
 
 	/**
 	 * Sets the comments in the messageDTO
@@ -96,9 +91,8 @@ public interface FeedService {
 	 * @param messageDTO
 	 * @return
 	 * 		messageDTO with comments
-	 * @throws EntityNotFoundException
 	 */
-	MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException;
+	MessageDTO setComments(MessageDTO messageDTO);
 
 	/**
 	 * Update DTO object after rating for correctly render xhtml

@@ -14,7 +14,6 @@ import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -76,7 +75,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void saveMessage(String headline, String text, String username, Document document, Document icon, List<Community> communities,
-			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) throws EntityNotFoundException {
+			List<MessageTag> messageTags, final Date validFrom, final Date validUntil) {
 
 		try {
 
@@ -102,7 +101,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 	@Override
 	public void updateMessage(int messageId, String headline, String text, Document document, Document icon, List<MessageTag> messageTags, final Date validFrom,
-			final Date validUntil) throws EntityNotFoundException {
+			final Date validUntil) {
 		try {
 			Message m = dbContext.getMessageDAO().getById(messageId);
 
@@ -127,7 +126,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public Message getMessageById(int messageId) throws EntityNotFoundException {
+	public Message getMessageById(int messageId) {
 		try {
 
 			Message byId = dbContext.getMessageDAO().getById(messageId);
@@ -141,7 +140,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public MessageDTO getMessageDTOById(int messageId) throws EntityNotFoundException {
+	public MessageDTO getMessageDTOById(int messageId) {
 		try {
 			MessageDTO messageDto = new MessageDTO(dbContext.getMessageDAO().getById(messageId));
 			return messageDto;
@@ -152,7 +151,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void rateMessage(int messageId, Person person) throws EntityNotFoundException {
+	public void rateMessage(int messageId, Person person) {
 		try {
 			ArgumentChecker.assertNotNull(person, "person");
 
@@ -170,7 +169,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void removeRating(int messageId, Person person) throws EntityNotFoundException {
+	public void removeRating(int messageId, Person person) {
 		try {
 			ArgumentChecker.assertNotNull(person, "person");
 
@@ -187,7 +186,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadNews(int communityId) throws EntityNotFoundException {
+	public List<MessageDTO> loadNews(int communityId) {
 		try {
 			return getMessageDTOs(dbContext.getMessageDAO().loadNews(communityId));
 		} catch (Throwable ex) {
@@ -229,7 +228,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public List<MessageDTO> loadComments(int messageId) throws EntityNotFoundException {
+	public List<MessageDTO> loadComments(int messageId) {
 		try {
 			return getMessageDTOs(dbContext.getMessageDAO().loadComments(getMessageById(messageId)));
 		} catch (Throwable ex) {
@@ -268,7 +267,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 				if (loadComments) {
 					try {
 						setComments(mDTO);
-					} catch (EntityNotFoundException e) {
+					} catch (ServiceException e) {
 						logger.warn("[FEED] Could not load Comments for message with ID " + "[" + mDTO.getId() + "] because entity was not found");
 					}
 				}
@@ -297,7 +296,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public MessageDTO setComments(MessageDTO messageDTO) throws EntityNotFoundException {
+	public MessageDTO setComments(MessageDTO messageDTO) {
 		try {
 			ArgumentChecker.assertNotNull(messageDTO, "messageDO");
 

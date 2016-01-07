@@ -17,8 +17,8 @@ import org.junit.Test;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Message;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.feed.FeedServiceFacade;
 import at.fhj.swd13.pse.plumbing.MailService;
@@ -87,7 +87,7 @@ public class MailServiceIT extends RemoteTestBase {
 		    assertEquals("recipient1@xyz.com", recipient[0].getAddress());
 		    assertEquals("recipient2@xyz.com", recipient[1].getAddress());
 		    
-		} catch (MessagingException | EntityNotFoundException | InterruptedException e) {
+		} catch (MessagingException | ServiceException | InterruptedException e) {
 			e.printStackTrace();
 			fail();
 		}

@@ -3,7 +3,6 @@ package at.fhj.swd13.pse.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -184,14 +183,9 @@ public class FeedServiceTestIT extends RemoteTestBase {
     
     @Test
     public void getMessageDTOByIdTest() {
-    	try {
-			MessageDTO m = feedService.getMessageDTOById(1);
-			assertTrue(m != null);
-			assertEquals(1, m.getId());
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-			fail();
-		}
+		MessageDTO m = feedService.getMessageDTOById(1);
+		assertTrue(m != null);
+		assertEquals(1, m.getId());
     }
     
     @Test
@@ -203,16 +197,11 @@ public class FeedServiceTestIT extends RemoteTestBase {
     
     @Test
     public void setCommentsTest() {
-		try {
-			MessageDTO m = feedService.getMessageDTOById(1);
-			assertTrue(m.getComments() == null); //Comments not loaded, should be empty
-			m = feedService.setComments(m); //Load comments
-			assertFalse(m.getComments() == null);
-			assertEquals("Comment 1", m.getComments().get(0).getText());
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-			fail();
-		}
+		MessageDTO m = feedService.getMessageDTOById(1);
+		assertTrue(m.getComments() == null); //Comments not loaded, should be empty
+		m = feedService.setComments(m); //Load comments
+		assertFalse(m.getComments() == null);
+		assertEquals("Comment 1", m.getComments().get(0).getText());
     }
     
     //FIXME: only works with locally stored image...
@@ -223,42 +212,31 @@ public class FeedServiceTestIT extends RemoteTestBase {
     	Document icon = documentService.store("pic", "D:\\no_img.png");
     	assertTrue(icon != null);
     	
-		try {
-			//Get message & add icon
-	    	Message m = feedService.getMessageById(1);
-			feedService.updateMessage(m.getMessageId(), m.getHeadline(), m.getMessage(), null, icon, m.getMessageTags(), m.getValidFrom(), m.getExpiresOn());
+		//Get message & add icon
+    	Message m = feedService.getMessageById(1);
+		feedService.updateMessage(m.getMessageId(), m.getHeadline(), m.getMessage(), null, icon, m.getMessageTags(), m.getValidFrom(), m.getExpiresOn());
+	
+		//Get messsageDTO
+		MessageDTO mDTO = feedService.getMessageDTOById(1);
+		assertTrue(mDTO.getImage() != null);
 		
-			//Get messsageDTO
-			MessageDTO mDTO = feedService.getMessageDTOById(1);
-			assertTrue(mDTO.getImage() != null);
-			
-			//Check whether image ref is there
-			assertTrue(mDTO.getImageRef() == null);
-			
-			mDTO = feedService.setImageRef(mDTO); 
-			assertFalse(mDTO.getImageRef() == null);
-			
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-			fail();
-		}
+		//Check whether image ref is there
+		assertTrue(mDTO.getImageRef() == null);
+		
+		mDTO = feedService.setImageRef(mDTO); 
+		assertFalse(mDTO.getImageRef() == null);
     }
     
     @Test
     public void setMessageLikesTest() {
-    	try {
-			MessageDTO m = feedService.getMessageDTOById(1);
-			assertEquals(0, m.getQuantityRatings());
-			assertTrue(m.getRatingPersonsList() == null);
-			assertFalse(m.isLike());
-			
-			m = feedService.setMessageLikes(m, "pompenig13");
-			assertEquals(2, m.getQuantityRatings());
-			assertFalse(m.getRatingPersonsList() == null);
-			assertTrue(m.isLike());
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-			fail();
-		}
+		MessageDTO m = feedService.getMessageDTOById(1);
+		assertEquals(0, m.getQuantityRatings());
+		assertTrue(m.getRatingPersonsList() == null);
+		assertFalse(m.isLike());
+		
+		m = feedService.setMessageLikes(m, "pompenig13");
+		assertEquals(2, m.getQuantityRatings());
+		assertFalse(m.getRatingPersonsList() == null);
+		assertTrue(m.isLike());
     }
 }
