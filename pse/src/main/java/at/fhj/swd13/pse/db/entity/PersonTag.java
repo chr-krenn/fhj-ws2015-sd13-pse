@@ -3,6 +3,8 @@ package at.fhj.swd13.pse.db.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 
 /**
  * The persistent class for the person_tag database table.
@@ -34,6 +36,10 @@ public class PersonTag implements Serializable {
 	}
 
 	public PersonTag(Tag tag) {
+		this();
+		
+		ArgumentChecker.assertNotNull(tag, "tag");
+		
 		this.tag = tag;
 	}
 
@@ -51,6 +57,9 @@ public class PersonTag implements Serializable {
 	}
 
 	public void setPerson(Person person) {
+		
+		ArgumentChecker.assertNotNull(person, "person");
+		
 		this.person = person;
 	}
 
@@ -59,6 +68,9 @@ public class PersonTag implements Serializable {
 	}
 
 	public void setTag(Tag tag) {
+		
+		ArgumentChecker.assertNotNull(tag, "tag");
+
 		this.tag = tag;
 	}
 
