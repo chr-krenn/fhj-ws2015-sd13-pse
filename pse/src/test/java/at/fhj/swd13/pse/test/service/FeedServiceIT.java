@@ -34,7 +34,7 @@ import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
 import at.fhj.swd13.pse.test.util.SleepUtil;
 
-public class FeedServiceTestIT extends RemoteTestBase {
+public class FeedServiceIT extends RemoteTestBase {
 
 	private FeedService feedService;
 	private ChatService chatService;
@@ -238,5 +238,31 @@ public class FeedServiceTestIT extends RemoteTestBase {
 		assertEquals(2, m.getQuantityRatings());
 		assertFalse(m.getRatingPersonsList() == null);
 		assertTrue(m.isLike());
+    }
+    
+    @Test
+    public void updateDTOafterRatingTest() {
+    	MessageDTO mDTO = feedService.getMessageDTOById(1); 
+    	assertEquals(null,mDTO.getRatingPersonsList()); //user already likes this message, but ratingPersonsList hasn't been loaded
+    	assertFalse(mDTO.isLike());
+    	assertEquals(0,mDTO.getQuantityRatings());
+    	mDTO = feedService.setMessageLikes(mDTO, user.getUserName()); //Data is loaded
+    	mDTO = feedService.updateDTOafterRating(mDTO, user); //Data is set
+    	assertEquals(2,mDTO.getRatingPersonsList().size());
+    	assertTrue(mDTO.isLike());
+    	assertEquals(2,mDTO.getQuantityRatings());
+    }
+    
+    @Test
+    public void updateDTOafterRatingTest2() {
+    	MessageDTO mDTO = feedService.getMessageDTOById(5); //User doesn't like message yet
+    	assertEquals(null,mDTO.getRatingPersonsList());
+    	assertFalse(mDTO.isLike());
+    	assertEquals(0,mDTO.getQuantityRatings());
+    	mDTO = feedService.setMessageLikes(mDTO, user.getUserName());
+    	mDTO = feedService.updateDTOafterRating(mDTO, user);
+    	assertEquals(1,mDTO.getRatingPersonsList().size());
+    	assertTrue(mDTO.isLike());
+    	assertEquals(1,mDTO.getQuantityRatings());
     }
 }

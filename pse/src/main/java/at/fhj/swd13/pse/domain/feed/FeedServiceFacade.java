@@ -89,13 +89,13 @@ public class FeedServiceFacade implements FeedService {
 	}
 
 	@Override
-	public void updateDTOafterRating(MessageDTO messageDTO, Person person) {
-		feedService.updateDTOafterRating(messageDTO, person);
+	public MessageDTO updateDTOafterRating(MessageDTO messageDTO, Person person) {
+		return feedService.updateDTOafterRating(messageDTO, person);
 	}
 
 	@Override
-	public void updateDTOAfterRemove(MessageDTO messageDTO, Person person) {
-		feedService.updateDTOAfterRemove(messageDTO, person);
+	public MessageDTO updateDTOAfterRemove(MessageDTO messageDTO, Person person) {
+		return feedService.updateDTOAfterRemove(messageDTO, person);
 	}
 
 	@Override

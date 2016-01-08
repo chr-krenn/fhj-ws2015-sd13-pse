@@ -99,16 +99,20 @@ public interface FeedService {
 	 * 
 	 * @param messageDTO
 	 * @param person
+	 * @return
+	 * 		messageDTO with rating
 	 */
-	void updateDTOafterRating(MessageDTO messageDTO, Person person);
+	MessageDTO updateDTOafterRating(MessageDTO messageDTO, Person person);
 
 	/**
 	 * Update DTO object after removing rate for correctly render xhtml
 	 * 
 	 * @param messageDTO
 	 * @param person
+	 * @return
+	 * 		messageDTO with rating removed
 	 */
-	void updateDTOAfterRemove(MessageDTO messageDTO, Person person);
+	MessageDTO updateDTOAfterRemove(MessageDTO messageDTO, Person person);
 
 	/**
 	 * Deletes a message from the database

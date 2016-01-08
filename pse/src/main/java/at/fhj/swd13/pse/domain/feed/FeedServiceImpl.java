@@ -298,7 +298,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	@Override
 	public MessageDTO setComments(MessageDTO messageDTO) {
 		try {
-			ArgumentChecker.assertNotNull(messageDTO, "messageDO");
+			ArgumentChecker.assertNotNull(messageDTO, "messageDTO");
 
 			messageDTO.setComments(loadComments(messageDTO.getId()));
 			return messageDTO;
@@ -309,39 +309,45 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 	}
 
 	@Override
-	public void updateDTOafterRating(MessageDTO messageDTO, Person person) {
+	public MessageDTO updateDTOafterRating(MessageDTO messageDTO, Person person) {
+		MessageDTO mDTO = messageDTO;
 		try {
-			ArgumentChecker.assertNotNull(messageDTO, "messageDO");
+			ArgumentChecker.assertNotNull(mDTO, "messageDTO");
 			ArgumentChecker.assertNotNull(person, "person");
 
-			messageDTO.getRatingPersonsList().add(person);
-			messageDTO.setLike(true);
-			messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+			if(!mDTO.getRatingPersonsList().contains(person)) {
+				mDTO.getRatingPersonsList().add(person);
+			}
+			mDTO.setLike(true);
+			mDTO.setQuantityRatings(mDTO.getRatingPersonsList().size());
 		} catch (Throwable ex) {
-			logger.info("[FeedService] cannot update message '" + messageDTO.getId() + "': " + ex.getMessage(), ex);
+			logger.info("[FeedService] cannot update message '" + mDTO.getId() + "': " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
+		return mDTO;
 	}
 
 	@Override
-	public void updateDTOAfterRemove(MessageDTO messageDTO, Person person) {
+	public MessageDTO updateDTOAfterRemove(MessageDTO messageDTO, Person person) {
+		MessageDTO mDTO = messageDTO;
 		try {
-			ArgumentChecker.assertNotNull(messageDTO, "messageDO");
+			ArgumentChecker.assertNotNull(mDTO, "messageDTO");
 			ArgumentChecker.assertNotNull(person, "person");
 
-			List<Person> ratingPersonsList = messageDTO.getRatingPersonsList();
+			List<Person> ratingPersonsList = mDTO.getRatingPersonsList();
 			for (int i = 0; i < ratingPersonsList.size(); i++) {
 				if (ratingPersonsList.get(i).getUserName().contentEquals(person.getUserName())) {
-					messageDTO.getRatingPersonsList().remove(i);
+					mDTO.getRatingPersonsList().remove(i);
 					break;
 				}
 			}
-			messageDTO.setLike(false);
-			messageDTO.setQuantityRatings(messageDTO.getRatingPersonsList().size());
+			mDTO.setLike(false);
+			mDTO.setQuantityRatings(mDTO.getRatingPersonsList().size());
 		} catch (Throwable ex) {
-			logger.info("[FeedService] cannot update message '" + messageDTO.getId() + "': " + ex.getMessage(), ex);
+			logger.info("[FeedService] cannot update message '" + mDTO.getId() + "': " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
 		}
+		return mDTO;
 	}
 
 	@Override

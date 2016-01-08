@@ -2,12 +2,10 @@ package at.fhj.swd13.pse.domain.chat;
 
 import java.util.List;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.service.DuplicateEntityException;
 
 public interface ChatService {
 
