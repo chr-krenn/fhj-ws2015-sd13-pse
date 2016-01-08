@@ -16,9 +16,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.hibernate.service.spi.ServiceException;
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.plumbing.ConfigurationHelper;
@@ -103,15 +103,15 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			logger.info("[DOCS] storage location is " + document.getStorageLocation());
 
 			return document;
-		} catch (ConstraintViolationException | IOException x) {
+		} catch (Throwable x) {
 			logger.error("[DOCS] Error storing file " + filename + " : " + x.getMessage());
-			return null;
+			throw new ServiceException("[DOCS] cannot store " + filename, x);
 		}
 		finally {
 			try {
 				data.close();
 			} catch (IOException e) {
-				logger.error("[DOCS] Error with file input stream for " + filename + " : " + e.getMessage());
+				logger.error("[DOCS] Error closing file input stream for " + filename + " : " + e.getMessage());
 			}
 		}
 	}
@@ -134,7 +134,8 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 			return store(filename, in);
 		} catch (IOException e) {
 			logger.error("[DOCS] Error creating file input stream for " + filename + " with filepath " + filepath + ": " + e.getMessage());
-			return null;
+
+			throw new ServiceException("[DOCS] cannot store " + filename, e);
 		}
 	}
 
@@ -145,7 +146,13 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	 */
 	public Document get(final int documentId) {
 
-		return dbContext.getDocumentDAO().getById(documentId);
+		try {
+			return dbContext.getDocumentDAO().getById(documentId);
+		} catch (Throwable e) {
+			logger.error("[DOCS] Error getting " + documentId, e);
+
+			throw new ServiceException("[DOCS] error getting " + documentId, e);
+		}
 	}
 
 	public void remove(final Document document) {
@@ -185,14 +192,18 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	 * @throws IOException
 	 *             when an I/O Exception occured during copying
 	 */
-	private static String storeFile(InputStream stream) throws IOException {
+	private static String storeFile(InputStream stream) {
+		try {
+			final Path relativeFilename = buildRelativeFilename();
+			final Path absoluteFile = Paths.get(imageFolder, relativeFilename.toString());
 
-		final Path relativeFilename = buildRelativeFilename();
-		final Path absoluteFile = Paths.get(imageFolder, relativeFilename.toString());
+			Files.copy(stream, absoluteFile);
 
-		Files.copy(stream, absoluteFile);
+			return relativeFilename.toString();
+		} catch (Throwable e) {
 
-		return relativeFilename.toString();
+			throw new ServiceException("[DOCS] error copying", e);
+		}
 	}
 
 	private static Path buildRelativeFilename() {
@@ -254,29 +265,38 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	 * 
 	 * @see at.fhj.swd13.pse.domain.document.DocumentService#assertDocumentFolders()
 	 */
-	public void assertDocumentFolders() throws IOException {
+	public void assertDocumentFolders() {
+		try {
+			Path documentPath = Paths.get(imageFolder);
 
-		Path documentPath = Paths.get(imageFolder);
+			Files.createDirectories(documentPath);
+			logger.info("[DOCS] checked document folder " + documentPath);
 
-		Files.createDirectories(documentPath);
-		logger.info("[DOCS] checked document folder " + documentPath);
+			for (int i = 1; i <= maxSubIndices; ++i) {
 
-		for (int i = 1; i <= maxSubIndices; ++i) {
+				Path documentSubPath = Paths.get(imageFolder + "/" + i);
 
-			Path documentSubPath = Paths.get(imageFolder + "/" + i);
+				Files.createDirectories(documentSubPath);
+				logger.info("[DOCS] checked document folder " + documentSubPath);
+			}
+		} catch (Throwable e) {
+			logger.error("[DOCS] creating document folders ", e);
 
-			Files.createDirectories(documentSubPath);
-			logger.info("[DOCS] checked document folder " + documentSubPath);
+			throw new ServiceException("[DOCS] error creating document folders", e);
 		}
 	}
 
 	@Override
-	public InputStream getStreamForDocument(int documentId) throws DocumentNotFoundException {
+	public InputStream getStreamForDocument(int documentId) {
 		try {
 			Document document = get(documentId);
 			return new FileInputStream(getServerPath(document));
 		} catch (FileNotFoundException e) {
-			throw new DocumentNotFoundException("", e);
+			logger.error("[DOCS] file not found for " + documentId, e);
+			throw new ServiceException("[DOCS] file not found " + documentId, e);
+		} catch ( Throwable t ) {
+			logger.error("[DOCS] error getting stream for " + documentId +": " + t.getMessage(), t);
+			throw new ServiceException("[DOCS] error getting stream for " + documentId + ":" + t.getMessage(), t);			
 		}
 	}
 }

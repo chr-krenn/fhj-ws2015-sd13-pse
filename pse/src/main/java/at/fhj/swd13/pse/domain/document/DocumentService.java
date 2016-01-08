@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.domain.document;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import at.fhj.swd13.pse.db.entity.Document;
@@ -93,7 +92,7 @@ public interface DocumentService {
 	 * check if all needed folders exist in the file system
 	 * if not, try to create them
 	 */
-	void assertDocumentFolders() throws IOException;
+	void assertDocumentFolders();
 	
 	/**
 	 * Removes a document from the database
@@ -109,7 +108,7 @@ public interface DocumentService {
 	 * @param documentId
 	 * 
 	 */
-	InputStream getStreamForDocument(final int documentId) throws DocumentNotFoundException;
+	InputStream getStreamForDocument(final int documentId);
 	
 	
 }

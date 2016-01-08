@@ -3,13 +3,10 @@ package at.fhj.swd13.pse.controller;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Produces;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.OrderBy;
 
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
@@ -29,11 +26,6 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 @ManagedBean
 @ViewScoped
 public class SimpleFeedController {
-
-    @Produces
-    @Named
-    @OrderBy("createdAt ASC")
-	private List<MessageDTO> messages;
     
     @Inject
     private FeedService feedService;
@@ -62,10 +54,6 @@ public class SimpleFeedController {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getActivities failed for " + userSession.getUsername() + " from " + context.toString());
 		}
-    }
-    
-    public List<MessageDTO> getMessages () {
-    	return messages;
     }
     
     public List<MessageDTO> getActivities() {

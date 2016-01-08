@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.test.db;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import at.fhj.swd13.pse.plumbing.ArgumentChecker;

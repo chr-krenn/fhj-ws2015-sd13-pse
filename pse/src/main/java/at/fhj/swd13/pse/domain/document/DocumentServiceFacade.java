@@ -1,6 +1,5 @@
 package at.fhj.swd13.pse.domain.document;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ejb.EJB;
@@ -57,7 +56,7 @@ public class DocumentServiceFacade implements DocumentService {
 	}
 
 	@Override
-	public void assertDocumentFolders() throws IOException {
+	public void assertDocumentFolders(){
 		documentService.assertDocumentFolders();
 	}
 
@@ -67,7 +66,7 @@ public class DocumentServiceFacade implements DocumentService {
 	}
 
 	@Override
-	public InputStream getStreamForDocument(int documentId) throws DocumentNotFoundException {
+	public InputStream getStreamForDocument(int documentId){
 		return documentService.getStreamForDocument(documentId);
 	}
 
