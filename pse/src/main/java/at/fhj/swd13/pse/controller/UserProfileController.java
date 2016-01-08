@@ -297,10 +297,10 @@ public class UserProfileController implements Serializable {
 						&& c.getPrivateUser().getUserName().equals(userName)).findAny();
 
 		if (userCommunity.isPresent()) {
-			return "/protected/xperimental/AddMessage.jsf?community="
+			return "/protected/chat/AddMessage.jsf?community="
 					+ userCommunity.get().getName() + "&faces-redirect=true";
 		}
-		return "/protected/xperimental/AddMessage.jsf?faces-redirect=true";
+		return "/protected/chat/AddMessage.jsf?faces-redirect=true";
 	}
 
 	public String contactButtonAction() {

@@ -83,7 +83,7 @@ public class CommunityProfileController implements Serializable {
 	public void onCreateNewActivity(){
 	    try 
 	    {
-	    	FacesContext.getCurrentInstance().getExternalContext().redirect("xperimental/AddMessage.jsf?community=" + community.getName() +"&lockCommunity=true");
+	    	FacesContext.getCurrentInstance().getExternalContext().redirect("chat/AddMessage.jsf?community=" + community.getName() +"&lockCommunity=true");
 		} 
 	    catch (IOException e) 
 	    {
