@@ -94,7 +94,8 @@ public class CommunitiesPage {
 		searchInput.clear();
 		searchInput.sendKeys(search);
 		driver.findElement(By.id("communitySearch:communitySearch")).click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		
 	}
 	
 	/**
@@ -102,9 +103,12 @@ public class CommunitiesPage {
 	 * 
 	 * @return name of community listed first
 	 */
-	public Boolean getCommunityName(String name){
+	public int getCommunityName(String name){
 		String text = getElement(".//*[@id='communitySearch:communities_data']/tr[1]/td[1]").getText();
-		return name.equals(text);
+		if (name.equals(text))
+			return 1;
+		else 
+			return 0;
 	}
 	
 	/**
@@ -126,8 +130,9 @@ public class CommunitiesPage {
 	 * @return number of listed communities
 	 */
 	public int getFoundCommunitiesNumber() {
+		
 		if(((driver.findElements(By.xpath("//tbody[@id='communitySearch:communities_data']/tr"))).size() == 1))
-			return 0;
+			return 1;
 		else
 			return driver.findElements(By.xpath("//tbody[@id='communitySearch:communities_data']/tr")).size();	
 	}

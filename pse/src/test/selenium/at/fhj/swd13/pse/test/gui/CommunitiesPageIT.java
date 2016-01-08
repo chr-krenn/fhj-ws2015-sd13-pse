@@ -12,6 +12,7 @@ import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
@@ -34,13 +35,12 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		}
 		// Adding private message
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
+		loginPage = new LoginPage(driver, BASE_URL);
+		homepage = loginPage.login("pompenig13", "12345678");
 	}
 	
 	
-	@After
-	public void logoutAfter() {
-		homepage.logout();
-	}
+
 	
 	/*
 	 * PSE2015-30 "Als angemeldeter Benutzer habe ich auf der Übersichtsseite der Communities eine Liste aller öffentlichen und privaten Communities"
@@ -48,8 +48,7 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		
 	@Test
 	public void listCommunities(){
-		loginPage = new LoginPage(driver, BASE_URL);
-		homepage = loginPage.login("pompenig13", "12345678");
+
 		CommunitiesPage communityPage = homepage.getCommunitiesPage();	
 		verifyEquals(3,communityPage.getListedCommunitiesNumber());
 	}
@@ -60,28 +59,25 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testSearchForCommunities(){
-		loginPage = new LoginPage(driver, BASE_URL);
-		homepage = loginPage.login("pompenig13", "12345678");
 		CommunitiesPage communityPage = homepage.getCommunitiesPage();
 		String communitysearch = "SWD";
 		communityPage.searchCommunities(communitysearch);
-		verifyEquals(0,communityPage.getFoundCommunitiesNumber());
-		verifyEquals(0,communityPage.getCommunityName(communitysearch));
+		SleepUtil.sleep(3000);
+		verifyEquals(1,communityPage.getFoundCommunitiesNumber());
+		verifyEquals(1,communityPage.getCommunityName(communitysearch));
 	}
 	
 	
 	@Test
 	public void testCommunitySection() {
-		loginPage = new LoginPage(driver, BASE_URL);
-		homepage = loginPage.login("pompenig13", "12345678");
+
 		CommunitiesPage communityPage = homepage.getCommunitiesPage();
 		verifyTrue(communityPage.isCommunityListPresent());
 	}
 	
 	@Test
 	public void testSearchFunctionality(){
-		loginPage = new LoginPage(driver, BASE_URL);
-		homepage = loginPage.login("pompenig13", "12345678");
+
 		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
 		verifyTrue(communitiesPage.isSearchButtonPresent());
 	}
