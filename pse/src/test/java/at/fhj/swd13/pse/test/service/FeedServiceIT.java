@@ -243,7 +243,7 @@ public class FeedServiceIT extends RemoteTestBase {
     @Test
     public void updateDTOafterRatingTest() {
     	MessageDTO mDTO = feedService.getMessageDTOById(1); 
-    	assertEquals(null,mDTO.getRatingPersonsList()); //user already likes this message, but ratingPersonsList hasn't been loaded
+    	assertEquals(null,mDTO.getRatingPersonsList()); //user & one other person like this message, but ratingPersonsList hasn't been loaded
     	assertFalse(mDTO.isLike());
     	assertEquals(0,mDTO.getQuantityRatings());
     	mDTO = feedService.setMessageLikes(mDTO, user.getUserName()); //Data is loaded
@@ -255,7 +255,7 @@ public class FeedServiceIT extends RemoteTestBase {
     
     @Test
     public void updateDTOafterRatingTest2() {
-    	MessageDTO mDTO = feedService.getMessageDTOById(5); //User doesn't like message yet
+    	MessageDTO mDTO = feedService.getMessageDTOById(5); //No one likes this message yet
     	assertEquals(null,mDTO.getRatingPersonsList());
     	assertFalse(mDTO.isLike());
     	assertEquals(0,mDTO.getQuantityRatings());
@@ -263,6 +263,19 @@ public class FeedServiceIT extends RemoteTestBase {
     	mDTO = feedService.updateDTOafterRating(mDTO, user);
     	assertEquals(1,mDTO.getRatingPersonsList().size());
     	assertTrue(mDTO.isLike());
+    	assertEquals(1,mDTO.getQuantityRatings());
+    }
+    
+    @Test
+    public void updateDTOAfterRemoveTest() {
+    	MessageDTO mDTO = feedService.getMessageDTOById(1); //user & one other person like this message
+    	assertEquals(null,mDTO.getRatingPersonsList());
+    	assertFalse(mDTO.isLike());
+    	assertEquals(0,mDTO.getQuantityRatings());
+    	mDTO = feedService.setMessageLikes(mDTO, user.getUserName());
+    	mDTO = feedService.updateDTOAfterRemove(mDTO, user);
+    	assertEquals(1,mDTO.getRatingPersonsList().size());
+    	assertFalse(mDTO.isLike());
     	assertEquals(1,mDTO.getQuantityRatings());
     }
 }
