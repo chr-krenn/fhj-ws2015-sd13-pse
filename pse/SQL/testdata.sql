@@ -258,6 +258,12 @@ insert into message_rating
 --Added relation between person 109 and 114
 insert into person_relation
 	(source_person_id, target_person_id)
-	values(109, 114);	
-	
-	
+	values(109, 114);		
+----------------------------------------------
+
+----------------------------------------------
+
+--Required for confirming a community
+insert into community
+	(invitation_only, name, created_by, confirmed_by)
+	values(0,"Not confirmed community", 102, null);	
