@@ -9,7 +9,7 @@ public interface DocumentLibraryService {
 	
 	void addEntry(String fileName, String descrition, InputStream content, int communityId); 
 	
-	void deleteEntry(int documentLibraryEntryId) throws DocumentNotFoundException;
+	void deleteEntry(int documentLibraryEntryId);
 	
-	DocumentLibraryEntry getEntryById(int documentLibraryEntryId) throws DocumentNotFoundException;
+	DocumentLibraryEntry getEntryById(int documentLibraryEntryId);
 }
