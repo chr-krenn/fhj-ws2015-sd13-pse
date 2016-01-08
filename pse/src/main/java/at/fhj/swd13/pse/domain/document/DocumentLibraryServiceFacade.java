@@ -25,12 +25,12 @@ public class DocumentLibraryServiceFacade implements DocumentLibraryService {
 	}
 
 	@Override
-	public void deleteEntry(int documentLibraryEntryId) throws DocumentNotFoundException {
+	public void deleteEntry(int documentLibraryEntryId){
 		documentLibraryService.deleteEntry(documentLibraryEntryId);
 	}
 
 	@Override
-	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) throws DocumentNotFoundException {
+	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) {
 		return documentLibraryService.getEntryById(documentLibraryEntryId);
 	}
 

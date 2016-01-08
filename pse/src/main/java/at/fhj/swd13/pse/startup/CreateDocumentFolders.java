@@ -1,7 +1,5 @@
 package at.fhj.swd13.pse.startup;
 
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -9,6 +7,7 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 
 @Startup
@@ -28,7 +27,7 @@ public class CreateDocumentFolders {
 		try {
 			
 			documentService.assertDocumentFolders();
-		} catch (IOException e) {
+		} catch (ServiceException e) {
 			logger.error("[STARTUP] error creating document directories: " + e.getMessage() );
 		}		
 	}
