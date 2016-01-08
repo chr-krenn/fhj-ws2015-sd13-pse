@@ -10,6 +10,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.MessageDTO;
 
 @Stateless
 @Remote(ChatService.class)
@@ -109,7 +110,7 @@ public class ChatServiceFacade implements ChatService {
 	}
 
 	@Override
-	public Message addComment(String username, int commentedMessageId, String headline, String comment) {
+	public MessageDTO addComment(String username, int commentedMessageId, String headline, String comment) {
 		return chatService.addComment(username, commentedMessageId, headline, comment);
 	}
 

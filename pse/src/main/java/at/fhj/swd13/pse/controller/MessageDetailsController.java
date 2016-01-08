@@ -11,7 +11,6 @@ import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.EntityNotFoundException;
-import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
@@ -79,8 +78,7 @@ public class MessageDetailsController {
 		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
 		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
 		
-		Message message = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
-		MessageDTO newMessageDTO = new MessageDTO(message);
+		MessageDTO newMessageDTO = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
 		
 		try {
 			feedService.setImageRef(newMessageDTO);

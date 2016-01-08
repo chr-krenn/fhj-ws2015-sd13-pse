@@ -6,6 +6,7 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.dto.MessageDTO;
 
 public interface ChatService {
 
@@ -130,8 +131,11 @@ public interface ChatService {
 	 * 
 	 * @param comment text of the comment itself
 	 */
-	Message addComment( final String username, final int commentedMessageId, final String headline, final String comment );
+	MessageDTO addComment( final String username, final int commentedMessageId, final String headline, final String comment );
+	
 	void confirmCommunityMember(Person adminPerson, CommunityMember unconfirmed);
+	
 	void declineCommunityMember(Person adminPerson, CommunityMember unconfirmed);
+	
 	CommunityMember getUnconfirmedCommunityMember(int communityId);
 }

@@ -18,6 +18,7 @@ import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.ServiceException;
+import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -449,7 +450,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	@Override
-	public Message addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
+	public MessageDTO addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
 		try {
 			final Person author = dbContext.getPersonDAO().getByUsername(username);
 
@@ -465,7 +466,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 						dbContext.getDeliverySystemDAO().getPseService(), author);
 				message.setCommunities(communities);
 
-				return commentedMessage.addMessage(message);
+				return new MessageDTO(commentedMessage.addMessage(message));
 			} else {
 				logger.error("[ChatService] addComment commenting person not foud: " + username);
 			}
