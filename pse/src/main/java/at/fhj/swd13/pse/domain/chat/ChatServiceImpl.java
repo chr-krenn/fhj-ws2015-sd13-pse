@@ -12,12 +12,12 @@ import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.ConstraintViolationException;
 import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.dao.CommunityDAO;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.service.DuplicateEntityException;
 import at.fhj.swd13.pse.service.ServiceBase;
 
@@ -45,17 +45,26 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * Returns community found by communityId
 	 */
 	@Override
-	public Community getCommunity(final int communityId) throws EntityNotFoundException {
-
-		return dbContext.getCommunityDAO().get(communityId);
+	public Community getCommunity(final int communityId) {
+		try {
+			return dbContext.getCommunityDAO().get(communityId);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getCommunity failed for communityId " + communityId + " : " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	/**
 	 * Returns community found by communityName
 	 */
 	@Override
-	public Community getCommunity(final String communityName) throws EntityNotFoundException {
-		return dbContext.getCommunityDAO().getByName(communityName);
+	public Community getCommunity(final String communityName) {
+		try {
+			return dbContext.getCommunityDAO().getByName(communityName);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getCommunity failed for communityName " + communityName + " : " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -65,22 +74,21 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * String, java.lang.String, boolean, at.fhj.swd13.pse.db.DbContext)
 	 */
 	@Override
-	public Community createChatCommunity(final String creatorUsername, final String communityName, final boolean invitationOnly)
-			throws EntityNotFoundException {
+	public Community createChatCommunity(final String creatorUsername, final String communityName, final boolean invitationOnly) {
+		try {
+			Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
 
-		Person creator = dbContext.getPersonDAO().getByUsername(creatorUsername, true);
-
-		if (creator.getIsActive()) {
-
-			Community community = new Community(communityName, creator);
-
-			community.setInvitationOnly(invitationOnly);
-
-			return createCommunity(creator, community);
-
-		} else {
-			throw new IllegalStateException("User is not active and can therefore not create communities: " + creatorUsername);
+			if (creator.getIsActive()) {
+				Community community = new Community(communityName, creator);
+				community.setInvitationOnly(invitationOnly);
+				return createCommunity(creator, community);
+			}
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getCommunity failed for communityName " + communityName + " : " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
+
+		throw new ServiceException("User is not active and can therefore not create communities: " + creatorUsername);
 	}
 
 	/*
@@ -92,30 +100,44 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 */
 	@Override
 	public List<Community> getUnconfirmedCommunities() {
-
-		return dbContext.getCommunityDAO().getUnconfirmedCommunites();
+		try {
+			return dbContext.getCommunityDAO().getUnconfirmedCommunites();
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getUnconfirmedCommunities failed: " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public List<Community> getAllCommunities() {
-
-		return dbContext.getCommunityDAO().getAllCommunities();
+		try {
+			return dbContext.getCommunityDAO().getAllCommunities();
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getAllCommunities failed: " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public List<CommunityMember> getAllUnconfirmedCommunityMembers() {
-		List<CommunityMember> memberrequests = new LinkedList<CommunityMember>();
-		List<Community> communities = getAllCommunities();
-		for (int i = 0; i < communities.size(); i++) {
-			if (!communities.get(i).isPrivateChannel() && communities.get(i).getInvitationOnly()) {
-				List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
-				for (int j = 0; j < mlist.size(); j++) {
-					if (mlist.get(j).getConfirmer() == null)
-						memberrequests.add(mlist.get(j));
+		try {
+			List<CommunityMember> memberrequests = new LinkedList<CommunityMember>();
+			List<Community> communities = getAllCommunities();
+			for (int i = 0; i < communities.size(); i++) {
+				if (!communities.get(i).isPrivateChannel() && communities.get(i).getInvitationOnly()) {
+					List<CommunityMember> mlist = communities.get(i).getCommunityMembers();
+					for (int j = 0; j < mlist.size(); j++) {
+						if (mlist.get(j).getConfirmer() == null)
+							memberrequests.add(mlist.get(j));
+					}
 				}
 			}
+			return memberrequests;
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getAllUnconfirmedCommunityMembers failed: " + ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-		return memberrequests;
+		
 	}
 
 	/**
@@ -163,50 +185,45 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	}
 
 	public CommunityMember createCommunityMember(final Person person, final Community community) {
-
 		try {
 			Person p = dbContext.getPersonDAO().getById(person.getPersonId());
 			Community c = dbContext.getCommunityDAO().get(community.getCommunityId());
-
 			CommunityMember member = c.addMember(p, false);
-
 			dbContext.persist(member);
-
 			return member;
-
-		} catch (EntityNotFoundException e) {
-			logger.error("[CHAT] Error creating community member. Person " +person +" not found: ", e);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] createCommunityMember failed for Person " + person + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-		return null;
 	}
 
 	public Boolean isPersonMemberOfCommunity(final Person person, final Community community) {
-
-		Boolean isMemberOfCommunity = false;
 		try {
 			Person p = dbContext.getPersonDAO().getById(person.getPersonId());
 			Community c = dbContext.getCommunityDAO().get(community.getCommunityId());
-
-			isMemberOfCommunity = c.isMember(p);
-
-		} catch (EntityNotFoundException e) {
-			logger.error("[CHAT] Error checking community membership. Person " +person +" not found: ", e);
+			return c.isMember(p);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] isPersonMemberOfCommunity failed for Person " + person + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-
-		return isMemberOfCommunity;
 	}
 
 	public List<CommunityMember> getCommunityMembersList(final Community community) {
-
-		List<CommunityMember> memberList = dbContext.getCommunityDAO().getCommunityMembers(community);
-
-		return memberList;
+		try {
+			return dbContext.getCommunityDAO().getCommunityMembers(community);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getCommunityMembersList failed for Community " + community + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	public CommunityMember getCommunityMember(final Community community, final Person person) {
-
-		return dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(community, person);
-
+		try {
+			return dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(community, person);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getCommunityMemberByCommunityAndPerson failed for Community " + community + " and Person " + person + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	/*
@@ -219,54 +236,65 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 	@Override
 	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
-
-		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
-				adminPerson.addConfirmedCommunities(unconfirmed);
-
-				Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
-
-				c.setConfirmedBy(adminPerson);
-
-				dbContext.persist(c);
-		} else {
-			throw new IllegalStateException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
+		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
+			throw new ServiceException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
 		}
+		
+		try {
+			adminPerson.addConfirmedCommunities(unconfirmed);
+			Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
+			c.setConfirmedBy(adminPerson);
+			dbContext.persist(c);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] confirmCommunity failed for Community " + unconfirmed + " and Person " + adminPerson + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
+
 	}
 
 	@Override
 	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
-
-		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
+		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
+			throw new ServiceException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
+		}
+		
+		try {
 			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
-
 			c.setConfirmer(adminPerson);
-
 			dbContext.persist(c);
-		} else {
-			throw new IllegalStateException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
+		} catch (Throwable ex) {
+			logger.info("[ChatService] confirmCommunityMember failed for CommunityMember " + unconfirmed + " and Person " + adminPerson + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
 	}
 
 	@Override
 	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
+		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
+			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
+		}
 
-		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
+		try {
 			Community c = dbContext.getCommunityDAO().get(unconfirmed.getCommunityId());
-
 			dbContext.remove(c);
-		} else {
-			throw new IllegalStateException("Person declining the community is either not active or not an admin: " + adminPerson.getUserName());
+		} catch (Throwable ex) {
+			logger.info("[ChatService] declineCommunity failed for CommunityMember " + unconfirmed + " and Person " + adminPerson + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
 	}
 
 	@Override
 	public void declineCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
+		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
+			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
+		}
 
-		if (adminPerson.getIsActive() && adminPerson.isAdmin()) {
+		try {
 			CommunityMember c = dbContext.getCommunityDAO().getCommunityMemberByCommunityAndPerson(unconfirmed.getCommunity(), unconfirmed.getMember());
 			dbContext.remove(c);
-		} else {
-			throw new IllegalStateException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
+		} catch (Throwable ex) {
+			logger.info("[ChatService] declineCommunityMember failed for CommunityMember " + unconfirmed + " and Person " + adminPerson + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
 	}
 
@@ -278,8 +306,12 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * java.lang.String, java.lang.String)
 	 */
 	public List<Community> getPossibleTargetCommunities(final String username, final String needle) {
-
-		return dbContext.getCommunityDAO().getMatchingCommunities(username, needle);
+		try {
+			return dbContext.getCommunityDAO().getMatchingCommunities(username, needle);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] declineCommunityMember failed for User " + username + " and Needle " + needle + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	/**
@@ -289,32 +321,35 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * @return the number of created communities
 	 */
 	public int createAllPrivateCommunities() {
+		try {
+			int createdCommunities = 0;
 
-		int createdCommunities = 0;
+			final List<Person> allPersons = dbContext.getPersonDAO().getAllPersons();
 
-		final List<Person> allPersons = dbContext.getPersonDAO().getAllPersons();
+			for (Person user : allPersons) {
+				final String privateCommunityName = Community.PRIVATE_PREFIX + user.getUserName();
+				boolean foundPrivateCommunity = false;
 
-		for (Person user : allPersons) {
+				for (Community community : user.getCreatedCommunities()) {
 
-			final String privateCommunityName = Community.PRIVATE_PREFIX + user.getUserName();
-			boolean foundPrivateCommunity = false;
+					if (community.getName().equals(privateCommunityName)) {
+						foundPrivateCommunity = true;
+						break;
+					}
+				}
 
-			for (Community community : user.getCreatedCommunities()) {
-
-				if (community.getName().equals(privateCommunityName)) {
-					foundPrivateCommunity = true;
-					break;
+				if (!foundPrivateCommunity) {
+					++createdCommunities;
+					createPrivateCommunity(user);
 				}
 			}
 
-			if (!foundPrivateCommunity) {
-				++createdCommunities;
+			return createdCommunities;
 
-				createPrivateCommunity(user);
-			}
+		} catch (Throwable ex) {
+			logger.info("[ChatService] createAllPrivateCommunities failed : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-
-		return createdCommunities;
 	}
 
 	/**
@@ -358,34 +393,44 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 
 	@Override
 	public List<Community> getAllAccessibleCommunities() {
-
-		return dbContext.getCommunityDAO().getAllAccessibleCommunities();
-
+		try {
+			return dbContext.getCommunityDAO().getAllAccessibleCommunities();
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getAllAccessibleCommunities failed : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public List<Community> getAllAccessibleCommunities(String searchfieldText) {
-
-		return dbContext.getCommunityDAO().getAllAccessibleCommunities(searchfieldText);
+		try {
+			return dbContext.getCommunityDAO().getAllAccessibleCommunities(searchfieldText);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getAllAccessibleCommunities failed : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	public String resolveReceipientsMail(final Message message) {
+		try {
+			StringBuilder builder = new StringBuilder();
 
-		StringBuilder builder = new StringBuilder();
+			if (message.getCommunities() != null) {
 
-		if (message.getCommunities() != null) {
-
-			for (Community community : message.getCommunities()) {
-				if (community.isPrivateChannel()) {
-					if (builder.length() > 0) {
-						builder.append(",");
+				for (Community community : message.getCommunities()) {
+					if (community.isPrivateChannel()) {
+						if (builder.length() > 0) {
+							builder.append(",");
+						}
+						builder.append(community.getPrivateUser().getEmailAddress());
 					}
-					builder.append(community.getPrivateUser().getEmailAddress());
 				}
 			}
+			return builder.toString();
+		} catch (Throwable ex) {
+			logger.info("[ChatService] resolveReceipientsMail failed : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-
-		return builder.toString();
 	}
 
 	/**
@@ -397,17 +442,20 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 */
 	@Override
 	public Community getPrivateCommunity(Person person) {
-		return dbContext.getCommunityDAO().getPrivateCommunity(person);
+		try {
+			return dbContext.getCommunityDAO().getPrivateCommunity(person);
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getPrivateCommunity failed for Person " + person + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
+		}
 	}
 
 	@Override
 	public Message addComment(final String username, final int commentedMessageId, final String headline, final String comment) {
+		try {
+			final Person author = dbContext.getPersonDAO().getByUsername(username);
 
-		final Person author = dbContext.getPersonDAO().getByUsername(username);
-
-		if (author != null) {
-
-			try {
+			if (author != null) {
 				final Message commentedMessage = dbContext.getMessageDAO().getById(commentedMessageId);
 
 				List<Community> communities = new ArrayList<Community>();
@@ -420,25 +468,27 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 				message.setCommunities(communities);
 
 				return commentedMessage.addMessage(message);
-
-			} catch (EntityNotFoundException e) {
-				logger.error("[CHAT] message that is commented upon is not found");
+			} else {
+				logger.error("[ChatService] addComment commenting person not foud: " + username);
 			}
-
-		} else {
-			logger.error("[CHAT] commenting person not foud: " + username);
+			return null;
+		} catch (Throwable ex) {
+			logger.info("[ChatService] addComment failed for User " + username + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-		return null;
-
 	}
 
 	@Override
 	public CommunityMember getUnconfirmedCommunityMember(int communityId) {
-		for (CommunityMember c : getAllUnconfirmedCommunityMembers()) {
-			if (c.getCommunityMemberId() == communityId)
-				return c;
+		try {
+			for (CommunityMember c : getAllUnconfirmedCommunityMembers()) {
+				if (c.getCommunityMemberId() == communityId)
+					return c;
+			}
+			return null;
+		} catch (Throwable ex) {
+			logger.info("[ChatService] getUnconfirmedCommunityMember failed for Community Id " + communityId + " : " +  ex.getMessage(), ex);
+			throw new ServiceException(ex);
 		}
-		return null;
 	}
-
 }

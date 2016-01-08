@@ -18,7 +18,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.MessageTag;
@@ -136,7 +135,7 @@ public class MessageEditorController {
 	private void loadCommunity(String communityName){
 		try {
 			targetCommunity = chatService.getCommunity(communityName);
-		} catch (EntityNotFoundException e) {
+		} catch (Throwable e) {
 			logger.info("[MSG+] failed to load community: " +e.getMessage());
 		}
 		if (targetCommunity != null) {
@@ -190,7 +189,7 @@ public class MessageEditorController {
 		for (CommunityDTO communityDto : selectedCommunities) {
 			try {
 				communities.add(chatService.getCommunity(communityDto.getName()));
-			} catch (EntityNotFoundException e) {
+			} catch (Throwable e) {
 				logger.error("[MSG+] failed to add community: " +e.getMessage());
 			}
 		}

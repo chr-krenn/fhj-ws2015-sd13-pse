@@ -20,7 +20,8 @@ public interface ChatService {
 	 * @return community or null if not found
 	 * @throws EntityNotFoundException 
 	 */
-	Community getCommunity(final int communityId) throws EntityNotFoundException;
+	Community getCommunity(final int communityId);
+	
 	List<CommunityMember> getAllUnconfirmedCommunityMembers();
 	/**
 	 * Get the community with the given name
@@ -31,7 +32,7 @@ public interface ChatService {
 	 * @return community or null if not found
 	 * @throws EntityNotFoundException 
 	 */
-	Community getCommunity(final String communityName) throws EntityNotFoundException;
+	Community getCommunity(final String communityName);
 
 	/**
 	 * Create a public chat community. If the creator is an administrator, the
@@ -58,7 +59,7 @@ public interface ChatService {
 	 *             if the user is not active
 	 */
 	Community createChatCommunity(String creatorUsername, String communityName,
-			boolean invitationOnly) throws EntityNotFoundException;
+			boolean invitationOnly);
 
 	/**
 	 * Get a list of all currently unconfirmed communities

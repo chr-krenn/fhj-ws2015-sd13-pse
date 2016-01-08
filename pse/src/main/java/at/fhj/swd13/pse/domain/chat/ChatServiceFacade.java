@@ -6,7 +6,6 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Message;
@@ -20,7 +19,7 @@ public class ChatServiceFacade implements ChatService {
 	private ChatService chatService;
 	
 	@Override
-	public Community getCommunity(int communityId) throws EntityNotFoundException {
+	public Community getCommunity(int communityId) {
 		return chatService.getCommunity(communityId);
 	}
 
@@ -30,12 +29,12 @@ public class ChatServiceFacade implements ChatService {
 	}
 
 	@Override
-	public Community getCommunity(String communityName) throws EntityNotFoundException {
+	public Community getCommunity(String communityName) {
 		return chatService.getCommunity(communityName);
 	}
 
 	@Override
-	public Community createChatCommunity(String creatorUsername, String communityName, boolean invitationOnly) throws EntityNotFoundException {
+	public Community createChatCommunity(String creatorUsername, String communityName, boolean invitationOnly) {
 		return chatService.createChatCommunity(creatorUsername, communityName, invitationOnly);
 	}
 

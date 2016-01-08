@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.dto.CommunityDTO;
@@ -36,15 +35,15 @@ public class CommunityConverter implements Converter {
 		if (objectId != null) {
 			final int communityId = Integer.parseInt(objectId);
 
-			Community community = null;
+			Community community;
 			try {
 				community = chatService.getCommunity(communityId);
-			} catch (EntityNotFoundException e) {
+			} catch (Exception e) {
 				logger.error("[MSG+] failed to add community: " +e.getMessage());
+				community = null;
 			}
 
 			if (community != null) {
-
 				// TODO: add copy ctor to Communit<DTO
 				return new CommunityDTO(objectId, community.getName());
 			}

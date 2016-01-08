@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.jboss.logging.Logger;
 import org.primefaces.context.RequestContext;
 
-import at.fhj.swd13.pse.db.EntityNotFoundException;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.plumbing.UserSession;
@@ -45,7 +44,7 @@ public class CommunityProfileController implements Serializable {
 		try 
 		{	
 			community = chatService.getCommunity(communityId);
-		}catch (EntityNotFoundException e) {
+		} catch (Throwable e) {
         	RequestContext context = RequestContext.getCurrentInstance();
         	logger.error("[COMMUNITY] Failed to find community with id" + communityId  + "for user" + userSession.getUsername() + " from " + context.toString());
 		}
