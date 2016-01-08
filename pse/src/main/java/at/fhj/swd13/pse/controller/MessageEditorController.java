@@ -28,7 +28,6 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.tag.TagService;
-import at.fhj.swd13.pse.dto.CommunityDTO;
 import at.fhj.swd13.pse.dto.MessageDTO;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
@@ -73,7 +72,7 @@ public class MessageEditorController {
 	
 	private Community targetCommunity = null;
 
-	private List<CommunityDTO> selectedCommunities = new ArrayList<CommunityDTO>();
+	private List<Community> selectedCommunities = new ArrayList<Community>();
 
 	private List<String> selectedTags = new ArrayList<String>();
 
@@ -139,7 +138,7 @@ public class MessageEditorController {
 			logger.info("[MSG+] failed to load community: " +e.getMessage());
 		}
 		if (targetCommunity != null) {
-			selectedCommunities.add(new CommunityDTO(targetCommunity));
+			selectedCommunities.add(targetCommunity);
 		}
 	}
 	
@@ -148,7 +147,7 @@ public class MessageEditorController {
 	 */
 	public String getCommunityName() {
 		String communities = "";
-		for(CommunityDTO community: this.selectedCommunities){
+		for(Community community: this.selectedCommunities){
 			if(communities != ""){
 				communities += " und ";
 			}
@@ -167,7 +166,6 @@ public class MessageEditorController {
 
 		Document document = documentService.get(documentId);
 		Document icon = documentService.get(iconId);
-		List<Community> communities = new ArrayList<Community>();
 		List<MessageTag> messageTags = new ArrayList<MessageTag>();
 		Tag tag;
 		MessageTag messageTag;
@@ -186,14 +184,6 @@ public class MessageEditorController {
 			messageTags.add(messageTag);
 		}
 
-		for (CommunityDTO communityDto : selectedCommunities) {
-			try {
-				communities.add(chatService.getCommunity(communityDto.getName()));
-			} catch (Throwable e) {
-				logger.error("[MSG+] failed to add community: " +e.getMessage());
-			}
-		}
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		ExternalContext extContext = context.getExternalContext();
 		extContext.getFlash().setKeepMessages(true);
@@ -203,7 +193,7 @@ public class MessageEditorController {
 			if(this.messageId > 0){
 				feedService.updateMessage(messageId, headline, richText, document, icon, messageTags, dtFrom, dtUntil);
 			}else{
-				feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, communities, messageTags, dtFrom, dtUntil);
+				feedService.saveMessage(headline, richText, userSession.getUsername(), document, icon, selectedCommunities, messageTags, dtFrom, dtUntil);
 			}
 
 			if (targetCommunity == null || targetCommunity.getSystemInternal()) {
@@ -267,16 +257,15 @@ public class MessageEditorController {
 	 * 
 	 * @return a list of matching communities or an empty list
 	 */
-	public List<CommunityDTO> completeCommunity(String input) {
+	public List<Community> completeCommunity(String input) {
 		logger.info("[MSG+] complete called with: " + input);
 
-		List<CommunityDTO> result = new ArrayList<CommunityDTO>();
+		List<Community> result = new ArrayList<Community>();
 
 		for (Community community : chatService.getPossibleTargetCommunities(userSession.getUsername(), input)) {
-			CommunityDTO communityDTO = new CommunityDTO(community);
-
-			if (!isCommunityAlreadySelected(communityDTO.getToken())) {
-				result.add(communityDTO);
+			
+			if (!isCommunityAlreadySelected(community.getToken())) {
+				result.add(community);
 			}
 		}
 
@@ -299,8 +288,8 @@ public class MessageEditorController {
 		logger.info("[MSG+] checking already selected for " + token);
 		logger.info("[MSG+] selected count " + selectedCommunities.size());
 
-		for (CommunityDTO communityDTO : selectedCommunities) {
-			if (communityDTO.getToken().equals(token)) {
+		for (Community community : selectedCommunities) {
+			if (community.getToken().equals(token)) {
 				return true;
 			}
 		}
@@ -360,7 +349,7 @@ public class MessageEditorController {
 	 *            event data
 	 */
 	public void handleUnselect(UnselectEvent event) {
-		CommunityDTO removedCommunity = (CommunityDTO) event.getObject();
+		Community removedCommunity = (Community) event.getObject();
 		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
 
 		// TODO Prevent unselection of preselected items
@@ -398,7 +387,7 @@ public class MessageEditorController {
 	 * 
 	 * @return list of the selected communities (may be empty)
 	 */
-	public List<CommunityDTO> getSelectedCommunities() {
+	public List<Community> getSelectedCommunities() {
 
 		return selectedCommunities;
 	}
@@ -409,7 +398,7 @@ public class MessageEditorController {
 	 * @param selectedCommunities
 	 *            the list of in the view selected communities
 	 */
-	public void setSelectedCommunities(List<CommunityDTO> selectedCommunities) {
+	public void setSelectedCommunities(List<Community> selectedCommunities) {
 
 		logger.info("[MSG+] set selected communities with an itemcount of " + selectedCommunities.size());
 

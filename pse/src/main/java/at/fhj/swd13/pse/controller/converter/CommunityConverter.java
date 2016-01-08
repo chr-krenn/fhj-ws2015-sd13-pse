@@ -11,7 +11,6 @@ import org.jboss.logging.Logger;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.dto.CommunityDTO;
 
 @FacesConverter("communityConverter")
 public class CommunityConverter implements Converter {
@@ -44,11 +43,9 @@ public class CommunityConverter implements Converter {
 			}
 
 			if (community != null) {
-				// TODO: add copy ctor to Communit<DTO
-				return new CommunityDTO(objectId, community.getName());
+				return community;
 			}
 		}
-
 		
 		return null;
 	}
@@ -61,7 +58,7 @@ public class CommunityConverter implements Converter {
 
 		if (item != null) {
 
-			return ((CommunityDTO) item).getToken();
+			return ((Community)item).getToken();
 
 		} else {
 

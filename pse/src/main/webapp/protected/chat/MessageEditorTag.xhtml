@@ -76,14 +76,14 @@
 					<p:autoComplete id="targetCommunities" multiple="true"
 						value="#{messageEditorController.selectedCommunities}"
 						completeMethod="#{messageEditorController.completeCommunity}"
-						converter="communityConverter" var="communityDTO"
-						itemLabel="#{communityDTO.name}" itemValue="#{communityDTO}"
+						converter="communityConverter" var="community"
+						itemLabel="#{community.name}" itemValue="#{community}"
 						forceSelection="true" minQueryLength="3" required="true">
 						<p:ajax event="itemSelect"
 							listener="#{messageEditorController.handleSelect}" />
 						<p:ajax event="itemUnselect"
 							listener="#{messageEditorController.handleUnselect}" />
-						<f:facet name="itemTip">#{communityDTO.name}</f:facet>
+						<f:facet name="itemTip">#{community.name}</f:facet>
 
 					</p:autoComplete>
 				</p:column>

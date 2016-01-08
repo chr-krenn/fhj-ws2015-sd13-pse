@@ -320,6 +320,10 @@ public class Community implements Serializable {
 		return message;
 	}
 
+	public String getToken() {
+		return Integer.toString(getCommunityId());
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
