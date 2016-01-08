@@ -18,7 +18,6 @@ public interface ChatService {
 	 *            the id of the community to retrieve
 	 * 
 	 * @return community or null if not found
-	 * @throws EntityNotFoundException 
 	 */
 	Community getCommunity(final int communityId);
 	
@@ -30,7 +29,6 @@ public interface ChatService {
 	 *            the id of the community to retrieve
 	 * 
 	 * @return community or null if not found
-	 * @throws EntityNotFoundException 
 	 */
 	Community getCommunity(final String communityName);
 
@@ -51,12 +49,6 @@ public interface ChatService {
 	 *            session to the persistent storage
 	 * 
 	 * @return instance of the created community *
-	 * @throws DuplicateEntityException
-	 *             if the community already exists
-	 * @throws EntityNotFoundException
-	 *             if the creator is no known user
-	 * @throws IllegalStateException
-	 *             if the user is not active
 	 */
 	Community createChatCommunity(String creatorUsername, String communityName,
 			boolean invitationOnly);
@@ -80,8 +72,6 @@ public interface ChatService {
 	 * @param unconfirmed
 	 *            the unconfirmed community
 	 * 
-	 * @throws IllegalStateException
-	 *             when the adminPerson is not active or not an admin
 	 */
 	void confirmCommunity(final Person adminPerson, Community unconfirmed);
 

@@ -152,8 +152,6 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	 * 
 	 * @return the created, persisted but not committed community
 	 *
-	 * @throws DuplicateEntityException
-	 *             if the community already exists
 	 */
 	protected Community createCommunity(final Person creator, final Community community) {
 
