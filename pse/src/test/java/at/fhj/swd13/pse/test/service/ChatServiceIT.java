@@ -12,6 +12,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Community;
@@ -78,7 +79,7 @@ public class ChatServiceIT extends RemoteTestBase {
      * PSE2015-58 Als angemeldeter Benutzer habe ich auf der Übersichtsseite der Communities eine Liste aller öffentlichen und privaten Communities  
      */
     @Test
-    public void getAllAssessibelCommunities()
+    public void GetAllAssessibelCommunities()
     {
     	List<Community> communities = new ArrayList<Community>();
     	
@@ -97,6 +98,54 @@ public class ChatServiceIT extends RemoteTestBase {
     	Community communityPrivate = chatService.getCommunity("Private community");
     	assertNotNull(communityPrivate);
     	assertTrue(communities.contains(communityPrivate));
+    }
+    
+    @Test
+    public void GetAllAssessibelCommunitiesWithSearchString()
+    {
+    	List<Community> communities = new ArrayList<Community>();
+    	
+    	communities = chatService.getAllAccessibleCommunities("SWD");
+    	assertNotNull(communities);
+    	assertEquals(communities.size(), 1);
+    	
+    	Community communitySWD = chatService.getCommunity("SWD");
+    	assertNotNull(communitySWD);
+    	assertTrue(communities.contains(communitySWD));
+    }
+    
+    @Test
+    public void GetAllAssessibelCommunitiesWithSearchStringNotFound()
+    {
+    	List<Community> communities = new ArrayList<Community>();
+    	
+    	communities = chatService.getAllAccessibleCommunities("SK8");
+    	assertNotNull(communities);
+    	assertEquals(communities.size(), 0);
+    }
+    
+    /*
+     *  PSE2015-54 Als angemeldeter Benutzer kann ich einer öffentlichen Community beitreten oder Mitgliedschaft bei einer privaten Community beantragen.
+     *  TODO FIXME
+     */
+    @Ignore
+    @Test
+    public void createCommunityMember()
+    {
+    	Community communityPublicCommunity = chatService.getCommunity("Public community");
+    	assertNotNull(communityPublicCommunity);
+    	
+    	Person user = userService.getUser("haringst13");
+    	assertNotNull(user);
+    	
+    	assertFalse(communityPublicCommunity.isMember(user));
+    	
+    	chatService.createCommunityMember(user, communityPublicCommunity);
+    	
+    	communityPublicCommunity = chatService.getCommunity("Public community");
+    	assertNotNull(communityPublicCommunity);
+    	    	
+    	assertTrue(communityPublicCommunity.isMember(user));
     }
     
     @Test
