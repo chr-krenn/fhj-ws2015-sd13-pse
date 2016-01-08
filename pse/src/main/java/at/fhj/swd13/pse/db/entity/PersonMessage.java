@@ -3,6 +3,8 @@ package at.fhj.swd13.pse.db.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 
 /**
  * The persistent class for the person_message database table.
@@ -46,6 +48,9 @@ public class PersonMessage implements Serializable {
 	}
 
 	public void setMessage(Message message) {
+		
+		ArgumentChecker.assertNotNull(message, "message");
+		
 		this.message = message;
 	}
 
@@ -54,6 +59,9 @@ public class PersonMessage implements Serializable {
 	}
 
 	public void setPerson(Person person) {
+		
+		ArgumentChecker.assertNotNull(person, "person");
+		
 		this.person = person;
 	}
 	

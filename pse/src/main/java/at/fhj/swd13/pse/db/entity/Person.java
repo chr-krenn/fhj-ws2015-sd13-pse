@@ -27,6 +27,8 @@ import javax.persistence.TemporalType;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 /**
  * The persistent class for the person database table.
  * 
@@ -171,6 +173,9 @@ public class Person implements Serializable {
 
 		this();
 
+		ArgumentChecker.assertContent(userName, "userName");
+		ArgumentChecker.assertContent(lastName, "lastName");
+		
 		this.userName = userName;
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -246,6 +251,8 @@ public class Person implements Serializable {
 	 */
 	public void setPassword(String plainPassword) {
 
+		ArgumentChecker.assertContent(plainPassword, "plainPassword");
+		
 		hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12));
 	}
 
@@ -315,6 +322,9 @@ public class Person implements Serializable {
 	}
 
 	public void setLastName(String lastName) {
+		
+		ArgumentChecker.assertContent(lastName, "lastName");
+		
 		this.lastName = lastName;
 	}
 
@@ -386,6 +396,9 @@ public class Person implements Serializable {
 	}
 
 	public Community addConfirmedCommunities(Community communities2) {
+		
+		ArgumentChecker.assertNotNull(communities2, "xommunities2");
+		
 		getConfirmedCommunities().add(communities2);
 		communities2.setConfirmedBy(this);
 
@@ -393,6 +406,9 @@ public class Person implements Serializable {
 	}
 
 	public Community removeConfirmedCommunities(Community communities2) {
+		
+		ArgumentChecker.assertNotNull(communities2, "xommunities2");
+
 		getConfirmedCommunities().remove(communities2);
 		communities2.setConfirmedBy(null);
 
@@ -404,6 +420,9 @@ public class Person implements Serializable {
 	}
 
 	public Community addCreatedCommunities(Community communities3) {
+		
+		ArgumentChecker.assertNotNull(communities3, "xommunities3");
+		
 		getCreatedCommunities().add(communities3);
 		communities3.setCreatedBy(this);
 
@@ -411,6 +430,9 @@ public class Person implements Serializable {
 	}
 
 	public Community removeCreatedCommunities(Community communities3) {
+
+		ArgumentChecker.assertNotNull(communities3, "xommunities3");
+		
 		getCreatedCommunities().remove(communities3);
 		communities3.setCreatedBy(null);
 
@@ -422,12 +444,18 @@ public class Person implements Serializable {
 	}
 
 	public CommunityMember addConfirmedMemberships(CommunityMember confirmedMembership) {
+		
+		ArgumentChecker.assertNotNull(confirmedMembership, "confirmedMembership");
+		
 		getConfirmedMemberships().add(confirmedMembership);
 
 		return confirmedMembership;
 	}
 
 	public CommunityMember removeConfirmedMemberships(CommunityMember confirmedMembership) {
+		
+		ArgumentChecker.assertNotNull(confirmedMembership, "confirmedMembership");
+
 		getConfirmedMemberships().remove(confirmedMembership);
 
 		return confirmedMembership;
@@ -438,12 +466,18 @@ public class Person implements Serializable {
 	}
 
 	public CommunityMember addMembership(CommunityMember membership) {
+		
+		ArgumentChecker.assertNotNull(membership, "membership");
+		
 		getMemberships().add(membership);
 
 		return membership;
 	}
 
 	public CommunityMember removeMembership(CommunityMember membership) {
+
+		ArgumentChecker.assertNotNull(membership, "membership");
+		
 		getMemberships().remove(membership);
 
 		return membership;
@@ -458,6 +492,9 @@ public class Person implements Serializable {
 	}
 
 	public MessageRating addMesasgeRating(MessageRating mesasgeRating) {
+		
+		ArgumentChecker.assertNotNull(mesasgeRating, "messageRating");
+		
 		getMesasgeRatings().add(mesasgeRating);
 		mesasgeRating.setPerson(this);
 
@@ -465,6 +502,9 @@ public class Person implements Serializable {
 	}
 
 	public MessageRating removeMesasgeRating(MessageRating mesasgeRating) {
+
+		ArgumentChecker.assertNotNull(mesasgeRating, "messageRating");
+
 		getMesasgeRatings().remove(mesasgeRating);
 		mesasgeRating.setPerson(null);
 
@@ -480,6 +520,9 @@ public class Person implements Serializable {
 	}
 
 	public Message addMessage(Message message) {
+		
+		ArgumentChecker.assertNotNull(message, "message");
+		
 		getMessages().add(message);
 		message.setPerson(this);
 
@@ -487,6 +530,9 @@ public class Person implements Serializable {
 	}
 
 	public Message removeMessage(Message message) {
+
+		ArgumentChecker.assertNotNull(message, "message");
+
 		getMessages().remove(message);
 		message.setPerson(null);
 
@@ -510,6 +556,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonMessage addPersonMessage(PersonMessage personMessage) {
+		
+		ArgumentChecker.assertNotNull(personMessage, "personMessage");
+		
 		getPersonMessages().add(personMessage);
 		personMessage.setPerson(this);
 
@@ -517,6 +566,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonMessage removePersonMessage(PersonMessage personMessage) {
+
+		ArgumentChecker.assertNotNull(personMessage, "personMessage");
+
 		getPersonMessages().remove(personMessage);
 		personMessage.setPerson(null);
 
@@ -528,6 +580,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonRelation addPersonSourceRelation(PersonRelation personRelation) {
+		
+		ArgumentChecker.assertNotNull(personRelation, "personRelation");
+		
 		getPersonSourceRelations().add(personRelation);
 		personRelation.setSourcePerson(this);
 
@@ -535,6 +590,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonRelation removePersonSourceRelation(PersonRelation personRelations) {
+
+		ArgumentChecker.assertNotNull(personRelations, "personRelations");
+		
 		getPersonSourceRelations().remove(personRelations);
 		personRelations.setSourcePerson(null);
 
@@ -550,6 +608,8 @@ public class Person implements Serializable {
 	 */
 	public void removeRelationTo(Person personTo) {
 
+		ArgumentChecker.assertNotNull( personTo, "personTo");
+		
 		for (PersonRelation relation : getPersonSourceRelations()) {
 			if (relation.getTargetPerson() == personTo) {
 
@@ -571,6 +631,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonRelation removePersonTragetRelation(PersonRelation personRelations) {
+		
+		ArgumentChecker.assertNotNull(personRelations, "personRelations");
+		
 		getPersonTargetRelations().remove(personRelations);
 		personRelations.setTargetPerson(null);
 
@@ -613,6 +676,9 @@ public class Person implements Serializable {
 	}
 
 	public PersonTag addPersonTag(PersonTag personTag) {
+		
+		ArgumentChecker.assertNotNull(personTag, "personTag");
+		
 		getPersonTags().add(personTag);
 		personTag.setPerson(this);
 
@@ -620,6 +686,9 @@ public class Person implements Serializable {
 	}
 
 	public void removePersonTag(PersonTag personTag) {
+
+		ArgumentChecker.assertNotNull(personTag, "personTag");
+		
 		getPersonTags().remove(personTag);
 		personTag.getTag().removePersonTag(personTag);
 	}
@@ -651,6 +720,9 @@ public class Person implements Serializable {
 	 *            the tag to add
 	 */
 	public void addTag(Tag t) {
+		
+		ArgumentChecker.assertNotNull(t, "t");
+		
 		if (!hasTag(t)) {
 
 			PersonTag myTag = new PersonTag(t);
@@ -666,6 +738,8 @@ public class Person implements Serializable {
 	 *            the tag to remove
 	 */
 	public void removeTag(Tag t) {
+
+		ArgumentChecker.assertNotNull(t, "t");
 
 		for (PersonTag myTag : getPersonTags()) {
 

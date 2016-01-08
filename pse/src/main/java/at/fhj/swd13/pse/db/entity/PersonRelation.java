@@ -13,6 +13,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import at.fhj.swd13.pse.plumbing.ArgumentChecker;
+
 
 /**
  * The persistent class for the person_relation database table.
@@ -88,6 +90,9 @@ public class PersonRelation implements Serializable {
 	}
 
 	public void setSourcePerson( Person person ) {
+		
+		ArgumentChecker.assertNotNull(person, "person");
+		
 		this.sourcePerson = person;
 	}
 	
@@ -96,6 +101,9 @@ public class PersonRelation implements Serializable {
 	}
 
 	public void setTargetPerson( Person person ) {
+
+		ArgumentChecker.assertNotNull(person, "person");		
+		
 		this.targetPerson = person;
 	}
 	
