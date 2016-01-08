@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
@@ -16,7 +16,7 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class CommunityProfileController implements Serializable {
 
 	private static final long serialVersionUID = -984282742840189477L;
