@@ -1,14 +1,11 @@
 package at.fhj.swd13.pse.test.gui.pageobjects;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class NewCommunityMessagePage {
 	protected WebDriver driver;
@@ -35,8 +32,8 @@ public class NewCommunityMessagePage {
 	/**
 	 * Press Save button
 	 */
-	public void save() {
-		driver.findElement(By.id("j_idt39:j_idt72")).click();
+	public void save(){
+		driver.findElement(By.id("j_idt39:j_idt81")).click();
 	}
 
 	/**

@@ -2,12 +2,9 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
 
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunityPage;
@@ -25,8 +22,6 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {	
-		// resset Database for each testcase here
-		//prepare();
 		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("pompenig13", "12345678");
 		communitiespage = homepage.getCommunitiesPage();
@@ -41,7 +36,6 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 	/*
 	 * PSE2015-50: "Als angemeldeter User kann ich einen neuen Community-Beitrag in einer ausgewählten Community erstellen."
 	 */
-	
 	@Test
 	public void createNewActivity(){
 		newcommunitymessagepage = communitypage.openNewMessage();
@@ -62,7 +56,5 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 		verifyEquals(title,communitypage.getActivityTitle(firstActivity));
 		verifyEquals(text,communitypage.getActivityText(firstActivity));
 	}
-	
-	
-	
+
 }

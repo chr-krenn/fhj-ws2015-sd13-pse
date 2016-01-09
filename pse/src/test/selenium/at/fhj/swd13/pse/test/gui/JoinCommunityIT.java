@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -47,6 +46,7 @@ public class JoinCommunityIT extends SeleniumBaseTestCase{
 		verifyEquals(0,communityPage.isCommunityPrivate(2));
 		verifyEquals(1,communityPage.isCommunityPrivate(3));
 	}
+	
 	/*
 	 * PSE2015-55 "Als angemeldeter Benutzer kann ich einer öffentlichen Community beitreten oder Mitgliedschaft bei einer privaten Community beantragen."
 	 */

@@ -1,12 +1,9 @@
 package at.fhj.swd13.pse.test.gui;
 
-import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
+
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.domain.chat.ChatService;
@@ -16,7 +13,7 @@ import at.fhj.swd13.pse.test.util.SleepUtil;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
-import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
+
 
 public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	
@@ -39,18 +36,13 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		homepage = loginPage.login("pompenig13", "12345678");
 	}
 	
-	
-
-	
 	/*
 	 * PSE2015-30 "Als angemeldeter Benutzer habe ich auf der Übersichtsseite der Communities eine Liste aller öffentlichen und privaten Communities"
 	 */
-		
 	@Test
 	public void listCommunities(){
-
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();	
-		verifyEquals(3,communityPage.getListedCommunitiesNumber());
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();	
+		verifyEquals(3,communitiesPage.getListedCommunitiesNumber());
 	}
 	
 	/*
@@ -59,34 +51,26 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testSearchForCommunities(){
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();
-		String communitysearch = "SWD";
-		communityPage.searchCommunities(communitysearch);
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
+		String communitySearch = "SWD";
+		communitiesPage.searchCommunities(communitySearch);
 		SleepUtil.sleep(3000);
-		verifyEquals(1,communityPage.getFoundCommunitiesNumber());
-		verifyEquals(1,communityPage.getCommunityName(communitysearch));
+		verifyEquals(1,communitiesPage.getFoundCommunitiesNumber());
+		verifyEquals(1,communitiesPage.communityNameEquals(communitySearch));
 	}
-	
 	
 	@Test
 	public void testCommunitySection() {
-
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();
-		verifyTrue(communityPage.isCommunityListPresent());
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
+		verifyTrue(communitiesPage.isCommunityListPresent());
 	}
 	
 	@Test
 	public void testSearchFunctionality(){
-
 		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
 		verifyTrue(communitiesPage.isSearchButtonPresent());
 	}
 	
-	
-
-
-	
-
 }
 
 	

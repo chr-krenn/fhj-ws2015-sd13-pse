@@ -1,15 +1,11 @@
 package at.fhj.swd13.pse.test.gui;
 
-import org.junit.BeforeClass;
+
 import org.junit.After;
 import org.junit.Before;
 
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunityPage;
@@ -46,15 +42,12 @@ public class CommunityPageIT extends SeleniumBaseTestCase{
 	/*
 	* PSE2015-24: "Als Mitglied einer Community möchte ich auf der Seite der Community alle für die Community erfassten Activities sehen."
 	*/
-	
 	@Test 
 	public void isActivityStreamPresent(){
 		homepage = loginPage.login("pompenig13", "12345678");
 		communitiesPage = homepage.getCommunitiesPage();
 		communityPage = communitiesPage.getCommunityPage();
-
 		verifyTrue(communityPage.isActivitiesStreamPresent());
-
 	}
 	
 	@Test
@@ -77,8 +70,6 @@ public class CommunityPageIT extends SeleniumBaseTestCase{
 		verifyEquals(secondActivityAutor,communityPage.getAuthor(secondActivity));
 		verifyEquals(secondActivityTitle,communityPage.getActivityTitle(secondActivity));
 		verifyEquals(secondActivityText,communityPage.getActivityText(secondActivity));
-
 	}
-	
-	
+
 }
