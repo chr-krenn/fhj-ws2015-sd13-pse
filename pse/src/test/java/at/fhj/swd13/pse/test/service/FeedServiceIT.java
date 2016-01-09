@@ -157,8 +157,7 @@ public class FeedServiceIT extends RemoteTestBase {
     	communities.add(chatService.getCommunity(100));
     	
     	//Prepare document
-    	//Not working with "src/test/resources/testDocs/no_img.png"
-    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	Document icon = documentService.store("pic", "/testDocs/no_img.png");
     	assertTrue(icon != null);
     	
     	String headline = "IT Test with Icon headline";
@@ -208,8 +207,7 @@ public class FeedServiceIT extends RemoteTestBase {
     @Test
     public void setImageRefAndUpdateTest() {
     	//Prepare document
-    	//Not working with "src/test/resources/testDocs/no_img.png"
-    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	Document icon = documentService.store("pic", "/testDocs/no_img.png");
     	assertTrue(icon != null);
     	
 		//Get message & add icon
