@@ -302,13 +302,11 @@ public class UserServiceIT extends RemoteTestBase {
     	assertEquals(28,users.size());
     }
     
-    //FIXME: only working with locally stored image...
     @Test
     public void setUserImageTest() throws NamingException {
     	//Prepare document
-    	//FIXME: Not working with "src/test/resources/testDocs/no_img.png"
     	DocumentService documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
-    	Document icon = documentService.store("pic", "D:\\no_img.png");
+    	Document icon = documentService.store("pic",  getClass().getResource("/testDocs/no_img.png").getFile());
     	assertTrue(icon != null);
     	
     	userService.setUserImage("pompenig13", icon.getDocumentId());
