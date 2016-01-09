@@ -227,7 +227,7 @@ public class DbCommunityTest extends DbTestBase {
 	public void getUnconfirmedCommunites() throws Exception {
 		try (DbContext context = contextProvider.getDbContext()) {
 			List<Community> communities = context.getCommunityDAO().getUnconfirmedCommunites();
-			assertEquals(4, communities.size());
+			assertEquals(5, communities.size());
 			assertTrue(communities.contains(inv));
 			assertTrue(communities.contains(invited));
 			assertTrue(communities.contains(privMe));
@@ -276,7 +276,7 @@ public class DbCommunityTest extends DbTestBase {
 		try (DbContext context = contextProvider.getDbContext()) {
 			CommunityDAO communityDAO = context.getCommunityDAO();
 			List<Community> communities = communityDAO.getAllCommunities();
-			assertEquals(8, communities.size());
+			assertEquals(9, communities.size());
 		}
 	}
 	
