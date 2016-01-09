@@ -152,7 +152,6 @@ public class FeedServiceIT extends RemoteTestBase {
     /*
      * PSE2015-66 "Als angemeldeter Benutzer möchte ich ausgehend vom Activity Stream auf meiner Startseite die Details der Activity ansehen können."
      * 
-     * FIXME: Only working with absolute path to file system...
      */
     @Test
     public void getMessageDetailsWithIcon() throws Exception {
@@ -161,7 +160,7 @@ public class FeedServiceIT extends RemoteTestBase {
     	communities.add(chatService.getCommunity(100));
     	
     	//Prepare document
-    	Document icon = documentService.store( "pic", getClass().getClassLoader().getResourceAsStream("/testDocs/no_img.png"));
+    	Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
     	assertTrue(icon != null);
     	
     	String headline = "IT Test with Icon headline";
@@ -207,11 +206,10 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals("Comment 1", m.getComments().get(0).getText());
     }
     
-    //FIXME: only works with locally stored image...
     @Test
     public void setImageRefAndUpdateTest() {
     	//Prepare document
-    	Document icon = documentService.store( "pic", getClass().getClassLoader().getResourceAsStream("/testDocs/no_img.png"));
+    	Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
     	assertTrue(icon != null);
     	
 		//Get message & add icon

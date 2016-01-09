@@ -47,9 +47,8 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		
 	@Test
 	public void listCommunities(){
-
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();	
-		verifyEquals(3,communityPage.getListedCommunitiesNumber());
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();	
+		verifyEquals(3,communitiesPage.getListedCommunitiesNumber());
 	}
 	
 	/*
@@ -58,20 +57,19 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testSearchForCommunities(){
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();
-		String communitysearch = "SWD";
-		communityPage.searchCommunities(communitysearch);
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
+		String communitySearch = "SWD";
+		communitiesPage.searchCommunities(communitySearch);
 		SleepUtil.sleep(3000);
-		verifyEquals(1,communityPage.getFoundCommunitiesNumber());
-		verifyEquals(1,communityPage.getCommunityName(communitysearch));
+		verifyEquals(1,communitiesPage.getFoundCommunitiesNumber());
+		verifyEquals(1,communitiesPage.communityNameEquals(communitySearch));
 	}
 	
 	
 	@Test
 	public void testCommunitySection() {
-
-		CommunitiesPage communityPage = homepage.getCommunitiesPage();
-		verifyTrue(communityPage.isCommunityListPresent());
+		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
+		verifyTrue(communitiesPage.isCommunityListPresent());
 	}
 	
 	@Test
@@ -80,12 +78,6 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();
 		verifyTrue(communitiesPage.isSearchButtonPresent());
 	}
-	
-	
-
-
-	
-
 }
 
 	

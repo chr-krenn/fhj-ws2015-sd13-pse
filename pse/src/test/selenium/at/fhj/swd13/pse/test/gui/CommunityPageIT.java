@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 
 import org.junit.Test;
+
+
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunityPage;

@@ -21,8 +21,6 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {	
-		// resset Database for each testcase here
-		//prepare();
 		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("pompenig13", "12345678");
 		communitiespage = homepage.getCommunitiesPage();

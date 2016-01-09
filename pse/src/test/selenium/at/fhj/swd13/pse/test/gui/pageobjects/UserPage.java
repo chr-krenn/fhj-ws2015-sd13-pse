@@ -392,4 +392,33 @@ public class UserPage {
 		inputLastname.sendKeys(lastname);
 	}
 	
+	/**
+	 * Click the Button "Neue Community beantragen"
+	 * 
+	 */
+	public void clickRequestNewCommunityButton(){
+		WebElement button = driver.findElement(By.xpath(".//*[@id='userForm:j_idt97:membershipList:communityButton']"));
+		button.click();	
+	}
+	
+	/**
+	 * sets the name for a new community
+	 * 
+	 */
+	public void setNewCommunityName(String communityName) {
+		WebElement inputField = driver.findElement(By.xpath(".//*[@id='communityDialogForm:communityname']"));
+		inputField.clear();
+		inputField.sendKeys(communityName);
+	}
+	
+	
+	/**
+	 * saves new community requested
+	 * 
+	 */
+	public void clickSaveNewCommunityButton(){
+		WebElement button = driver.findElement(By.xpath(".//*[@id='communityDialogForm:requestButton']"));
+		button.click();	
+	}
+	
 }
