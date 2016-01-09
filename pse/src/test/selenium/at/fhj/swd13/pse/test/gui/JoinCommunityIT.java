@@ -41,7 +41,7 @@ public class JoinCommunityIT extends SeleniumBaseTestCase{
 	}
 	
 	@Test
-	public void isCommunityListedPrivate(){
+	public void testIsCommunityListedPrivate(){
 		verifyEquals(0,communityPage.isCommunityPrivate(1));
 		verifyEquals(0,communityPage.isCommunityPrivate(2));
 		verifyEquals(1,communityPage.isCommunityPrivate(3));

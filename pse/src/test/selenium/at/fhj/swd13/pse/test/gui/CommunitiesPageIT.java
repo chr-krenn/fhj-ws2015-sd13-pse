@@ -46,7 +46,7 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	 */
 		
 	@Test
-	public void listCommunities(){
+	public void testListCommunities(){
 		CommunitiesPage communitiesPage = homepage.getCommunitiesPage();	
 		verifyEquals(3,communitiesPage.getListedCommunitiesNumber());
 	}

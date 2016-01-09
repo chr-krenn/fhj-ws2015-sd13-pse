@@ -44,17 +44,15 @@ public class CommunityPageIT extends SeleniumBaseTestCase{
 	*/
 	
 	@Test 
-	public void isActivityStreamPresent(){
+	public void testIsActivityStreamPresent(){
 		homepage = loginPage.login("pompenig13", "12345678");
 		communitiesPage = homepage.getCommunitiesPage();
 		communityPage = communitiesPage.getCommunityPage();
-
 		verifyTrue(communityPage.isActivitiesStreamPresent());
-
 	}
 	
 	@Test
-	public void areActivitiesPresent(){
+	public void testAreActivitiesPresent(){
 		homepage = loginPage.login("pompenig13", "12345678");
 		communitiesPage = homepage.getCommunitiesPage();
 		communityPage = communitiesPage.getCommunityPage();
@@ -73,7 +71,6 @@ public class CommunityPageIT extends SeleniumBaseTestCase{
 		verifyEquals(secondActivityAutor,communityPage.getAuthor(secondActivity));
 		verifyEquals(secondActivityTitle,communityPage.getActivityTitle(secondActivity));
 		verifyEquals(secondActivityText,communityPage.getActivityText(secondActivity));
-
 	}
 	
 	

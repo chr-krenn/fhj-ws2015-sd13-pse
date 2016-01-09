@@ -34,7 +34,7 @@ public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 	 */
 	
 	@Test
-	public void activateRequestedCommunity(){
+	public void testActivateRequestedCommunity(){
 		homePage = loginPage.login("padmin", "12345678");
 		adminPage = homePage.getAdministrationPage();
 		String acceptButton = "Annehmen";
@@ -46,7 +46,7 @@ public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 	}
 	
 	@Test
-	public void verifyCommunityIsActivated(){
+	public void testVerifyCommunityIsActivated(){
 		int newCommunity = 4;
 		homePage = loginPage.login("mitteregger13", "12345678");
 		communitiesPage = homePage.getCommunitiesPage();
@@ -58,7 +58,7 @@ public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 	 */
 	
 	@Test
-	public void acceptCommunitymembership(){
+	public void testAcceptCommunitymembership(){
 		int privateCommunity = 3;
 		homePage = loginPage.login("mitteregger13", "12345678");
 		communitiesPage = homePage.getCommunitiesPage();
@@ -79,7 +79,7 @@ public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 	}
 	
 	@Test
-	public void requestorIsNowMemberofCommunity(){
+	public void testRequestorIsNowMemberofCommunity(){
 		int privateCommunity = 3;
 		homePage = loginPage.login("mitteregger13", "12345678");
 		communitiesPage = homePage.getCommunitiesPage();

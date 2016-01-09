@@ -37,7 +37,7 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	
 	@Test
-	public void createNewActivity(){
+	public void testCreateNewActivity(){
 		newcommunitymessagepage = communitypage.openNewMessage();
 		String title = "Test Title";
 		String text = "text ;-)";
@@ -49,7 +49,7 @@ public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 	}
 	
 	@Test
-	public void verifyMessage(){
+	public void testVerifyMessage(){
 		String title = "Test Title";
 		String text = "text ;-)";
 		int firstActivity = 1;
