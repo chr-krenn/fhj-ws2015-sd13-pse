@@ -12,10 +12,10 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 
-	private static LoginPage loginPage;
-	private static HomePage homePage;
-	private static CommunitiesPage communitiesPage;
-	private static AdminPage adminPage;
+	private LoginPage loginPage;
+	private HomePage homePage;
+	private CommunitiesPage communitiesPage;
+	private AdminPage adminPage;
 	private static String newCommunityName = "Not confirmed community";
 	
 

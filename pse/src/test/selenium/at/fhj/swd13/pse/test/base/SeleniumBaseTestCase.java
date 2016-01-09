@@ -30,7 +30,7 @@ import at.fhj.swd13.pse.test.util.JdbcTestHelper;
  */
 public abstract class SeleniumBaseTestCase  {
 
-	protected static WebDriver driver;
+	protected WebDriver driver;
 	protected static final String BASE_URL = getBaseUrl();
 
 	protected StringBuffer verificationErrors = new StringBuffer();
