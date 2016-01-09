@@ -10,7 +10,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
-public class communitiesAdministrationIT extends SeleniumBaseTestCase{
+public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 
 	private static LoginPage loginPage;
 	private static HomePage homePage;
