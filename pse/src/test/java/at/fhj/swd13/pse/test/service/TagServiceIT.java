@@ -8,6 +8,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Tag;
@@ -19,15 +20,18 @@ import at.fhj.swd13.pse.test.util.RemoteTestBase;
 
 public class TagServiceIT extends RemoteTestBase {
 
-	private TagService tagService;
-	private UserService userService;
+	private static TagService tagService;
+	private static UserService userService;
 	
-    @Before
-    public void setup() throws NamingException {
-    	prepareDatabase();
-    	
+	@BeforeClass
+    public static void setupServices() throws NamingException {
         tagService = lookup(TagServiceFacade.class, TagService.class);
         userService = lookup(UserServiceFacade.class, UserService.class);
+    }	
+
+	@Before
+    public void setup() throws NamingException {
+    	prepareDatabase();
     }	
 	
     @Test

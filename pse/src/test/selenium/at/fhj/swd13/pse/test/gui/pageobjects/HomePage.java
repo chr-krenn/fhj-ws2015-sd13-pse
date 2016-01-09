@@ -352,6 +352,14 @@ public class HomePage {
 		WebElement searchInput = driver.findElement(By.id("searchform:usersearch"));
 		searchInput.clear();
 		searchInput.sendKeys(search);
+		
+		(new WebDriverWait(driver, 100)).until(new ExpectedCondition<Boolean>() {
+            @Override
+			public Boolean apply(WebDriver d) {
+            	return searchInput.getAttribute("value").equals(search);
+            }
+        });		
+		
 	    driver.findElement(By.id("searchform:searchbutton")).click();
 	    return new UserList(driver);
 	}

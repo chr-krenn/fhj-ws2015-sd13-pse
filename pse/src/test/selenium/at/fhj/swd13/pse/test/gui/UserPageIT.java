@@ -295,7 +295,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		homepage = loginPage.login("padmin", "12345678");
 		AdminPage adminPage = homepage.getAdministrationPage();
 		verifyTrue(adminPage.getCommunityRequests().contains(COMMUNITY));
-		verifyEquals(1, adminPage.getCommunityRequests().size());
+		verifyEquals(2, adminPage.getCommunityRequests().size());
 		
 		verifyTrue(adminPage.getUserCommunityRequests().contains(COMMUNITY + " " + "haringst13"));
 		verifyEquals(1, adminPage.getUserCommunityRequests().size());

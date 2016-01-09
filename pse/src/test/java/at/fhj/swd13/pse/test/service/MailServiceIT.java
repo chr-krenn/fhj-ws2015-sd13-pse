@@ -12,6 +12,7 @@ import javax.naming.NamingException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.icegreen.greenmail.util.GreenMail;
@@ -30,25 +31,29 @@ public class MailServiceIT extends RemoteTestBase {
 	private static final String SMTP_TEST_PORT = "3025";
 	private final String SUB_PREFIX = "[PSE] ";
 	private final String SENDER = "swd13pse@gmail.com";
-	private MailService mailService;
-	private FeedService feedService;
+
+	private static MailService mailService;
+	private static FeedService feedService;
 	private GreenMail greenMail;
-	private Properties props;
+	private static Properties props;
 	
-    @Before
-    public void setup() throws NamingException {
-    	prepareDatabase();
-    	
+	@BeforeClass
+    public static void setupServices() throws NamingException {
     	props = new Properties();
         props.setProperty("mail.smtp.host", "localhost");
         props.setProperty("mail.smtp.port", SMTP_TEST_PORT);
         
     	mailService = lookup(MailServiceFacade.class, MailService.class);
-    	
+        feedService = lookup(FeedServiceFacade.class, FeedService.class);
+	}	
+	
+	
+    @Before
+    public void setup() throws NamingException {
     	greenMail = new GreenMail(new ServerSetup(Integer.parseInt(SMTP_TEST_PORT), null, "smtp"));
         greenMail.start ();
-        
-        feedService = lookup(FeedServiceFacade.class, FeedService.class);
+
+        prepareDatabase();
     }	
     
     @After
@@ -61,7 +66,7 @@ public class MailServiceIT extends RemoteTestBase {
     	try {
 			mailService.sendMail("Test Subject", "Mail body", "to@localhost.com", props);
 			
-			assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+			assertTrue(greenMail.waitForIncomingEmail(10000, 1));
 			String subject = greenMail.getReceivedMessages()[0].getSubject();
 			InternetAddress[] sender = (InternetAddress[]) greenMail.getReceivedMessages()[0].getFrom();
 		    assertEquals(SUB_PREFIX +"Test Subject", subject);
@@ -80,7 +85,7 @@ public class MailServiceIT extends RemoteTestBase {
     		Message m = feedService.getMessageById(1);
 			mailService.sendMail(m, "recipient1@xyz.com, recipient2@xyz.com", props);
 			
-			assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+			assertTrue(greenMail.waitForIncomingEmail(10000, 1));
 			String subject = greenMail.getReceivedMessages()[0].getSubject();
 			InternetAddress[] recipient = (InternetAddress[]) greenMail.getReceivedMessages()[0].getAllRecipients();
 		    assertEquals(SUB_PREFIX +m.getHeadline(), subject);
