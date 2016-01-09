@@ -11,6 +11,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.EntityNotFoundException;
@@ -36,23 +37,26 @@ import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class FeedServiceIT extends RemoteTestBase {
 
-	private FeedService feedService;
-	private ChatService chatService;
-	private TagService tagService;
-	private DocumentService documentService;
-	private UserService userService;
-	private Person user;
+	private static FeedService feedService;
+	private static ChatService chatService;
+	private static TagService tagService;
+	private static DocumentService documentService;
+	private static UserService userService;
+	private static Person user;
 	
-    @Before
-    public void setup() throws NamingException {
-    	prepareDatabase();
-    	
+	@BeforeClass
+    public static void setupServices() throws NamingException {
         feedService = lookup(FeedServiceFacade.class, FeedService.class);
         chatService = lookup(ChatServiceFacade.class, ChatService.class);
         tagService = lookup(TagServiceFacade.class, TagService.class);
         documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
         userService = lookup(UserServiceFacade.class, UserService.class);
         user = userService.getUser("pompenig13");
+    }	
+	
+    @Before
+    public void setup() throws NamingException {
+    	prepareDatabase();
     }	
 	
     /*

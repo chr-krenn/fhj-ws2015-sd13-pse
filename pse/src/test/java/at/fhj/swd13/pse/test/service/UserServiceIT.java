@@ -13,6 +13,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Document;
@@ -27,13 +28,16 @@ import at.fhj.swd13.pse.test.util.RemoteTestBase;
 
 public class UserServiceIT extends RemoteTestBase {
 
-	private UserService userService;
+	private static UserService userService;
+	
+	@BeforeClass
+    public static void setupServices() throws NamingException {
+        userService = lookup(UserServiceFacade.class, UserService.class);
+    }	
 	
     @Before
     public void setup() throws NamingException {
     	prepareDatabase();
-    	
-        userService = lookup(UserServiceFacade.class, UserService.class);
 		userService.updateNullPasswords();
     }	
 	
