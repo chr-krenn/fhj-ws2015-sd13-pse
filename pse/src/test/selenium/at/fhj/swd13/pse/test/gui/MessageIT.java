@@ -16,8 +16,8 @@ import at.fhj.swd13.pse.test.gui.pageobjects.PrivateMessagesPage;
 
 public class MessageIT extends SeleniumBaseTestCase {
 
-	private static LoginPage loginPage;
-	private static HomePage homepage;
+	private LoginPage loginPage;
+	private HomePage homepage;
 
 	@BeforeClass
 	public static void init() throws Exception {

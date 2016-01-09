@@ -1,13 +1,10 @@
 package at.fhj.swd13.pse.test.gui;
 
-import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
@@ -22,8 +19,6 @@ public class UserSearchIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {
-		WebDriver driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("florian.genser", "12345678");
 	}

@@ -8,8 +8,8 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 public class LogoutIT extends SeleniumBaseTestCase {
 
-	private static LoginPage loginPage;
-	private static HomePage homepage;
+	private LoginPage loginPage;
+	private HomePage homepage;
 
 	@Before
 	public void init() {

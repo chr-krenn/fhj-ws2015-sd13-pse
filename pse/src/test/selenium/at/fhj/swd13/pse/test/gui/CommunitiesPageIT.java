@@ -1,12 +1,9 @@
 package at.fhj.swd13.pse.test.gui;
 
-import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
 import at.fhj.swd13.pse.db.DbContext;
 import at.fhj.swd13.pse.domain.chat.ChatService;
@@ -16,13 +13,12 @@ import at.fhj.swd13.pse.test.util.SleepUtil;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
-import at.fhj.swd13.pse.test.gui.pageobjects.NewMessagePage;
 
 public class CommunitiesPageIT extends SeleniumBaseTestCase {
 	
 	
-	private static LoginPage loginPage;
-	private static HomePage homepage;
+	private LoginPage loginPage;
+	private HomePage homepage;
 
 	@BeforeClass
 	public static void init() throws Exception {
@@ -35,11 +31,14 @@ public class CommunitiesPageIT extends SeleniumBaseTestCase {
 		}
 		// Adding private message
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
-		loginPage = new LoginPage(driver, BASE_URL);
-		homepage = loginPage.login("pompenig13", "12345678");
 	}
 	
 	
+	@Before
+	public void loginBefore() throws Exception {
+		loginPage = new LoginPage(driver, BASE_URL);
+		homepage = loginPage.login("pompenig13", "12345678");
+	}
 
 	
 	/*

@@ -8,9 +8,9 @@ import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
 
 public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
-	private  static HomePage homepage = null;
-	private  static LoginPage loginPage = null;
-	private  static NotLoggedInPage notLoggedInPage = null;
+	private  HomePage homepage = null;
+	private  LoginPage loginPage = null;
+	private  NotLoggedInPage notLoggedInPage = null;
 	
 	/**
 	 * PSE2015-12: Als angemeldeter Benutzer des Systems möchte ich mein Passwort ändern können

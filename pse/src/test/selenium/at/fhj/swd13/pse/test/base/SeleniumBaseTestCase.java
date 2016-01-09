@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -47,8 +48,6 @@ public abstract class SeleniumBaseTestCase  {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		prepare();
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 	}
 
 	private static String getBaseUrl() {
@@ -67,6 +66,13 @@ public abstract class SeleniumBaseTestCase  {
 		return baseUrl;
 	}
 	
+	@Before
+	public void initWebdriver() throws Exception {
+		driver = new FirefoxDriver();
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+	}
+	
+	
 	@After
 	public void tearDown() throws Exception {
 
@@ -75,12 +81,11 @@ public abstract class SeleniumBaseTestCase  {
 			Assert.fail(verificationErrorString);
 
 		}
-
+		driver.quit();
 	}
 
 	@AfterClass
 	public static void tearDownAl() throws Exception {
-		driver.quit();
 	}
 
 	protected boolean isElementPresent(By by) {

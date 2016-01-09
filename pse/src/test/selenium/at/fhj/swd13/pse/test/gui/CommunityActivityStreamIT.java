@@ -2,12 +2,8 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunityPage;
@@ -18,10 +14,10 @@ import at.fhj.swd13.pse.test.gui.pageobjects.NewCommunityMessagePage;
 public class CommunityActivityStreamIT extends SeleniumBaseTestCase {
 	
 	private LoginPage loginPage;
-	private static HomePage homepage;
-	private static CommunitiesPage communitiespage;
-	private static CommunityPage communitypage;
-	private static NewCommunityMessagePage newcommunitymessagepage;
+	private HomePage homepage;
+	private CommunitiesPage communitiespage;
+	private CommunityPage communitypage;
+	private NewCommunityMessagePage newcommunitymessagepage;
 
 	@Before
 	public void init() {	

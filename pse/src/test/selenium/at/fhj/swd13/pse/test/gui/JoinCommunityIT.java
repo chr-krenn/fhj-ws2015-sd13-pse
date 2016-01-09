@@ -2,7 +2,6 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.DbContext;
@@ -15,9 +14,9 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 public class JoinCommunityIT extends SeleniumBaseTestCase{
 	
-	private static LoginPage loginPage;
-	private static HomePage homepage;
-	private static CommunitiesPage communityPage;
+	private LoginPage loginPage;
+	private HomePage homepage;
+	private CommunitiesPage communityPage;
 
 	@Before
 	public void init() throws Exception {

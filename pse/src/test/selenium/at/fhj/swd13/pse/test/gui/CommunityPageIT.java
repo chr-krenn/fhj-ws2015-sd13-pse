@@ -1,15 +1,9 @@
 package at.fhj.swd13.pse.test.gui;
 
-import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Before;
 
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-
-import at.fhj.swd13.pse.db.DbContext;
-import at.fhj.swd13.pse.domain.chat.ChatService;
-import at.fhj.swd13.pse.domain.chat.ChatServiceImpl;
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunityPage;
@@ -18,10 +12,10 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 
 public class CommunityPageIT extends SeleniumBaseTestCase{
 
-	private static CommunitiesPage communitiesPage;
-	private static LoginPage loginPage;
-	private static HomePage homepage;
-	private static CommunityPage communityPage;
+	private CommunitiesPage communitiesPage;
+	private LoginPage loginPage;
+	private HomePage homepage;
+	private CommunityPage communityPage;
 
 	
 	@Before
