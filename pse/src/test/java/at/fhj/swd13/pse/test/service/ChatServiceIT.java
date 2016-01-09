@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -17,22 +18,32 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
+import at.fhj.swd13.pse.domain.feed.FeedService;
+import at.fhj.swd13.pse.domain.feed.FeedServiceFacade;
+import at.fhj.swd13.pse.domain.tag.TagService;
+import at.fhj.swd13.pse.domain.tag.TagServiceFacade;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceFacade;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class ChatServiceIT extends RemoteTestBase {
 
 	private static ChatService chatService;
+	private static FeedService feedService;
+	private static TagService  tagService;
 	private static UserService userService;
 	
 	@BeforeClass
     public static void setupServices() throws NamingException {
-        userService = lookup(UserServiceFacade.class, UserService.class);
-        chatService = lookup(ChatServiceFacade.class, ChatService.class);
+		chatService = lookup(ChatServiceFacade.class, ChatService.class);
+		feedService = lookup(FeedServiceFacade.class, FeedService.class);
+		tagService = lookup(TagServiceFacade.class, TagService.class);
+		userService = lookup(UserServiceFacade.class, UserService.class);
     }	
 	
     @Before
@@ -80,6 +91,28 @@ public class ChatServiceIT extends RemoteTestBase {
     }
     
     /*
+     * PSE2015-50 Als angemeldeter User kann ich einen neuen Community-Beitrag in einer ausgewählten Community erstellen.
+     */
+    @Test
+    public void CommunityAddMessage()
+    {
+    	//Prepare Community list
+    	List<Community> communities = new ArrayList<>();
+    	communities.add(chatService.getCommunity(1000));
+    	
+    	//Create new message
+    	feedService.saveMessage("IT Test addMessage headline", "IT Test addMessage", "haringst13", 
+    			null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+    	SleepUtil.sleep(1000);
+
+    	Community community = chatService.getCommunity(1000);
+    	assertNotNull(community);
+    	assertEquals(1, community.getMessages().size());
+    	assertTrue(community.getMessages().get(0).getHeadline().equals("IT Test addMessage headline"));
+    	assertTrue(community.getMessages().get(0).getMessage().equals("IT Test addMessage"));
+    }
+    
+    /*
      * PSE2015-58 Als angemeldeter Benutzer habe ich auf der Übersichtsseite der Communities eine Liste aller öffentlichen und privaten Communities  
      */
     @Test
@@ -89,7 +122,7 @@ public class ChatServiceIT extends RemoteTestBase {
     	
     	communities = chatService.getAllAccessibleCommunities();
     	assertNotNull(communities);
-    	assertEquals(communities.size(), 3);
+    	assertEquals(communities.size(), 4);
     	
     	Community communityPublicCommunity = chatService.getCommunity("Public community");
     	assertNotNull(communityPublicCommunity);
@@ -98,6 +131,10 @@ public class ChatServiceIT extends RemoteTestBase {
     	Community communitySWD = chatService.getCommunity("SWD");
     	assertNotNull(communitySWD);
     	assertTrue(communities.contains(communitySWD));
+    	
+    	Community communityAddMessage = chatService.getCommunity("AddMessage");
+    	assertNotNull(communityAddMessage);
+    	assertTrue(communities.contains(communityAddMessage));
     	
     	Community communityPrivate = chatService.getCommunity("Private community");
     	assertNotNull(communityPrivate);
@@ -130,9 +167,7 @@ public class ChatServiceIT extends RemoteTestBase {
     
     /*
      *  PSE2015-54 Als angemeldeter Benutzer kann ich einer öffentlichen Community beitreten oder Mitgliedschaft bei einer privaten Community beantragen.
-     *  TODO FIXME
      */
-    @Ignore
     @Test
     public void createCommunityMember()
     {
@@ -141,15 +176,15 @@ public class ChatServiceIT extends RemoteTestBase {
     	
     	Person user = userService.getUser("haringst13");
     	assertNotNull(user);
-    	
-    	assertFalse(communityPublicCommunity.isMember(user));
+
+    	assertFalse(chatService.isPersonMemberOfCommunity(user, communityPublicCommunity));
     	
     	chatService.createCommunityMember(user, communityPublicCommunity);
     	
     	communityPublicCommunity = chatService.getCommunity("Public community");
     	assertNotNull(communityPublicCommunity);
-    	    	
-    	assertTrue(communityPublicCommunity.isMember(user));
+    	  
+    	assertTrue(chatService.isPersonMemberOfCommunity(user, communityPublicCommunity));
     }
     
     @Test
@@ -161,11 +196,21 @@ public class ChatServiceIT extends RemoteTestBase {
     }
     
     @Test
-    public void GetCommunity() {
+    public void GetCommunityWithName() {
     	Community community = chatService.getCommunity("Not confirmed community");
     	assertNotNull(community);
     	assertNull(community.getConfirmedBy());
     	assertTrue(community.getName().equals("Not confirmed community"));
+    	assertEquals(999, community.getCommunityId());
+    }
+    
+    @Test
+    public void GetCommunityWithId() {
+    	Community community = chatService.getCommunity(999);
+    	assertNotNull(community);
+    	assertNull(community.getConfirmedBy());
+    	assertTrue(community.getName().equals("Not confirmed community"));
+    	assertEquals(999, community.getCommunityId());
     }
     
     @Test

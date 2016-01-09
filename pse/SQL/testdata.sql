@@ -265,5 +265,15 @@ insert into person_relation
 
 --Required for confirming a community
 insert into community
-	(invitation_only, name, created_by, confirmed_by)
-	values(0,"Not confirmed community", 102, null);	
+	(community_id, invitation_only, name, created_by, confirmed_by)
+	values(999, 0,"Not confirmed community", 102, null);	
+	
+	
+--Community for testing, (addMessage)
+insert into community
+	(community_id, invitation_only, name, created_by, confirmed_by)
+	values (1000, 0, "AddMessage", 102, 102);
+	
+insert into community_member 
+	(community_id, person_id)
+	values(1000, 102);
