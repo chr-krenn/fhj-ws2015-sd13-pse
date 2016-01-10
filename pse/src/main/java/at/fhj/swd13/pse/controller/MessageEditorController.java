@@ -108,8 +108,9 @@ public class MessageEditorController extends ControllerBase{
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
-			//TODO possibility that getCommunity returns more than one community
-			loadCommunity(messageDto.getCommunity());
+			for(Community c : messageDto.getCommunity()) {
+				loadCommunity(c.getName());
+			}
 			
 			Document icon = messageDto.getImage();
 			if(icon != null){
