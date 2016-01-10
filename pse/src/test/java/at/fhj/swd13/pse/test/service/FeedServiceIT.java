@@ -193,8 +193,8 @@ public class FeedServiceIT extends RemoteTestBase {
      */
     @Test
     public void loadCommunityActivities() {
-    	List<MessageDTO> activities = feedService.loadNews(31);    	
-		assertEquals(3, activities.size());
+    	List<MessageDTO> activities = feedService.loadNews(100);
+		assertEquals(2, activities.size());
     }
     
 	private static void prepareFile(final String resourceFilename, final String externalFilename) throws Throwable {
