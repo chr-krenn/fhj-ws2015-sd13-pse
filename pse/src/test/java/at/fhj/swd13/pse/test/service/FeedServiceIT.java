@@ -261,7 +261,7 @@ public class FeedServiceIT extends RemoteTestBase {
 	public void loadFeedTest() {
 		List<MessageDTO> messages = feedService.loadFeed();
 		assertTrue(messages != null);
-		assertEquals(18, messages.size());
+		assertEquals(15, messages.size());
 	}
 
 	/*
