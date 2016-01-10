@@ -364,13 +364,6 @@ public class MessageEditorController extends ControllerBase{
 	public void handleUnselect(UnselectEvent event) {
 		Community removedCommunity = (Community) event.getObject();
 		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
-
-		// TODO Prevent unselection of preselected items
-
-		// if (targetCommunity != null &&
-		// removedCommunity.getName().equals(targetCommunity.getName())) {
-		// selectedCommunities.add(new CommunityDTO(targetCommunity));
-		// }
 	}
 
 	/**
