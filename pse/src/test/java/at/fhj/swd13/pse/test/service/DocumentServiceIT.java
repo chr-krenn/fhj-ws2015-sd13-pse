@@ -1,14 +1,16 @@
 package at.fhj.swd13.pse.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 
 import javax.naming.NamingException;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Document;
@@ -22,14 +24,18 @@ public class DocumentServiceIT extends RemoteTestBase {
 	private static String serviceUrl = "/store/media/";
 	private static String imageFolderUrl = "/protected/img/";
 	private static String imageFolder = "/tmp/pse/documents";
+	private static int maxSubIndices = 9;
 	
 	private static DocumentService documentService;
+	
+	@BeforeClass
+	public static void setupServices() throws NamingException {
+		documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
+	}
 	
 	@Before
     public void setup() throws NamingException {
     	prepareDatabase();
-    	
-    	documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
     }	
 	
 	@Test
@@ -100,13 +106,28 @@ public class DocumentServiceIT extends RemoteTestBase {
 		assertEquals(imageFolderUrl + "default_user_image.jpg", documentService.getDefaultDocumentRef(DocumentCategory.USER_IMAGE));
 	}
 	
-	/*@Test
+	@Test
+	public void assertDocumentFolders(){
+		documentService.assertDocumentFolders();
+		
+		assertTrue(new File(Paths.get(imageFolder).toString()).exists());
+		
+		for (int i = 1; i <= maxSubIndices; ++i) {
+
+			assertTrue(new File(Paths.get(imageFolder + "/" + i).toString()).exists());
+		}
+	}
+	
+	@Test
 	public void getStreamForDocument() throws FileNotFoundException{
 		String documentName = "testdoc";
 		Document doc = documentService.store(documentName, getClass().getResource("/testDocs/no_img.png").getFile());
-		InputStream expected = (InputStream)new FileInputStream(Paths.get(imageFolder, doc.getStorageLocation()).toString());
-		InputStream actual = documentService.getStreamForDocument(doc.getDocumentId()); 
-		assertEquals(expected, actual);
-		documentService.removeDocument(doc.getDocumentId());
-	}*/
+		//TODO
+		//InputStream actual = documentService.getStreamForDocument(doc.getDocumentId()); 
+		//InputStream expected = (InputStream)new FileInputStream(Paths.get(imageFolder, doc.getStorageLocation()).toString());
+		//
+		
+		//assertEquals(expected, actual);
+		//documentService.removeDocument(doc.getDocumentId());
+	}
 }
