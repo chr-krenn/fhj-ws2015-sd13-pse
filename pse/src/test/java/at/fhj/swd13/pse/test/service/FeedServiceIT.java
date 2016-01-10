@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
@@ -239,6 +240,10 @@ public class FeedServiceIT extends RemoteTestBase {
     
 	private static void prepareFile(final String resourceFilename, final String externalFilename) throws Throwable {
 		try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceFilename)) {
+			
+			if ( in == null ) {
+				throw new FileNotFoundException( resourceFilename );
+			}
 			
 			File outFile = new File(externalFilename);
 
