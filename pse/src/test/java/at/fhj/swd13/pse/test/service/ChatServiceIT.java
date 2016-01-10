@@ -14,7 +14,6 @@ import javax.naming.NamingException;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Community;
@@ -24,8 +23,6 @@ import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
 import at.fhj.swd13.pse.domain.feed.FeedService;
 import at.fhj.swd13.pse.domain.feed.FeedServiceFacade;
-import at.fhj.swd13.pse.domain.tag.TagService;
-import at.fhj.swd13.pse.domain.tag.TagServiceFacade;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.domain.user.UserServiceFacade;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
@@ -35,14 +32,12 @@ public class ChatServiceIT extends RemoteTestBase {
 
 	private static ChatService chatService;
 	private static FeedService feedService;
-	private static TagService  tagService;
 	private static UserService userService;
 	
 	@BeforeClass
     public static void setupServices() throws NamingException {
 		chatService = lookup(ChatServiceFacade.class, ChatService.class);
 		feedService = lookup(FeedServiceFacade.class, FeedService.class);
-		tagService = lookup(TagServiceFacade.class, TagService.class);
 		userService = lookup(UserServiceFacade.class, UserService.class);
     }	
 	
