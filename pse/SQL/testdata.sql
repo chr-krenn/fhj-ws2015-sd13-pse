@@ -277,3 +277,33 @@ insert into community
 insert into community_member 
 	(community_id, person_id)
 	values(1000, 102);
+
+----------------------------------------------
+--Create a community with activities
+insert into community
+	(community_id, invitation_only, name, created_by, confirmed_by)
+	values (31, 1, "Sport", 110, 1);
+	
+insert into message 
+	(created_by, message, delivered_by) 
+	values (110, "Soccer news", 1);
+	
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message = "Soccer news" limit 1), 31);
+	
+insert into message 
+	(created_by, message, delivered_by) 
+	values (110, "Golf news", 1);
+	
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message = "Golf news" limit 1), 31);
+	
+insert into message 
+	(created_by, message, delivered_by) 
+	values (110, "Baseball news", 1);
+	
+insert into message_community
+	(messages_message_id, communities_community_id)
+	values((select message_id from message where message = "Baseball news" limit 1), 31);	
