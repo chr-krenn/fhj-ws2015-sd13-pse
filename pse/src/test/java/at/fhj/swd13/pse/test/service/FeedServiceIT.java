@@ -187,6 +187,16 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(communities, m.getCommunities());
 	}
 
+	/*
+     * PSE2015-24: Als Mitglied einer Community möchte ich auf der Seite der Community alle für die Community erfassten Activities sehen
+     * 
+     */
+    @Test
+    public void loadCommunityActivities() {
+    	List<MessageDTO> activities = feedService.loadNews(31);    	
+		assertEquals(3, activities.size());
+    }
+    
 	private static void prepareFile(final String resourceFilename, final String externalFilename) throws Throwable {
 		try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceFilename)) {
 			
