@@ -10,7 +10,10 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -307,5 +310,140 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(1, mDTO.getRatingPersonsList().size());
 		assertFalse(mDTO.isLike());
 		assertEquals(1, mDTO.getQuantityRatings());
+	}
+	
+
+	/*
+	 * PSE2015-31 "Als angemeldeter Benutzer möchte ich auf meiner Startseite die vom Admin erfassten Unternehmens-News sehen können."
+	 * PSE2015-33 "Als Benutzer sehe ich alle News-Einträge im Portal auf meiner Startseite."
+	 * PSE2015-34 "Als angemeldeter Benutzer kann ich auf der Startseite die News-Beiträge sehen"
+	 * 
+	 */
+	@Test
+	public void loadNews() throws Throwable{
+		SleepUtil.sleep(1000);
+		List<MessageDTO> newsOld = feedService.loadNews(1);
+		
+		createTestNews("News1", "Text 1");
+		createTestNews("News2", "Text 2");
+		SleepUtil.sleep(1000);
+		List<MessageDTO> news = feedService.loadNews(1);
+		
+		assertTrue(news.size() >= 2);
+		assertEquals(newsOld.size() + 2, news.size());
+	}
+	
+	/*
+	 * PSE2015-36 - PSE2015-40
+	 * 
+	 */
+	@Test
+	public void createNews() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+		
+		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(icon != null);
+
+		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(doc != null);
+		
+		String headline = "News-Test";
+		String text = "News Text";
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
+		Date validFrom = c.getTime();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)+10);
+		Date validTo = c.getTime();
+		
+		// Create new message
+		feedService.saveMessage(headline, text, user.getUserName(), doc, icon, communities, new ArrayList<MessageTag>(), validFrom, validTo);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		
+		// Check data
+		Message m = feedService.getMessageById(messageId);
+		assertEquals(headline, m.getHeadline());
+		assertEquals(text, m.getMessage());
+		assertEquals(communities, m.getCommunities());
+		assertEquals(df.format(validFrom), df.format(m.getValidFrom()));
+		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
+	}
+	
+	/*
+	 * PSE2015-35 "Als Portaladministrator kann ich die News-Beiträge editieren"
+	 * 
+	 */
+	@Test
+	public void editNews() throws Throwable{
+		createTestNews("News 1", "Text 1");
+		
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(1).get(0).getId();
+
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+		
+		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(icon != null);
+
+		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(doc != null);
+		
+		String headline = "News-Test new";
+		String text = "News Text new";
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
+		Date validFrom = c.getTime();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)+10);
+		Date validTo = c.getTime();
+		
+		feedService.updateMessage(messageId, headline, text, doc, icon, new ArrayList<MessageTag>(), validFrom, validTo);
+		
+		Message m = feedService.getMessageById(messageId);
+		
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		
+		// Check data
+		assertEquals(icon, m.getIcon());
+		assertEquals(headline, m.getHeadline());
+		assertEquals(text, m.getMessage());
+		assertEquals(communities, m.getCommunities());
+		assertEquals(df.format(validFrom), df.format(m.getValidFrom()));
+		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
+	}
+	
+	public void createTestNews(String headline, String text) throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+		
+		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(icon != null);
+
+		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(doc != null);
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
+		Date validFrom = c.getTime();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)+10);
+		Date validTo = c.getTime();
+		
+		// Create new message
+		feedService.saveMessage(headline, text, user.getUserName(), doc, icon, communities, new ArrayList<MessageTag>(), validFrom, validTo);
+		SleepUtil.sleep(1000);
 	}
 }
