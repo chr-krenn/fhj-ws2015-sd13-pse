@@ -1,10 +1,9 @@
 package at.fhj.swd13.pse.test.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 
 import javax.naming.NamingException;
@@ -14,8 +13,8 @@ import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.domain.document.DocumentService;
-import at.fhj.swd13.pse.domain.document.DocumentServiceFacade;
 import at.fhj.swd13.pse.domain.document.DocumentService.DocumentCategory;
+import at.fhj.swd13.pse.domain.document.DocumentServiceFacade;
 import at.fhj.swd13.pse.test.util.RemoteTestBase;
 
 public class DocumentServiceIT extends RemoteTestBase {
