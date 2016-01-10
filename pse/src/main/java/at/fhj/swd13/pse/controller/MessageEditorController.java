@@ -34,7 +34,7 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @ViewScoped
-public class MessageEditorController {
+public class MessageEditorController extends ControllerBase{
 
 	@Inject
 	private Logger logger;
@@ -127,15 +127,19 @@ public class MessageEditorController {
 			selectedTags = messageDto.getTags();
 			
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
+			logger.error("[MSG+] Load message by id failed");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 	}
 	
 	private void loadCommunity(String communityName){
 		try {
 			targetCommunity = chatService.getCommunity(communityName);
-		} catch (Throwable e) {
+		} catch (ServiceException e) {
 			logger.info("[MSG+] failed to load community: " +e.getMessage());
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 		if (targetCommunity != null) {
 			selectedCommunities.add(targetCommunity);
@@ -262,13 +266,21 @@ public class MessageEditorController {
 
 		List<Community> result = new ArrayList<Community>();
 
-		for (Community community : chatService.getPossibleTargetCommunities(userSession.getUsername(), input)) {
-			
+		List<Community> possibleTargetCommunities = new ArrayList<Community>();
+		try {
+			possibleTargetCommunities = chatService.getPossibleTargetCommunities(userSession.getUsername(), input);
+		} catch (ServiceException e) {
+			logger.info("[MSG+] cannot load possible target communities");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+		
+		for (Community community : possibleTargetCommunities) {
 			if (!isCommunityAlreadySelected(community.getToken())) {
 				result.add(community);
 			}
 		}
-
+		
 		logger.info("[MSG+] matching and not already selected communities found: " + result.size());
 
 		return result;

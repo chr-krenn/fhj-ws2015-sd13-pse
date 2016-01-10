@@ -19,6 +19,7 @@ import org.primefaces.event.SelectEvent;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.MailService;
@@ -30,246 +31,320 @@ import at.fhj.swd13.pse.plumbing.UserSession;
  *
  */
 @Model
-public class RequestController {
+public class RequestController extends ControllerBase {
 
-    @Produces
-    @Named
-    @OrderBy("createdAt ASC")
+	@Produces
+	@Named
+	@OrderBy("createdAt ASC")
 	private List<Community> requests;
-    
-    @Produces
-    @Named
-    @OrderBy("createdAt ASC")
+
+	@Produces
+	@Named
+	@OrderBy("createdAt ASC")
 	private List<CommunityMember> memberrequests;
-    
-    @Inject
-    private ChatService chatService;
-    
+
+	@Inject
+	private ChatService chatService;
 
 	@Inject
 	private MailService mailService;
-	
-    @Inject
-    private Logger logger;
-    
-    @Inject
-    private UserSession userSession;
-	
-    @Inject
-    private UserService userService;
-    
-    private transient Community selectedRequest = null;
-    
-    private transient CommunityMember selectedMemberRequest = null;
-    
-    private int communityId;
-    private String communityIdString;
-    private boolean isMember;
-    private int communityMemberId;
-    private String communityMemberIdString;
-    
-    @PostConstruct
-    public void postConstruct() {
-    	requests = chatService.getUnconfirmedCommunities();	
-    	
-    	memberrequests = chatService.getAllUnconfirmedCommunityMembers();
-    	
-    	communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityId");
-    	communityMemberIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityMemberId");
-    }
 
-    
-    public List<Community> getRequests () {
-    	return requests;
-    }
-    
-    public List<CommunityMember> getMemberrequests () {
-    	return memberrequests;
-    }
-	
+	@Inject
+	private Logger logger;
+
+	@Inject
+	private UserSession userSession;
+
+	@Inject
+	private UserService userService;
+
+	private transient Community selectedRequest = null;
+
+	private transient CommunityMember selectedMemberRequest = null;
+
+	private int communityId;
+	private String communityIdString;
+	private boolean isMember;
+	private int communityMemberId;
+	private String communityMemberIdString;
+
+	@PostConstruct
+	public void postConstruct() {
+		try {
+			updateUnconfirmedCommunities();
+			updateMemberRequests();
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+
+		communityIdString = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("communityId");
+		communityMemberIdString = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("communityMemberId");
+	}
+
+	public List<Community> getRequests() {
+		return requests;
+	}
+
+	public List<CommunityMember> getMemberrequests() {
+		return memberrequests;
+	}
+
 	public Community getSelectedRequest() {
 		return selectedRequest;
 	}
-	
+
 	public CommunityMember getSelectedMemberRequest() {
 		return selectedMemberRequest;
 	}
 
 	public void setSelectedRequest(Community selectedRequest) {
-	this.selectedRequest = selectedRequest;
-	}	
+		this.selectedRequest = selectedRequest;
+	}
+
 	public void setSelectedMemberRequest(CommunityMember selectedMemberRequest) {
 		this.selectedMemberRequest = selectedMemberRequest;
-		}	
-	
-	public void onCommunitySelected(SelectEvent object){
-	    try 
-	    {
-	    	FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedRequest.getCommunityId());
-		} 
-	    catch (IOException e) 
-	    {
-	    	logger.error("Error on redirecting to Community.jsf?id=" + selectedRequest.getCommunityId() +": " +e.getMessage());
+	}
+
+	public void onCommunitySelected(SelectEvent object) {
+		try {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							"Community.jsf?id="
+									+ selectedRequest.getCommunityId());
+		} catch (IOException e) {
+			logger.error("Error on redirecting to Community.jsf?id="
+					+ selectedRequest.getCommunityId() + ": " + e.getMessage());
 		}
 	}
-	
-	public void onMemberRequestSelected(SelectEvent object){
-	    try 
-	    {
-	    	FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedRequest.getCommunityId());
-		} 
-	    catch (IOException e) 
-	    {
-	    	logger.error("Error on redirecting to Community.jsf?id=" + selectedRequest.getCommunityId() +": " +e.getMessage());
+
+	public void onMemberRequestSelected(SelectEvent object) {
+		try {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							"Community.jsf?id="
+									+ selectedRequest.getCommunityId());
+		} catch (IOException e) {
+			logger.error("Error on redirecting to Community.jsf?id="
+					+ selectedRequest.getCommunityId() + ": " + e.getMessage());
 		}
 	}
-	
-	public void approveCommunity(){
-				
+
+	public void approveCommunity() {
+
 		Community com = null;
 		Person currentUser = null;
 		communityId = Integer.parseInt(communityIdString);
-		
-		try 
-		{	
+
+		try {
 			com = chatService.getCommunity(communityId);
-			logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
-			
+			logger.info("  community: " + com.getCommunityId() + " - "
+					+ com.getName());
+
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			chatService.confirmCommunity(currentUser, com);
-			logger.info(" Community Confirmed: " +com.getCommunityId() +" by: "+currentUser.getPersonId() );
-			
-		} catch (Exception e) {
-			logger.error("ERROR: " + e.getMessage());
-		}
-		
-    	requests = chatService.getUnconfirmedCommunities();	
+			logger.info(" Community Confirmed: " + com.getCommunityId()
+					+ " by: " + currentUser.getPersonId());
 
-    	try {
-			mailService.sendMail("Community Antrag "+com.getName()+" Freigegeben",
-					"Die Community " + com.getName() + " ist jetzt freigegeben!", com.getCreatedBy().getEmailAddress(), null);
+		} catch (ServiceException e) {
+			logger.error("Error while approving community");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+
+		updateUnconfirmedCommunities();
+
+		try {
+			mailService.sendMail("Community Antrag " + com.getName()
+					+ " Freigegeben", "Die Community " + com.getName()
+					+ " ist jetzt freigegeben!", com.getCreatedBy()
+					.getEmailAddress(), null);
 			logger.info("Email sent");
 
-    	} catch (MessagingException e) {
+		} catch (MessagingException e) {
 			logger.error("ERROR: " + e.getMessage());
 		}
-		
-    	info("Community Antrag angenommen!");
+
+		info("Community Antrag angenommen!");
 	}
-	
-	public void declineCommunity(){
-		
+
+	public void declineCommunity() {
+
 		Community com = null;
 		Person currentUser = null;
 		communityId = Integer.parseInt(communityIdString);
-		
-		try 
-		{	
+
+		try {
 			com = chatService.getCommunity(communityId);
-			logger.info("  community: " + com.getCommunityId() + " - " +com.getName() );
-			
+			logger.info("  community: " + com.getCommunityId() + " - "
+					+ com.getName());
+
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			chatService.declineCommunity(currentUser, com);
-			logger.info(" Community Declined: " +com.getCommunityId() +" by: "+currentUser.getPersonId() );
-			
-		} catch (Exception e) {
-			logger.error("ERROR: " + e.getMessage());
-		}
-		
-    	requests = chatService.getUnconfirmedCommunities();	
+			logger.info(" Community Declined: " + com.getCommunityId()
+					+ " by: " + currentUser.getPersonId());
 
-    	try {
-			mailService.sendMail("Community Antrag "+com.getName()+" Abgelehnt",
-					"Die Community " + com.getName() + " wurde nicht freigegeben!", com.getCreatedBy().getEmailAddress(), null);
+		} catch (ServiceException e) {
+			logger.error("Error while declining community");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+
+		updateUnconfirmedCommunities();
+
+		try {
+			mailService.sendMail("Community Antrag " + com.getName()
+					+ " Abgelehnt", "Die Community " + com.getName()
+					+ " wurde nicht freigegeben!", com.getCreatedBy()
+					.getEmailAddress(), null);
 			logger.info("Email sent");
 
-    	} catch (MessagingException e) {
+		} catch (MessagingException e) {
 			logger.error("ERROR: " + e.getMessage());
 		}
-    	info("Community Antrag abgelehnt!");
+		info("Community Antrag abgelehnt!");
 	}
-	
-	public void approveMemberRequest(){
-		
+
+	public void approveMemberRequest() {
+
 		CommunityMember com = null;
 		Person currentUser = null;
 		communityMemberId = Integer.parseInt(communityMemberIdString);
-		
-		try 
-		{	
+
+		try {
 			com = chatService.getUnconfirmedCommunityMember(communityMemberId);
-			logger.info("  communitymember: " + com.getCommunityMemberId() + " - member: " +com.getMember().getPersonId() );
-			
+			logger.info("  communitymember: " + com.getCommunityMemberId()
+					+ " - member: " + com.getMember().getPersonId());
+
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			chatService.confirmCommunityMember(currentUser, com);
-			logger.info(" CommunityMember Confirmed: " +com.getCommunityMemberId() +" by: "+currentUser.getPersonId() );
-			
-		} catch (Exception e) {
-			logger.error("ERROR: " + e.getMessage());
-		}
-		
-    	memberrequests = chatService.getAllUnconfirmedCommunityMembers();	
+			logger.info(" CommunityMember Confirmed: "
+					+ com.getCommunityMemberId() + " by: "
+					+ currentUser.getPersonId());
 
-    	try {
-			mailService.sendMail("Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+" Freigegeben",
-					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+ " ist jetzt freigegeben!", com.getMember().getEmailAddress(), null);
+		} catch (ServiceException e) {
+			logger.error("Error while approving member request");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+
+		updateMemberRequests();
+
+		try {
+			mailService.sendMail("Community Mitgliedschafts Antrag "
+					+ com.getCommunity().getName() + " "
+					+ com.getMember().getUserName() + " Freigegeben",
+					"Der Community Mitgliedschafts Antrag "
+							+ com.getCommunity().getName() + " "
+							+ com.getMember().getUserName()
+							+ " ist jetzt freigegeben!", com.getMember()
+							.getEmailAddress(), null);
 			logger.info("Email sent");
 
-    	} catch (MessagingException e) {
+		} catch (MessagingException e) {
 			logger.error("ERROR: " + e.getMessage());
 		}
-		
-    	info("Community Mitgliedschafts Antrag angenommen!");
+
+		info("Community Mitgliedschafts Antrag angenommen!");
 	}
-	
-	public void declineMemberRequest(){
-		
+
+	public void declineMemberRequest() {
+
 		CommunityMember com = null;
 		Person currentUser = null;
 		communityMemberId = Integer.parseInt(communityMemberIdString);
-		
-		try 
-		{	
+
+		try {
 			com = chatService.getUnconfirmedCommunityMember(communityMemberId);
-			logger.info("  communitymember: " + com.getCommunityMemberId() + " - " +com.getMember().getPersonId() );
-			
+			logger.info("  communitymember: " + com.getCommunityMemberId()
+					+ " - " + com.getMember().getPersonId());
+
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName() );
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			chatService.declineCommunityMember(currentUser, com);
-			logger.info(" CommunityMember Declined: " +com.getCommunityMemberId() +" by: "+currentUser.getPersonId() );
-			
-		} catch (Exception e) {
-			logger.error("ERROR: " + e.getMessage());
-		}
-		
-    	 memberrequests = chatService.getAllUnconfirmedCommunityMembers();	
+			logger.info(" CommunityMember Declined: "
+					+ com.getCommunityMemberId() + " by: "
+					+ currentUser.getPersonId());
 
-    	try {
-			mailService.sendMail("Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName()+" Abgelehnt",
-					"Der Community Mitgliedschafts Antrag "+com.getCommunity().getName()+" "+com.getMember().getUserName() + " wurde nicht freigegeben!", com.getMember().getEmailAddress(), null);
+		} catch (ServiceException e) {
+			logger.error("Error while declining member Request: "
+					+ e.getMessage());
+		}
+		updateMemberRequests();
+
+		try {
+			mailService.sendMail("Community Mitgliedschafts Antrag "
+					+ com.getCommunity().getName() + " "
+					+ com.getMember().getUserName() + " Abgelehnt",
+					"Der Community Mitgliedschafts Antrag "
+							+ com.getCommunity().getName() + " "
+							+ com.getMember().getUserName()
+							+ " wurde nicht freigegeben!", com.getMember()
+							.getEmailAddress(), null);
 			logger.info("Email sent");
 
-    	} catch (MessagingException e) {
+		} catch (MessagingException e) {
 			logger.error("ERROR: " + e.getMessage());
 		}
-    	info("Community Mitgliedschafts Antrag abgelehnt!");
+		info("Community Mitgliedschafts Antrag abgelehnt!");
+	}
+
+	private void updateMemberRequests() {
+		try {
+			memberrequests = chatService.getAllUnconfirmedCommunityMembers();
+		} catch (ServiceException e) {
+			logger.info("[Request-Controller] Error while updating member requests");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+	}
+	
+	private void updateUnconfirmedCommunities() {
+		try {
+			requests = chatService.getUnconfirmedCommunities();
+		} catch (ServiceException e){
+			logger.info("[Request-Controller] Error while updating unconfirmed communities");
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
+		
 	}
 
 	public void error() {
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry!", "You are not a member of this community!"));
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry!",
+						"You are not a member of this community!"));
 	}
-	
+
 	public void info(String text) {
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", text));
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", text));
 	}
-	 
+
 	public boolean isMember() {
 		return isMember;
 	}

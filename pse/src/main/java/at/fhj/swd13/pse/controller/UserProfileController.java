@@ -26,6 +26,7 @@ import at.fhj.swd13.pse.db.entity.Document;
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonTag;
 import at.fhj.swd13.pse.db.entity.Tag;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.document.DocumentService;
 import at.fhj.swd13.pse.domain.tag.TagService;
@@ -362,7 +363,7 @@ public class UserProfileController implements Serializable {
 			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);
 			setCommunityName("");
 			getPerson();
-		} catch (Throwable e) {
+		} catch (ServiceException e) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Community anlegen Fehler", e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}

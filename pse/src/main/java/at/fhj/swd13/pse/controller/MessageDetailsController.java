@@ -21,7 +21,7 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 
 @ManagedBean
 @SessionScoped
-public class MessageDetailsController {
+public class MessageDetailsController extends ControllerBase {
 
 	@Inject
 	UserService userService;
@@ -78,9 +78,8 @@ public class MessageDetailsController {
 		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
 		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
 		
-		MessageDTO newMessageDTO = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
-		
 		try {
+			MessageDTO newMessageDTO = chatService.addComment(userSession.getUsername(), parentMessageId, headline, text);
 			feedService.setImageRef(newMessageDTO);
 			feedService.setMessageLikes(newMessageDTO, userSession.getUsername());
 			feedService.setComments(newMessageDTO);
@@ -97,6 +96,8 @@ public class MessageDetailsController {
 	        context.addMessage(null, new FacesMessage("Successful",  "Kommentar wurde gespeichert") );
 		} catch (ServiceException e) {
 			logger.info("[MESSAGEDETAILS] addComment failed for " + userSession.getUsername());
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 	}	
 	

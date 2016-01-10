@@ -20,7 +20,7 @@ import at.fhj.swd13.pse.plumbing.UserSession;
 
 
 @ManagedBean
-public class LoginController {
+public class LoginController extends ControllerBase{
 
 	private String username;
 
@@ -48,34 +48,39 @@ public class LoginController {
 		FacesMessage message = null;
 		boolean loggedIn = false;
 
-		if (username != null && password != null) {
-			Person user = userService.loginUser(username, password, userSession.getSessionId());
+		try {
+			if (username != null && password != null) {
+				Person user = userService.loginUser(username, password, userSession.getSessionId());
 
-			if (user != null) {
-				userSession.login(username);
-				userSession.setAdmin(user.isAdmin());
-				
-				//get private community
-				Community community = chatService.getPrivateCommunity(user);
-				if (community != null)
-					userSession.setPrivateCommunityId(community.getCommunityId());
-				
-				loggedIn = true;
-				logger.info("[LOGIN] logged-in-user " + user);
-				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome",
-						user.getFirstName() + " " + user.getLastName());
+				if (user != null) {
+					userSession.login(username);
+					userSession.setAdmin(user.isAdmin());
+					
+					//get private community
+					Community community = chatService.getPrivateCommunity(user);
+					if (community != null)
+						userSession.setPrivateCommunityId(community.getCommunityId());
+					
+					loggedIn = true;
+					logger.info("[LOGIN] logged-in-user " + user);
+					message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome",
+							user.getFirstName() + " " + user.getLastName());
+				} else {
+					loggedIn = false;
+					logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
+					message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+				}
 			} else {
 				loggedIn = false;
 				logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
 				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
 			}
-		} else {
-			loggedIn = false;
-			logger.info("[LOGIN] login failed for " + username + " from " + context.toString());
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-		}
-
-		FacesContext.getCurrentInstance().addMessage(null, message);
+			FacesContext.getCurrentInstance().addMessage(null, message);
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}		
+		
 		return ((loggedIn ? "/protected/Main" : "NotLoggedIn") + "?faces-redirect=true");
 	}
 

@@ -18,6 +18,7 @@ import org.primefaces.event.SelectEvent;
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.user.UserService;
 import at.fhj.swd13.pse.plumbing.UserSession;
@@ -28,7 +29,7 @@ import at.fhj.swd13.pse.plumbing.UserSession;
  *
  */
 @Model
-public class CommunityController {
+public class CommunityController extends ControllerBase{
 
 	@Produces
 	@Named
@@ -61,10 +62,18 @@ public class CommunityController {
 
 	@PostConstruct
 	public void postConstruct() {
-		communities = chatService.getAllAccessibleCommunities();
+		try {
+			communities = chatService.getAllAccessibleCommunities();
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
 
-		communityIdString = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("communityId");
-		invitationOnly = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invitationOnly");
+		communityIdString = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("communityId");
+		invitationOnly = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("invitationOnly");
 	}
 
 	public List<Community> getCommunities() {
@@ -80,8 +89,15 @@ public class CommunityController {
 	}
 
 	public String search() {
-		communities = chatService.getAllAccessibleCommunities(searchFieldText);
+		try {
+			communities = chatService
+					.getAllAccessibleCommunities(searchFieldText);
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		}
 		return "communities";
+
 	}
 
 	public Community getSelectedCommunity() {
@@ -95,13 +111,22 @@ public class CommunityController {
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			if (isMemberOfCommunity(selectedCommunity.getCommunityId())) {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("Community.jsf?id=" + selectedCommunity.getCommunityId());
+				FacesContext
+						.getCurrentInstance()
+						.getExternalContext()
+						.redirect(
+								"Community.jsf?id="
+										+ selectedCommunity.getCommunityId());
 			} else {
 				error();
-				logger.info("User " + userSession.getUsername() + " is not a member of the community " + selectedCommunity.getName());
+				logger.info("User " + userSession.getUsername()
+						+ " is not a member of the community "
+						+ selectedCommunity.getName());
 			}
 		} catch (IOException e) {
-			logger.error("Error redirecting to 'Community.jsf?id=" + selectedCommunity.getCommunityId() +"': " +e.getLocalizedMessage());
+			logger.error("Error redirecting to 'Community.jsf?id="
+					+ selectedCommunity.getCommunityId() + "': "
+					+ e.getLocalizedMessage());
 		}
 	}
 
@@ -115,14 +140,19 @@ public class CommunityController {
 
 		try {
 			com = chatService.getCommunity(communityId);
-			logger.info("  community: " + com.getCommunityId() + " - " + com.getName());
+			logger.info("  community: " + com.getCommunityId() + " - "
+					+ com.getName());
 
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.info("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName());
+			logger.info("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			// addCommunityMember
-			CommunityMember member = chatService.createCommunityMember(currentUser, com);
-			logger.debug("  CommunityMemberId : " + member.getCommunityMemberId());
+			CommunityMember member = chatService.createCommunityMember(
+					currentUser, com);
+			logger.debug("  CommunityMemberId : "
+					+ member.getCommunityMemberId());
 
 			if (!isinvitationOnly()) // public Community
 			{
@@ -132,7 +162,8 @@ public class CommunityController {
 					setMember(isMemberOfCommunity(com.getCommunityId()));
 				}
 
-				info("You are now a member of the community '" + com.getName() + "'");
+				info("You are now a member of the community '" + com.getName()
+						+ "'");
 
 				logger.info("#### Done - Public Community ####");
 
@@ -140,22 +171,25 @@ public class CommunityController {
 			{
 				logger.info("#### Private Community ####");
 
-				List<CommunityMember> memberList = chatService.getCommunityMembersList(com);
+				List<CommunityMember> memberList = chatService
+						.getCommunityMembersList(com);
 
 				logger.debug("  memberListSize: <" + memberList.size() + ">");
 
 				String message = "Your request has been sent to the administrator";
 				for (CommunityMember m : memberList) {
 					if (m.getIsAdministrator()) {
-						logger.debug("  adminMemberLastname: " + m.getMember().getLastName());
-						message = message +", " + m.getMember().getFullName();
+						logger.debug("  adminMemberLastname: "
+								+ m.getMember().getLastName());
+						message = message + ", " + m.getMember().getFullName();
 					}
 				}
 				info(message);
 				logger.info("#### Done - Private Community ####");
 			}
-		} catch (Exception e) {
-			logger.error("ERROR-MESSAGE: " + e.getMessage());
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 
 		logger.info("######## DONE - subscribeCommunity ########");
@@ -172,22 +206,29 @@ public class CommunityController {
 		Community com = null;
 		try {
 			currentUser = userService.getUser(userSession.getUsername());
-			logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName());
+			logger.debug("  currentUser: " + currentUser.getPersonId() + " - "
+					+ currentUser.getFirstName() + " "
+					+ currentUser.getLastName());
 
 			com = chatService.getCommunity(comId);
-			logger.debug("  community: " + com.getCommunityId() + " - " + com.getName());
+			logger.debug("  community: " + com.getCommunityId() + " - "
+					+ com.getName());
 
 			if (!com.getInvitationOnly()) // Public community
 			{
-				setMember(chatService.isPersonMemberOfCommunity(currentUser, com));
+				setMember(chatService.isPersonMemberOfCommunity(currentUser,
+						com));
 			} else {
 				// Private community
 
 				try {
-					CommunityMember m = chatService.getCommunityMember(com, currentUser);
-					logger.debug("	PRIVATE COMMUNITY MEMBER ->->-> " + m.getCommunityMemberId());
+					CommunityMember m = chatService.getCommunityMember(com,
+							currentUser);
+					logger.debug("	PRIVATE COMMUNITY MEMBER ->->-> "
+							+ m.getCommunityMemberId());
 					if (m.getConfirmer() != null || m.getIsAdministrator()) {
-						setMember(chatService.isPersonMemberOfCommunity(currentUser, com));
+						setMember(chatService.isPersonMemberOfCommunity(
+								currentUser, com));
 					} else {
 						setMember(false);
 					}
@@ -199,11 +240,14 @@ public class CommunityController {
 
 			}
 
-		} catch (Exception e) {
-			logger.debug(" Error_Message: " + e.getMessage());
-		}
+		} catch (ServiceException e) {
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
+		} 
 
-		logger.info("## isMemberOfCommunity <" + isMember() + ">; community: <" + com.getName() + ">; person <" + currentUser.getLastName() + "> ##");
+		logger.info("## isMemberOfCommunity <" + isMember() + ">; community: <"
+				+ com.getName() + ">; person <" + currentUser.getLastName()
+				+ "> ##");
 
 		return isMember();
 
@@ -230,24 +274,31 @@ public class CommunityController {
 			Community com = null;
 			try {
 				currentUser = userService.getUser(userSession.getUsername());
-				logger.debug("  currentUser: " + currentUser.getPersonId() + " - " + currentUser.getFirstName() + " " + currentUser.getLastName());
+				logger.debug("  currentUser: " + currentUser.getPersonId()
+						+ " - " + currentUser.getFirstName() + " "
+						+ currentUser.getLastName());
 
 				com = chatService.getCommunity(comId);
-				logger.debug("  community: " + com.getCommunityId() + " - " + com.getName());
+				logger.debug("  community: " + com.getCommunityId() + " - "
+						+ com.getName());
 
 				try {
-					CommunityMember m = chatService.getCommunityMember(com, currentUser);
+					CommunityMember m = chatService.getCommunityMember(com,
+							currentUser);
 
 					if (m.getConfirmer() == null)
-						disable = true; // enable button askCommunity because it was pressed one time.
+						disable = true; // enable button askCommunity because it
+										// was pressed one time.
 
 				} catch (NullPointerException e) {
-					// communityMember does not exists means the button askCommunity was never pressed.
+					// communityMember does not exists means the button
+					// askCommunity was never pressed.
 					disable = false;
 				}
 
-			} catch (Exception e) {
-				logger.debug(" Error_Message: " + e.getMessage());
+			} catch (ServiceException e) {
+				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Fehler", getStringResource("UnknownErrorMessage")));
 			}
 		}
 
@@ -258,11 +309,15 @@ public class CommunityController {
 	}
 
 	public void error() {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry!", "You are not a member of this community!"));
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry!",
+						"You are not a member of this community!"));
 	}
 
 	public void info(String text) {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", text));
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", text));
 	}
 
 	public boolean isMember() {
