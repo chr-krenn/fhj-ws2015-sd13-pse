@@ -17,8 +17,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhj.swd13.pse.db.entity.Community;
+import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
+import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
 import at.fhj.swd13.pse.domain.feed.FeedService;
@@ -164,7 +166,7 @@ public class ChatServiceIT extends RemoteTestBase {
      *  PSE2015-54 Als angemeldeter Benutzer kann ich einer öffentlichen Community beitreten oder Mitgliedschaft bei einer privaten Community beantragen.
      */
     @Test
-    public void createCommunityMember()
+    public void CreateCommunityMember()
     {
     	Community communityPublicCommunity = chatService.getCommunity("Public community");
     	assertNotNull(communityPublicCommunity);
@@ -231,6 +233,45 @@ public class ChatServiceIT extends RemoteTestBase {
     	
     	assertTrue(chatService.isPersonMemberOfCommunity(user, community));
     }
- 
+    
+    @Test
+    public void GetCommunityMembersList()
+    {
+    	Community community = chatService.getCommunity(1000);
+    	assertNotNull(community);
+    	
+    	Person user = userService.getUser("haringst13");
+    	assertNotNull(user);
+    	
+    	List<CommunityMember> communityMembers = new ArrayList<CommunityMember>();
+    	
+    	communityMembers = chatService.getCommunityMembersList(community);
+    	assertEquals(communityMembers.size(), 1);
+    	assertTrue(communityMembers.get(0).getMember().equals(user));
+    }
+    
+    @Test
+    public void GetCommunityMemberNotFound()
+    {    	
+    	Person user = userService.getUser("pompenig13");
+    	assertNotNull(user);
+    	
+    	assertNull(chatService.getCommunityMember(chatService.getCommunity(1000), user));
+    }
+    
+    @Test
+    public void GetCommunityMember()
+    {    	
+    	Community community = chatService.getCommunity(1000);
+    	assertNotNull(community);
+    	
+    	Person user = userService.getUser("haringst13");
+    	assertNotNull(user);
+    	
+    	CommunityMember communityMember = chatService.getCommunityMember(community, user);
+    	assertNotNull(communityMember);
+    	assertTrue(communityMember.getMember().equals(user));
+    	assertTrue(communityMember.getCommunity().equals(community));
+    }
 }
  
