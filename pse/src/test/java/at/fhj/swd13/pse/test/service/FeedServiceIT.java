@@ -205,7 +205,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		communities.add(chatService.getCommunity(100));
 
 		// Prepare document
-		prepareFile("/testDocs/no_img.png", "/tmp/no_img.png");
+		prepareFile("testDocs/no_img.png", "/tmp/no_img.png");
 		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
@@ -286,7 +286,7 @@ public class FeedServiceIT extends RemoteTestBase {
 	@Test
 	public void setImageRefAndUpdateTest() throws Throwable {
 		// Prepare document
-		prepareFile("/testDocs/no_img.png", "/tmp/no_img.png");
+		prepareFile("testDocs/no_img.png", "/tmp/no_img.png");
 
 		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
@@ -396,10 +396,12 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 		
-		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		prepareFile("testDocs/no_img.png","/tmp/no_img.png");
+		
+		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
-		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 		
 		String headline = "News-Test new";
