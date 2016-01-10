@@ -59,7 +59,7 @@ public abstract class SeleniumBaseTestCase  {
 	
 	private static String resolveBaseUrl() {
 
-		final String port = EnvironmentUtil.reolvePort();
+		final String port = EnvironmentUtil.resolvePort();
 		
 		final String baseUrl = "http://localhost:" + port +"/pse";
 

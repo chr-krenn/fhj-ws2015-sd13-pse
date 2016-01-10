@@ -10,7 +10,7 @@ package at.fhj.swd13.pse.test.util;
  */
 public class EnvironmentUtil {
 
-	public static String reolvePort() {
+	public static String resolvePort() {
 		
 		final String pseEnv = System.getenv("PSE_ENV");
 

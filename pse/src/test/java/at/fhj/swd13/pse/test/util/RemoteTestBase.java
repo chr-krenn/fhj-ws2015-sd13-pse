@@ -23,7 +23,7 @@ public abstract class RemoteTestBase {
 	  	final Properties clientProp = new Properties();
     	clientProp.put("remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED", "false");
     	clientProp.put("remote.connections", "default");
-    	final String port = EnvironmentUtil.reolvePort();
+    	final String port = EnvironmentUtil.resolvePort();
     	clientProp.put("remote.connection.default.port", port);
     	clientProp.put("remote.connection.default.host", "localhost");
     	clientProp.put("remote.connection.default.username", "student");
