@@ -141,6 +141,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<>();
 		communities.add(contact.getPrivateCommunity());
 		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(1000);
 		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
 		assertEquals(numberOfMessages + 1, messages.size());
 		// Newest message is first in list -> index 0
@@ -159,8 +160,8 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<>();
 		communities.add(userService.getUser("haringst13").getConfirmedCommunities().get(0));
 		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
-		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
 		SleepUtil.sleep(1000);
+		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
 		assertEquals(numberOfMessages + 1, messages.size());
 		// Newest message is first in list -> index 0
 		assertEquals("IT Test headline", messages.get(0).getHeadline());
@@ -373,49 +374,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(newsOld.size() + 2, news.size());
 	}
 	
-	/*
-	 * PSE2015-36 - PSE2015-40
-	 * 
-	 */
-	@Test
-	public void createNews() throws Throwable{
-		Community newsCommunity = chatService.getCommunity(1);
-		List<Community> communities = new ArrayList<Community>();
-		communities.add(newsCommunity);
-		
-		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
-		assertTrue(icon != null);
-
-		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
-		assertTrue(doc != null);
-		
-		String headline = "News-Test";
-		String text = "News Text";
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date());
-		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
-		Date validFrom = c.getTime();
-		c.setTime(new Date());
-		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)+10);
-		Date validTo = c.getTime();
-		
-		// Create new message
-		feedService.saveMessage(headline, text, user.getUserName(), doc, icon, communities, new ArrayList<MessageTag>(), validFrom, validTo);
-		SleepUtil.sleep(1000);
-
-		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
-
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		
-		// Check data
-		Message m = feedService.getMessageById(messageId);
-		assertEquals(headline, m.getHeadline());
-		assertEquals(text, m.getMessage());
-		assertEquals(communities, m.getCommunities());
-		assertEquals(df.format(validFrom), df.format(m.getValidFrom()));
-		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
-	}
+	
 	
 	/*
 	 * PSE2015-35 "Als Portaladministrator kann ich die News-Beiträge editieren"
@@ -461,6 +420,149 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(communities, m.getCommunities());
 		assertEquals(df.format(validFrom), df.format(m.getValidFrom()));
 		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
+		
+		feedService.removeMessage(m.getMessageId());
+	}
+	
+	/*
+	 * PSE2015-36 Als Portaladministrator kann ich dem News-Beitrag einen Titel geben.
+	 * 
+	 */
+	@Test
+	public void createNewsTitle() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+
+		String headline = "Header Test";
+
+		// Create new message
+		feedService.saveMessage(headline, "Test", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		Message m = feedService.getMessageById(messageId);
+		
+		assertEquals(headline, m.getHeadline());
+		
+		feedService.removeMessage(m.getMessageId());
+	}
+	
+	/*
+	 * PSE2015-37 Als Portaladministrator kann ich dem News-Beitrag ein Symbol-Bild hinzufügen.
+	 * 
+	 */
+	@Test
+	public void createNewsSymbol() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+
+		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(icon != null);
+
+		// Create new message
+		feedService.saveMessage("Header", "Test", user.getUserName(), null, icon, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		Message m = feedService.getMessageById(messageId);
+		
+		assertEquals(icon, m.getIcon());
+		
+		feedService.removeMessage(m.getMessageId());
+	}
+	
+	/*
+	 * PSE2015-38 Als Portaladministrator kann ich dem News-Beitrag ein Symbol-Bild hinzufügen.
+	 * 
+	 */
+	@Test
+	public void createNewsValidDates() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
+		Date validFrom = c.getTime();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)+10);
+		Date validTo = c.getTime();
+
+		// Create new message
+		feedService.saveMessage("Header", "Test", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), validFrom, validTo);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		Message m = feedService.getMessageById(messageId);
+		
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		
+		// Check data
+		assertEquals(df.format(validFrom), df.format(m.getValidFrom()));
+		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
+		
+		feedService.removeMessage(m.getMessageId());
+	}
+	
+	/*
+	 * PSE2015-39 Als Portaladministrator kann ich den News-Beiträgen eine Datei anhängen.
+	 * 
+	 */
+	@Test
+	public void createNewsDoc() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+
+		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		assertTrue(doc != null);
+
+		// Create new message
+		feedService.saveMessage("Header", "Test", user.getUserName(), doc, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		Message m = feedService.getMessageById(messageId);
+		
+		assertEquals(doc, m.getAttachment());
+		
+		feedService.removeMessage(m.getMessageId());
+	}
+	
+	/*
+	 * PSE2015-40	Als Portaladministrator kann ich den News-Beiträgen einen Link anhängen.
+	 * 
+	 */
+	@Test
+	public void createNewsLink() throws Throwable{
+		Community newsCommunity = chatService.getCommunity(1);
+		List<Community> communities = new ArrayList<Community>();
+		communities.add(newsCommunity);
+		
+		String text = "http:\\www.google.at";
+	
+		// Create new message
+		feedService.saveMessage("Header", text, user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(1000);
+
+		// Get Id of first (= newest) message of Message list for community
+		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+
+		Message m = feedService.getMessageById(messageId);
+		assertEquals(text, m.getMessage());
+		
+		feedService.removeMessage(m.getMessageId());
 	}
 	
 	private void createTestNews(String headline, String text) throws Throwable{
