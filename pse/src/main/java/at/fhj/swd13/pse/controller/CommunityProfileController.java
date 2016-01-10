@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.logging.Logger;
-import org.primefaces.context.RequestContext;
 
 import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.domain.ServiceException;

@@ -20,7 +20,6 @@ import at.fhj.swd13.pse.db.entity.Community;
 import at.fhj.swd13.pse.db.entity.CommunityMember;
 import at.fhj.swd13.pse.db.entity.MessageTag;
 import at.fhj.swd13.pse.db.entity.Person;
-import at.fhj.swd13.pse.domain.ServiceException;
 import at.fhj.swd13.pse.domain.chat.ChatService;
 import at.fhj.swd13.pse.domain.chat.ChatServiceFacade;
 import at.fhj.swd13.pse.domain.feed.FeedService;
