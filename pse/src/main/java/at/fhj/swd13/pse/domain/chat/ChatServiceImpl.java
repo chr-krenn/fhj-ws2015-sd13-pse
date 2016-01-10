@@ -174,7 +174,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 					dbContext.persist(memberShip);
 				}
 			} catch (ConstraintViolationException x) {
-				throw new DuplicateEntityException("Community already exists: " + community.getName());
+				throw new DuplicateEntityException("Community already exists: " + community.getName(), x);
 
 			}
 			return community;
@@ -381,7 +381,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 					dbContext.persist(memberShip);
 				}
 			} catch (ConstraintViolationException x) {
-				throw new DuplicateEntityException("Community already exists: " + community.getName());
+				throw new DuplicateEntityException("Community already exists: " + community.getName(), x);
 			}
 
 			return community;

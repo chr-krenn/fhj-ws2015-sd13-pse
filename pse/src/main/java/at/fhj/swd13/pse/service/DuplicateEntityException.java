@@ -10,4 +10,8 @@ public class DuplicateEntityException extends RuntimeException{
 	public DuplicateEntityException( final String message ) {
 		super( message );
 	}
+	
+	public DuplicateEntityException (final String message, Throwable cause) {
+		super(message, cause);
+	}
 }
