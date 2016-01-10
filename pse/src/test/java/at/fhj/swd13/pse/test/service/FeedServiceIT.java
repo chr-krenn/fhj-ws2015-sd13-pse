@@ -143,7 +143,7 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage("IT Test with Tags headline", "IT Test with Tags Text", user.getUserName(), null, null, communities, tags, new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(1500);
 
 		// Get first (= newest) message of Message list for community
 		MessageDTO m = feedService.loadNews(100).get(0);
