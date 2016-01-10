@@ -130,6 +130,42 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals("IT Test headline", messages.get(0).getHeadline());
 		feedService.removeMessage(messages.get(0).getId());
 	}
+	
+	/*
+	 * PSE2015-57 Als angemeldeter Benutzer kann ich einem anderen Benutzer eine private Nachricht senden.
+	 */
+	@Test
+	public void sendMessageToUser() throws EntityNotFoundException {
+		Person contact = userService.getUser("poschdan13");
+		int numberOfMessages = feedService.loadFeedForUser(contact).size();
+		List<Community> communities = new ArrayList<>();
+		communities.add(contact.getPrivateCommunity());
+		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
+		assertEquals(numberOfMessages + 1, messages.size());
+		// Newest message is first in list -> index 0
+		assertEquals("IT Test headline", messages.get(0).getHeadline());
+		feedService.removeMessage(messages.get(0).getId());
+	}
+	
+	/*
+	 * PSE2015-64 Als Benutzer kann ich eine Nachricht schreiben und diese in einer oder mehreren Communities veröffentlichen.
+	 */
+	@Test
+	public void sendMessageToCommunity() throws EntityNotFoundException {
+		Person contact = userService.getUser("haringst13");
+		int numberOfMessages = feedService.loadFeedForUser(contact).size();
+		
+		List<Community> communities = new ArrayList<>();
+		communities.add(userService.getUser("haringst13").getConfirmedCommunities().get(0));
+		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
+		SleepUtil.sleep(1000);
+		assertEquals(numberOfMessages + 1, messages.size());
+		// Newest message is first in list -> index 0
+		assertEquals("IT Test headline", messages.get(0).getHeadline());
+		feedService.removeMessage(messages.get(0).getId());
+	}
 
 	/*
 	 * PSE2015-60 Beim Erfassen einer Nachricht kann ich Tags auswählen, um meine Nachricht zu klassifizieren.
@@ -228,6 +264,10 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(18, messages.size());
 	}
 
+	/*
+     * PSE2015-65 Als angemeldeter Benutzer kann ich bestehende Nachrichten die mir angezeigt werden kommentieren.
+     * 
+     */
 	@Test
 	public void setCommentsTest() {
 		MessageDTO m = feedService.getMessageDTOById(1);
@@ -423,7 +463,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(df.format(validTo), df.format(m.getExpiresOn()));
 	}
 	
-	public void createTestNews(String headline, String text) throws Throwable{
+	private void createTestNews(String headline, String text) throws Throwable{
 		Community newsCommunity = chatService.getCommunity(1);
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
