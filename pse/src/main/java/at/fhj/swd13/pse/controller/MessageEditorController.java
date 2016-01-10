@@ -108,7 +108,7 @@ public class MessageEditorController extends ControllerBase{
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
-			for(Community c : messageDto.getCommunity()) {
+			for(Community c : messageDto.getCommunities()) {
 				loadCommunity(c.getName());
 			}
 			

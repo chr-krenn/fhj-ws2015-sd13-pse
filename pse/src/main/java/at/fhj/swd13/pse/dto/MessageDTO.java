@@ -69,7 +69,7 @@ public class MessageDTO implements Serializable {
 		this.headline = m.getHeadline();
 		this.text = m.getMessage();
 		this.privateMessage = isPrivateMessage(m);
-		this.community = getCommunityString(m);
+		this.community = getCommunity(m);
 		this.communities = m.getCommunities();
 		this.image = m.getIcon();
 		this.attachement = m.getAttachment();
@@ -152,11 +152,11 @@ public class MessageDTO implements Serializable {
 		this.privateMessage = privateMessage;
 	}
 	
-	public String getCommunityString() {
+	public String getCommunity() {
 		return community;
 	}
 
-	public String getCommunityString(Message m) {
+	public String getCommunity(Message m) {
 		community = "";
 		for(Community c : m.getCommunities()) {
 			if(community != "") {
@@ -167,15 +167,15 @@ public class MessageDTO implements Serializable {
 		return community;
 	}
 	
-	public void setCommunityString(String community) {
+	public void setCommunity(String community) {
 		this.community = community;
 	}
 	
-	public List<Community> getCommunity() {
+	public List<Community> getCommunities() {
 		return communities;
 	}
 	
-	public void setCommunity(List<Community> communities) {
+	public void setCommunities(List<Community> communities) {
 		this.communities = communities;
 	}
 
