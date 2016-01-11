@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
+
+		<h:form id="userForm">
+			<p:growl id="messages" showDetail="true" />
+
+			<p:panelGrid style="width: 100%;">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Vorname" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask id="firstName" styleClass="forminput"
+							value="#{userProfileController.person.firstName}"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+					<p:column rowspan="10">
+						<p:graphicImage id="userimage" styleClass="userimage"
+							value="#{userProfileController.getImageRef()}" cache="false" />
+
+						<h:panelGroup id="fileUploadGroup"
+							style="#{userProfileController.modeEditAdminDisplay}">
+							<p:fileUpload
+								fileUploadListener="#{userProfileController.handleFileUpload}"
+								dragDropSupport="false" update="messages,userimage"
+								sizeLimit="10000000" multiple="false" fileLimit="1"
+								fileLimitMessage="Es kann nur ein Benutzerbild geladen werden!"
+								label="Bild auswählen" uploadLabel="Hochladen"
+								cancelLabel="Abbrechen"
+								allowTypes="/(\.|\/)(docx|xlsx|pdf|jpe?g|png)$/" mode="advanced" />
+						</h:panelGroup>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Nachname" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask id="lastName" styleClass="forminput"
+							value="#{userProfileController.person.lastName}"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Geburtsdatum" />
+					</p:column>
+					<p:column colspan="2">
+						<p:calendar id="dateOfBirth" styleClass="forminput"
+							showOn="button"
+							value="#{userProfileController.person.dateOfBirth}"
+							rendered="#{userProfileController.admin}" />
+						<p:inputText id="dateOfBirthDisplay"
+							rendered="#{!(userProfileController.admin)}"
+							styleClass="forminput"
+							value="#{userProfileController.person.dateOfBirth}"
+							readonly="true">
+							<f:convertDateTime pattern="dd.MM.yy" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="E-Mail" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask id="emailAddress" styleClass="forminput"
+							value="#{userProfileController.person.emailAddress}"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Abteilung" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask id="department" styleClass="forminput"
+							value="#{userProfileController.person.department}"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Gebäude" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask
+							id="building" 
+							value="#{userProfileController.person.locationBuilding}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Stockwerk" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask
+							id="floor" 
+							value="#{userProfileController.person.locationFloor}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Zimmer" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask
+							id="roomnumber" 
+							value="#{userProfileController.person.locationRoomNumber}"
+							styleClass="forminput"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Telefonnummer" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputMask id="phoneNumberMobile" styleClass="forminput"
+							value="#{userProfileController.person.phoneNumberMobile}"
+							readonly="#{!(userProfileController.admin)}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="personTags" value="Interessen/Expertisen:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="personTagsDisplay"
+							style="#{userProfileController.tagDisplayStyle}"
+							styleClass="forminput"
+							value="#{userProfileController.tagDisplayString}" readonly="true" />
+						<p:autoComplete id="personTags" multiple="true"
+							style="#{userProfileController.tagEditStyle}"
+							value="#{userProfileController.tags}"
+							completeMethod="#{userProfileController.completeTag}"
+							forceSelection="true" minQueryLength="3">
+							<p:ajax event="itemSelect"
+								listener="#{userProfileController.handleTagSelect}" />
+							<p:ajax event="itemUnselect"
+								listener="#{userProfileController.handleTagUnselect}" />
+						</p:autoComplete>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox
+							value="#{userProfileController.person.isOnline}" disabled="true" />
+						<p:outputLabel value="  Online" />
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox
+							value="#{userProfileController.person.isExtern}"
+							disabled="#{!(userProfileController.externFlagEnabled)}" id="outofoffice"/>
+						<p:outputLabel value="  Abwesend" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox
+							value="#{userProfileController.person.isActive}"
+							disabled="#{!(userProfileController.activeFlagEnabled)}" id="active"/>
+						<p:outputLabel value="  Aktiv" />
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox
+							value="#{userProfileController.person.isLoginAllowed}"  id="loginallowed"
+							disabled="#{!(userProfileController.loginAllowedFlagEnabled)}" />
+						<p:outputLabel value="  Login erlaubt" />
+					</p:column>
+				</p:row>
+
+				<p:row style="#{userProfileController.getModeEditAdminDisplay()}">
+					<p:column>
+					</p:column>
+					<p:column colspan="2">
+						<p:commandButton value="Speichern"
+							action="#{userProfileController.updateProfile}" update="messages"
+							type="submit" icon="ui-icon-disk" id="savebutton">
+							<f:param name="mode" value="edit"
+								disable="#{!(userProfileController.modeEdit)}" />
+						</p:commandButton>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panel id="addtocontact" cache="false">
+				<p:commandButton id="contactButton"
+					value="#{userProfileController.contactButtonText()}" type="submit"
+					icon="ui-icon-contact"
+					action="#{userProfileController.contactButtonAction()}"
+					rendered="#{userProfileController.addToContactVisible()}">
+				</p:commandButton>
+			</p:panel>
+			<p:panel id="sendmessage" cache="false">
+				<p:commandButton id="sendMessageButton"
+					value="#{userProfileController.sendMessageButtonText()}"
+					type="submit" icon="ui-icon-mail-closed"
+					action="#{userProfileController.sendMessageButtonAction()}"
+					rendered="#{userProfileController.canSendMessage()}" />
+			</p:panel>
+
+			<p:panel id="contacts">
+				<p:tabView>
+					<p:tab title="Abteilung">
+						<p:dataTable var="userWithDepartment"
+							value="#{userProfileController.getUsersWithDepartment()}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{userWithDepartment.lastName}"
+										style="font-weight: bold" />
+									<f:param name="userName" value="#{userWithDepartment.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{userWithDepartment.firstName}" />
+							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{userWithDepartment.isOnline}"
+									disabled="True" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Kontakte">
+						<p:dataTable var="contact"
+							value="#{userProfileController.person.contacts}">
+							<p:column headerText="Nachname">
+								<h:outputLink value="#{request.contextPath}/protected/User.jsf">
+									<h:outputText value="#{contact.lastName}"
+										class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
+									<f:param name="userName" value="#{contact.userName}" />
+									<f:param name="mode" value="view" />
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Vorname">
+								<h:outputText value="#{contact.firstName}"
+									class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
+							</p:column>
+							<p:column headerText="Online">
+								<h:selectBooleanCheckbox value="#{contact.isOnline}"
+									disabled="True"
+									class="#{userProfileController.getContactListEntryClass(userProfileController.person.userName, contact.department)}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Communities" id="communities">
+						<p:dataTable var="membership" id="membershipList"
+							value="#{userProfileController.communityMemberships}">
+							<p:column headerText="Name">
+								<h:outputLink
+									value="#{request.contextPath}/protected/Community.jsf"
+									rendered="#{(membership.community.confirmedBy ne null) and (membership.confirmer ne null or !membership.community.invitationOnly)}">
+									<h:outputText value="#{membership.community.name}" />
+									<f:param name="id" value="#{membership.community.communityId}" />
+								</h:outputLink>
+								<h:outputText value="#{membership.community.name}"
+									rendered="#{(membership.community.confirmedBy eq null) or (membership.confirmer eq null and membership.community.invitationOnly)}" />
+							</p:column>
+							<p:column headerText="Bestätigt">
+								<h:selectBooleanCheckbox
+									value="#{membership.community.confirmedBy != null}"
+									disabled="True"
+									rendered="#{!membership.community.privateUser.userName.equals(userProfileController.userName)}" />
+							</p:column>
+							<f:facet name="footer">
+								<p:commandButton value="Neue Community beantragen"
+									onclick="PF('communityDialog').show()"
+									rendered="#{userProfileController.modeEdit}"
+									id="communityButton" />
+							</f:facet>
+						</p:dataTable>
+					</p:tab>
+				</p:tabView>
+			</p:panel>
+		</h:form>
+		<p:dialog header="Neue Community" widgetVar="communityDialog"
+			resizeable="false">
+			<h:form id="communityDialogForm">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="communityname" value="Community" />
+					<p:inputText id="communityname" label="Name" required="true"
+						value="#{userProfileController.communityName}" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Beantragen" update="growl :userForm"
+							action="#{userProfileController.createCommunity()}"
+							onclick="PF('communityDialog').hide();"
+							id="requestButton"/>
+						<p:commandButton value="Abbrechen"
+							onclick="PF('communityDialog').hide();" />
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

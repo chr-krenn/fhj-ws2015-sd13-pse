@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="content">
+		<h1>Welcome to PSE!</h1>
+		<h:form id="loginform">
+			<h:panelGroup rendered="#{!loginController.isLoggedIn}">
+				Um mit der Arbeit zu beginnen, müssen sie sich <em><a
+					href="javascript:void(0)" onclick="PF('dlg').show()">einloggen!</a></em>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{loginController.isLoggedIn}">
+				<div>
+					Du bist bereits eingeloggt. Weiter gehts <a
+						href="#{request.contextPath}/protected/Main.jsf">hier</a>
+				</div>
+			</h:panelGroup>
+			<p:growl id="growl" sticky="false" showDetail="true" life="5000" />
+
+			<p:dialog header="Login" widgetVar="dlg" resizeable="false">
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel for="username" value="Username:" />
+					<p:inputText id="username" value="#{loginController.username}"
+						required="true" label="Username" />
+
+					<h:outputLabel for="password" value="Passwort:" />
+					<p:password id="password" value="#{loginController.password}"
+						required="true" label="Passwort" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Anmelden" update="growl" id="loginbutton"
+							action="#{loginController.login}" />
+						<p:commandButton value="Abbrechen" update="growl"
+							onclick="PF('dlg').hide();" />
+					</f:facet>
+
+					<p:link outcome="ResetPassword.xhtml" id="resetPasswordLink" value="Passwort vergessen">
+					</p:link>
+
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

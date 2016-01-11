@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/default.xhtml">
+	<ui:define name="userList">
+		<h:panelGrid columns="2" 
+			columnClasses="logo,detail">
+			<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+				<p:graphicImage value="#{userListController.getImageRef(user)}" styleClass="userimage"/>
+				<f:param name="userName" value="#{user.userName}" />
+				<f:param name="mode" value="view" />
+			</h:outputLink>
+			
+			<p:outputPanel>
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputText value="Name:" />
+					<h:outputLink  value="#{request.contextPath}/protected/User.jsf">
+						<h:outputText value="#{userListController.getFullName(user)}"  style="font-weight: bold"/>
+						<f:param name="userName" value="#{user.userName}" />
+						<f:param name="mode" value="view" />
+					</h:outputLink>
+
+					<h:outputText value="Abteilung:" />
+					<h:outputText value="#{user.department}" style="font-weight: bold" />
+
+					<h:outputText value="Funktion:" />
+					<h:outputText value="#{user.jobPosition}" style="font-weight: bold" />
+					
+					<h:outputText value="Online:" />
+					<p:selectBooleanCheckbox value="#{user.isOnline}" style="font-weight: bold" disabled="True" />
+				</h:panelGrid>
+			</p:outputPanel>
+		</h:panelGrid>
+	</ui:define>
+</ui:composition>
