@@ -5,10 +5,12 @@ import java.util.Properties;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 import javax.mail.MessagingException;
 
 import at.fhj.swd13.pse.db.entity.Message;
 
+@Alternative
 @Stateless
 @Remote(MailService.class)
 public class MailServiceFacade implements MailService {

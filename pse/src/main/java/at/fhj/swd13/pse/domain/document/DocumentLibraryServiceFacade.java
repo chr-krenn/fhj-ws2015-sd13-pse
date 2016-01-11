@@ -6,7 +6,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 
+@Alternative
 @Stateless
 @Remote(DocumentLibraryService.class)
 public class DocumentLibraryServiceFacade implements DocumentLibraryService {
