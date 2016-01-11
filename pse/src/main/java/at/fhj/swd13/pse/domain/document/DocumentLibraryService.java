@@ -9,6 +9,8 @@ public interface DocumentLibraryService {
 	
 	void addEntry(String fileName, String descrition, InputStream content, int communityId); 
 	
+	void addEntry(String fileName, String description, byte[] content, int communityId);
+	
 	void deleteEntry(int documentLibraryEntryId);
 	
 	DocumentLibraryEntry getEntryById(int documentLibraryEntryId);

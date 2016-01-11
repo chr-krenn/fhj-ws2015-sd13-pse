@@ -55,9 +55,8 @@ public class MessageDetailsController extends ControllerBase {
 			feedService.setMessageLikes(messageDTO, userSession.getUsername());
 			feedService.setComments(messageDTO);
 			
-			if(messageDTO.getComments().size()>0) {
-				fillUpComments(messageDTO);
-				
+			if(!messageDTO.getComments().isEmpty() ) {
+				fillUpComments(messageDTO);				
 			}
 			
 		} catch (ServiceException e) {
@@ -116,7 +115,7 @@ public class MessageDetailsController extends ControllerBase {
 				feedService.updateDTOafterRating(getMessageDTO(), p);
 			}
 			else {
-				if(getMessageDTO().getComments().size() > 0) {
+				if(!getMessageDTO().getComments().isEmpty() ) {
 					commentsRatingRecursive(getMessageDTO(), id, p);
 				}
 			}

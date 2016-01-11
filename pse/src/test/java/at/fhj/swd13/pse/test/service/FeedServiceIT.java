@@ -4,13 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -234,8 +227,8 @@ public class FeedServiceIT extends RemoteTestBase {
      */
     @Test
     public void loadCommunityActivities() {
-    	List<MessageDTO> activities = feedService.loadNews(31);    	
-		assertEquals(3, activities.size());
+    	List<MessageDTO> activities = feedService.loadNews(100);
+		assertEquals(2, activities.size());
     }
     
 	@Test

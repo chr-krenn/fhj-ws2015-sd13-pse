@@ -1,6 +1,10 @@
 package at.fhj.swd13.pse.domain.document;
 
-public class DocumentLibraryEntry {
+import java.io.Serializable;
+
+public class DocumentLibraryEntry implements Serializable {
+
+	private static final long serialVersionUID = -8812890012030526846L;
 
 	private final int id;
 	

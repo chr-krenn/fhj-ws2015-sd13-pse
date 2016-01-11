@@ -6,7 +6,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 
+@Alternative
 @Stateless
 @Remote(DocumentLibraryService.class)
 public class DocumentLibraryServiceFacade implements DocumentLibraryService {
@@ -32,6 +34,11 @@ public class DocumentLibraryServiceFacade implements DocumentLibraryService {
 	@Override
 	public DocumentLibraryEntry getEntryById(int documentLibraryEntryId) {
 		return documentLibraryService.getEntryById(documentLibraryEntryId);
+	}
+
+	@Override
+	public void addEntry(String fileName, String description, byte[] content, int communityId) {
+		documentLibraryService.addEntry(fileName, description, content, communityId);
 	}
 
 }

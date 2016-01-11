@@ -1,5 +1,6 @@
 package at.fhj.swd13.pse.domain.document;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,9 +89,15 @@ public class DocumentLibraryServiceImpl implements DocumentLibraryService {
 			entry = documentLibraryEntryDAO.getById(documentLibraryEntryId);
 			return convert(entry);
 		} catch (EntityNotFoundException e) {
-			throw new ServiceException("[DOCS]error getting entry" + documentLibraryEntryId, e);
+			throw new ServiceException("[DOCS] error getting entry" + documentLibraryEntryId, e);
 		} catch (Throwable e) {
 			throw new ServiceException("[DOCS] internal error", e);
 		}
+	}
+
+	@Override
+	public void addEntry(String fileName, String description, byte[] content, int communityId) {
+		InputStream inputStream = new ByteArrayInputStream(content);
+		addEntry(fileName, description, inputStream, communityId);
 	}
 }

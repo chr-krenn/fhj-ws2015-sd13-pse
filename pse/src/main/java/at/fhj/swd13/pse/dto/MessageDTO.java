@@ -159,7 +159,7 @@ public class MessageDTO implements Serializable {
 	public String getCommunity(Message m) {
 		community = "";
 		for(Community c : m.getCommunities()) {
-			if(community != "") {
+			if(! community.equals("")) {
 				community += ", ";
 			}
 			community += c.getName();
