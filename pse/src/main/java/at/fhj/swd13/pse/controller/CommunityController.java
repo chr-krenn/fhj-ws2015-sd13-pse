@@ -197,7 +197,7 @@ public class CommunityController extends ControllerBase{
 	}
 
 	private boolean isinvitationOnly() {
-		return invitationOnly != null && invitationOnly.equals("true");
+		return invitationOnly != null && "true".equals( invitationOnly );
 	}
 
 	public Boolean isMemberOfCommunity(int comId) {
