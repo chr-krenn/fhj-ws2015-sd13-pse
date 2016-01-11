@@ -34,4 +34,9 @@ public class DocumentLibraryServiceFacade implements DocumentLibraryService {
 		return documentLibraryService.getEntryById(documentLibraryEntryId);
 	}
 
+	@Override
+	public void addEntry(String fileName, String description, byte[] content, int communityId) {
+		documentLibraryService.addEntry(fileName, description, content, communityId);
+	}
+
 }

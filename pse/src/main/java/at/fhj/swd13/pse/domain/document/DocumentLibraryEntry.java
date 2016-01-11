@@ -1,6 +1,8 @@
 package at.fhj.swd13.pse.domain.document;
 
-public class DocumentLibraryEntry {
+import java.io.Serializable;
+
+public class DocumentLibraryEntry implements Serializable {
 
 	private final int id;
 	
