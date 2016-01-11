@@ -236,7 +236,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void confirmCommunity(final Person adminPerson, Community unconfirmed) {
 		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
-			throw new ServiceException("Person confirming the community is either not active or not an admin: " + adminPerson.getUserName());
+			throw new ServiceException("Person confirming the community is either not active or not an admin: " + adminPerson == null ? "n/a" : adminPerson.getUserName());
 		}
 		
 		try {
@@ -254,7 +254,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void confirmCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
-			throw new ServiceException("Person confirming the member request is either not active or not an admin: " + adminPerson.getUserName());
+			throw new ServiceException("Person confirming the member request is either not active or not an admin: " + adminPerson == null ? "n/a" : adminPerson.getUserName());
 		}
 		
 		try {
@@ -270,7 +270,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void declineCommunity(final Person adminPerson, Community unconfirmed) {
 		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
-			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
+			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson == null ? "n/a" : adminPerson.getUserName());
 		}
 
 		try {
@@ -285,7 +285,7 @@ public class ChatServiceImpl extends ServiceBase implements ChatService {
 	@Override
 	public void declineCommunityMember(final Person adminPerson, CommunityMember unconfirmed) {
 		if (adminPerson == null || !adminPerson.getIsActive() || !adminPerson.isAdmin()) {
-			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson.getUserName());
+			throw new ServiceException("Person declining the member request is either not active or not an admin: " + adminPerson == null ? "n/a" : adminPerson.getUserName());
 		}
 
 		try {
