@@ -14,3 +14,8 @@ hs_err_pid*
 #metadata
 pse-dbmodell/.metadata
 pse-dbmodell/.tern-project
+pse-dbmodell/bin/
+pse-dbmodell/target/
+pse-dbmodell/.settings/org.eclipse.core.resources.prefs
+pse-dbmodell/.settings/
+pse-dbmodell/.classpath
