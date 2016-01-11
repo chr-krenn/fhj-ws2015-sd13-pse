@@ -109,8 +109,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			m.setMessage(text);
 			m.setIcon(icon);
 			m.setAttachment(document);
-			// TODO update message tags
-			// m.setMessageTags(messageTags);
 			m.setValidFrom(validFrom);
 			m.setExpiresOn(validUntil);
 
