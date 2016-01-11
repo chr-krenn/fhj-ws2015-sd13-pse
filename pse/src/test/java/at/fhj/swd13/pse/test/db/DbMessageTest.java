@@ -49,7 +49,7 @@ public class DbMessageTest extends DbTestBase {
 			List<Message> activities = messageDAO.loadAll();
 
 			assertNotNull(activities);
-			assertEquals(20, activities.size());
+			assertEquals(17, activities.size());
 		}
 	}
 

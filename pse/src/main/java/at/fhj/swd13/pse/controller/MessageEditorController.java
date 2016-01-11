@@ -108,8 +108,9 @@ public class MessageEditorController extends ControllerBase{
 			dtFrom = messageDto.getValidFrom();
 			dtUntil = messageDto.getValidUntil();
 			
-			//TODO possibility that getCommunity returns more than one community
-			loadCommunity(messageDto.getCommunity());
+			for(Community c : messageDto.getCommunities()) {
+				loadCommunity(c.getName());
+			}
 			
 			Document icon = messageDto.getImage();
 			if(icon != null){
@@ -363,13 +364,6 @@ public class MessageEditorController extends ControllerBase{
 	public void handleUnselect(UnselectEvent event) {
 		Community removedCommunity = (Community) event.getObject();
 		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
-
-		// TODO Prevent unselection of preselected items
-
-		// if (targetCommunity != null &&
-		// removedCommunity.getName().equals(targetCommunity.getName())) {
-		// selectedCommunities.add(new CommunityDTO(targetCommunity));
-		// }
 	}
 
 	/**

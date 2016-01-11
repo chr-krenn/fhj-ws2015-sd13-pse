@@ -299,7 +299,7 @@ public class UserProfileController implements Serializable {
 
 		if (userCommunity.isPresent()) {
 			return "/protected/chat/AddMessage.jsf?community="
-					+ userCommunity.get().getName() + "&faces-redirect=true";
+					+ userCommunity.get().getName() + "&lockCommunity=true&faces-redirect=true";
 		}
 		return "/protected/chat/AddMessage.jsf?faces-redirect=true";
 	}

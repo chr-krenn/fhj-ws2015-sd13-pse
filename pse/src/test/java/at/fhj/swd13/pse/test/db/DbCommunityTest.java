@@ -276,7 +276,7 @@ public class DbCommunityTest extends DbTestBase {
 		try (DbContext context = contextProvider.getDbContext()) {
 			CommunityDAO communityDAO = context.getCommunityDAO();
 			List<Community> communities = communityDAO.getAllCommunities();
-			assertEquals(11, communities.size());
+			assertEquals(10, communities.size());
 		}
 	}
 	
@@ -314,7 +314,7 @@ public class DbCommunityTest extends DbTestBase {
 		try (DbContext context = contextProvider.getDbContext()) {
 			CommunityDAO communityDAO = context.getCommunityDAO();
 			List<Community> communities = communityDAO.getAllAccessibleCommunities();
-			assertEquals(5, communities.size());
+			assertEquals(4, communities.size());
 		}
 	}
 	

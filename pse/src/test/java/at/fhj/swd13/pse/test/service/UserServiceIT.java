@@ -307,10 +307,11 @@ public class UserServiceIT extends RemoteTestBase {
     }
     
     @Test
-    public void setUserImageTest() throws NamingException {
+    public void setUserImageTest() throws Throwable {
     	//Prepare document
+    	prepareFile("testDocs/no_img.png", "/tmp/no_img.png");
     	DocumentService documentService = lookup(DocumentServiceFacade.class, DocumentService.class);
-    	Document icon = documentService.store("pic",  getClass().getResource("/testDocs/no_img.png").getFile());
+    	Document icon = documentService.store("pic",  "/tmp/no_img.png");
     	assertTrue(icon != null);
     	
     	userService.setUserImage("pompenig13", icon.getDocumentId());

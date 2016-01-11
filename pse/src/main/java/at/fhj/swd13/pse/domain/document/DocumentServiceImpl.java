@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.service.spi.ServiceException;
 import org.jboss.logging.Logger;
 
@@ -156,14 +155,20 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	}
 
 	public void remove(final Document document) {
-		// TODO: remove from db
-		// TODO: remove file
-		throw new NotImplementedException("must implement!!!");
+		try {
+			dbContext.getDocumentDAO().remove(document);
+		} catch (Throwable e) {
+			logger.error("[DOCS] Error removing document " + document, e);
+		}
 	}
 
 	@Override
 	public void removeDocument(int documentId) {
-		dbContext.getDocumentDAO().remove(documentId);
+		try {
+			dbContext.getDocumentDAO().remove(documentId);
+		} catch (Throwable e) {
+			logger.error("[DOCS] Error removing document with id " + documentId, e);
+		}
 	}
 
 	/*

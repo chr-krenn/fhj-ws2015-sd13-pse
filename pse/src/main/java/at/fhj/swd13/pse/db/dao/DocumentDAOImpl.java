@@ -29,9 +29,6 @@ public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 
 			throw new IllegalArgumentException("document null or not persisted yet");
 		}
-
-		// TODO clean up references
-
 		dbContext.remove(document);
 	}
 

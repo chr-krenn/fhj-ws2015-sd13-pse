@@ -1,5 +1,12 @@
 package at.fhj.swd13.pse.test.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -56,4 +63,22 @@ public abstract class RemoteTestBase {
 	protected static void executeSqlScript(String filename) {
 		JDBC_HELPER.executeSqlScript(filename);
 	}
+	
+	protected static void prepareFile(final String resourceFilename, final String externalFilename) throws Throwable {
+		try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceFilename)) {
+			
+			if ( in == null ) {
+				throw new FileNotFoundException( resourceFilename );
+			}
+			
+			File outFile = new File(externalFilename);
+
+			File outPath = new File( outFile.getAbsolutePath());
+			outPath.mkdirs();
+			
+			CopyOption[] options = new CopyOption[] { StandardCopyOption.REPLACE_EXISTING, };
+
+			Files.copy(in, Paths.get(externalFilename), options);
+		}
+	}	
 }
