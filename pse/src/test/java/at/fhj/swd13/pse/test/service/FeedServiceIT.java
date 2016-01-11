@@ -238,24 +238,6 @@ public class FeedServiceIT extends RemoteTestBase {
 		assertEquals(3, activities.size());
     }
     
-	private static void prepareFile(final String resourceFilename, final String externalFilename) throws Throwable {
-		try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceFilename)) {
-			
-			if ( in == null ) {
-				throw new FileNotFoundException( resourceFilename );
-			}
-			
-			File outFile = new File(externalFilename);
-
-			File outPath = new File( outFile.getAbsolutePath());
-			outPath.mkdirs();
-			
-			CopyOption[] options = new CopyOption[] { StandardCopyOption.REPLACE_EXISTING, };
-
-			Files.copy(in, Paths.get(externalFilename), options);
-		}
-	}
-
 	@Test
 	public void getMessageDTOByIdTest() {
 		MessageDTO m = feedService.getMessageDTOById(1);
@@ -467,7 +449,8 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 
-		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
 		// Create new message
@@ -530,7 +513,8 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 
-		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 
 		// Create new message
@@ -576,11 +560,12 @@ public class FeedServiceIT extends RemoteTestBase {
 		Community newsCommunity = chatService.getCommunity(1);
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
-		
-		Document icon = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
-		Document doc = documentService.store("pic", getClass().getResource("/testDocs/no_img.png").getFile());
+		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 		
 		Calendar c = Calendar.getInstance();
