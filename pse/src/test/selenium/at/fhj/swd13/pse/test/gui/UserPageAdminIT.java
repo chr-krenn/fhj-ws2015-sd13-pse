@@ -2,6 +2,7 @@ package at.fhj.swd13.pse.test.gui;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
@@ -14,14 +15,16 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 	
 	private HomePage homepage = null;
 	private LoginPage loginPage = null;
-	private NotLoggedInPage notLoggedInPage = null;
 
 	@Before
-	public void init() {
-		// login as admin
+	public void loginBefore() throws Exception {
+		prepare();
+		
+		// Setting up private communities per user
 		loginPage = new LoginPage(driver, BASE_URL);
 		homepage = loginPage.login("padmin", "12345678");
 	}
+	
 	
 	/**
 	 * PSE2015-13: Als angemeldeter Admin möchte ich einen User aktiv/inaktiv setzen können
@@ -83,11 +86,11 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		userPage.save();
 		
 		// user must not be able to login
-		homepage.logout();
+		loginPage = homepage.logout();
 		if((!active) || (!loginAllowed))
 		{
 			//forwarded to NotLoggedIn Page
-			notLoggedInPage = loginPage.loginWithWrongCredentials("angelofr13", "12345678");
+			NotLoggedInPage notLoggedInPage = loginPage.loginWithWrongCredentials("angelofr13", "12345678");
 			
 			verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());
 		}
@@ -115,7 +118,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		userPage.setUserLastname(newLastname);
 		userPage.save();
 		
-		homepage.logout();
+		loginPage = homepage.logout();
 		homepage = loginPage.login("oswaldge13", "12345678");
 		
 		UserPage userProfilePage = homepage.getUserProfilePage();

@@ -33,7 +33,7 @@ public class HomePage {
 		driver.findElement(By.xpath(".//*[@id='j_idt8:j_idt15_menu']/ul/li[4]/a")).click();
 		
 		//wait
-		(new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+		(new WebDriverWait(driver, 30)).until(new ExpectedCondition<Boolean>() {
             @Override
 			public Boolean apply(WebDriver d) {
             	return d.findElement(By.linkText("einloggen!")) != null;

@@ -13,7 +13,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 public class ActivityStreamIT extends SeleniumBaseTestCase {
 	
 	private LoginPage loginPage;
-	private static HomePage homepage;
+	private HomePage homepage;
 
 	@Before
 	public void init() {	
