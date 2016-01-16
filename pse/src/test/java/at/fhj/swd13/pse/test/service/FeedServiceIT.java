@@ -227,7 +227,7 @@ public class FeedServiceIT extends RemoteTestBase {
      */
     @Test
     public void loadCommunityActivities() {
-    	List<MessageDTO> activities = feedService.loadNews(100);
+    	List<MessageDTO> activities = feedService.loadNews(200);
 		assertEquals(2, activities.size());
     }
     
