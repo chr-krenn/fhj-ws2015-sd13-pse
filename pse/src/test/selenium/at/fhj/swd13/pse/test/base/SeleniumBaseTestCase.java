@@ -69,7 +69,7 @@ public abstract class SeleniumBaseTestCase  {
 	@Before
 	public void initWebdriver() throws Exception {
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
 	

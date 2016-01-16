@@ -5,6 +5,8 @@ package at.fhj.swd13.pse.test.gui.pageobjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author florian.genser
@@ -48,7 +50,16 @@ public class LoginPage {
 	 */
 	public NotLoggedInPage loginWithWrongCredentials(String username, String password) {
 
-		loginInternal(username, password);
+		driver.get(baseUrl + "/index.jsf");
+		driver.findElement(By.linkText("einloggen!")).click();
+		driver.findElement(By.id("loginform:username")).clear();
+		driver.findElement(By.id("loginform:username")).sendKeys(username);
+		driver.findElement(By.id("loginform:password")).clear();
+		driver.findElement(By.id("loginform:password")).sendKeys(password);
+		driver.findElement(By.id("loginform:loginbutton")).click();		
+		
+		//wait
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.linkText("Doors of Durin")));
 
 		return new NotLoggedInPage(driver);
 	}
@@ -62,6 +73,9 @@ public class LoginPage {
 		driver.findElement(By.id("loginform:password")).clear();
 		driver.findElement(By.id("loginform:password")).sendKeys(password);
 		driver.findElement(By.id("loginform:loginbutton")).click();		
+		
+		//wait
+		new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfElementLocated(By.id("j_idt8:j_idt15_button")));
 	}
 	
 	/**

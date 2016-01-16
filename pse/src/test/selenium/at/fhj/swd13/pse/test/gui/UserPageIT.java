@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -21,11 +20,11 @@ import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
 
 public class UserPageIT extends SeleniumBaseTestCase {
 
-	private static LoginPage loginPage;
-	private static HomePage homepage;
+	private LoginPage loginPage;
+	private HomePage homepage;
 
-	@BeforeClass
-	public static void init() throws Exception {
+	@Before
+	public void loginBefore() throws Exception {
 		prepare();
 		
 		// Setting up private communities per user
@@ -36,10 +35,7 @@ public class UserPageIT extends SeleniumBaseTestCase {
 		}
 		// Adding private message
 		JDBC_HELPER.executeSqlScript("SQL/testdata_DBMessageTest.sql");
-	}
-	
-	@Before
-	public void loginBefore() {
+
 		loginPage = new LoginPage(driver, BASE_URL);
 	}
 
@@ -141,15 +137,14 @@ public class UserPageIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testContacts() {
-		homepage = loginPage.login("pompenig13", "12345678");
+		homepage = loginPage.login("loeflerm13", "12345678");
 				
 		UserPage userPage = homepage.getUserProfilePage();
 		userPage.openContactsTab();
-		verifyEquals(userPage.getNumberOfContacts(), 2);
+		verifyEquals(userPage.getNumberOfContacts(), 1);
 		
 		List<String> names = userPage.getNamesOfContacts();
-		verifyTrue(names.contains("Löfler Mario"));
-		verifyTrue(names.contains("Genser Florian"));		
+		verifyTrue(names.contains("Pompenig Christine"));
 	}
 	
 	/*

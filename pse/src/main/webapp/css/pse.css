@@ -24,3 +24,9 @@
 	margin-left: 10px;
 	
 }
+
+.ui-growl {   
+    position:fixed;
+    top: 40%;
+    left: 37%;
+}
