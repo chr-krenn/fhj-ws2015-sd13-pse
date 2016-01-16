@@ -442,7 +442,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 
-		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.png" );
 		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
@@ -506,7 +506,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 
-		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.png" );
 		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 
@@ -554,7 +554,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<Community>();
 		communities.add(newsCommunity);
 
-		prepareFile( "testDocs/no_img.png", "/tmp/no_img.pmg" );
+		prepareFile( "testDocs/no_img.png", "/tmp/no_img.png" );
 		Document icon = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(icon != null);
 
