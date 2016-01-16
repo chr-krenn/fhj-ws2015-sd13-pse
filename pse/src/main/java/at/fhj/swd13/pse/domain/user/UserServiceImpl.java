@@ -88,8 +88,12 @@ public class UserServiceImpl extends ServiceBase implements UserService {
 	public void logoutUser(String username) {
 		try {
 			Person p = dbContext.getPersonDAO().getByUsername(username);
-			p.setIsOnline(false);
-			p.setCurrentSessionId(null);
+			if ( p != null ) {
+				p.setIsOnline(false);
+				p.setCurrentSessionId(null);
+			} else {
+				logger.warn("[UserService] cannot logout unkown user " + username );
+			}
 		} catch (Throwable ex) {
 			logger.info("[UserService] logoutUser failed for " + username + " : " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
