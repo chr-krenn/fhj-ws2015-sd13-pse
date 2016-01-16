@@ -451,9 +451,15 @@ public class FeedServiceIT extends RemoteTestBase {
 		SleepUtil.sleep(1000);
 
 		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+		final List<MessageDTO> news = feedService.loadNews(newsCommunity.getCommunityId()); 
+		
+		assertTrue( ! news.isEmpty() );
+		
+		final MessageDTO myMessage = news.get( 0 ); 
+		
+		assertTrue( myMessage != null );
 
-		Message m = feedService.getMessageById(messageId);
+		Message m = feedService.getMessageById( myMessage.getId() );
 		
 		assertEquals(icon, m.getIcon());
 		
