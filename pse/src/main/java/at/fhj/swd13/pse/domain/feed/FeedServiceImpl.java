@@ -86,10 +86,10 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 			message.setExpiresOn(validUntil);
 			message.setAttachment(document);
 			message.setIcon(icon);
-			dbContext.getMessageDAO().insert(message);
 			message.setMessageTags(messageTags);
 			message.setCommunities(communities);
 
+			dbContext.getMessageDAO().insert(message);
 		} catch (ConstraintViolationException e) {
 			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + headline);
 			throw new ServiceException(e);
