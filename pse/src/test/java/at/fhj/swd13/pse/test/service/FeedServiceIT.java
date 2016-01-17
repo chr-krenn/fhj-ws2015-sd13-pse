@@ -367,7 +367,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		createTestNews("News 1", "Text 1");
 		
 		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(1).get(0).getId();
+		final int messageId = feedService.loadNews(1).get(0).getId();
 
 		Community newsCommunity = chatService.getCommunity(1);
 		List<Community> communities = new ArrayList<Community>();
@@ -381,8 +381,9 @@ public class FeedServiceIT extends RemoteTestBase {
 		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 		
-		String headline = "News-Test new";
-		String text = "News Text new";
+		final String headline = "News-Test new";
+		final String text = "News Text new";
+		
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
@@ -394,11 +395,12 @@ public class FeedServiceIT extends RemoteTestBase {
 		feedService.updateMessage(messageId, headline, text, doc, icon, new ArrayList<MessageTag>(), validFrom, validTo);
 		SleepUtil.sleep(5000);
 		
-		Message m = feedService.getMessageById(messageId);
+		final Message m = feedService.getMessageById(messageId);
 		
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		
 		// Check data
+		assertEquals(messageId, m.getMessage());
 		assertEquals(icon, m.getIcon());
 		assertEquals(headline, m.getHeadline());
 		assertEquals(text, m.getMessage());
