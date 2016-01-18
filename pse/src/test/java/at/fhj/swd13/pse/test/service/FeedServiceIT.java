@@ -118,6 +118,8 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<>();
 		communities.add(contact.getPrivateCommunity());
 		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
+		SleepUtil.sleep(5000);
+		
 		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
 		assertEquals(numberOfMessages + 1, messages.size());
 		// Newest message is first in list -> index 0
@@ -154,7 +156,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		List<Community> communities = new ArrayList<>();
 		communities.add(userService.getUser("haringst13").getConfirmedCommunities().get(0));
 		feedService.saveMessage("IT Test headline", "IT Test Text", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 		List<MessageDTO> messages = feedService.loadFeedForUser(contact);
 		assertEquals(numberOfMessages + 1, messages.size());
 		// Newest message is first in list -> index 0
@@ -199,7 +201,7 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Prepare document
 		prepareFile("testDocs/no_img.png", "/tmp/no_img.png");
-		Document icon = documentService.store("pic", "/tmp/no_img.png");
+		Document icon = documentService.store("pic", "/tmp/no_img.png" );
 		assertTrue(icon != null);
 
 		String headline = "IT Test with Icon headline";
@@ -207,7 +209,7 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage(headline, text, user.getUserName(), null, icon, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 
 		// Get Id of first (= newest) message of Message list for community
 		int messageId = feedService.loadNews(100).get(0).getId();
@@ -227,7 +229,7 @@ public class FeedServiceIT extends RemoteTestBase {
      */
     @Test
     public void loadCommunityActivities() {
-    	List<MessageDTO> activities = feedService.loadNews(100);
+    	List<MessageDTO> activities = feedService.loadNews(200);
 		assertEquals(2, activities.size());
     }
     
@@ -242,7 +244,7 @@ public class FeedServiceIT extends RemoteTestBase {
 	public void loadFeedTest() {
 		List<MessageDTO> messages = feedService.loadFeed();
 		assertTrue(messages != null);
-		assertEquals(15, messages.size());
+		assertEquals(17, messages.size());
 	}
 
 	/*
@@ -263,7 +265,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		// Prepare document
 		prepareFile("testDocs/no_img.png", "/tmp/no_img.png");
 
-		Document icon = documentService.store("pic", "/tmp/no_img.png");
+		Document icon = documentService.store("pic", "/tmp/no_img.png" );
 		assertTrue(icon != null);
 
 		// Get message & add icon
@@ -365,7 +367,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		createTestNews("News 1", "Text 1");
 		
 		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(1).get(0).getId();
+		final int messageId = feedService.loadNews(1).get(0).getId();
 
 		Community newsCommunity = chatService.getCommunity(1);
 		List<Community> communities = new ArrayList<Community>();
@@ -379,8 +381,9 @@ public class FeedServiceIT extends RemoteTestBase {
 		Document doc = documentService.store("pic", "/tmp/no_img.png");
 		assertTrue(doc != null);
 		
-		String headline = "News-Test new";
-		String text = "News Text new";
+		final String headline = "News-Test new";
+		final String text = "News Text new";
+		
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		c.set(Calendar.DAY_OF_MONTH,  c.get(Calendar.DAY_OF_MONTH)-10);
@@ -390,12 +393,14 @@ public class FeedServiceIT extends RemoteTestBase {
 		Date validTo = c.getTime();
 		
 		feedService.updateMessage(messageId, headline, text, doc, icon, new ArrayList<MessageTag>(), validFrom, validTo);
+		SleepUtil.sleep(5000);
 		
-		Message m = feedService.getMessageById(messageId);
+		final Message m = feedService.getMessageById(messageId);
 		
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		
 		// Check data
+		assertEquals(messageId, m.getMessage());
 		assertEquals(icon, m.getIcon());
 		assertEquals(headline, m.getHeadline());
 		assertEquals(text, m.getMessage());
@@ -420,16 +425,20 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage(headline, "Test", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 
 		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
-
-		Message m = feedService.getMessageById(messageId);
+		final List<MessageDTO> news = feedService.loadNews(newsCommunity.getCommunityId()); 
 		
-		assertEquals(headline, m.getHeadline());
+		assertTrue( ! news.isEmpty() );
 		
-		feedService.removeMessage(m.getMessageId());
+		final MessageDTO myMessage = news.get( 0 ); 
+		
+		assertTrue( myMessage != null );
+		
+		assertEquals(headline, myMessage.getHeadline());
+		
+		feedService.removeMessage(myMessage.getId());
 	}
 	
 	/*
@@ -448,12 +457,18 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage("Header", "Test", user.getUserName(), null, icon, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 
 		// Get Id of first (= newest) message of Message list for community
-		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
+		final List<MessageDTO> news = feedService.loadNews(newsCommunity.getCommunityId()); 
+		
+		assertTrue( news.size() == 3 );
+		
+		final MessageDTO myMessage = news.get( 0 ); 
+		
+		assertTrue( myMessage != null );
 
-		Message m = feedService.getMessageById(messageId);
+		Message m = feedService.getMessageById( myMessage.getId() );
 		
 		assertEquals(icon, m.getIcon());
 		
@@ -480,7 +495,7 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage("Header", "Test", user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), validFrom, validTo);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(10000);
 
 		// Get Id of first (= newest) message of Message list for community
 		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
@@ -512,7 +527,7 @@ public class FeedServiceIT extends RemoteTestBase {
 
 		// Create new message
 		feedService.saveMessage("Header", "Test", user.getUserName(), doc, null, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 
 		// Get Id of first (= newest) message of Message list for community
 		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
@@ -538,7 +553,7 @@ public class FeedServiceIT extends RemoteTestBase {
 	
 		// Create new message
 		feedService.saveMessage("Header", text, user.getUserName(), null, null, communities, new ArrayList<MessageTag>(), new Date(), null);
-		SleepUtil.sleep(1000);
+		SleepUtil.sleep(5000);
 
 		// Get Id of first (= newest) message of Message list for community
 		int messageId = feedService.loadNews(newsCommunity.getCommunityId()).get(0).getId();
@@ -555,10 +570,10 @@ public class FeedServiceIT extends RemoteTestBase {
 		communities.add(newsCommunity);
 
 		prepareFile( "testDocs/no_img.png", "/tmp/no_img.png" );
-		Document icon = documentService.store("pic", "/tmp/no_img.png");
+		Document icon = documentService.store("pic", "/tmp/no_img.png" );
 		assertTrue(icon != null);
 
-		Document doc = documentService.store("pic", "/tmp/no_img.png");
+		Document doc = documentService.store("pic", "/tmp/no_img.png" );
 		assertTrue(doc != null);
 		
 		Calendar c = Calendar.getInstance();

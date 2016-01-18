@@ -118,7 +118,7 @@ public class ChatServiceIT extends RemoteTestBase {
     	
     	communities = chatService.getAllAccessibleCommunities();
     	assertNotNull(communities);
-    	assertEquals(4, communities.size());
+    	assertEquals(5, communities.size());
     	
     	Community communityPublicCommunity = chatService.getCommunity("Public community");
     	assertNotNull(communityPublicCommunity);
