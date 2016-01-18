@@ -47,7 +47,7 @@ public class CommunitiesAdministrationIT extends SeleniumBaseTestCase{
 	
 	@Test
 	public void testVerifyCommunityIsActivated(){
-		int newCommunity = 4;
+		int newCommunity = 5;
 		homePage = loginPage.login("mitteregger13", "12345678");
 		communitiesPage = homePage.getCommunitiesPage();
 		verifyEquals(newCommunityName,communitiesPage.getCommunityName(newCommunity));
