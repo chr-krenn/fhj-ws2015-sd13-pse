@@ -19,10 +19,12 @@ import org.jboss.ejb.client.EJBClientConfiguration;
 import org.jboss.ejb.client.EJBClientContext;
 import org.jboss.ejb.client.PropertiesBasedEJBClientConfiguration;
 import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
+import org.junit.AfterClass;
 
 public abstract class RemoteTestBase {
 
 	private static final JdbcTestHelper JDBC_HELPER = new JdbcTestHelper();
+	private static Context context;
 
 	@SuppressWarnings("unchecked")
 	protected static <T> T lookup(Class<? extends T> bean, Class<T> viewClass) throws NamingException {
@@ -43,7 +45,7 @@ public abstract class RemoteTestBase {
     	
     	final Hashtable<String, String> jndiProperties = new Hashtable<String, String>();
         jndiProperties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-        final Context context = new InitialContext(jndiProperties);
+        context = new InitialContext(jndiProperties);
         
         final String jndiName = "ejb:" + "" 
         		+ "/" + "pse" 
@@ -52,6 +54,11 @@ public abstract class RemoteTestBase {
         		+ "!" + viewClass.getName();
 
         return (T) context.lookup(jndiName);
+	}
+	
+	@AfterClass
+	public static void closeConnection() throws NamingException {
+		context.close();
 	}
 	
 	protected static void prepareDatabase() {
