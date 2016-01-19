@@ -400,7 +400,7 @@ public class FeedServiceIT extends RemoteTestBase {
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		
 		// Check data
-		assertEquals(messageId, m.getMessage());
+		assertEquals(messageId, m.getMessageId());
 		assertEquals(icon, m.getIcon());
 		assertEquals(headline, m.getHeadline());
 		assertEquals(text, m.getMessage());
