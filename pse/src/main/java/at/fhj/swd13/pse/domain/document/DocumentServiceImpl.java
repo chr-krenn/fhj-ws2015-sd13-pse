@@ -128,6 +128,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 	}
 
 	@Override
+	@SuppressWarnings("squid:S1166")
 	public Document store(String filename, String filepath) {
 		try (InputStream in = new FileInputStream(filepath)) {
 			return store(filename, in);

@@ -74,6 +74,7 @@ public class MessageDetailsController extends ControllerBase {
 	 * Adds a new Comment to a specific message and updates the messageDTO for correct xhtml render
 	 * 
 	 */
+	@SuppressWarnings("squid:S1166")	
 	public void addComment() {	
 		final int parentMessageId = Integer.parseInt( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("parentMessageId") );
 		logger.info("[CMT] adding comment for " + parentMessageId + " from " + userSession.getUsername() + "  " + text );
@@ -148,7 +149,7 @@ public class MessageDetailsController extends ControllerBase {
 				feedService.updateDTOAfterRemove(getMessageDTO(), p);
 			}
 			else {
-				if(getMessageDTO().getComments().size() > 0) {
+				if( ! getMessageDTO().getComments().isEmpty()) {
 					commentsRemovingRecursive(getMessageDTO(), id, p);
 				}
 			}
@@ -167,7 +168,7 @@ public class MessageDetailsController extends ControllerBase {
 	private void fillUpComments(MessageDTO messageDTO) {
 		for(int i = 0;i < messageDTO.getComments().size(); i++) {
 			feedService.setMessageLikes(messageDTO.getComments().get(i), userSession.getUsername());
-			if(messageDTO.getComments().get(i).getComments().size() > 0) {
+			if(! messageDTO.getComments().get(i).getComments().isEmpty()) {
 				fillUpComments(messageDTO.getComments().get(i));
 			}
 		}
@@ -183,10 +184,9 @@ public class MessageDetailsController extends ControllerBase {
     			feedService.updateDTOafterRating(message.getComments().get(l), p);
     			message.getComments().get(l).setLike(true);
 			} else {
-				if(message.getComments().get(l).getComments() != null) {
-					if(message.getComments().get(l).getComments().size() > 0) {
-					commentsRatingRecursive(message.getComments().get(l), id, p);
-					}
+				if( (message.getComments().get(l).getComments() != null)
+					&& ( ! message.getComments().get(l).getComments().isEmpty() ) ) {
+						commentsRatingRecursive(message.getComments().get(l), id, p);
 				}
 			}
 		}
@@ -202,7 +202,7 @@ public class MessageDetailsController extends ControllerBase {
 				feedService.updateDTOAfterRemove(message.getComments().get(l), p);
 				message.getComments().get(l).setLike(false);
 			} else {
-				if(message.getComments().get(l).getComments().size() > 0) {
+				if( ! message.getComments().get(l).getComments().isEmpty() ) {
 					commentsRemovingRecursive(message.getComments().get(l), id, p);
 				}
 			}

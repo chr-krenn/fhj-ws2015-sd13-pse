@@ -21,6 +21,7 @@ public class CreateDocumentFolders {
 	private DocumentService documentService;
 	
 	@PostConstruct
+	@SuppressWarnings("squid:S1166")
 	protected void onPostConstruct() {
 		logger.info("[STARTUP] checking document folders");
 		

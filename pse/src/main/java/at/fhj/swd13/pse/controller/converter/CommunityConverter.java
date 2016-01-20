@@ -22,12 +22,12 @@ public class CommunityConverter implements Converter {
 	private ChatService chatService;
 
 	@PostConstruct
-	@SuppressWarnings("squid:S1166")
 	public void postConstruct() {
 		logger.info("[MSG+] converter instantiated");
 	}
 
 	@Override
+	@SuppressWarnings("squid:S1166")
 	public Object getAsObject(FacesContext fc, UIComponent uic, String objectId) {
 
 		logger.info("[MSG+] converter.getAsObject for " + objectId);
@@ -35,16 +35,10 @@ public class CommunityConverter implements Converter {
 		if (objectId != null) {
 			final int communityId = Integer.parseInt(objectId);
 
-			Community community;
 			try {
-				community = chatService.getCommunity(communityId);
+				return chatService.getCommunity(communityId);
 			} catch (Exception e) {
 				logger.error("[MSG+] failed to add community: " +e.getMessage());
-				community = null;
-			}
-
-			if (community != null) {
-				return community;
 			}
 		}
 		
