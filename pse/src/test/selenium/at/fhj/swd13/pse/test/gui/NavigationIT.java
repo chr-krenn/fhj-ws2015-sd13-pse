@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.test.gui;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
@@ -33,7 +34,7 @@ public class NavigationIT  extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testUsernameInHeader() throws Exception {
-		verifyTextById("florian.genser", "j_idt8:j_idt15_button");
+		verifyText("florian.genser", By.cssSelector("button[id='j_idt8:j_idt15_button'] span"));
 	}
 	
 	/*
