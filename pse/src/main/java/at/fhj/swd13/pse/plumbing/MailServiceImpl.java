@@ -51,15 +51,14 @@ public class MailServiceImpl implements MailService {
 	 */
 	@Override
 	public void sendMail(final String subject, final String htmlBody, final String recipient, Properties props) throws MessagingException {
-		
-		if(props != null) {
+
+		if (props != null) {
 			this.session = Session.getInstance(props);
 		}
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		try {
 			mimeMessage.setFrom(fromMailAddress);
-			// FIXME
 			mimeMessage.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(recipient));
 
 			mimeMessage.setSubject("[PSE] " + subject);
@@ -85,15 +84,15 @@ public class MailServiceImpl implements MailService {
 	@Override
 	@Asynchronous
 	public void sendMail(final Message message, final String receipientList, Properties props) throws MessagingException {
-		
-		if(props != null) {
+
+		if (props != null) {
 			this.session = Session.getInstance(props);
 		}
 		MimeMessage mimeMessage = new MimeMessage(session);
 
 		try {
-			mimeMessage.setFrom( new InternetAddress( message.getPerson().getEmailAddress(), message.getPerson().getFullName() ) );
-			mimeMessage.setReplyTo( new Address[] { new InternetAddress( message.getPerson().getEmailAddress(), message.getPerson().getFullName() ) } );
+			mimeMessage.setFrom(new InternetAddress(message.getPerson().getEmailAddress(), message.getPerson().getFullName()));
+			mimeMessage.setReplyTo(new Address[] { new InternetAddress(message.getPerson().getEmailAddress(), message.getPerson().getFullName()) });
 
 			mimeMessage.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(receipientList));
 
@@ -122,13 +121,12 @@ public class MailServiceImpl implements MailService {
 
 			logger.info("[MAIL] sent message " + message.getMessageId() + " to " + receipientList);
 		} catch (MessagingException e) {
-//FIXME: due to async annotation, message is not shown to user!
 			logger.error("[MAIL] unable to send message " + message.getMessageId() + " to " + receipientList);
 			logger.error(e);
 
 			throw e;
 		} catch (UnsupportedEncodingException e) {
-			logger.error("[MAIL] unsupported encoding: " +e.getMessage());
+			logger.error("[MAIL] unsupported encoding: " + e.getMessage());
 		}
-	}	
+	}
 }

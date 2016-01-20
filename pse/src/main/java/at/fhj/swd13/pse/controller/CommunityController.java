@@ -48,18 +48,19 @@ public class CommunityController extends ControllerBase{
 	@Inject
 	private UserService userService;
 
-	private transient Community selectedCommunity = null;
+	private Community selectedCommunity = null;
 
 	private String searchFieldText = "";
 
-	public static final String answerYes = "Yes";
-	public static final String answerNo = "No";
+	public static final String ANSWER_YES = "Yes";
+	public static final String ANSWER_NO = "No";
 
 	private int communityId;
 	private String invitationOnly;
 	private String communityIdString;
 	private boolean isMember;
 
+	@SuppressWarnings("squid:S1166")
 	@PostConstruct
 	public void postConstruct() {
 		try {
@@ -88,6 +89,7 @@ public class CommunityController extends ControllerBase{
 		this.searchFieldText = searchFieldText;
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public String search() {
 		try {
 			communities = chatService
@@ -107,7 +109,8 @@ public class CommunityController extends ControllerBase{
 	public void setSelectedCommunity(Community selectedCommunity) {
 		this.selectedCommunity = selectedCommunity;
 	}
-
+	
+	@SuppressWarnings("squid:S1166")
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			if (isMemberOfCommunity(selectedCommunity.getCommunityId())) {
@@ -130,6 +133,7 @@ public class CommunityController extends ControllerBase{
 		}
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void subscribeCommunity() {
 
 		logger.info("######## Start - subscribeCommunity ########");
@@ -197,9 +201,10 @@ public class CommunityController extends ControllerBase{
 	}
 
 	private boolean isinvitationOnly() {
-		return invitationOnly != null && invitationOnly.equals("true");
+		return invitationOnly != null && "true".equals( invitationOnly );
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public Boolean isMemberOfCommunity(int comId) {
 		setMember(false);
 		Person currentUser = null;
@@ -256,13 +261,14 @@ public class CommunityController extends ControllerBase{
 	public String isMemberToString() {
 		logger.debug("## isMemberToString - isMember <" + isMember() + ">");
 		if (isMember()) {
-			return answerYes;
+			return ANSWER_YES;
 		} else {
-			return answerNo;
+			return ANSWER_NO;
 		}
 
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public Boolean disableAskCommunity(int comId) {
 		boolean disable = false;
 		setMember(isMemberOfCommunity(comId));
@@ -329,10 +335,10 @@ public class CommunityController extends ControllerBase{
 	}
 
 	public static String getAnsweryes() {
-		return answerYes;
+		return ANSWER_YES;
 	}
 
 	public static String getAnswerno() {
-		return answerNo;
+		return ANSWER_NO;
 	}
 }

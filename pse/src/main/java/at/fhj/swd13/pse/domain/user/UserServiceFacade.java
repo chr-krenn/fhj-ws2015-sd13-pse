@@ -5,10 +5,12 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 
 import at.fhj.swd13.pse.db.entity.Person;
 import at.fhj.swd13.pse.db.entity.PersonRelation;
 
+@Alternative
 @Stateless
 @Remote(UserService.class)
 public class UserServiceFacade implements UserService {

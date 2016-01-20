@@ -51,7 +51,9 @@ public abstract class RemoteTestBase {
         		+ "/" + bean.getSimpleName()
         		+ "!" + viewClass.getName();
 
-        return (T) context.lookup(jndiName);
+        T result = (T) context.lookup(jndiName);
+        context.close();
+        return result;
 	}
 	
 	protected static void prepareDatabase() {

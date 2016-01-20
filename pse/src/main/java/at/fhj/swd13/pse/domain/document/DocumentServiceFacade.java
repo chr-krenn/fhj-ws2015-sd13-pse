@@ -5,9 +5,11 @@ import java.io.InputStream;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Alternative;
 
 import at.fhj.swd13.pse.db.entity.Document;
 
+@Alternative
 @Stateless
 @Remote(DocumentService.class)
 public class DocumentServiceFacade implements DocumentService {

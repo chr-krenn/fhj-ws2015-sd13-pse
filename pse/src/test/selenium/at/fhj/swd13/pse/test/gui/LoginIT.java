@@ -14,6 +14,7 @@ public class LoginIT extends SeleniumBaseTestCase {
 
 	@Before
 	public void init() {
+		prepare();
 		loginPage = new LoginPage(driver, BASE_URL);
 	}
 

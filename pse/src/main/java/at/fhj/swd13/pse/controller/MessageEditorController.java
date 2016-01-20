@@ -234,8 +234,8 @@ public class MessageEditorController extends ControllerBase{
 	 * @throws IOException 
 	 */
 	public void removeMessage() {
-		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
-		int id = Integer.parseInt(messageId);
+		String pageMessageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
+		int id = Integer.parseInt(pageMessageId);
 		feedService.removeMessage(id);
 		
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -336,7 +336,7 @@ public class MessageEditorController extends ControllerBase{
 
 		for (String tag : selectedTags) {
 
-			if (tag.toLowerCase().equals(needle)) {
+			if (tag.equalsIgnoreCase(needle)) {
 				return true;
 			}
 		}

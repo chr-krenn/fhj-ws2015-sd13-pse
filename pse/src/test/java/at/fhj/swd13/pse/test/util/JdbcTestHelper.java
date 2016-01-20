@@ -20,6 +20,7 @@ public class JdbcTestHelper
     private String url;
     private String user;
     private String password;  
+    private Boolean logSqlCommand = false;
 	
     
     /*
@@ -44,6 +45,8 @@ public class JdbcTestHelper
 			url = jdbcProperties.getProperty("jdbc.url");
 			user = jdbcProperties.getProperty("jdbc.username");
 			password = jdbcProperties.getProperty("jdbc.password");  
+			logSqlCommand = Boolean.parseBoolean( jdbcProperties.getProperty("jdbc.logSqlCommand",  "false") );
+			
 		}
 		catch(Exception e)
 		{
@@ -137,7 +140,10 @@ public class JdbcTestHelper
     		st = con.createStatement();            
     		for(String sqlStatement : sqlStatements)
     		{
-    			System.out.println("SQL> " + sqlStatement);
+    			if ( logSqlCommand ) {
+    				System.out.println("SQL> " + sqlStatement);
+    			}
+    			
     			st.execute(sqlStatement);
     		}
     		con.commit();

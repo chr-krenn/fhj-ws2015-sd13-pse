@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -69,23 +68,18 @@ public abstract class SeleniumBaseTestCase  {
 	@Before
 	public void initWebdriver() throws Exception {
 		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
 	
 	@After
 	public void tearDown() throws Exception {
-
+		driver.quit();
 		if (verificationErrors.length() != 0) {
 			String verificationErrorString = verificationErrors.toString();
 			Assert.fail(verificationErrorString);
 
 		}
-		driver.quit();
-	}
-
-	@AfterClass
-	public static void tearDownAl() throws Exception {
 	}
 
 	protected boolean isElementPresent(By by) {
