@@ -8,6 +8,7 @@ import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.MessageDetailView;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 
 public class ActivityStreamIT extends SeleniumBaseTestCase {
@@ -30,6 +31,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	
 	@Test
 	public void testActivitySection() {
+		SleepUtil.sleep(500);
 		verifyTrue(homepage.isActivitiesStreamPresent());
 	}
 	
@@ -52,6 +54,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testActivityDetailView() {
+		SleepUtil.sleep(500);
 		verifyTrue(homepage.isActivityStreamDetailViewCorrect());
 	}
 	
@@ -64,6 +67,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testNumberOfComments() {
+		SleepUtil.sleep(500);
 		int messageWithComments = homepage.getMessageNumberByHeadline("Message Headline");
 		int messageWithoutComments = homepage.getMessageNumberByHeadline("New software");
 		verifyEquals(3, homepage.getNumberOfComments(messageWithComments));
@@ -79,6 +83,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testNumberOfLikes() {
+		SleepUtil.sleep(500);
 		int messageWithLikes = homepage.getMessageNumberByHeadline("Message Headline");
 		int messageWithoutLikes = homepage.getMessageNumberByHeadline("New software");
 		verifyEquals(2, homepage.getNumberOfLikes(messageWithLikes));
@@ -90,6 +95,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testNumberOfLikesDetailView() {
+		SleepUtil.sleep(500);
 		int messageWithLikes = homepage.getMessageNumberByHeadline("Message Headline");
 		MessageDetailView detailView = homepage.openDetailView(messageWithLikes);
 		verifyEquals(2, detailView.getNumberOfLikes());
@@ -102,6 +108,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	public void testLike() {
 		Boolean revert = false;
 		
+		SleepUtil.sleep(500);
 		int expected = homepage.getNumberOfLikes(0);
 		if(homepage.likeMessage(0)) {
 			expected += 1;
@@ -142,7 +149,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	@Test
 	public void testRevertLike() {
 		Boolean revert = false;
-		
+		SleepUtil.sleep(500);
 		int expected = homepage.getNumberOfLikes(0);
 		if(homepage.revertLike(0)) {
 			expected -= 1;
@@ -182,6 +189,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testLikeButton() {
+		SleepUtil.sleep(500);
 		int expected = homepage.getNumberOfLikes(0);
 		int change = homepage.clickLikeButton(0);
 		verifyEquals(expected+change,homepage.getNumberOfLikes(0));
@@ -209,6 +217,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testGetUsersLikingMessage() {
+		SleepUtil.sleep(500);
 		homepage.likeMessage(0);
 		verifyTrue(homepage.getUsersLikingMessage(0).contains("Christine Pompenig"));
 	}
@@ -228,6 +237,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testNumberOfCommentsDisplayedInDetailView() {
+		SleepUtil.sleep(500);
 		int numberOfComments = homepage.getNumberOfComments(0);
 		MessageDetailView detailView = homepage.openDetailView(0);
 		verifyEquals(numberOfComments, detailView.getNumberOfCommentsInHeader());
@@ -241,6 +251,7 @@ public class ActivityStreamIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testCommentsDisplay() {
+		SleepUtil.sleep(500);
 		int messageWithComments = homepage.getMessageNumberByHeadline("Message Headline");
 		MessageDetailView detailView = homepage.openDetailView(messageWithComments);
 		verifyTrue(detailView.getCommentsText().contains("Comment 3"));

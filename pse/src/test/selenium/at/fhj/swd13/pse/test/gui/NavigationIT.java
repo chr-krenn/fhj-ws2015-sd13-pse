@@ -12,6 +12,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.ServicesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserList;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class NavigationIT  extends SeleniumBaseTestCase {
 	
@@ -34,6 +35,7 @@ public class NavigationIT  extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testUsernameInHeader() throws Exception {
+		SleepUtil.sleep(500);
 		verifyText("florian.genser", By.cssSelector("button[id='j_idt8:j_idt15_button'] span"));
 	}
 	
