@@ -60,6 +60,7 @@ public class CommunityController extends ControllerBase{
 	private String communityIdString;
 	private boolean isMember;
 
+	@SuppressWarnings("squid:S1166")
 	@PostConstruct
 	public void postConstruct() {
 		try {
@@ -88,6 +89,7 @@ public class CommunityController extends ControllerBase{
 		this.searchFieldText = searchFieldText;
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public String search() {
 		try {
 			communities = chatService
@@ -107,7 +109,8 @@ public class CommunityController extends ControllerBase{
 	public void setSelectedCommunity(Community selectedCommunity) {
 		this.selectedCommunity = selectedCommunity;
 	}
-
+	
+	@SuppressWarnings("squid:S1166")
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			if (isMemberOfCommunity(selectedCommunity.getCommunityId())) {
@@ -130,6 +133,7 @@ public class CommunityController extends ControllerBase{
 		}
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void subscribeCommunity() {
 
 		logger.info("######## Start - subscribeCommunity ########");
@@ -200,6 +204,7 @@ public class CommunityController extends ControllerBase{
 		return invitationOnly != null && "true".equals( invitationOnly );
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public Boolean isMemberOfCommunity(int comId) {
 		setMember(false);
 		Person currentUser = null;
@@ -263,6 +268,7 @@ public class CommunityController extends ControllerBase{
 
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public Boolean disableAskCommunity(int comId) {
 		boolean disable = false;
 		setMember(isMemberOfCommunity(comId));
