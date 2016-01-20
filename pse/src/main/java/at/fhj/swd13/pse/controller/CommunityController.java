@@ -48,12 +48,12 @@ public class CommunityController extends ControllerBase{
 	@Inject
 	private UserService userService;
 
-	private transient Community selectedCommunity = null;
+	private Community selectedCommunity = null;
 
 	private String searchFieldText = "";
 
-	public static final String answerYes = "Yes";
-	public static final String answerNo = "No";
+	public static final String ANSWER_YES = "Yes";
+	public static final String ANSWER_NO = "No";
 
 	private int communityId;
 	private String invitationOnly;
@@ -261,9 +261,9 @@ public class CommunityController extends ControllerBase{
 	public String isMemberToString() {
 		logger.debug("## isMemberToString - isMember <" + isMember() + ">");
 		if (isMember()) {
-			return answerYes;
+			return ANSWER_YES;
 		} else {
-			return answerNo;
+			return ANSWER_NO;
 		}
 
 	}
@@ -335,10 +335,10 @@ public class CommunityController extends ControllerBase{
 	}
 
 	public static String getAnsweryes() {
-		return answerYes;
+		return ANSWER_YES;
 	}
 
 	public static String getAnswerno() {
-		return answerNo;
+		return ANSWER_NO;
 	}
 }
