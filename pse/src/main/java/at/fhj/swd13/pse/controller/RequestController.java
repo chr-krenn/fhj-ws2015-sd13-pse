@@ -131,20 +131,8 @@ public class RequestController extends ControllerBase {
 
 	@SuppressWarnings("squid:S1166")
 	public void onMemberRequestSelected(SelectEvent object) {
-		try {
-			FacesContext
-					.getCurrentInstance()
-					.getExternalContext()
-					.redirect(
-							"Community.jsf?id="
-									+ selectedRequest.getCommunityId());
-		} catch (IOException e) {
-			logger.error("Error on redirecting to Community.jsf?id="
-					+ selectedRequest.getCommunityId() + ": " + e.getMessage());
 
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fehler", getStringResource("UnknownErrorMessage")));
-		}
+		onCommunitySelected(object);
 	}
 
 	@SuppressWarnings("squid:S1166")

@@ -36,6 +36,7 @@ public class DocumentDAOImpl extends DAOBase implements DocumentDAO {
 	/* (non-Javadoc)
 	 * @see at.fhj.swd13.pse.db.dao.DocumentDAO#remove(int)
 	 */
+	@Override
 	public void remove( int documentId ) {
 	
 		final Query q = dbContext.createNamedQuery("Document.deleteById");

@@ -82,7 +82,7 @@ public class LoginController extends ControllerBase{
 					"Fehler", getStringResource("UnknownErrorMessage")));
 		}		
 		
-		return (loggedIn ? "/protected/Main" : "NotLoggedIn" + "?faces-redirect=true");
+		return loggedIn ? "/protected/Main" : "NotLoggedIn" + "?faces-redirect=true";
 	}
 
 	public String changePassword() {

@@ -23,6 +23,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * @see
 	 * at.fhj.swd13.pse.db.dao.TagDAO#insert(at.fhj.swd13.pse.db.entity.Tag)
 	 */
+	@Override
 	public void insert(Tag tag) {
 
 		dbContext.persist(tag);
@@ -61,6 +62,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * 
 	 * @see at.fhj.swd13.pse.db.TagDAO#remove(int)
 	 */
+	@Override
 	public void remove(int tagId) {
 
 		final Query q = dbContext.createNamedQuery("Tag.deleteById");

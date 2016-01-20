@@ -191,7 +191,7 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */
 	public boolean isModeEdit() {
-		return editMode != null && editMode.equals("edit");
+		return editMode != null && "edit".equals( editMode);
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */
 	public String getTagDisplayString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		for (String tag : getTags()) {
 			if (result.length() > 0)
 				result.append(" ");
@@ -328,11 +328,11 @@ public class UserProfileController implements Serializable {
 	}
 
 	public boolean isActiveFlagEnabled() {
-		return (!isLoggedInUser() && isAdmin());
+		return !isLoggedInUser() && isAdmin();
 	}
 
 	public boolean isLoginAllowedFlagEnabled() {
-		return (!isLoggedInUser() && isAdmin());
+		return !isLoggedInUser() && isAdmin();
 	}
 
 	public boolean isExternFlagEnabled() {
@@ -348,10 +348,9 @@ public class UserProfileController implements Serializable {
 		if (!username.equals(userSession.getUsername()))
 			return "";
 
-		Person person = null;
 		try {
-			person = userService.getUser(userSession.getUsername());
-			if (department.equals(person.getDepartment()))
+			final Person p = userService.getUser(userSession.getUsername());
+			if (department.equals(p.getDepartment()))
 				return "samedepartment";
 			else
 				return "";

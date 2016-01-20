@@ -103,12 +103,16 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	@Override
 	public void commit() {
 
+		assertTransaction();
+
+		transaction.commit();
+	}
+
+	private void assertTransaction() {
 		if (transaction == null || !transaction.isActive()) {
 
 			throw new IllegalStateException("no transaction open");
 		}
-
-		transaction.commit();
 	}
 
 	/*
@@ -119,10 +123,7 @@ public class DbContextImpl implements AutoCloseable, DbContext {
 	@Override
 	public void rollback() {
 
-		if (transaction == null || !transaction.isActive()) {
-
-			throw new IllegalStateException("no transaction open");
-		}
+		assertTransaction();
 
 		transaction.rollback();
 	}

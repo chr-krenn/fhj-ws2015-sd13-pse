@@ -33,7 +33,7 @@ public class Document implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int nameLength = JpaHelper.getColumneLength(Document.class, "name");
+	private static final int NAME_LENGTH = JpaHelper.getColumneLength(Document.class, "name");
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -137,13 +137,13 @@ public class Document implements Serializable {
 
 		ArgumentChecker.assertContent(name, "name");
 
-		if (nameLength == 0 || name.length() <= nameLength) {
+		if (NAME_LENGTH == 0 || name.length() <= NAME_LENGTH) {
 
 			this.name = name;
 		} else {
 			// name is too long to fit into the db column --> truncate
 
-			final int charsTooMuch = name.length() - nameLength;
+			final int charsTooMuch = name.length() - NAME_LENGTH;
 			final int lastDot = name.lastIndexOf('.');
 
 			if (lastDot > charsTooMuch) {
@@ -151,7 +151,7 @@ public class Document implements Serializable {
 				this.name = name.substring(0, lastDot - charsTooMuch);
 				this.name = this.name + name.substring(lastDot);
 			} else {
-				this.name = name.substring(0, nameLength);
+				this.name = name.substring(0, NAME_LENGTH);
 			}
 		}
 	}
