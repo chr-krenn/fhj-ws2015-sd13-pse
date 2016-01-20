@@ -33,6 +33,7 @@ public class FileUploadController {
 	 * 
 	 * @param event
 	 */
+	@SuppressWarnings("squid:S1166")
 	public void handleUpload(FileUploadEvent event) {
 
 		logger.info("[UPLOAD] storing: " + event.getFile().getFileName());

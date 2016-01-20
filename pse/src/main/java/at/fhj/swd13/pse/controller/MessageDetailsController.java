@@ -46,6 +46,7 @@ public class MessageDetailsController extends ControllerBase {
 	
 	private MessageDTO messageDTO;
 
+	@SuppressWarnings("squid:S1166")
 	public String openDetailView() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
 		int id = Integer.parseInt(messageId);
@@ -104,6 +105,7 @@ public class MessageDetailsController extends ControllerBase {
 	 * Adds "like" from actual message for the person currently logged-in
 	 * 
 	 */
+	@SuppressWarnings("squid:S1166")
 	public void rateMessageDetailedView() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");		
 	    int id = Integer.parseInt(messageId);
@@ -134,6 +136,7 @@ public class MessageDetailsController extends ControllerBase {
 	 * Removes the "like" from actual message for the person currently logged-in
 	 * 
 	 */
+	@SuppressWarnings("squid:S1166")
 	 public void removeRatingDetailedView() {
 		String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");		
 		int id = Integer.parseInt(messageId);

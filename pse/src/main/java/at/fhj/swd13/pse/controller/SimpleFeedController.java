@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.controller;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -25,7 +26,7 @@ import at.fhj.swd13.pse.plumbing.UserSession;
  */
 @ManagedBean
 @ViewScoped
-public class SimpleFeedController {
+public class SimpleFeedController extends ControllerBase{
     
     @Inject
     private FeedService feedService;
@@ -42,6 +43,7 @@ public class SimpleFeedController {
     private List<MessageDTO> messageList;
     
     @PostConstruct
+    @SuppressWarnings("squid:S1166")
     public void postConstruct() {
     	try {
     		this.messageList = feedService.loadFeedForUser(userService.getUser(userSession.getUsername()));
@@ -53,6 +55,9 @@ public class SimpleFeedController {
     	catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getActivities failed for " + userSession.getUsername() + " from " + context.toString());
+			
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));			
 		}
     }
     
@@ -64,6 +69,7 @@ public class SimpleFeedController {
      * Adds "like" for clicked message in activity stream for the currently logged-in person
      * 
      */
+    @SuppressWarnings("squid:S1166")
     public void rateMessage() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	int id = Integer.parseInt(messageId);
@@ -81,6 +87,8 @@ public class SimpleFeedController {
         	catch (ServiceException e) {
         		RequestContext context = RequestContext.getCurrentInstance();
         		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+    			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+    					"Fehler", getStringResource("UnknownErrorMessage")));			
     		}
 	}
     
@@ -88,6 +96,7 @@ public class SimpleFeedController {
      * Removes "like" for clicked message in activity stream for the currently logged-in person
      * 
      */
+    @SuppressWarnings("squid:S1166")
     public void removeRating() {
     	String messageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
     	
@@ -106,9 +115,12 @@ public class SimpleFeedController {
 			catch (ServiceException e) {
 				RequestContext context = RequestContext.getCurrentInstance();
 	    		logger.info("[FEEDS] rateMessage failed for " + userSession.getUsername() + " from " + context.toString());
+    			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+    					"Fehler", getStringResource("UnknownErrorMessage")));			
 			}
 	}
     
+    @SuppressWarnings("squid:S1166")
     public List<MessageDTO> getNews(int communityId) {
     	try {
     		List<MessageDTO> messageList = feedService.loadNews(communityId);
@@ -116,11 +128,13 @@ public class SimpleFeedController {
 		} catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getNews failed for community " + communityId + " from " + context.toString());
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));			
 			return null;
-		}
-    	
+		}    	
     }
     
+    @SuppressWarnings("squid:S1166")
     public List<MessageDTO> getCommunityAcitivities(int communityId) {
     	try {
     		List<MessageDTO> messageList = feedService.loadNews(communityId);
@@ -132,9 +146,9 @@ public class SimpleFeedController {
 		} catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getCommunityAcitivities failed for community " + communityId + " from " + context.toString());
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));			
 			return null;
-		}
-    	
+		}    	
     }
-
 }

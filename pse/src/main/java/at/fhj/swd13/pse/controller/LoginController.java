@@ -42,6 +42,7 @@ public class LoginController extends ControllerBase{
 	@Inject
 	private UserSession userSession;
 
+	@SuppressWarnings("squid:S1166")
 	public String login() {
 
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -104,6 +105,7 @@ public class LoginController extends ControllerBase{
 		return passwordChanged ? "/protected/Main" : "/protected/UserPasswordChange";
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void logout() {
 
 		userService.logoutUser(getLoggedInUsername());
@@ -203,6 +205,7 @@ public class LoginController extends ControllerBase{
 	 * Indicates whether the logged-in user is an admin
 	 * @return isAdmin
 	 */
+	@SuppressWarnings("squid:S1166")	
 	public boolean getIsAdmin() {
 		try {
 			return userService.getUser(getLoggedInUsername()).isAdmin();

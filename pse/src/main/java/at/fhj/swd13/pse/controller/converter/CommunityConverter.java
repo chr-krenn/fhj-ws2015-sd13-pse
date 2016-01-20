@@ -22,6 +22,7 @@ public class CommunityConverter implements Converter {
 	private ChatService chatService;
 
 	@PostConstruct
+	@SuppressWarnings("squid:S1166")
 	public void postConstruct() {
 		logger.info("[MSG+] converter instantiated");
 	}

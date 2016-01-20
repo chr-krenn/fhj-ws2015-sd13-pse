@@ -39,6 +39,7 @@ public class CommunityProfileController extends ControllerBase implements Serial
 	 * Returns selected community of communities site
 	 * 
 	 */
+	@SuppressWarnings("squid:S1166")
 	private Community getCommunity() {
 		communityId = Integer.parseInt(communityIdString);
 		try {
@@ -80,6 +81,7 @@ public class CommunityProfileController extends ControllerBase implements Serial
 	 * Redirects to create Message site for selected community
 	 * 
 	 */
+	@SuppressWarnings("squid:S1166")	
 	public void onCreateNewActivity() {
 		try {
 			FacesContext

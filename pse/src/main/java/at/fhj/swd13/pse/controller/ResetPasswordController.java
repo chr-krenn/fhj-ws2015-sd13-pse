@@ -19,6 +19,7 @@ public class ResetPasswordController {
 	@Inject
 	private UserService userService;
 	
+	@SuppressWarnings("squid:S1166")	
 	public void resetPassword() {		
 		if (emailAddress != null) {
 			try {

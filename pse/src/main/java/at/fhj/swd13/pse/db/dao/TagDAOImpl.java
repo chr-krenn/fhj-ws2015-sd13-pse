@@ -70,6 +70,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	}
 
 	@Override
+	@SuppressWarnings("squid:S1166")
 	public Tag getByToken(String token) {
 		final Query q = dbContext.createNamedQuery("Tag.findByToken");
 		q.setParameter("token", token);

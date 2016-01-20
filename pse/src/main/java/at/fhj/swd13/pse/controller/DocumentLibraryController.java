@@ -137,6 +137,7 @@ public class DocumentLibraryController extends ControllerBase {
 		return new ArrayList<DocumentLibraryEntry>();
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public StreamedContent downloadDocument(int id) {
 		try {
 
