@@ -9,6 +9,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserList;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 
 public class UserPageAdminIT extends SeleniumBaseTestCase {
@@ -65,6 +66,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testUserActiveLoginAllowedTrue() {
+		SleepUtil.sleep(500);
 		testLogin(true, true);
 		
 		// forwarded to HomePage
@@ -74,6 +76,7 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 	private void testLogin(boolean active, boolean loginAllowed) {
 		// search for user
 		UserList userList = homepage.searchUser("Angelo");
+		SleepUtil.sleep(500);
 		verifyEquals(1, userList.getUsers().size());
 		
 		// open user page
@@ -91,12 +94,13 @@ public class UserPageAdminIT extends SeleniumBaseTestCase {
 		{
 			//forwarded to NotLoggedIn Page
 			NotLoggedInPage notLoggedInPage = loginPage.loginWithWrongCredentials("angelofr13", "12345678");
-			
+			SleepUtil.sleep(500);
 			verifyTrue(notLoggedInPage.isDoorsOfDurinLabelPresent());
 		}
 		else
 		{
 			homepage = loginPage.login("angelofr13", "12345678");
+			SleepUtil.sleep(500);
 			verifyTrue(homepage.isActivitiesStreamPresent());
 		}
 	}

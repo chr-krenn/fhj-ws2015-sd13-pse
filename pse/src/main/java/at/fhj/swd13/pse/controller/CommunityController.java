@@ -110,7 +110,11 @@ public class CommunityController extends ControllerBase{
 		this.selectedCommunity = selectedCommunity;
 	}
 	
-	@SuppressWarnings("squid:S1166")
+	
+	/**
+	 * @param object - needed to comply with faces syntax
+	 */
+	@SuppressWarnings({"squid:S1166", "squid:S1172"})
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			if (isMemberOfCommunity(selectedCommunity.getCommunityId())) {

@@ -97,6 +97,7 @@ public class MessageEditorController extends ControllerBase{
 		}
 	}
 
+	@SuppressWarnings("squid:S1166")
 	private void loadMessage(int messageId){
 		try {
 			this.messageId = messageId;
@@ -134,6 +135,7 @@ public class MessageEditorController extends ControllerBase{
 		}
 	}
 	
+	@SuppressWarnings("squid:S1166")
 	private void loadCommunity(String communityName){
 		try {
 			targetCommunity = chatService.getCommunity(communityName);
@@ -166,6 +168,7 @@ public class MessageEditorController extends ControllerBase{
 	/**
 	 * Save the entered message to the database
 	 */
+	@SuppressWarnings("squid:S1166")
 	public void save() {
 		logger.info("[MSG+] saving message... ");
 
@@ -173,7 +176,6 @@ public class MessageEditorController extends ControllerBase{
 		Document icon = documentService.get(iconId);
 		List<MessageTag> messageTags = new ArrayList<MessageTag>();
 		Tag tag;
-		MessageTag messageTag;
 
 		for (String tagString : selectedTags) {
 			tag = tagService.getTagByToken(tagString);
@@ -185,8 +187,7 @@ public class MessageEditorController extends ControllerBase{
 					logger.error("[MSG+] error creating new tag (duplicate...)");
 				}
 			}
-			messageTag = new MessageTag(tag);
-			messageTags.add(messageTag);
+			messageTags.add(new MessageTag(tag));
 		}
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -233,6 +234,7 @@ public class MessageEditorController extends ControllerBase{
 	 * Removes a message from the database
 	 * @throws IOException 
 	 */
+	@SuppressWarnings("squid:S1166")	
 	public void removeMessage() {
 		String pageMessageId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("messageId");
 		int id = Integer.parseInt(pageMessageId);
@@ -262,6 +264,7 @@ public class MessageEditorController extends ControllerBase{
 	 * 
 	 * @return a list of matching communities or an empty list
 	 */
+	@SuppressWarnings("squid:S1166")
 	public List<Community> completeCommunity(String input) {
 		logger.info("[MSG+] complete called with: " + input);
 
@@ -323,7 +326,7 @@ public class MessageEditorController extends ControllerBase{
 			}
 		}
 
-		if (result.size() == 0 && !selectedTags.contains(input)) {
+		if (result.isEmpty() && !selectedTags.contains(input)) {
 			result.add(input);
 		}
 
@@ -350,6 +353,7 @@ public class MessageEditorController extends ControllerBase{
 	 * @param event
 	 *            event data
 	 */
+	@SuppressWarnings("squid:S1172")
 	public void handleSelect(SelectEvent event) {
 
 		logger.info("[MSG+] Community handleSelect");
@@ -361,6 +365,7 @@ public class MessageEditorController extends ControllerBase{
 	 * @param event
 	 *            event data
 	 */
+	@SuppressWarnings("squid:S1172")
 	public void handleUnselect(UnselectEvent event) {
 		Community removedCommunity = (Community) event.getObject();
 		logger.info("[MSG+] Community handleUnselect: " + removedCommunity.getName());
@@ -372,6 +377,7 @@ public class MessageEditorController extends ControllerBase{
 	 * @param event
 	 *            event data
 	 */
+	@SuppressWarnings("squid:S1172")
 	public void handleTagSelect(SelectEvent event) {
 
 		logger.info("[MSG+] Tag handleSelect");
@@ -383,6 +389,7 @@ public class MessageEditorController extends ControllerBase{
 	 * @param event
 	 *            event data
 	 */
+	@SuppressWarnings("squid:S1172")
 	public void handleTagUnselect(UnselectEvent event) {
 
 		logger.info("[MSG+] Tag handleUnselect");

@@ -114,8 +114,6 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 
 			dbContext.getMessageDAO().update(m);
 
-		} catch (ConstraintViolationException e) {
-			logger.error("[FEED] Could not persist message (ConstraintViolation ??" + headline);
 		} catch (Throwable ex) {
 			logger.info("[FeedService] cannot update message '" + headline + "': " + ex.getMessage(), ex);
 			throw new ServiceException(ex);
@@ -263,11 +261,7 @@ public class FeedServiceImpl extends ServiceBase implements FeedService {
 					setImageRef(mDTO);
 				}
 				if (loadComments) {
-					try {
-						setComments(mDTO);
-					} catch (ServiceException e) {
-						logger.warn("[FEED] Could not load Comments for message with ID " + "[" + mDTO.getId() + "] because entity was not found");
-					}
+					setComments(mDTO);
 				}
 				result.add(mDTO);
 			}

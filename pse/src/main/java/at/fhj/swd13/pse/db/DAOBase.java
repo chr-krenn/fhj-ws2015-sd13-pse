@@ -21,7 +21,7 @@ public abstract class DAOBase {
 	 * 
 	 * @return single instance form the query or null if result was empty
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked","squid:S1166" })
 	protected <T> T fetchSingle(final Query q) {
 		try {
 

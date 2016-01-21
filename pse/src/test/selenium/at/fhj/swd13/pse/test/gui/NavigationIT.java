@@ -3,6 +3,7 @@ package at.fhj.swd13.pse.test.gui;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.CommunitiesPage;
@@ -11,6 +12,7 @@ import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.ServicesPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserList;
 import at.fhj.swd13.pse.test.gui.pageobjects.UserPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class NavigationIT  extends SeleniumBaseTestCase {
 	
@@ -33,7 +35,8 @@ public class NavigationIT  extends SeleniumBaseTestCase {
 	 */
 	@Test
 	public void testUsernameInHeader() throws Exception {
-		verifyTextById("florian.genser", "j_idt8:j_idt15_button");
+		SleepUtil.sleep(500);
+		verifyText("florian.genser", By.cssSelector("button[id='j_idt8:j_idt15_button'] span"));
 	}
 	
 	/*

@@ -64,6 +64,7 @@ public class UserProfileController implements Serializable {
 	private List<String> tags = new ArrayList<String>();
 
 	@PostConstruct
+	@SuppressWarnings("squid:S1166")
 	public void setup() {
 		userName = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("userName");
@@ -115,6 +116,7 @@ public class UserProfileController implements Serializable {
 		return userName;
 	}
 	
+	@SuppressWarnings("squid:S1166")
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile file = event.getFile();
 		FacesMessage message = null;
@@ -145,6 +147,7 @@ public class UserProfileController implements Serializable {
 		return !modeEdit ? "display:none" : "display:all";
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void updateProfile() {
 		try {
 			// add tag if not already existing
@@ -188,7 +191,7 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */
 	public boolean isModeEdit() {
-		return editMode != null && editMode.equals("edit");
+		return editMode != null && "edit".equals( editMode);
 	}
 
 	/**
@@ -258,7 +261,7 @@ public class UserProfileController implements Serializable {
 	 * 
 	 */
 	public String getTagDisplayString() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		for (String tag : getTags()) {
 			if (result.length() > 0)
 				result.append(" ");
@@ -304,6 +307,7 @@ public class UserProfileController implements Serializable {
 		return "/protected/chat/AddMessage.jsf?faces-redirect=true";
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public String contactButtonAction() {
 
 		try {
@@ -324,11 +328,11 @@ public class UserProfileController implements Serializable {
 	}
 
 	public boolean isActiveFlagEnabled() {
-		return (!isLoggedInUser() && isAdmin());
+		return !isLoggedInUser() && isAdmin();
 	}
 
 	public boolean isLoginAllowedFlagEnabled() {
-		return (!isLoggedInUser() && isAdmin());
+		return !isLoggedInUser() && isAdmin();
 	}
 
 	public boolean isExternFlagEnabled() {
@@ -338,15 +342,15 @@ public class UserProfileController implements Serializable {
 	public List<Person> getUsersWithDepartment() {
 		return userService.getUsersWithDepartment(person.getDepartment());
 	}
-	
+
+	@SuppressWarnings("squid:S1166")
 	public String getContactListEntryClass(String username, String department) {
 		if (!username.equals(userSession.getUsername()))
 			return "";
 
-		Person person = null;
 		try {
-			person = userService.getUser(userSession.getUsername());
-			if (department.equals(person.getDepartment()))
+			final Person p = userService.getUser(userSession.getUsername());
+			if (department.equals(p.getDepartment()))
 				return "samedepartment";
 			else
 				return "";
@@ -358,6 +362,7 @@ public class UserProfileController implements Serializable {
 	/**
 	 * creates  a new Community for the user logged in
 	 */	
+	@SuppressWarnings("squid:S1166")
 	public void createCommunity() {
 		try {
 			chatService.createChatCommunity(userSession.getUsername(), getCommunityName(), true);

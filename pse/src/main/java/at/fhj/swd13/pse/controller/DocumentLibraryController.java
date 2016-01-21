@@ -78,14 +78,13 @@ public class DocumentLibraryController extends ControllerBase {
 			// Check manually whether an file has been uploaded earlier
 			// Primefaces validation is not applicable in this scenario
 			if (uploadedFileContent == null) {
-				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Fehler", "Es wurde keine Datei ausgewählt."));
+				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler",
+						"Es wurde keine Datei ausgewählt."));
 				return;
 			}
 
 			InputStream is = new ByteArrayInputStream(uploadedFileContent);
-			documentLibraryService.addEntry(getUploadedFileName(),
-					newDocumentDescription, is, communityId);
+			documentLibraryService.addEntry(getUploadedFileName(), newDocumentDescription, is, communityId);
 
 			uploadedFileContent = null;
 			setUploadedFileName(null);
@@ -94,33 +93,24 @@ public class DocumentLibraryController extends ControllerBase {
 
 		} catch (ServiceException e) {
 			logger.error("[DocumentLibrary] Failed to add new document.", e);
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fehler", getStringResource("UnknownErrorMessage")));
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler",
+					getStringResource("UnknownErrorMessage")));
 		}
 	}
 
 	public void deleteDocument(int id) {
 		try {
 			documentLibraryService.deleteEntry(id);
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"Info",
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_INFO, "Info",
 					getStringResource("DeletedDocumentEntrySuccessfully")));
 		} catch (ServiceException e) {
-			if (e.getCause() != null
-					&& e.getCause().getClass() == DocumentNotFoundException.class) {
-				addFacesMessage(new FacesMessage(
-						FacesMessage.SEVERITY_ERROR,
-						"Fehler",
-						String.format(
-								getStringResource("DocumentLibraryEntryNotFound"),
-								id)));
+			if (e.getCause() != null && e.getCause().getClass() == DocumentNotFoundException.class) {
+				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", String.format(
+						getStringResource("DocumentLibraryEntryNotFound"), id)));
 			} else {
-				logger.error(
-						String.format(
-								"[DocumentLibrary] Failed to delete document with id %s.",
-								id), e);
-				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Fehler", getStringResource("UnknownErrorMessage")));
+				logger.error(String.format("[DocumentLibrary] Failed to delete document with id %s.", id), e);
+				addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler",
+						getStringResource("UnknownErrorMessage")));
 			}
 		}
 	}
@@ -129,29 +119,24 @@ public class DocumentLibraryController extends ControllerBase {
 		try {
 			return documentLibraryService.getEntriesForCommunity(communityId);
 		} catch (ServiceException e) {
-			logger.error(
-					String.format("[DocumentLibrary] Failed to get entries"), e);
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fehler", getStringResource("UnknownErrorMessage")));
+			logger.error(String.format("[DocumentLibrary] Failed to get entries"), e);
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler",
+					getStringResource("UnknownErrorMessage")));
 		}
 		return new ArrayList<DocumentLibraryEntry>();
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public StreamedContent downloadDocument(int id) {
 		try {
 
-			DocumentLibraryEntry entry = documentLibraryService
-					.getEntryById(id);
-			InputStream stream = documentService.getStreamForDocument(entry
-					.getDocumentId());
-			return new DefaultStreamedContent(stream, entry.getContentType(),
-					entry.getName());
+			DocumentLibraryEntry entry = documentLibraryService.getEntryById(id);
+			InputStream stream = documentService.getStreamForDocument(entry.getDocumentId());
+			return new DefaultStreamedContent(stream, entry.getContentType(), entry.getName());
 
 		} catch (ServiceException e) {
-			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Fehler", String.format(
-							getStringResource("DocumentLibraryEntryNotFound"),
-							id)));
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", String.format(
+					getStringResource("DocumentLibraryEntryNotFound"), id)));
 			return null;
 		}
 	}
@@ -169,16 +154,14 @@ public class DocumentLibraryController extends ControllerBase {
 	}
 
 	public void init() {
-		Map<String, String> parameterMap = (Map<String, String>) FacesContext
-				.getCurrentInstance().getExternalContext()
+		Map<String, String> parameterMap = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap();
 		if (parameterMap.containsKey("id"))
 			communityId = Integer.parseInt(parameterMap.get("id"));
 		else
 			communityId = 1;
 
-		documentLibraryRightsProvider = documentLibraryRightsProviderFactory
-				.create(communityId);
+		documentLibraryRightsProvider = documentLibraryRightsProviderFactory.create(communityId);
 	}
 
 	public String getNewDocumentDescription() {

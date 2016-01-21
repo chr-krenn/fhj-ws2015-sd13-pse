@@ -23,6 +23,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * @see
 	 * at.fhj.swd13.pse.db.dao.TagDAO#insert(at.fhj.swd13.pse.db.entity.Tag)
 	 */
+	@Override
 	public void insert(Tag tag) {
 
 		dbContext.persist(tag);
@@ -61,6 +62,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * 
 	 * @see at.fhj.swd13.pse.db.TagDAO#remove(int)
 	 */
+	@Override
 	public void remove(int tagId) {
 
 		final Query q = dbContext.createNamedQuery("Tag.deleteById");
@@ -70,6 +72,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	}
 
 	@Override
+	@SuppressWarnings("squid:S1166")
 	public Tag getByToken(String token) {
 		final Query q = dbContext.createNamedQuery("Tag.findByToken");
 		q.setParameter("token", token);

@@ -69,6 +69,7 @@ public class RequestController extends ControllerBase {
 	private String communityMemberIdString;
 
 	@PostConstruct
+	@SuppressWarnings("squid:S1166")
 	public void postConstruct() {
 		try {
 			updateUnconfirmedCommunities();
@@ -110,6 +111,7 @@ public class RequestController extends ControllerBase {
 		this.selectedMemberRequest = selectedMemberRequest;
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			FacesContext
@@ -121,23 +123,19 @@ public class RequestController extends ControllerBase {
 		} catch (IOException e) {
 			logger.error("Error on redirecting to Community.jsf?id="
 					+ selectedRequest.getCommunityId() + ": " + e.getMessage());
+			
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void onMemberRequestSelected(SelectEvent object) {
-		try {
-			FacesContext
-					.getCurrentInstance()
-					.getExternalContext()
-					.redirect(
-							"Community.jsf?id="
-									+ selectedRequest.getCommunityId());
-		} catch (IOException e) {
-			logger.error("Error on redirecting to Community.jsf?id="
-					+ selectedRequest.getCommunityId() + ": " + e.getMessage());
-		}
+
+		onCommunitySelected(object);
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void approveCommunity() {
 
 		Community com = null;
@@ -179,7 +177,7 @@ public class RequestController extends ControllerBase {
 
 		info("Community Antrag angenommen!");
 	}
-
+	@SuppressWarnings("squid:S1166")
 	public void declineCommunity() {
 
 		Community com = null;
@@ -221,6 +219,7 @@ public class RequestController extends ControllerBase {
 		info("Community Antrag abgelehnt!");
 	}
 
+	@SuppressWarnings("squid:S1166")
 	public void approveMemberRequest() {
 
 		CommunityMember com = null;
@@ -267,7 +266,7 @@ public class RequestController extends ControllerBase {
 
 		info("Community Mitgliedschafts Antrag angenommen!");
 	}
-
+	@SuppressWarnings("squid:S1166")
 	public void declineMemberRequest() {
 
 		CommunityMember com = null;
@@ -292,6 +291,9 @@ public class RequestController extends ControllerBase {
 		} catch (ServiceException e) {
 			logger.error("Error while declining member Request: "
 					+ e.getMessage());
+
+			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Fehler", getStringResource("UnknownErrorMessage")));
 		}
 		updateMemberRequests();
 
@@ -311,7 +313,8 @@ public class RequestController extends ControllerBase {
 		}
 		info("Community Mitgliedschafts Antrag abgelehnt!");
 	}
-
+	
+	@SuppressWarnings("squid:S1166")
 	private void updateMemberRequests() {
 		try {
 			memberrequests = chatService.getAllUnconfirmedCommunityMembers();
@@ -322,6 +325,7 @@ public class RequestController extends ControllerBase {
 		}
 	}
 	
+	@SuppressWarnings("squid:S1166")
 	private void updateUnconfirmedCommunities() {
 		try {
 			requests = chatService.getUnconfirmedCommunities();

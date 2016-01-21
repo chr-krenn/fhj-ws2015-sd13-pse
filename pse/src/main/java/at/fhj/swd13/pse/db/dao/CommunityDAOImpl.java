@@ -32,6 +32,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		dbContext.persist(community);
 	}
 
+	@Override
 	public Community getByName(final String name) {
 
 		final Query q = dbContext.createNamedQuery("Community.findByName");
@@ -45,6 +46,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * 
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#get(int)
 	 */
+	@Override
 	public Community get(final int communityId) {
 
 		final Query q = dbContext.createNamedQuery("Community.findById");
@@ -60,6 +62,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	 * @see at.fhj.swd13.pse.db.dao.CommunityDAO#getMatchingCommunities(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Community> getMatchingCommunities(final String needle) {
 
 		final Query q = dbContext.createNamedQuery("Community.findMatching");
@@ -69,6 +72,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Community> getMatchingCommunities(final String username, final String needle) {
 
 		final Query q = dbContext.createNamedQuery("Community.findMatchingByMemberButOwn");

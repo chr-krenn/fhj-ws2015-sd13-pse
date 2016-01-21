@@ -476,6 +476,6 @@ public class HomePage {
 	 * @return logged in user
 	 */
 	public String getLoggedInUser() {
-		return driver.findElement(By.id("j_idt8:j_idt15_button")).getText();
+		return driver.findElement(By.cssSelector("button[id='j_idt8:j_idt15_button'] span")).getText();
 	}
 }

@@ -1,10 +1,12 @@
 package at.fhj.swd13.pse.test.gui;
 
 import org.junit.Test;
+
 import at.fhj.swd13.pse.test.base.SeleniumBaseTestCase;
 import at.fhj.swd13.pse.test.gui.pageobjects.HomePage;
 import at.fhj.swd13.pse.test.gui.pageobjects.LoginPage;
 import at.fhj.swd13.pse.test.gui.pageobjects.NotLoggedInPage;
+import at.fhj.swd13.pse.test.util.SleepUtil;
 
 public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
@@ -29,7 +31,11 @@ public class UserChangePasswordIT extends SeleniumBaseTestCase {
 
 		homepage = loginPage.login(username, newPassword);
 
-		verifyEquals(homepage.getLoggedInUser(), username);
+		SleepUtil.sleep(1000);
+		
+		String loggedInUser = homepage.getLoggedInUser();
+		
+		verifyEquals(username, loggedInUser);
 		
 		homepage.logout();
 
