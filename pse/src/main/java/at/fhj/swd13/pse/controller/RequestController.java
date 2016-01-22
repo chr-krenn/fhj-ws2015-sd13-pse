@@ -111,7 +111,7 @@ public class RequestController extends ControllerBase {
 		this.selectedMemberRequest = selectedMemberRequest;
 	}
 
-	@SuppressWarnings("squid:S1166")
+	@SuppressWarnings({"squid:S1166", "squid:S1172"})
 	public void onCommunitySelected(SelectEvent object) {
 		try {
 			FacesContext

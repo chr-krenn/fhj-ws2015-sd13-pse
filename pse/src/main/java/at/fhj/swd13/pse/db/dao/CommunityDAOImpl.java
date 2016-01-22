@@ -154,7 +154,7 @@ public class CommunityDAOImpl extends DAOBase implements CommunityDAO {
 		final Query q = dbContext.createNamedQuery("Community.findPrivateForUser");
 		q.setParameter("person", person);
 		List<Community> privateCommunity = q.getResultList();
-		return privateCommunity.size() > 0 ? privateCommunity.get(0) : null;
+		return !privateCommunity.isEmpty() ? privateCommunity.get(0) : null;
 	}
 
 	@SuppressWarnings("unchecked")

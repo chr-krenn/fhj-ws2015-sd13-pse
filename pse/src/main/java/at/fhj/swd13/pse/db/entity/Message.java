@@ -145,6 +145,7 @@ public class Message implements Serializable {
 	/**
 	 * before the update set the updatedOn property
 	 */
+	@SuppressWarnings("squid:UnusedPrivateMethod")
 	@PreUpdate
 	private void onPreUpdate() {
 		updatedOn = new Date();

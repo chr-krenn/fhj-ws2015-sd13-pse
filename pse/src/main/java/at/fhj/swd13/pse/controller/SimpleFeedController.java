@@ -138,19 +138,20 @@ public class SimpleFeedController extends ControllerBase {
 	@SuppressWarnings("squid:S1166")
 	public List<MessageDTO> getCommunityAcitivities(int communityId) {
 		try {
-			List<MessageDTO> messageList = feedService.loadNews(communityId);
-			for (int i = 0; i < messageList.size(); i++) {
-				feedService.setMessageLikes(messageList.get(i), userSession.getUsername());
-				feedService.setComments(messageList.get(i));
+			List<MessageDTO> localMessageList = feedService.loadNews(communityId);
+			for (int i = 0; i < localMessageList.size(); i++) {
+				feedService.setMessageLikes(localMessageList.get(i), userSession.getUsername());
+				feedService.setComments(localMessageList.get(i));
 			}
-			return messageList;
+			return localMessageList;
 		} catch (ServiceException e) {
 			RequestContext context = RequestContext.getCurrentInstance();
 			logger.info("[FEEDS] getCommunityAcitivities failed for community " + communityId + " from "
 					+ context.toString());
 			addFacesMessage(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler",
 					getStringResource("UnknownErrorMessage")));
-			return null;
+			
+			return new ArrayList<MessageDTO>();
 		}
 	}
 }

@@ -49,6 +49,7 @@ public class TagDAOImpl extends DAOBase implements TagDAO {
 	 * @see at.fhj.swd13.pse.db.dao.TagDAO#getByTokenLike(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public List<Tag> getByTokenLike(String beginning) {
 
 		final Query q = dbContext.createNamedQuery("Tag.findByTokenLike");
