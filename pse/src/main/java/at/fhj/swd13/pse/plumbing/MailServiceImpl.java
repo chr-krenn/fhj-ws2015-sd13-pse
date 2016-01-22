@@ -50,7 +50,7 @@ public class MailServiceImpl implements MailService {
 	 * @see at.fhj.swd13.pse.plumbing.MailService#sendMail(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	@SuppressWarnings("squid:S1166")
+	@SuppressWarnings("squid:S1166")	
 	public void sendMail(final String subject, final String htmlBody, final String recipient, Properties props) throws MessagingException {
 
 		if (props != null) {
