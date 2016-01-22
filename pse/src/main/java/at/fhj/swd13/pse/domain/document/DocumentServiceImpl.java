@@ -86,6 +86,7 @@ public class DocumentServiceImpl extends ServiceBase implements DocumentService 
 		maxSubIndices = ConfigurationHelper.saveSetPropertyInt("at.fhj.swd13.pse.maxSubIndices", "9");
 	}
 
+	@SuppressWarnings("squid:S1166")
 	@Override
 	public Document store(String filename, InputStream data, String description) {
 

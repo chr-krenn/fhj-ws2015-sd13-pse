@@ -41,6 +41,7 @@ public abstract class JpaHelper {
 	 * 
 	 * @throws SecurityException
 	 */
+	@SuppressWarnings("squid:S1166")
 	public static int getColumneLength(final Class<?> target, final String fieldName) {
 
 		try {

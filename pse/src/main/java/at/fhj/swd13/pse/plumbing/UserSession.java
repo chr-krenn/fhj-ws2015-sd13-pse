@@ -39,6 +39,7 @@ public class UserSession implements Serializable {
 		logger.info("[USERSESSION] constructed");
 	}
 
+	@SuppressWarnings("squid:S1166")
 	@PreDestroy
 	@Transactional
 	protected void preDestroy() {
